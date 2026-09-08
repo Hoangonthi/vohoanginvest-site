@@ -1,5 +1,246 @@
-:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#e5edf7;background:#07111f}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07111f 0%,#0b1627 42%,#eef3f8 42%,#eef3f8 100%);min-height:100vh}.calc-topbar{background:rgba(5,12,23,.95);border-bottom:1px solid #1d2c40;position:sticky;top:0;z-index:20}.calc-topbar-inner{max-width:1180px;margin:auto;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:900;letter-spacing:.05em;color:white;text-decoration:none}.calc-topbar nav{display:flex;gap:14px;flex-wrap:wrap}.calc-topbar nav a{color:#a9bdd3;text-decoration:none;font-size:.92rem}.calc-wrap{max-width:1180px;margin:auto;padding:32px 18px 56px}.calc-hero{display:grid;grid-template-columns:1fr auto;gap:26px;align-items:end;margin-bottom:24px}.eyebrow{font-size:.76rem;font-weight:900;letter-spacing:.16em;color:#6dd0ff}.calc-hero h1{font-size:clamp(2rem,4vw,3.9rem);line-height:1.02;margin:10px 0 14px;max-width:850px;color:white}.calc-hero p{color:#a9bdd3;max-width:760px;line-height:1.65;margin:0}.identity-box{background:#0e1c2f;border:1px solid #223751;border-radius:16px;padding:14px;min-width:230px}.identity-status{font-size:.83rem;color:#9fb3c8;margin-bottom:10px}.identity-box button{width:100%;border:1px solid #38516e;background:#13253b;color:white;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}.terminal{background:#0b1627;border:1px solid #243a54;border-radius:24px;overflow:hidden;box-shadow:0 24px 70px rgba(1,8,18,.26)}.calc-panel{display:none;padding:28px}.calc-panel.active{display:block}.panel-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:12px}.step{display:inline-block;font-size:.73rem;font-weight:900;letter-spacing:.14em;color:#62c9fa;margin-bottom:7px}.panel-head h2{margin:0;color:white;font-size:1.55rem}.formula{font-size:.8rem;color:#91a8bf;border:1px solid #29405b;background:#0c1b2d;border-radius:999px;padding:8px 11px;white-space:nowrap}.why{margin:0 0 18px;background:#0a1827;border:1px solid #213851;border-radius:13px;padding:13px 15px}.why strong{display:block;color:#f1f6fb;font-size:.86rem;margin-bottom:5px}.why p{margin:0;color:#9fb3c8;line-height:1.55;font-size:.86rem}.workbench{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(330px,.95fr);gap:18px}.input-panel,.result-panel{background:#0e1c2f;border:1px solid #243a54;border-radius:17px;padding:18px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field-grid label{font-size:.8rem;color:#9eb2c7;font-weight:750}.field-grid input,.risk-row input{margin-top:6px;width:100%;border:1px solid #314963;background:#091421;color:white;border-radius:10px;padding:12px;font:inherit;font-size:1rem;outline:none}.field-grid input:focus,.risk-row input:focus{border-color:#61c8fb;box-shadow:0 0 0 3px rgba(83,198,255,.1)}.calculate{margin-top:16px;width:100%;border:0;border-radius:11px;background:#57c7fa;color:#06111e;padding:13px 16px;font-weight:950;letter-spacing:.04em;cursor:pointer}.validation{min-height:20px;color:#ffb4b4;font-size:.82rem;margin:9px 0 0}.verdict{display:inline-block;border-radius:999px;padding:7px 10px;background:#172b42;border:1px solid #2d4967;color:#a9c4df;font-size:.72rem;font-weight:950;letter-spacing:.09em}.verdict.good{background:#0e2c27;border-color:#22574c;color:#9de7d6}.verdict.warn{background:#31260d;border-color:#6e5520;color:#f6d889}.verdict.bad{background:#35181d;border-color:#71303a;color:#ffb8c0}.big-number{margin:18px 0 16px}.big-number span{display:block;color:#90a6bc;font-size:.82rem}.big-number strong{display:inline-block;color:white;font-size:clamp(2.1rem,5vw,4rem);line-height:1.05;margin-top:4px;overflow-wrap:anywhere}.big-number small{color:#8da3b9;margin-left:8px}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric-grid div{background:#091521;border:1px solid #1d3047;border-radius:11px;padding:11px;min-width:0}.metric-grid span{display:block;color:#8197ae;font-size:.74rem}.metric-grid b{display:block;color:#edf5ff;margin-top:5px;font-size:1.04rem;overflow-wrap:anywhere}.nba{margin-top:14px;background:#0a1827;border-left:4px solid #56c7fa;border-radius:10px;padding:13px 14px}.nba span{color:#70cffa;font-size:.72rem;font-weight:950;letter-spacing:.1em}.nba p{color:#d8e4f0;margin:6px 0 0;line-height:1.55}.scenario-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.scenario-strip div{background:#101f31;border-radius:10px;padding:10px;text-align:center}.scenario-strip span{display:block;color:#8197ae;font-size:.72rem}.scenario-strip b{color:white}.risk-table{margin-top:16px;display:grid;gap:8px}.risk-head,.risk-row{display:grid;grid-template-columns:.8fr 1.25fr 1fr;gap:8px;align-items:center}.risk-head{color:#7f97b2;font-size:.72rem;font-weight:800;padding:0 3px}.risk-row input{margin-top:0}.principle{margin-top:18px;background:white;border:1px solid #d9e2ec;color:#475569;border-radius:14px;padding:14px 16px;line-height:1.55}.principle strong{color:#172033}
-/* PREMIUM FINANCIAL TOOL DIRECTORY */
-.terminal-tabs{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;overflow:hidden!important;width:100%!important;padding:24px!important;background:linear-gradient(180deg,#091321 0%,#0b1727 100%)!important;border-bottom:1px solid #1c3047!important;scrollbar-width:none!important}.terminal-tabs::-webkit-scrollbar{display:none!important}.terminal-tabs::before{content:"BỘ MÁY TÍNH ĐẦU TƯ\AChọn đúng việc anh/chị đang cần xử lý.";white-space:pre-line;grid-column:1/-1;color:#f7fbff;font-size:1.22rem;font-weight:900;line-height:1.45;padding:0 0 18px;margin:0 0 2px;border-bottom:0;letter-spacing:-.01em}.terminal-tabs .tab{position:relative!important;display:block!important;flex:none!important;width:100%!important;min-width:0!important;white-space:normal!important;text-align:left!important;border:1px solid #1b3048!important;background:linear-gradient(180deg,rgba(18,38,61,.58),rgba(11,27,45,.52))!important;color:#f0f6fc!important;padding:18px 20px 19px!important;border-radius:15px!important;font-weight:900!important;line-height:1.3!important;box-shadow:0 8px 24px rgba(0,0,0,.08)!important;overflow:visible!important;transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease!important}.terminal-tabs .tab::before{display:block;margin-bottom:7px;font-size:.66rem;font-weight:900;letter-spacing:.11em;color:#67cfff;text-transform:uppercase}.terminal-tabs .tab::after{display:block;margin-top:7px;color:#8fa8c1;font-size:.79rem;line-height:1.5;font-weight:600;max-width:95%}.terminal-tabs .tab:nth-child(1)::before,.terminal-tabs .tab:nth-child(2)::before{content:"TRƯỚC MUA"}.terminal-tabs .tab:nth-child(3)::before,.terminal-tabs .tab:nth-child(5)::before,.terminal-tabs .tab:nth-child(7)::before,.terminal-tabs .tab:nth-child(8)::before{content:"ĐANG GIỮ / XỬ LÝ VỊ THẾ"}.terminal-tabs .tab:nth-child(4)::before,.terminal-tabs .tab:nth-child(6)::before{content:"MARGIN"}.terminal-tabs .tab:nth-child(9)::before,.terminal-tabs .tab:nth-child(10)::before{content:"RỦI RO"}.terminal-tabs .tab:nth-child(11)::before,.terminal-tabs .tab:nth-child(12)::before{content:"CỔ TỨC / QUYỀN"}.terminal-tabs .tab:nth-child(1)::after{content:"Mua tối đa bao nhiêu để không vượt mức lỗ cho phép."}.terminal-tabs .tab:nth-child(2)::after{content:"So phần lời kỳ vọng với phần lỗ chấp nhận trước khi vào lệnh."}.terminal-tabs .tab:nth-child(3)::after{content:"Tính giá vốn mới, tỷ trọng mới và rủi ro sau khi mua thêm."}.terminal-tabs .tab:nth-child(4)::after{content:"Thử trước nếu thị trường giảm thì vốn thật còn bao nhiêu."}.terminal-tabs .tab:nth-child(5)::after{content:"Tính giá bán tối thiểu sau phí, thuế và lãi margin."}.terminal-tabs .tab:nth-child(6)::after{content:"Biết khoản vay đang tốn bao nhiêu tiền mỗi ngày."}.terminal-tabs .tab:nth-child(7)::after{content:"Tính cần bán bao nhiêu để đưa đòn bẩy về mức mục tiêu."}.terminal-tabs .tab:nth-child(8)::after{content:"Tính số cổ phiếu cần bán để lấy lại vốn ban đầu."}.terminal-tabs .tab:nth-child(9)::after{content:"Biết phải tăng bao nhiêu phần trăm mới quay lại điểm xuất phát."}.terminal-tabs .tab:nth-child(10)::after{content:"Cộng số tiền có thể mất nếu các vị thế chạm mức cắt lỗ."}.terminal-tabs .tab:nth-child(11)::after{content:"Tính tiền cổ tức thực nhận, thuế và suất cổ tức."}.terminal-tabs .tab:nth-child(12)::after{content:"Tính giá lý thuyết sau cổ tức, cổ phiếu thưởng và quyền mua."}.terminal-tabs .tab:hover{transform:translateY(-2px)!important;background:linear-gradient(180deg,rgba(22,48,77,.82),rgba(13,33,54,.74))!important;border-color:#315170!important;box-shadow:0 12px 30px rgba(0,0,0,.16)!important}.terminal-tabs .tab.active{color:#fff!important;background:linear-gradient(135deg,#123252 0%,#102942 100%)!important;border-color:#3c88b0!important;box-shadow:0 10px 34px rgba(33,136,190,.14),inset 3px 0 0 #55c9ff!important}.terminal-tabs .tab.active::before{color:#a0ecd9!important}.terminal-tabs .tab.active::after{color:#c1d0df!important}.calc-panel{border-top:1px solid #17283b}
-@media(max-width:840px){body{background:linear-gradient(180deg,#07111f 0%,#0b1627 34%,#eef3f8 34%,#eef3f8 100%)}.calc-hero{grid-template-columns:1fr}.identity-box{max-width:320px}.workbench{grid-template-columns:1fr}.field-grid{grid-template-columns:1fr 1fr}.terminal-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:18px!important;gap:10px!important}}
-@media(max-width:560px){.calc-topbar-inner{align-items:flex-start;flex-direction:column}.calc-wrap{padding:22px 12px 42px}.calc-panel{padding:14px}.panel-head{flex-direction:column}.formula{white-space:normal}.field-grid,.metric-grid{grid-template-columns:1fr}.input-panel,.result-panel{padding:14px}.scenario-strip{grid-template-columns:1fr 1fr 1fr}.calc-hero h1{font-size:2.25rem}.risk-head,.risk-row{grid-template-columns:.7fr 1.2fr .9fr}.risk-row input{padding:10px 8px;font-size:.94rem}.terminal-tabs{grid-template-columns:1fr!important;padding:14px!important;gap:9px!important}.terminal-tabs::before{font-size:1.05rem;padding-bottom:12px}.terminal-tabs .tab{padding:15px 16px 16px!important}.terminal-tabs .tab::after{font-size:.76rem}}
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+:root{
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#0f1724;
+  --bg-2:#131e2e;
+  --surface:#172334;
+  --surface-2:#1b293b;
+  --surface-3:#111c2b;
+  --border:#2a3a50;
+  --border-soft:#223247;
+  --text:#eef3f8;
+  --text-2:#c4cfdb;
+  --muted:#93a4b7;
+  --muted-2:#76899e;
+  --accent:#5e8fca;
+  --accent-strong:#6ea1dc;
+  --accent-soft:rgba(94,143,202,.14);
+  --good:#6fb59b;
+  --warn:#c8a766;
+  --bad:#cf7d85;
+  color:var(--text);
+  background:var(--bg);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:linear-gradient(180deg,#0e1724 0%,#111c2b 44%,#eef2f6 44%,#eef2f6 100%);
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button,input{font:inherit}
+
+.calc-topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(13,22,34,.92);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  backdrop-filter:blur(12px);
+}
+.calc-topbar-inner{
+  max-width:1180px;margin:auto;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+}
+.brand{
+  color:#f7f9fc;text-decoration:none;font-weight:700;
+  letter-spacing:.015em;font-size:.95rem;
+}
+.calc-topbar nav{display:flex;gap:18px;flex-wrap:wrap}
+.calc-topbar nav a{color:#aab8c8;text-decoration:none;font-size:.88rem;font-weight:500}
+.calc-topbar nav a:hover{color:#eef3f8}
+
+.calc-wrap{max-width:1180px;margin:auto;padding:36px 18px 60px}
+.calc-hero{
+  display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end;
+  margin-bottom:26px;
+}
+.eyebrow{
+  font-size:.72rem;font-weight:600;letter-spacing:.085em;
+  color:#91acd0;
+}
+.calc-hero h1{
+  color:#f4f7fb;font-size:clamp(2rem,3.7vw,3.55rem);line-height:1.08;
+  margin:10px 0 14px;max-width:850px;font-weight:700;letter-spacing:-.03em;
+}
+.calc-hero p{color:#aebccb;max-width:760px;line-height:1.72;margin:0;font-size:.96rem}
+.identity-box{
+  background:rgba(24,37,55,.85);border:1px solid var(--border-soft);
+  border-radius:16px;padding:15px;min-width:235px;
+  box-shadow:0 8px 24px rgba(2,8,20,.08);
+}
+.identity-status{font-size:.8rem;color:#aab8c7;margin-bottom:10px}
+.identity-box button{
+  width:100%;border:1px solid #3a506a;background:#1a2a3d;color:#e7edf5;
+  border-radius:10px;padding:10px 12px;font-weight:600;cursor:pointer;
+}
+.identity-box button:hover{background:#203149;border-color:#4b627e}
+
+.terminal{
+  background:var(--bg-2);border:1px solid var(--border-soft);border-radius:24px;
+  overflow:hidden;box-shadow:0 22px 58px rgba(1,8,18,.20);
+}
+
+/* Tool directory */
+.terminal-tabs{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;overflow:hidden!important;width:100%!important;
+  padding:24px!important;background:#111c2b!important;
+  border-bottom:1px solid rgba(255,255,255,.06)!important;scrollbar-width:none!important;
+}
+.terminal-tabs::-webkit-scrollbar{display:none!important}
+.terminal-tabs::before{
+  content:"Bộ máy tính đầu tư\AChọn việc anh/chị đang cần xử lý.";
+  white-space:pre-line;grid-column:1/-1;color:#edf2f7;
+  font-size:1.18rem;font-weight:700;line-height:1.55;
+  padding:0 2px 17px;margin:0 0 3px;letter-spacing:-.015em;
+}
+.terminal-tabs .tab{
+  position:relative!important;display:block!important;flex:none!important;
+  width:100%!important;min-width:0!important;white-space:normal!important;text-align:left!important;
+  border:1px solid transparent!important;background:rgba(255,255,255,.018)!important;
+  color:#e8edf4!important;padding:17px 18px 18px!important;border-radius:13px!important;
+  font-weight:600!important;line-height:1.35!important;box-shadow:none!important;
+  overflow:visible!important;cursor:pointer!important;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease!important;
+}
+.terminal-tabs .tab::before{
+  display:block;margin-bottom:7px;font-size:.68rem;font-weight:600;
+  letter-spacing:.045em;color:#8caad0;text-transform:none;
+}
+.terminal-tabs .tab::after{
+  display:block;margin-top:7px;color:#94a5b8;font-size:.79rem;
+  line-height:1.55;font-weight:400;max-width:98%;
+}
+.terminal-tabs .tab:nth-child(1)::before,.terminal-tabs .tab:nth-child(2)::before{content:"Trước mua"}
+.terminal-tabs .tab:nth-child(3)::before,.terminal-tabs .tab:nth-child(5)::before,.terminal-tabs .tab:nth-child(7)::before,.terminal-tabs .tab:nth-child(8)::before{content:"Đang giữ / xử lý vị thế"}
+.terminal-tabs .tab:nth-child(4)::before,.terminal-tabs .tab:nth-child(6)::before{content:"Margin"}
+.terminal-tabs .tab:nth-child(9)::before,.terminal-tabs .tab:nth-child(10)::before{content:"Rủi ro"}
+.terminal-tabs .tab:nth-child(11)::before,.terminal-tabs .tab:nth-child(12)::before{content:"Cổ tức / quyền"}
+.terminal-tabs .tab:nth-child(1)::after{content:"Mua tối đa bao nhiêu để không vượt mức lỗ cho phép."}
+.terminal-tabs .tab:nth-child(2)::after{content:"So phần lời kỳ vọng với phần lỗ chấp nhận trước khi vào lệnh."}
+.terminal-tabs .tab:nth-child(3)::after{content:"Tính giá vốn mới, tỷ trọng mới và rủi ro sau khi mua thêm."}
+.terminal-tabs .tab:nth-child(4)::after{content:"Thử trước nếu thị trường giảm thì vốn thật còn bao nhiêu."}
+.terminal-tabs .tab:nth-child(5)::after{content:"Tính giá bán tối thiểu sau phí, thuế và lãi margin."}
+.terminal-tabs .tab:nth-child(6)::after{content:"Biết khoản vay đang tốn bao nhiêu tiền mỗi ngày."}
+.terminal-tabs .tab:nth-child(7)::after{content:"Tính cần bán bao nhiêu để đưa đòn bẩy về mức mục tiêu."}
+.terminal-tabs .tab:nth-child(8)::after{content:"Tính số cổ phiếu cần bán để lấy lại vốn ban đầu."}
+.terminal-tabs .tab:nth-child(9)::after{content:"Biết phải tăng bao nhiêu phần trăm mới quay lại điểm xuất phát."}
+.terminal-tabs .tab:nth-child(10)::after{content:"Cộng số tiền có thể mất nếu các vị thế chạm mức cắt lỗ."}
+.terminal-tabs .tab:nth-child(11)::after{content:"Tính tiền cổ tức thực nhận, thuế và suất cổ tức."}
+.terminal-tabs .tab:nth-child(12)::after{content:"Tính giá lý thuyết sau cổ tức, cổ phiếu thưởng và quyền mua."}
+.terminal-tabs .tab:hover{
+  transform:translateY(-1px)!important;background:#182638!important;
+  border-color:#2d4057!important;
+}
+.terminal-tabs .tab.active{
+  color:#f6f9fc!important;background:var(--accent-soft)!important;
+  border-color:rgba(110,161,220,.38)!important;
+  box-shadow:inset 3px 0 0 var(--accent)!important;
+}
+.terminal-tabs .tab.active::before{color:#a8bfdc!important}
+.terminal-tabs .tab.active::after{color:#b6c2cf!important}
+
+.calc-panel{display:none;padding:28px;border-top:1px solid rgba(255,255,255,.045)}
+.calc-panel.active{display:block}
+.panel-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:14px}
+.step{
+  display:inline-block;font-size:.69rem;font-weight:600;letter-spacing:.055em;
+  color:#95afd1;margin-bottom:7px;
+}
+.panel-head h2{margin:0;color:#f2f5f9;font-size:1.55rem;font-weight:650;letter-spacing:-.015em}
+.formula{
+  font-size:.78rem;color:#a6b4c3;border:1px solid var(--border-soft);
+  background:#152234;border-radius:999px;padding:8px 11px;white-space:nowrap;font-weight:500;
+}
+.why{
+  margin:0 0 18px;background:#152131;border:1px solid rgba(255,255,255,.055);
+  border-radius:14px;padding:14px 16px;
+}
+.why strong{display:block;color:#e8edf3;font-size:.84rem;margin-bottom:5px;font-weight:600}
+.why p{margin:0;color:#a4b2c1;line-height:1.62;font-size:.84rem;font-weight:400}
+.workbench{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(330px,.95fr);gap:18px}
+.input-panel,.result-panel{
+  background:var(--surface);border:1px solid rgba(255,255,255,.065);
+  border-radius:18px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.05);
+}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field-grid label{font-size:.79rem;color:#abb8c6;font-weight:500}
+.field-grid input,.risk-row input{
+  margin-top:7px;width:100%;border:1px solid #34465c;background:#111c2a;
+  color:#f0f4f8;border-radius:10px;padding:12px 13px;font:inherit;font-size:.96rem;outline:none;
+}
+.field-grid input:focus,.risk-row input:focus{
+  border-color:#648bb8;box-shadow:0 0 0 3px rgba(94,143,202,.12);
+}
+.calculate{
+  margin-top:17px;width:100%;border:0;border-radius:11px;
+  background:#5f8fc5;color:#f8fbff;padding:13px 16px;
+  font-weight:650;letter-spacing:0;cursor:pointer;
+  transition:background .18s ease,transform .18s ease;
+}
+.calculate:hover{background:#6b9ad0;transform:translateY(-1px)}
+.validation{min-height:20px;color:#e4a0a5;font-size:.8rem;margin:9px 0 0}
+.verdict{
+  display:inline-block;border-radius:999px;padding:7px 10px;background:#1c2a3d;
+  border:1px solid #34475d;color:#b7c4d2;font-size:.7rem;font-weight:600;letter-spacing:.035em;
+}
+.verdict.good{background:rgba(73,133,111,.14);border-color:rgba(111,181,155,.30);color:#a8d8c7}
+.verdict.warn{background:rgba(150,116,53,.14);border-color:rgba(200,167,102,.30);color:#d8c18f}
+.verdict.bad{background:rgba(151,72,83,.14);border-color:rgba(207,125,133,.30);color:#e0a7ad}
+.big-number{margin:19px 0 17px}
+.big-number span{display:block;color:#98a8b9;font-size:.8rem}
+.big-number strong{
+  display:inline-block;color:#f5f8fb;font-size:clamp(2.05rem,4.6vw,3.7rem);
+  line-height:1.08;margin-top:5px;overflow-wrap:anywhere;font-weight:700;letter-spacing:-.03em;
+}
+.big-number small{color:#8fa1b3;margin-left:8px}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.metric-grid div{
+  background:#121e2e;border:1px solid rgba(255,255,255,.055);
+  border-radius:12px;padding:12px;min-width:0;
+}
+.metric-grid span{display:block;color:#8799ac;font-size:.72rem}
+.metric-grid b{display:block;color:#e8edf3;margin-top:5px;font-size:1rem;font-weight:600;overflow-wrap:anywhere}
+.nba{
+  margin-top:15px;background:#142133;border-left:3px solid #658ebd;
+  border-radius:10px;padding:13px 14px;
+}
+.nba span{color:#9bb4d3;font-size:.69rem;font-weight:600;letter-spacing:.045em}
+.nba p{color:#ccd5df;margin:6px 0 0;line-height:1.58;font-size:.86rem}
+.scenario-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.scenario-strip div{background:#142133;border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.scenario-strip span{display:block;color:#8597aa;font-size:.71rem}
+.scenario-strip b{color:#e7edf3;font-weight:600}
+.risk-table{margin-top:16px;display:grid;gap:8px}
+.risk-head,.risk-row{display:grid;grid-template-columns:.8fr 1.25fr 1fr;gap:8px;align-items:center}
+.risk-head{color:#8395a8;font-size:.71rem;font-weight:500;padding:0 3px}
+.risk-row input{margin-top:0}
+.principle{
+  margin-top:18px;background:#fff;border:1px solid #dfe5ec;color:#58677a;
+  border-radius:14px;padding:14px 16px;line-height:1.58;font-size:.87rem;
+}
+.principle strong{color:#263547;font-weight:600}
+
+@media(max-width:840px){
+  body{background:linear-gradient(180deg,#0e1724 0%,#111c2b 36%,#eef2f6 36%,#eef2f6 100%)}
+  .calc-hero{grid-template-columns:1fr}.identity-box{max-width:320px}
+  .workbench{grid-template-columns:1fr}.field-grid{grid-template-columns:1fr 1fr}
+  .terminal-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:18px!important}
+}
+@media(max-width:560px){
+  .calc-topbar-inner{align-items:flex-start;flex-direction:column}
+  .calc-wrap{padding:24px 12px 44px}.calc-panel{padding:15px}
+  .panel-head{flex-direction:column}.formula{white-space:normal}
+  .field-grid,.metric-grid{grid-template-columns:1fr}
+  .input-panel,.result-panel{padding:15px}.scenario-strip{grid-template-columns:repeat(3,1fr)}
+  .calc-hero h1{font-size:2.15rem}.risk-head,.risk-row{grid-template-columns:.7fr 1.2fr .9fr}
+  .risk-row input{padding:10px 8px;font-size:.92rem}
+  .terminal-tabs{grid-template-columns:1fr!important;padding:14px!important;gap:8px!important}
+  .terminal-tabs::before{font-size:1.04rem;padding-bottom:12px}
+  .terminal-tabs .tab{padding:14px 15px 15px!important}
+  .terminal-tabs .tab::after{font-size:.75rem}
+}
