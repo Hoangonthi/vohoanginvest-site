@@ -1,4 +1,4 @@
-import { getLeadSource, supabaseClient } from "./assets/js/supabase-client.js";
+import { supabaseClient } from "./assets/js/supabase-client.js";
 
 const form = document.querySelector("[data-service-form]");
 const message = document.querySelector("[data-service-message]");
@@ -68,7 +68,7 @@ if (form) {
       p_preferred_daypart: "FLEXIBLE",
       p_preferred_time: null,
       p_note: note,
-      p_source: getLeadSource("SERVICE_PAGE"),
+      p_source: "SERVICE_PAGE",
     });
 
     submit.disabled = false;
