@@ -95,6 +95,10 @@ async function refreshSession() {
   }
 }
 
+function currentPageUrl() {
+  return `${window.location.origin}${window.location.pathname}`;
+}
+
 export function initAuth() {
   const trigger = document.querySelector("[data-auth-trigger]");
   const menu = document.querySelector("[data-account-menu]");
@@ -113,9 +117,7 @@ export function initAuth() {
       event.stopPropagation();
       return;
     }
-    if (closeTarget) {
-      closeModals();
-    }
+    closeModals();
   });
 
   trigger?.addEventListener("click", async () => {
@@ -138,7 +140,8 @@ export function initAuth() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/index.html`,
+        redirectTo: currentPageUrl(),
+        queryParams: { prompt: "select_account" },
       },
     });
     if (error && message) {
@@ -197,7 +200,7 @@ export function initAuth() {
       return;
     }
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/index.html`,
+      redirectTo: currentPageUrl(),
     });
     if (message) {
       message.textContent = error
