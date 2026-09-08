@@ -1,6 +1,7 @@
 export class TimeEngine {
   constructor({ start = 0, end = 120, tickMs = 1000, onTick = () => {}, onEnd = () => {} } = {}) {
     this.time = start;
+    this.start = start;
     this.end = end;
     this.tickMs = tickMs;
     this.speed = 1;
@@ -27,6 +28,10 @@ export class TimeEngine {
   }
   play() {
     if (this.time >= this.end || this.running) return;
+    // Game timelines that start at 0 should enter Day 1 immediately when Play is pressed.
+    // This avoids a dead "Day 0" beat and makes the visible run Day 1 -> Day N continuously.
+    if (this.time === 0 && this.end >= 1) this.step(1);
+    if (this.time >= this.end) return;
     this.running = true;
     this._schedule();
   }
