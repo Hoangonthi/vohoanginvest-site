@@ -42,14 +42,14 @@ function render(){
     <div><span class="badge">${esc(statusLabels[r.status]||r.status)}</span><h3>${esc(r.full_name)}</h3><div>${esc(r.phone)}</div><div class="muted">${esc(r.email||'')}</div><div class="muted">Gửi: ${fmt(r.created_at)}</div></div>
     <div><strong>${esc(sourceLabel(r.source))}</strong><div class="muted">Mức độ: ${esc(urgencyLabels[urgency(r.note)]||urgency(r.note))}</div><div class="muted">Nguồn kỹ thuật: ${esc(r.source)}</div></div>
     <div class="need">${esc(cleanNote(r.note))}</div>
-    <div class="actions"><a href="tel:${esc(r.phone)}">Gọi</a><a target="_blank" rel="noopener" href="https://zalo.me/${esc(zaloPhone(r.phone))}">Zalo</a>
+    <div class="actions">${r.customer_id?`<a href="khach-hang.html?id=${encodeURIComponent(r.customer_id)}">Hồ sơ 360</a>`:''}<a href="tel:${esc(r.phone)}">Gọi</a><a target="_blank" rel="noopener" href="https://zalo.me/${esc(zaloPhone(r.phone))}">Zalo</a>
       <button data-id="${r.id}" data-st="CONTACTED">Đã gọi</button><button data-id="${r.id}" data-st="CONFIRMED">Đang trao đổi</button><button data-id="${r.id}" data-st="COMPLETED">Chốt xong</button><button data-id="${r.id}" data-st="CANCELLED">Không phù hợp</button></div>
   </article>`).join(''):'<div class="card empty">Không có yêu cầu phù hợp bộ lọc.</div>';
 }
 
 async function load(){
   list.innerHTML='<div class="card">Đang tải...</div>';
-  const {data,error}=await supabaseClient.rpc('admin_list_service_requests',{p_status:status.value||null,p_limit:100,p_offset:0});
+  const {data,error}=await supabaseClient.rpc('admin_list_service_requests_v2',{p_status:status.value||null,p_limit:100,p_offset:0});
   if(error){
     const denied=String(error.message||'').includes('CRM_ACCESS_DENIED');
     list.innerHTML=`<div class="card">${denied?'Tài khoản này chưa có quyền ADMIN/STAFF. Hãy đăng nhập bằng vohoang.bank@gmail.com.':'Không thể tải dữ liệu: '+esc(error.message)}</div>`;
