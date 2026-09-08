@@ -10,14 +10,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="dich-vu-so.css" />
+    <link rel="stylesheet" href="assets/css/app-nav.css" />
   </head>
   <body>
-    <header class="service-header">
-      <a class="brand" href="./" aria-label="Võ Hoàng">
-        <img src="LOGO.png" alt="Võ Hoàng" />
-        <span><strong>VÕ HOÀNG</strong><small>Giải pháp số thực dụng</small></span>
-      </a>
-      <a class="header-link" href="#gui-viec">Gửi việc cần làm</a>
+    <header class="app-nav">
+      <div class="app-nav-inner">
+        <a class="app-nav-brand" href="./" aria-label="Võ Hoàng"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · GIẢI PHÁP SỐ</span></a>
+        <nav class="app-nav-links" aria-label="Điều hướng trang dịch vụ">
+          <button class="app-nav-back" type="button" data-smart-back>← Quay lại</button>
+          <a class="app-nav-home" href="./">Trang chủ</a>
+          <a class="app-nav-active" href="dich-vu-so.html">Dịch vụ</a>
+          <a href="#gui-viec">Gửi việc cần làm</a>
+          <a href="https://zalo.me/0928007302" target="_blank" rel="noopener">Zalo</a>
+        </nav>
+      </div>
     </header>
 
     <main>
@@ -149,6 +155,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="assets/js/app-nav.js"></script>
     <script type="module" src="dich-vu-so.js"></script>
   </body>
 </html>
