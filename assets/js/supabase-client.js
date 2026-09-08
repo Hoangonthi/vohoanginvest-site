@@ -68,8 +68,9 @@ captureLeadAttribution();
 
 const originalRpc = supabaseClient.rpc.bind(supabaseClient);
 supabaseClient.rpc = (fn, args = {}, options) => {
-  if (fn === "submit_meeting_request") {
-    const baseSource = args?.p_source || "WEBSITE_CONTACT";
+  if (fn === "submit_meeting_request" || fn === "submit_investment_assessment") {
+    const fallback = fn === "submit_investment_assessment" ? "INVESTOR_PROFILE_ASSESSMENT" : "WEBSITE_CONTACT";
+    const baseSource = args?.p_source || fallback;
     return originalRpc(fn, { ...args, p_source: getLeadSource(baseSource) }, options);
   }
   return originalRpc(fn, args, options);
