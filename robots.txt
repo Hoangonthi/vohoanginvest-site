@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin-dich-vu.html
+Disallow: /admin-dich-vu-v2.html
+Disallow: /crm-hom-nay.html
+Disallow: /khach-hang.html
+Disallow: /he-thong.html
+Disallow: /nguon-khach.html
+Disallow: /hieu-qua-cong-cu.html
+
+Sitemap: https://hoangonthi.github.io/vohoanginvest-site/sitemap.xml
