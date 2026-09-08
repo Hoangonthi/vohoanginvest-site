@@ -5,7 +5,37 @@ const ceilLot=(q,l)=>Math.ceil(q/l)*l, floorLot=(q,l)=>Math.floor(q/l)*l;
 function verdict(el,text,tone=''){if(!el)return;el.textContent=text;el.className=`verdict ${tone}`.trim()}
 function clearValidation(id){if($(id))$(id).textContent=''} function validate(id,msg){if($(id))$(id).textContent=msg;return false}
 function bind(id,fn){const el=$(id);if(el)el.addEventListener('submit',fn)}
-$$('.tab').forEach(btn=>btn.addEventListener('click',()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===btn));$$('.calc-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===btn.dataset.tab));history.replaceState(null,'',`#${btn.dataset.tab}`)}));
+
+const TOOL_GROUPS=[
+  {id:'prebuy',title:'Trước mua',tools:['position','rr']},
+  {id:'holding',title:'Đang giữ / xử lý vị thế',tools:['average','breakeven','deleverage','recovercapital']},
+  {id:'margin',title:'Margin',tools:['margin','margincost']},
+  {id:'risk',title:'Rủi ro',tools:['drawdown','portfolio']},
+  {id:'rights',title:'Cổ tức / quyền',tools:['dividend','exright']}
+];
+function setToolGroupOpen(group,open){if(!group)return;group.classList.toggle('open',open);const toggle=group.querySelector('.tool-group-toggle');if(toggle)toggle.setAttribute('aria-expanded',String(open))}
+function setupToolAccordion(){
+  const dir=$('.terminal-tabs');if(!dir||dir.dataset.accordionReady==='1')return;
+  const tabs=[...dir.querySelectorAll('.tab')],tabMap=new Map(tabs.map(t=>[t.dataset.tab,t]));
+  dir.dataset.accordionReady='1';dir.innerHTML='';
+  const head=document.createElement('div');head.className='tool-directory-head';
+  head.innerHTML='<div><strong>Bộ máy tính đầu tư</strong><span>Chọn đúng nhóm rồi mở công cụ cần dùng.</span></div><div class="tool-directory-actions"><button type="button" data-tools-open>Mở tất cả</button><button type="button" data-tools-close>Thu gọn</button></div>';
+  dir.appendChild(head);
+  TOOL_GROUPS.forEach((cfg,index)=>{
+    const group=document.createElement('section');group.className='tool-group';group.dataset.group=cfg.id;
+    const toggle=document.createElement('button');toggle.type='button';toggle.className='tool-group-toggle';toggle.setAttribute('aria-expanded','false');
+    toggle.innerHTML=`<span>${cfg.title}</span><small>${cfg.tools.length} công cụ</small><i aria-hidden="true">⌄</i>`;
+    const panel=document.createElement('div');panel.className='tool-group-panel';
+    cfg.tools.forEach(key=>{const tab=tabMap.get(key);if(tab)panel.appendChild(tab)});
+    group.append(toggle,panel);dir.appendChild(group);
+    toggle.addEventListener('click',()=>setToolGroupOpen(group,!group.classList.contains('open')));
+    if(index===0&&window.innerWidth>560)setToolGroupOpen(group,true);
+  });
+  head.querySelector('[data-tools-open]').addEventListener('click',()=>$$('.tool-group').forEach(g=>setToolGroupOpen(g,true)));
+  head.querySelector('[data-tools-close]').addEventListener('click',()=>$$('.tool-group').forEach(g=>setToolGroupOpen(g,false)));
+}
+setupToolAccordion();
+$$('.tab').forEach(btn=>btn.addEventListener('click',()=>{const group=btn.closest('.tool-group');setToolGroupOpen(group,true);$$('.tab').forEach(x=>x.classList.toggle('active',x===btn));$$('.calc-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===btn.dataset.tab));history.replaceState(null,'',`#${btn.dataset.tab}`)}));
 function activateFromHash(){const key=location.hash.replace('#','');const btn=$(`.tab[data-tab="${key}"]`);if(btn)btn.click()}
 
 bind('#positionForm',e=>{e.preventDefault();clearValidation('#posValidation');const capital=n('#posCapital'),riskPct=n('#posRiskPct'),budgetPct=n('#posPortfolioBudget'),usedPct=n('#posRiskUsed'),entry=n('#posEntry'),stop=n('#posStop'),maxPct=n('#posMaxPct'),lot=Math.max(1,n('#posLot'));if(capital<=0||entry<=0||stop<=0)return validate('#posValidation','Vốn, giá mua và giá cắt lỗ phải lớn hơn 0.');if(stop>=entry)return validate('#posValidation','Giá cắt lỗ phải thấp hơn giá mua.');if(riskPct<=0||budgetPct<=0||maxPct<=0)return validate('#posValidation','Các giới hạn rủi ro phải lớn hơn 0.');const roomPct=Math.max(0,budgetPct-usedPct),cashRisk=Math.min(capital*riskPct/100,capital*roomPct/100),riskPerShare=entry-stop,qtyRisk=Math.floor(cashRisk/riskPerShare),qtyWeight=Math.floor((capital*maxPct/100)/entry),qty=Math.max(0,floorLot(Math.min(qtyRisk,qtyWeight),lot)),value=qty*entry,loss=qty*riskPerShare,weight=value/capital*100,roomAfter=Math.max(0,roomPct-loss/capital*100);$('#posQty').textContent=num(qty);$('#posValue').textContent=money(value);$('#posLoss').textContent=money(loss);$('#posWeight').textContent=pct(weight);$('#posRoom').textContent=pct(roomAfter);if(roomPct<=0||qty===0){verdict($('#posVerdict'),'KHÔNG NÊN MỞ THÊM','bad');$('#posAction').textContent='Ngân sách rủi ro không còn đủ cho một lô hợp lệ. Giảm rủi ro vị thế hiện có hoặc bỏ lệnh.'}else if(qtyWeight<qtyRisk){verdict($('#posVerdict'),'BỊ GIỚI HẠN BỞI TỶ TRỌNG','warn');$('#posAction').textContent=`Giới hạn tỷ trọng/mã đang chặn quy mô ở khoảng ${pct(weight)}.`}else{verdict($('#posVerdict'),'TRONG GIỚI HẠN','good');$('#posAction').textContent=`Nếu luận điểm còn hiệu lực, quy mô tối đa khoảng ${num(qty)} cổ phiếu; lỗ tại cắt lỗ khoảng ${money(loss)}.`}saveIfLogged('PRE_BUY','CALC_POSITION_SIZE',{capital,riskPct,budgetPct,usedPct,entry,stop,maxPct,lot},{qty,value,loss,weight,roomAfter},$('#posAction').textContent)});
