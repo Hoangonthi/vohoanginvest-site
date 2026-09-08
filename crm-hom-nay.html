@@ -7,56 +7,32 @@
   <link rel="icon" href="LOGO.png" />
   <link rel="stylesheet" href="assets/css/app-nav.css" />
   <style>
-    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.toolbar input{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.metric strong{display:block;font-size:1.6rem;margin-top:7px}.metric span{font-size:.85rem;color:#697586}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.toolbar input{width:min(360px,100%)}.queue{display:grid;gap:12px}.lead{display:grid;grid-template-columns:90px 1.2fr 1fr 1.5fr auto;gap:14px;align-items:start}.p{display:inline-block;border-radius:999px;padding:6px 10px;background:#edf1f6;font-weight:900;text-align:center}.lead h3{margin:0 0 4px}.small{font-size:.85rem;color:#6b7484}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions a,.actions button{font:inherit;text-decoration:none;padding:8px 10px;border-radius:9px;border:1px solid #cfd7e2;background:#fff;color:#172033;cursor:pointer;font-weight:700}.need{line-height:1.5}.section-title{margin:30px 0 10px}.source-list{display:flex;gap:8px;flex-wrap:wrap}.source-pill{background:#eef2f6;border-radius:999px;padding:7px 10px;font-size:.85rem}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.lead{grid-template-columns:1fr}.p{width:max-content}}@media(max-width:560px){.metrics{grid-template-columns:1fr 1fr}}
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.toolbar input{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.metric strong{display:block;font-size:1.6rem;margin-top:7px}.metric span{font-size:.85rem;color:#697586}.rates{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.rate{background:#fff;border:1px solid #dfe5ed;border-radius:999px;padding:8px 11px;font-size:.86rem}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.toolbar input{width:min(360px,100%)}.queue{display:grid;gap:12px}.lead{display:grid;grid-template-columns:100px 1.25fr 1fr 1.5fr auto;gap:14px;align-items:start}.p,.temp{display:inline-block;border-radius:999px;padding:6px 10px;background:#edf1f6;font-weight:900;text-align:center}.score{font-size:1.7rem;font-weight:950;line-height:1;margin:8px 0 3px}.lead h3{margin:0 0 4px}.small{font-size:.85rem;color:#6b7484}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions a,.actions button{font:inherit;text-decoration:none;padding:8px 10px;border-radius:9px;border:1px solid #cfd7e2;background:#fff;color:#172033;cursor:pointer;font-weight:700}.need{line-height:1.5}.section-title{margin:30px 0 10px}.source-list{display:flex;gap:8px;flex-wrap:wrap}.source-pill{background:#eef2f6;border-radius:999px;padding:7px 10px;font-size:.85rem}.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tag{font-size:.72rem;padding:4px 7px;border-radius:999px;background:#f2f4f7}.empty{text-align:center;padding:36px;color:#6b7484}.sync{font-size:.82rem;color:#6b7484;margin-left:auto}@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.lead{grid-template-columns:1fr}.p{width:max-content}}@media(max-width:560px){.metrics{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
   <header class="app-nav">
     <div class="app-nav-inner">
-      <a class="app-nav-brand" href="./"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · HỆ THỐNG</span></a>
+      <a class="app-nav-brand" href="he-thong.html"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · HỆ THỐNG</span></a>
       <nav class="app-nav-links" aria-label="Điều hướng hệ thống">
         <button class="app-nav-back" type="button" data-smart-back>← Quay lại</button>
-        <a class="app-nav-home" href="./">Trang chủ</a>
-        <a class="app-nav-active" href="crm-hom-nay.html">CRM hôm nay</a>
-        <a href="admin-dich-vu.html">Khách gửi việc</a>
-        <a href="nguon-khach.html">Nguồn khách</a>
-        <a href="dich-vu-so.html">Trang dịch vụ</a>
-        <button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
+        <a href="he-thong.html">Trung tâm</a><a class="app-nav-home" href="./">Trang chủ</a><a class="app-nav-active" href="crm-hom-nay.html">CRM hôm nay</a><a href="admin-dich-vu.html">Khách gửi việc</a><a href="nguon-khach.html">Nguồn khách</a><a href="dich-vu-so.html">Trang dịch vụ</a><button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
       </nav>
     </div>
   </header>
   <main class="wrap">
     <section id="loginBox" class="card login">
-      <h1>Đăng nhập quản trị</h1>
-      <p class="muted">Dùng tài khoản Admin/Staff CRM.</p>
-      <button id="googleLogin" class="google" type="button">Đăng nhập với Google</button>
-      <form id="loginForm">
-        <p><input id="email" type="email" value="vohoang.bank@gmail.com" placeholder="Email" required /></p>
-        <p><input id="password" type="password" placeholder="Mật khẩu" required /></p>
-        <button class="primary" type="submit">Đăng nhập</button>
-        <p id="loginMsg" class="muted"></p>
-      </form>
+      <h1>Đăng nhập quản trị</h1><p class="muted">Dùng tài khoản Admin/Staff CRM.</p><button id="googleLogin" class="google" type="button">Đăng nhập với Google</button>
+      <form id="loginForm"><p><input id="email" type="email" value="vohoang.bank@gmail.com" placeholder="Email" required /></p><p><input id="password" type="password" placeholder="Mật khẩu" required /></p><button class="primary" type="submit">Đăng nhập</button><p id="loginMsg" class="muted"></p></form>
     </section>
-
     <section id="app" class="hidden">
-      <div class="toolbar">
-        <strong>Phễu:</strong>
-        <select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option></select>
-        <button id="refresh">Làm mới</button>
-      </div>
-      <div id="metrics" class="metrics"></div>
-      <div id="sources" class="source-list"></div>
-
+      <div class="toolbar"><strong>Phễu:</strong><select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option></select><button id="refresh">Làm mới</button><span id="sync" class="sync"></span></div>
+      <div id="metrics" class="metrics"></div><div id="rates" class="rates"></div><div id="sources" class="source-list"></div>
       <h2 class="section-title">Hôm nay cần xử lý ai trước</h2>
-      <div class="toolbar">
-        <input id="search" placeholder="Tìm tên, số điện thoại, nguồn..." />
-        <select id="priority"><option value="">Tất cả ưu tiên</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option></select>
-      </div>
+      <div class="toolbar"><input id="search" placeholder="Tìm tên, số điện thoại, nguồn..." /><select id="temperature"><option value="">Tất cả độ nóng</option><option value="HOT">HOT</option><option value="WARM">WARM</option><option value="COOL">COOL</option></select><select id="priority"><option value="">Tất cả ưu tiên</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option></select></div>
       <div id="queue" class="queue"></div>
     </section>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/app-nav.js"></script>
-  <script type="module" src="crm-hom-nay.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script type="module" src="assets/js/app-nav.js"></script><script type="module" src="crm-hom-nay.js"></script>
 </body>
 </html>
