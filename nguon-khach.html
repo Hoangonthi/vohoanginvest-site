@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nguồn khách – Võ Hoàng</title>
+  <link rel="icon" href="LOGO.png" />
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.top{position:sticky;top:0;z-index:5;display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 22px;background:#fff;border-bottom:1px solid #dfe5ed}.top nav{display:flex;gap:8px;flex-wrap:wrap}.top a,.top button{font:inherit;text-decoration:none;color:#172033;background:#fff;border:1px solid #cfd7e2;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px;margin-bottom:14px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.generator input,.generator select,.generator button{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid #e7ebf0}.table th{font-size:.85rem;color:#677384}.table td strong{font-size:.95rem}.generator{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:10px;align-items:end}.generator label{display:grid;gap:6px;font-size:.85rem;font-weight:700}.output{margin-top:12px;padding:12px;background:#eef2f6;border-radius:10px;word-break:break-all}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.generator{grid-template-columns:1fr 1fr}.generator button{grid-column:1/-1}}@media(max-width:560px){.generator{grid-template-columns:1fr}.top{align-items:flex-start}.top nav{justify-content:flex-end}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <strong>VÕ HOÀNG · NGUỒN KHÁCH</strong>
+    <nav>
+      <a href="crm-hom-nay.html">CRM Hôm nay</a>
+      <a href="admin-dich-vu.html">Khách gửi việc</a>
+      <button id="logout" class="hidden">Đăng xuất</button>
+    </nav>
+  </header>
+  <main class="wrap">
+    <section id="loginBox" class="card login">
+      <h1>Đăng nhập quản trị</h1>
+      <p class="muted">Dùng tài khoản Admin/Staff CRM.</p>
+      <button id="googleLogin" class="google" type="button">Đăng nhập với Google</button>
+      <form id="loginForm">
+        <p><input id="email" type="email" value="vohoang.bank@gmail.com" placeholder="Email" required /></p>
+        <p><input id="password" type="password" placeholder="Mật khẩu" required /></p>
+        <button class="primary" type="submit">Đăng nhập</button>
+        <p id="loginMsg" class="muted"></p>
+      </form>
+    </section>
+
+    <section id="app" class="hidden">
+      <section class="card">
+        <h2>Tạo link có tracking</h2>
+        <p class="muted">Dùng link này khi gửi cho khách hoặc giao cho CTV. Hệ thống sẽ giữ nguồn trong 30 ngày.</p>
+        <div class="generator">
+          <label>Trang đích
+            <select id="target">
+              <option value="dich-vu-so.html">Trang dịch vụ</option>
+              <option value="index.html">Website đầu tư</option>
+            </select>
+          </label>
+          <label>Nguồn
+            <select id="src">
+              <option value="zalo">Zalo</option>
+              <option value="facebook">Facebook</option>
+              <option value="tiktok">TikTok</option>
+              <option value="referral">Giới thiệu</option>
+              <option value="ctv">CTV</option>
+            </select>
+          </label>
+          <label>Mã người giới thiệu / CTV
+            <input id="ref" placeholder="VD: PHUONG01" maxlength="24" />
+          </label>
+          <label>Chiến dịch
+            <input id="campaign" value="kiem-khach-01" maxlength="28" />
+          </label>
+          <button id="makeLink" class="primary" type="button">Tạo & sao chép</button>
+        </div>
+        <div id="linkOut" class="output">Chưa tạo link.</div>
+      </section>
+
+      <div class="toolbar">
+        <strong>Hiệu quả nguồn:</strong>
+        <select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option><option value="365">365 ngày</option></select>
+        <button id="refresh">Làm mới</button>
+      </div>
+
+      <section class="card table-wrap">
+        <table class="table">
+          <thead><tr><th>Nguồn</th><th>Lead</th><th>Assessment</th><th>Yêu cầu hẹn</th><th>Hoàn thành</th><th>Assessment → Hẹn</th><th>Hẹn → Hoàn thành</th></tr></thead>
+          <tbody id="body"></tbody>
+        </table>
+        <div id="empty" class="empty hidden">Chưa có dữ liệu nguồn trong khoảng thời gian này.</div>
+      </section>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="nguon-khach.js"></script>
+</body>
+</html>
