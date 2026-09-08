@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Investor Calculator – Võ Hoàng</title>
+  <link rel="icon" href="LOGO.png">
+  <link rel="stylesheet" href="assets/css/investor-calculator.css">
+</head>
+<body>
+<header class="calc-topbar">
+  <div class="calc-topbar-inner">
+    <a class="brand" href="./">VÕ HOÀNG · INVESTOR CALCULATOR</a>
+    <nav><a href="cong-cu-tro-choi.html">Kho công cụ</a><a href="investor-os.html">Investor OS</a><a href="./">Trang chủ</a></nav>
+  </div>
+</header>
+
+<main class="calc-wrap">
+  <section class="calc-hero">
+    <div>
+      <div class="eyebrow">MÁY TÍNH CẦM TAY CỦA NHÀ ĐẦU TƯ</div>
+      <h1>Mỗi quyết định đầu tư đều phải đi qua một phép tính.</h1>
+      <p>Không cần đăng nhập để tính. Đăng nhập chỉ giúp hệ thống nhớ vốn, Risk Budget và lịch sử của anh/chị.</p>
+    </div>
+    <div class="identity-box">
+      <div id="identityStatus" class="identity-status">Chế độ nhanh · Không lưu</div>
+      <button id="loginBtn" type="button">Dùng Investor Passport</button>
+    </div>
+  </section>
+
+  <section class="terminal">
+    <div class="terminal-tabs" role="tablist" aria-label="Các máy tính đầu tư">
+      <button class="tab active" data-tab="position" type="button">Position Size</button>
+      <button class="tab" data-tab="rr" type="button">Risk : Reward</button>
+      <button class="tab" data-tab="average" type="button">Bình quân giá</button>
+      <button class="tab" data-tab="margin" type="button">Margin Stress</button>
+    </div>
+
+    <section class="calc-panel active" data-panel="position">
+      <div class="panel-head"><div><span class="step">TRƯỚC MUA</span><h2>Tôi được phép mua bao nhiêu?</h2></div><div class="formula">Risk trước · Size sau</div></div>
+      <div class="workbench">
+        <form id="positionForm" class="input-panel">
+          <div class="field-grid">
+            <label>Vốn được phép đầu tư<input id="posCapital" type="number" min="0" step="1000000" value="500000000"></label>
+            <label>Risk tối đa/lệnh (%)<input id="posRiskPct" type="number" min="0.1" max="20" step="0.1" value="1"></label>
+            <label>Risk Budget danh mục (%)<input id="posPortfolioBudget" type="number" min="0.1" max="50" step="0.1" value="8"></label>
+            <label>Risk đã dùng (%)<input id="posRiskUsed" type="number" min="0" max="50" step="0.1" value="3"></label>
+            <label>Giá dự kiến mua<input id="posEntry" type="number" min="0" step="0.01" value="75"></label>
+            <label>Giá stop / thesis sai<input id="posStop" type="number" min="0" step="0.01" value="71"></label>
+            <label>Tỷ trọng tối đa/mã (%)<input id="posMaxPct" type="number" min="1" max="100" step="1" value="20"></label>
+            <label>Lô giao dịch<input id="posLot" type="number" min="1" step="1" value="100"></label>
+          </div>
+          <button class="calculate" type="submit">TÍNH QUY MÔ LỆNH</button>
+          <p class="validation" id="posValidation" aria-live="polite"></p>
+        </form>
+        <div class="result-panel" aria-live="polite">
+          <div class="verdict" id="posVerdict">CHỜ DỮ LIỆU</div>
+          <div class="big-number"><span>Số lượng tối đa</span><strong id="posQty">—</strong><small>cổ phiếu</small></div>
+          <div class="metric-grid">
+            <div><span>Giá trị lệnh</span><b id="posValue">—</b></div>
+            <div><span>Lỗ tối đa tại stop</span><b id="posLoss">—</b></div>
+            <div><span>Tỷ trọng sau mua</span><b id="posWeight">—</b></div>
+            <div><span>Risk room còn lại</span><b id="posRoom">—</b></div>
+          </div>
+          <div class="nba"><span>Next Best Action</span><p id="posAction">Nhập dữ liệu lệnh để hệ thống tính giới hạn.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calc-panel" data-panel="rr">
+      <div class="panel-head"><div><span class="step">TRƯỚC MUA</span><h2>Lệnh này có đáng để nhận rủi ro?</h2></div><div class="formula">Reward ÷ Risk</div></div>
+      <div class="workbench">
+        <form id="rrForm" class="input-panel">
+          <div class="field-grid">
+            <label>Giá mua<input id="rrEntry" type="number" min="0" step="0.01" value="75"></label>
+            <label>Giá stop<input id="rrStop" type="number" min="0" step="0.01" value="71"></label>
+            <label>Giá mục tiêu<input id="rrTarget" type="number" min="0" step="0.01" value="85"></label>
+            <label>Số lượng cổ phiếu<input id="rrQty" type="number" min="1" step="100" value="1000"></label>
+          </div>
+          <button class="calculate" type="submit">TÍNH RISK : REWARD</button>
+          <p class="validation" id="rrValidation" aria-live="polite"></p>
+        </form>
+        <div class="result-panel" aria-live="polite">
+          <div class="verdict" id="rrVerdict">CHỜ DỮ LIỆU</div>
+          <div class="big-number"><span>Risk : Reward</span><strong id="rrRatio">—</strong></div>
+          <div class="metric-grid">
+            <div><span>Lỗ nếu chạm stop</span><b id="rrLoss">—</b></div>
+            <div><span>Lãi nếu đạt target</span><b id="rrProfit">—</b></div>
+            <div><span>Win rate hòa vốn</span><b id="rrBreakeven">—</b></div>
+            <div><span>Khoảng stop</span><b id="rrStopPct">—</b></div>
+          </div>
+          <div class="nba"><span>Next Best Action</span><p id="rrAction">Tính trước khi mở lệnh để biết mình đang đổi bao nhiêu rủi ro lấy bao nhiêu kỳ vọng.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calc-panel" data-panel="average">
+      <div class="panel-head"><div><span class="step">ĐANG GIỮ</span><h2>Mua thêm sẽ làm giá vốn và rủi ro đổi thế nào?</h2></div><div class="formula">Đừng bình quân bằng cảm giác</div></div>
+      <div class="workbench">
+        <form id="avgForm" class="input-panel">
+          <div class="field-grid">
+            <label>Số lượng đang có<input id="avgQty" type="number" min="0" step="100" value="2000"></label>
+            <label>Giá vốn hiện tại<input id="avgPrice" type="number" min="0" step="0.01" value="80"></label>
+            <label>Giá mua thêm<input id="avgAddPrice" type="number" min="0" step="0.01" value="70"></label>
+            <label>Số tiền định mua thêm<input id="avgAddAmount" type="number" min="0" step="1000000" value="70000000"></label>
+            <label>Stop sau khi mua thêm<input id="avgStop" type="number" min="0" step="0.01" value="66"></label>
+            <label>Vốn đầu tư toàn tài khoản<input id="avgCapital" type="number" min="0" step="1000000" value="500000000"></label>
+          </div>
+          <button class="calculate" type="submit">TÍNH SAU KHI MUA THÊM</button>
+          <p class="validation" id="avgValidation" aria-live="polite"></p>
+        </form>
+        <div class="result-panel" aria-live="polite">
+          <div class="verdict" id="avgVerdict">CHỜ DỮ LIỆU</div>
+          <div class="big-number"><span>Giá vốn mới</span><strong id="avgNewPrice">—</strong></div>
+          <div class="metric-grid">
+            <div><span>CP mua thêm</span><b id="avgAddQty">—</b></div>
+            <div><span>Tổng tỷ trọng</span><b id="avgWeight">—</b></div>
+            <div><span>Lỗ nếu chạm stop</span><b id="avgRisk">—</b></div>
+            <div><span>Risk/Tài khoản</span><b id="avgRiskPct">—</b></div>
+          </div>
+          <div class="nba"><span>Next Best Action</span><p id="avgAction">Tool chỉ cho phép gọi là “bình quân” sau khi nhìn thấy risk mới.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calc-panel" data-panel="margin">
+      <div class="panel-head"><div><span class="step">TRƯỚC KHI DÙNG MARGIN</span><h2>Nếu thị trường giảm, vốn thật còn bao nhiêu?</h2></div><div class="formula">Stress trước · Margin sau</div></div>
+      <div class="workbench">
+        <form id="marginForm" class="input-panel">
+          <div class="field-grid">
+            <label>Vốn tự có hiện tại<input id="mEquity" type="number" min="0" step="1000000" value="500000000"></label>
+            <label>Nợ margin dự kiến/hiện tại<input id="mDebt" type="number" min="0" step="1000000" value="150000000"></label>
+            <label>Mức giảm muốn stress test (%)<input id="mShock" type="number" min="1" max="80" step="1" value="10"></label>
+            <label>Margin tối đa theo rule cá nhân (%)<input id="mLimit" type="number" min="0" max="200" step="1" value="30"></label>
+          </div>
+          <button class="calculate" type="submit">STRESS TEST MARGIN</button>
+          <p class="validation" id="mValidation" aria-live="polite"></p>
+        </form>
+        <div class="result-panel" aria-live="polite">
+          <div class="verdict" id="mVerdict">CHỜ DỮ LIỆU</div>
+          <div class="big-number"><span>Vốn còn lại sau cú giảm</span><strong id="mAfter">—</strong></div>
+          <div class="metric-grid">
+            <div><span>Gross exposure</span><b id="mGross">—</b></div>
+            <div><span>Lỗ do cú giảm</span><b id="mLoss">—</b></div>
+            <div><span>Drawdown vốn thật</span><b id="mDrawdown">—</b></div>
+            <div><span>Nợ / vốn sau stress</span><b id="mDebtRatio">—</b></div>
+          </div>
+          <div class="scenario-strip"><div><span>-5%</span><b id="mS5">—</b></div><div><span>-10%</span><b id="mS10">—</b></div><div><span>-15%</span><b id="mS15">—</b></div></div>
+          <div class="nba"><span>Next Best Action</span><p id="mAction">Đừng hỏi margin giúp lời thêm bao nhiêu trước khi biết nó khuếch đại drawdown thế nào.</p></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="principle"><strong>Nguyên tắc:</strong> kết quả là công cụ hỗ trợ kỷ luật và tính toán, không phải khuyến nghị mua/bán hay cam kết lợi nhuận.</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="investor-calculator.js"></script>
+</body>
+</html>
