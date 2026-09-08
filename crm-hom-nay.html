@@ -5,19 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CRM Hôm nay – Võ Hoàng</title>
   <link rel="icon" href="LOGO.png" />
+  <link rel="stylesheet" href="assets/css/app-nav.css" />
   <style>
-    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.top{position:sticky;top:0;z-index:5;display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 22px;background:#fff;border-bottom:1px solid #dfe5ed}.top nav{display:flex;gap:8px;flex-wrap:wrap}.top a,.top button{font:inherit;text-decoration:none;color:#172033;background:#fff;border:1px solid #cfd7e2;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.toolbar input{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.metric strong{display:block;font-size:1.6rem;margin-top:7px}.metric span{font-size:.85rem;color:#697586}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.toolbar input{width:min(360px,100%)}.queue{display:grid;gap:12px}.lead{display:grid;grid-template-columns:90px 1.2fr 1fr 1.5fr auto;gap:14px;align-items:start}.p{display:inline-block;border-radius:999px;padding:6px 10px;background:#edf1f6;font-weight:900;text-align:center}.lead h3{margin:0 0 4px}.small{font-size:.85rem;color:#6b7484}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions a,.actions button{font:inherit;text-decoration:none;padding:8px 10px;border-radius:9px;border:1px solid #cfd7e2;background:#fff;color:#172033;cursor:pointer;font-weight:700}.need{line-height:1.5}.section-title{margin:30px 0 10px}.source-list{display:flex;gap:8px;flex-wrap:wrap}.source-pill{background:#eef2f6;border-radius:999px;padding:7px 10px;font-size:.85rem}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.lead{grid-template-columns:1fr}.p{width:max-content}}@media(max-width:560px){.metrics{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.top nav{justify-content:flex-end}}
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.toolbar input{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.metric strong{display:block;font-size:1.6rem;margin-top:7px}.metric span{font-size:.85rem;color:#697586}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.toolbar input{width:min(360px,100%)}.queue{display:grid;gap:12px}.lead{display:grid;grid-template-columns:90px 1.2fr 1fr 1.5fr auto;gap:14px;align-items:start}.p{display:inline-block;border-radius:999px;padding:6px 10px;background:#edf1f6;font-weight:900;text-align:center}.lead h3{margin:0 0 4px}.small{font-size:.85rem;color:#6b7484}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions a,.actions button{font:inherit;text-decoration:none;padding:8px 10px;border-radius:9px;border:1px solid #cfd7e2;background:#fff;color:#172033;cursor:pointer;font-weight:700}.need{line-height:1.5}.section-title{margin:30px 0 10px}.source-list{display:flex;gap:8px;flex-wrap:wrap}.source-pill{background:#eef2f6;border-radius:999px;padding:7px 10px;font-size:.85rem}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.lead{grid-template-columns:1fr}.p{width:max-content}}@media(max-width:560px){.metrics{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
-  <header class="top">
-    <strong>VÕ HOÀNG · CRM HÔM NAY</strong>
-    <nav>
-      <a href="nguon-khach.html">Nguồn khách</a>
-      <a href="admin-dich-vu.html">Khách gửi việc</a>
-      <a href="./">Website</a>
-      <button id="logout" class="hidden">Đăng xuất</button>
-    </nav>
+  <header class="app-nav">
+    <div class="app-nav-inner">
+      <a class="app-nav-brand" href="./"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · HỆ THỐNG</span></a>
+      <nav class="app-nav-links" aria-label="Điều hướng hệ thống">
+        <button class="app-nav-back" type="button" data-smart-back>← Quay lại</button>
+        <a class="app-nav-home" href="./">Trang chủ</a>
+        <a class="app-nav-active" href="crm-hom-nay.html">CRM hôm nay</a>
+        <a href="admin-dich-vu.html">Khách gửi việc</a>
+        <a href="nguon-khach.html">Nguồn khách</a>
+        <a href="dich-vu-so.html">Trang dịch vụ</a>
+        <button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
+      </nav>
+    </div>
   </header>
   <main class="wrap">
     <section id="loginBox" class="card login">
@@ -50,6 +56,7 @@
     </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="assets/js/app-nav.js"></script>
   <script type="module" src="crm-hom-nay.js"></script>
 </body>
 </html>
