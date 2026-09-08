@@ -5,18 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nguồn khách – Võ Hoàng</title>
   <link rel="icon" href="LOGO.png" />
+  <link rel="stylesheet" href="assets/css/app-nav.css" />
   <style>
-    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.top{position:sticky;top:0;z-index:5;display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 22px;background:#fff;border-bottom:1px solid #dfe5ed}.top nav{display:flex;gap:8px;flex-wrap:wrap}.top a,.top button{font:inherit;text-decoration:none;color:#172033;background:#fff;border:1px solid #cfd7e2;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px;margin-bottom:14px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.generator input,.generator select,.generator button{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid #e7ebf0}.table th{font-size:.85rem;color:#677384}.table td strong{font-size:.95rem}.generator{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:10px;align-items:end}.generator label{display:grid;gap:6px;font-size:.85rem;font-weight:700}.output{margin-top:12px;padding:12px;background:#eef2f6;border-radius:10px;word-break:break-all}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.generator{grid-template-columns:1fr 1fr}.generator button{grid-column:1/-1}}@media(max-width:560px){.generator{grid-template-columns:1fr}.top{align-items:flex-start}.top nav{justify-content:flex-end}}
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px;margin-bottom:14px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.generator input,.generator select,.generator button{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid #e7ebf0}.table th{font-size:.85rem;color:#677384}.table td strong{font-size:.95rem}.generator{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:10px;align-items:end}.generator label{display:grid;gap:6px;font-size:.85rem;font-weight:700}.output{margin-top:12px;padding:12px;background:#eef2f6;border-radius:10px;word-break:break-all}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.generator{grid-template-columns:1fr 1fr}.generator button{grid-column:1/-1}}@media(max-width:560px){.generator{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <header class="top">
-    <strong>VÕ HOÀNG · NGUỒN KHÁCH</strong>
-    <nav>
-      <a href="crm-hom-nay.html">CRM Hôm nay</a>
-      <a href="admin-dich-vu.html">Khách gửi việc</a>
-      <button id="logout" class="hidden">Đăng xuất</button>
-    </nav>
+  <header class="app-nav">
+    <div class="app-nav-inner">
+      <a class="app-nav-brand" href="./"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · HỆ THỐNG</span></a>
+      <nav class="app-nav-links" aria-label="Điều hướng hệ thống">
+        <button class="app-nav-back" type="button" data-smart-back>← Quay lại</button>
+        <a class="app-nav-home" href="./">Trang chủ</a>
+        <a href="crm-hom-nay.html">CRM hôm nay</a>
+        <a href="admin-dich-vu.html">Khách gửi việc</a>
+        <a class="app-nav-active" href="nguon-khach.html">Nguồn khách</a>
+        <a href="dich-vu-so.html">Trang dịch vụ</a>
+        <button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
+      </nav>
+    </div>
   </header>
   <main class="wrap">
     <section id="loginBox" class="card login">
@@ -52,7 +59,7 @@
             </select>
           </label>
           <label>Mã người giới thiệu / CTV
-            <input id="ref" placeholder="VD: PHUONG01" maxlength="24" />
+            <input id="ref" placeholder="VD: CTV0001" maxlength="24" />
           </label>
           <label>Chiến dịch
             <input id="campaign" value="kiem-khach-01" maxlength="28" />
@@ -78,6 +85,7 @@
     </section>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="assets/js/app-nav.js"></script>
   <script type="module" src="nguon-khach.js"></script>
 </body>
 </html>
