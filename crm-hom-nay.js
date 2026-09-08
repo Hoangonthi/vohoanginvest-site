@@ -30,7 +30,7 @@ function renderQueue(){
     <div><h3>${esc(r.full_name||'Chưa có tên')}</h3><div>${esc(r.phone||'')}</div><div class="small">${esc(r.email||'')}</div><div class="small">${esc(r.source||'Không rõ nguồn')}</div></div>
     <div><strong>${esc(stageLabel(r.stage))}</strong><div class="small">Assessment: ${esc(sevLabel(r.latest_assessment_severity))}</div><div class="small">Điểm: ${r.latest_assessment_score??'—'} · Gap: ${esc(r.latest_assessment_gap||'—')}</div></div>
     <div class="need"><strong>${esc(r.next_action_title||'Theo dõi khách')}</strong><div class="small">${esc(r.priority_reason||'')}</div><div class="small">Hạn: ${fmt(r.next_action_due_at)}</div></div>
-    <div class="actions"><a href="tel:${esc(r.phone)}">Gọi</a><a href="https://zalo.me/${esc(zaloPhone(r.phone))}" target="_blank" rel="noopener">Zalo</a>${r.task_id?`<button data-task="${r.task_id}">Xong việc</button>`:''}</div>
+    <div class="actions"><a href="khach-hang.html?id=${encodeURIComponent(r.customer_id)}">Hồ sơ 360</a><a href="tel:${esc(r.phone)}">Gọi</a><a href="https://zalo.me/${esc(zaloPhone(r.phone))}" target="_blank" rel="noopener">Zalo</a>${r.task_id?`<button data-task="${r.task_id}">Xong việc</button>`:''}</div>
   </article>`).join(''):'<div class="card empty">Không có khách phù hợp bộ lọc.</div>';
 }
 
