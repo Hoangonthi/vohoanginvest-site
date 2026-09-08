@@ -3,6 +3,7 @@ import { supabaseClient } from './assets/js/supabase-client.js';
 const loginBox = document.querySelector('#loginBox');
 const app = document.querySelector('#app');
 const loginForm = document.querySelector('#loginForm');
+const googleLogin = document.querySelector('#googleLogin');
 const loginMsg = document.querySelector('#loginMsg');
 const logout = document.querySelector('#logout');
 const status = document.querySelector('#status');
@@ -23,7 +24,11 @@ function zaloPhone(phone=''){let p=String(phone).replace(/\D/g,''); if(p.startsW
 async function load(){
   list.innerHTML='<div class="card">Đang tải...</div>';
   const {data,error}=await supabaseClient.rpc('admin_list_service_requests',{p_status:status.value||null,p_limit:100,p_offset:0});
-  if(error){list.innerHTML=`<div class="card">Không thể tải dữ liệu: ${esc(error.message)}</div>`;return}
+  if(error){
+    const denied=String(error.message||'').includes('CRM_ACCESS_DENIED');
+    list.innerHTML=`<div class="card">${denied?'Tài khoản này chưa có quyền ADMIN/STAFF. Hãy đăng nhập bằng vohoang.bank@gmail.com.':'Không thể tải dữ liệu: '+esc(error.message)}</div>`;
+    return;
+  }
   count.textContent=`${data.length} yêu cầu`;
   list.innerHTML=data.length?data.map(r=>`<article class="card lead">
     <div><span class="badge">${esc(r.status)}</span><h3>${esc(r.full_name)}</h3><div>${esc(r.phone)}</div><div class="muted">${esc(r.email||'')}</div><div class="muted">Gửi: ${fmt(r.created_at)}</div></div>
@@ -37,7 +42,15 @@ async function load(){
 async function showApp(){loginBox.classList.add('hidden');app.classList.remove('hidden');logout.classList.remove('hidden');await load()}
 async function showLogin(){loginBox.classList.remove('hidden');app.classList.add('hidden');logout.classList.add('hidden')}
 
-loginForm.addEventListener('submit',async e=>{e.preventDefault();loginMsg.textContent='Đang đăng nhập...';const {error}=await supabaseClient.auth.signInWithPassword({email:document.querySelector('#email').value.trim(),password:document.querySelector('#password').value});if(error){loginMsg.textContent='Đăng nhập không thành công.';return}loginMsg.textContent='';await showApp()});
+loginForm.addEventListener('submit',async e=>{e.preventDefault();loginMsg.textContent='Đang đăng nhập...';const {error}=await supabaseClient.auth.signInWithPassword({email:document.querySelector('#email').value.trim(),password:document.querySelector('#password').value});if(error){loginMsg.textContent='Sai mật khẩu hoặc tài khoản chưa dùng mật khẩu. Hãy bấm “Đăng nhập với Google”.';return}loginMsg.textContent='';await showApp()});
+
+googleLogin?.addEventListener('click',async()=>{
+  loginMsg.textContent='Đang chuyển sang Google...';
+  const redirectTo=window.location.origin+window.location.pathname;
+  const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'}}});
+  if(error) loginMsg.textContent='Không mở được đăng nhập Google: '+error.message;
+});
+
 logout.addEventListener('click',async()=>{await supabaseClient.auth.signOut();showLogin()});
 status.addEventListener('change',load);refresh.addEventListener('click',load);
 list.addEventListener('click',async e=>{const b=e.target.closest('button[data-id]');if(!b)return;b.disabled=true;const {error}=await supabaseClient.rpc('admin_update_service_request_status',{p_request_id:b.dataset.id,p_status:b.dataset.st});b.disabled=false;if(error){alert('Không cập nhật được: '+error.message);return}await load()});
