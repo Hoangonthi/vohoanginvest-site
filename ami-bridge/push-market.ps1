@@ -1,11 +1,13 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.2
+# VO HOANG Market Sync V1.3
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
+$StockBaseUrl = 'http://127.0.0.1:8765/stock'
 $RelayUrl = 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed'
 $IntervalSeconds = 60
+$WatchListRoot = 'D:\AmiBroker\eod\WatchLists'
 $BridgeKey = [Environment]::GetEnvironmentVariable('VH_BRIDGE_KEY','User')
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) { $BridgeKey = $env:VH_BRIDGE_KEY }
 
@@ -36,6 +38,49 @@ function Get-ErrorDetail($err) {
     return $err.Exception.Message
 }
 
+function Read-WatchList([string]$name) {
+    $path = Join-Path $WatchListRoot ($name + '.tls')
+    if (-not (Test-Path $path)) { return @() }
+    return @(Get-Content -LiteralPath $path -ErrorAction SilentlyContinue | ForEach-Object { $_.Trim().ToUpperInvariant() } | Where-Object { $_ -match '^[A-Z0-9._-]+$' } | Select-Object -Unique)
+}
+
+function Get-Breadth([string[]]$symbols) {
+    $adv = 0; $flat = 0; $dec = 0; $missing = 0
+    foreach ($symbol in $symbols) {
+        try {
+            $p = Invoke-RestMethod -UseBasicParsing -Uri ($StockBaseUrl + '/' + [Uri]::EscapeDataString($symbol)) -Method Get -TimeoutSec 5
+            if (-not $p.ok -or $null -eq $p.quote) { $missing++; continue }
+            $chg = [double]$p.quote.change
+            if ($chg -gt 0) { $adv++ }
+            elseif ($chg -lt 0) { $dec++ }
+            else { $flat++ }
+        } catch { $missing++ }
+    }
+    return [pscustomobject]@{ adv=$adv; flat=$flat; dec=$dec; missing=$missing; total=$symbols.Count }
+}
+
+function Enrich-MarketData($data) {
+    try {
+        $vn30Symbols = Read-WatchList 'VN30'
+        if ($vn30Symbols.Count -gt 0) {
+            $b = Get-Breadth $vn30Symbols
+            foreach ($idx in @($data.indexes)) {
+                if ($idx.symbol -eq 'VN30') {
+                    $idx.adv = $b.adv
+                    $idx.flat = $b.flat
+                    $idx.dec = $b.dec
+                    $idx | Add-Member -NotePropertyName breadth_total -NotePropertyValue $b.total -Force
+                    $idx | Add-Member -NotePropertyName breadth_missing -NotePropertyValue $b.missing -Force
+                    $idx | Add-Member -NotePropertyName breadth_source -NotePropertyValue 'AmiBroker WatchLists/VN30.tls' -Force
+                }
+            }
+        }
+    } catch {
+        Write-Host ('[{0}] Khong tinh duoc breadth VN30: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
+    }
+    return $data
+}
+
 function Push-Once {
     $started = Get-Date
     try {
@@ -44,12 +89,17 @@ function Push-Once {
             Write-Host ('[{0}] Bridge chua co du lieu chi so.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor Yellow
             return
         }
+
+        $data = Enrich-MarketData $data
         $json = $data | ConvertTo-Json -Depth 10 -Compress
         $headers = @{ 'x-bridge-key' = $BridgeKey }
         $result = Invoke-RestMethod -UseBasicParsing -Uri $RelayUrl -Method Post -Headers $headers -ContentType 'application/json' -Body $json -TimeoutSec 20
         if ($result.ok) {
             $elapsed = [Math]::Round(((Get-Date) - $started).TotalSeconds, 1)
-            Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s)' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed) -ForegroundColor Green
+            $vn30 = @($data.indexes | Where-Object { $_.symbol -eq 'VN30' }) | Select-Object -First 1
+            $breadthText = ''
+            if ($null -ne $vn30 -and $null -ne $vn30.adv) { $breadthText = (' | VN30: +{0} ={1} -{2}' -f $vn30.adv, $vn30.flat, $vn30.dec) }
+            Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $breadthText) -ForegroundColor Green
         } else {
             Write-Host ('[{0}] Relay tu choi du lieu: {1}' -f (Get-Date -Format 'HH:mm:ss'), ($result | ConvertTo-Json -Compress)) -ForegroundColor Yellow
         }
@@ -58,11 +108,12 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.2' -ForegroundColor Cyan
-Write-Host ('Bridge: http://127.0.0.1:8765/market/overview')
+Write-Host 'VO HOANG Market Sync V1.3' -ForegroundColor Cyan
+Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky:  {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
+Write-Host 'VN30 breadth: tinh tu D:\AmiBroker\eod\WatchLists\VN30.tls' -ForegroundColor Cyan
 Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
