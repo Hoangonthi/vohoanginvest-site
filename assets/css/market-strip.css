@@ -1,82 +1,101 @@
 .market-overview{position:relative;z-index:12;margin-top:93px;background:#08111b;border-top:1px solid rgba(229,196,119,.14);border-bottom:1px solid rgba(229,196,119,.16);box-shadow:0 10px 28px rgba(0,0,0,.18)}
 .market-overview,.market-overview *{box-sizing:border-box}
-.market-overview-inner{max-width:1440px;margin:0 auto;padding:10px max(16px,calc((100vw - 1380px)/2)) 11px}
-.market-overview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;padding:0 2px;color:#9aa7b5;font-size:11px;line-height:1.25}
-.market-overview-title{display:flex;align-items:center;gap:8px;min-width:0;color:#d8e0e8;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.market-overview-inner{max-width:1480px;margin:0 auto;padding:6px max(14px,calc((100vw - 1410px)/2)) 7px}
+.market-overview-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px;padding:0 2px;color:#9aa7b5;font-size:10px;line-height:1.2}
+.market-overview-title{display:flex;align-items:center;gap:7px;min-width:0;color:#d8e0e8;font-size:10.5px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
 .market-overview-title i{width:7px;height:7px;flex:0 0 auto;border-radius:50%;background:#8f9aa7;box-shadow:0 0 0 4px rgba(143,154,167,.08)}
 .market-overview[data-mode="realtime"] .market-overview-title i,.market-overview[data-mode="direct-file"] .market-overview-title i{background:#42d17d;box-shadow:0 0 0 4px rgba(66,209,125,.10)}
 .market-overview[data-mode="eod"] .market-overview-title i,.market-overview[data-mode="cached"] .market-overview-title i{background:#e5c477;box-shadow:0 0 0 4px rgba(229,196,119,.10)}
-.market-overview-status{min-width:0;color:#8795a4;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.market-overview-status{min-width:0;color:#8795a4;text-align:right;font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .market-overview[data-mode="error"] .market-overview-status{color:#f06572}
 .market-index-shell{position:relative;min-width:0}
-.market-index-viewport{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;border:1px solid rgba(255,255,255,.055);border-radius:10px;background:rgba(255,255,255,.06);scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.market-index-viewport{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;border:1px solid rgba(255,255,255,.055);border-radius:9px;background:rgba(255,255,255,.055);scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
 .market-index-viewport::-webkit-scrollbar{display:none}
-.market-index-track{display:flex;align-items:stretch;gap:1px;min-width:100%;min-height:82px}
-.market-index-card{flex:0 0 calc((100% - 2px)/3);min-width:0;overflow:hidden;display:grid;grid-template-rows:auto auto auto;align-content:center;row-gap:5px;background:#0c1723;padding:10px 14px 9px;transition:background .15s ease;scroll-snap-align:start;scroll-snap-stop:normal}
+.market-index-track{display:flex;align-items:stretch;gap:1px;min-width:100%;min-height:70px}
+
+/* Mỗi card luôn đúng 3 hàng: giá -> KL/GT -> độ rộng. */
+.market-index-card{flex:0 0 calc((100% - 2px)/3);min-width:0;overflow:hidden;display:grid;grid-template-rows:auto auto auto;align-content:center;row-gap:3px;background:#0c1723;padding:7px 12px 6px;transition:background .15s ease;scroll-snap-align:start;scroll-snap-stop:normal}
 .market-index-card:hover{background:#102032}
-.market-index-headline{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;column-gap:8px;row-gap:2px;min-width:0;line-height:1.2}
-.market-index-name{flex:0 0 auto;color:#e5c477;font-size:clamp(11px,.82vw,12px);font-weight:800;letter-spacing:.01em;white-space:nowrap}
-.market-index-card[data-market-symbol="VN-INDEX"] .market-index-name{font-size:clamp(11.5px,.88vw,12.8px)}
-.market-index-quote{flex:0 1 auto;min-width:max-content;margin-left:auto;display:flex;align-items:baseline;justify-content:flex-end;gap:5px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.2}
-.market-index-main{font-size:clamp(12.5px,.96vw,14px);font-weight:800}
-.market-index-change{font-size:clamp(9.5px,.72vw,10.5px);font-weight:700}
+
+/* Hàng 1: tên chỉ số + điểm/thay đổi nằm cùng một dòng, không wrap. */
+.market-index-headline{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);align-items:baseline;column-gap:8px;min-width:0;line-height:1.12}
+.market-index-name{min-width:0;overflow:hidden;text-overflow:ellipsis;color:#e5c477;font-size:clamp(10.5px,.74vw,12px);font-weight:800;letter-spacing:.01em;white-space:nowrap}
+.market-index-card[data-market-symbol="VN-INDEX"] .market-index-name{font-size:clamp(11px,.78vw,12.4px)}
+.market-index-quote{min-width:0;margin-left:auto;display:flex;align-items:baseline;justify-content:flex-end;gap:4px;color:#d8e0e8;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.12}
+.market-index-main{flex:0 0 auto;font-size:clamp(12px,.9vw,14px);font-weight:800}
+.market-index-change{flex:0 1 auto;min-width:0;font-size:clamp(9px,.66vw,10.5px);font-weight:700;overflow:hidden;text-overflow:ellipsis}
 .market-index-quote.up{color:#38dc78}.market-index-quote.down{color:#f06572}.market-index-quote.flat{color:#e5c477}
-.market-index-stats{display:flex;align-items:center;flex-wrap:wrap;gap:2px 6px;min-width:0;margin:0;color:#aab5c1;font-size:clamp(9.5px,.7vw,10.5px);line-height:1.25;font-variant-numeric:tabular-nums}
-.market-index-stats span{min-width:0;white-space:nowrap}.market-index-stats b{color:#d5dde5;font-weight:700}.market-stat-sep{color:#566574}.market-index-stats.is-empty{color:#718091}
-.market-index-breadth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:6px;min-width:0;margin:0;font-size:clamp(9.5px,.7vw,10.5px);font-variant-numeric:tabular-nums;white-space:nowrap}
-.market-index-breadth span{min-width:0;display:flex;align-items:baseline;gap:3px;overflow:hidden}.market-index-breadth span:nth-child(2){justify-content:center}.market-index-breadth span:nth-child(3){justify-content:flex-end}.market-index-breadth b{font-weight:800}.market-index-breadth em{font-style:normal;font-size:.92em;opacity:.9}
+
+/* Hàng 2: KL + GT, nhẹ hơn hàng giá. */
+.market-index-stats{display:flex;align-items:center;min-width:0;gap:5px;margin:0;color:#9eabb8;font-size:clamp(8.8px,.62vw,10px);line-height:1.16;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.market-index-stats span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.market-index-stats b{color:#ced7df;font-weight:700}.market-stat-sep{flex:0 0 auto;color:#566574}.market-index-stats.is-empty{color:#718091}
+
+/* Hàng 3: tăng / TC / giảm chia đều ba cột. */
+.market-index-breadth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:4px;min-width:0;margin:0;font-size:clamp(8.8px,.62vw,10px);line-height:1.16;font-variant-numeric:tabular-nums;white-space:nowrap}
+.market-index-breadth span{min-width:0;display:flex;align-items:baseline;gap:2px;overflow:hidden;text-overflow:ellipsis}.market-index-breadth span:nth-child(2){justify-content:center}.market-index-breadth span:nth-child(3){justify-content:flex-end}.market-index-breadth b{font-weight:800}.market-index-breadth em{font-style:normal;font-size:.9em;opacity:.88}.market-index-breadth small{font-size:.82em;font-weight:700;opacity:.82}
 .market-index-breadth .adv{color:#38dc78}.market-index-breadth .flat{color:#e5c477}.market-index-breadth .dec{color:#f06572}.market-index-breadth.is-empty{opacity:.68}
-.market-edge-nav{position:absolute;top:50%;z-index:4;transform:translateY(-50%);width:22px;height:40px;display:grid;place-items:center;margin:0;padding:0;border:0;border-radius:7px;background:rgba(8,17,27,.72);box-shadow:0 0 10px rgba(0,0,0,.24);color:#e5c477;font-size:21px;line-height:1;cursor:pointer;opacity:.72;transition:opacity .15s ease,background .15s ease}
+
+/* Nút điều hướng nằm bên trong strip, không chiếm thêm diện tích. */
+.market-edge-nav{position:absolute;top:50%;z-index:4;transform:translateY(-50%);width:20px;height:34px;display:grid;place-items:center;margin:0;padding:0;border:0;border-radius:6px;background:rgba(8,17,27,.74);box-shadow:0 0 9px rgba(0,0,0,.22);color:#e5c477;font-size:18px;line-height:1;cursor:pointer;opacity:.7;transition:opacity .15s ease,background .15s ease}
 .market-edge-nav.is-prev{left:2px}.market-edge-nav.is-next{right:2px}.market-edge-nav:hover{opacity:1;background:rgba(13,25,37,.94)}.market-edge-nav:focus-visible{outline:2px solid rgba(229,196,119,.7);outline-offset:1px}.market-edge-nav:disabled{visibility:hidden}.market-edge-nav[hidden]{display:none}
-.market-strip-empty{flex:1;display:grid;place-items:center;min-height:82px;padding:12px;color:#8795a4;font-size:11px;text-align:center}
-.market-overview + .hero{padding-top:52px;min-height:calc(100svh - 118px)}
+.market-strip-empty{flex:1;display:grid;place-items:center;min-height:70px;padding:9px;color:#8795a4;font-size:10px;text-align:center}
+.market-overview + .hero{padding-top:44px;min-height:calc(100svh - 110px)}
 
-/* Chỉ khi không gian thực sự rộng mới dàn 4 card. Tránh ép chữ ở laptop 1280/1366. */
-@media (min-width:1450px){.market-index-card{flex-basis:calc((100% - 3px)/4)}}
+/* Desktop rộng: 4 card chuẩn, không ép chữ. */
+@media (min-width:1360px){
+  .market-index-card{flex-basis:calc((100% - 3px)/4)}
+}
 
-/* Laptop nhỏ và iPad ngang: 3 card, ưu tiên đọc rõ hơn việc nhét đủ 4 card. */
-@media (min-width:1100px) and (max-width:1449px){.market-index-card{flex-basis:calc((100% - 2px)/3)}}
+/* Laptop 1024–1359: 3 card để giữ cỡ chữ dễ đọc. */
+@media (min-width:1024px) and (max-width:1359px){
+  .market-index-card{flex-basis:calc((100% - 2px)/3)}
+}
 
-/* Tablet/iPad: khoảng 2.2 card để gợi ý thao tác vuốt. */
-@media (min-width:768px) and (max-width:1099px){.market-overview-inner{padding-inline:14px}.market-index-card{flex-basis:45%;padding-inline:13px}.market-overview + .hero{padding-top:42px}}
+/* Tablet / iPad: 2 card + hé card tiếp theo. */
+@media (min-width:768px) and (max-width:1023px){
+  .market-overview-inner{padding-inline:12px}
+  .market-index-card{flex-basis:46.5%;padding-inline:11px}
+  .market-index-main{font-size:12.5px}
+  .market-index-change{font-size:9.3px}
+  .market-overview + .hero{padding-top:38px}
+}
 
-/* Mobile: 1 card chính + hé card kế tiếp; tất cả dòng khóa theo cùng cấu trúc nên không lệch. */
+/* Mobile: 1 card rõ + hé card sau, vẫn giữ đúng 3 hàng. */
 @media (max-width:767px){
   .market-overview{margin-top:88px}
-  .market-overview-inner{padding:9px 10px 10px}
-  .market-overview-head{gap:8px;margin-bottom:7px;font-size:10px}
-  .market-overview-title{font-size:10.5px}
-  .market-overview-status{max-width:60%;font-size:9.5px;line-height:1.3}
-  .market-index-track{min-height:96px}
-  .market-index-card{flex-basis:86%;grid-template-rows:minmax(31px,auto) auto auto;align-content:center;row-gap:5px;padding:10px 14px 9px}
-  .market-index-headline{display:grid;grid-template-columns:1fr;align-content:start;gap:2px}
-  .market-index-name{font-size:11.5px}
-  .market-index-card[data-market-symbol="VN-INDEX"] .market-index-name{font-size:12px}
-  .market-index-quote{min-width:0;width:100%;margin-left:0;justify-content:flex-start;gap:5px}
-  .market-index-main{font-size:13.5px}
-  .market-index-change{font-size:10px}
-  .market-index-stats,.market-index-breadth{font-size:10px}
-  .market-index-stats{min-height:13px}
-  .market-index-breadth{min-height:13px;gap:5px}
-  .market-edge-nav{width:20px;height:36px;font-size:19px;background:rgba(8,17,27,.68)}
+  .market-overview-inner{padding:6px 9px 7px}
+  .market-overview-head{gap:6px;margin-bottom:5px;font-size:9.5px}
+  .market-overview-title{font-size:10px}
+  .market-overview-status{max-width:56%;font-size:9px}
+  .market-index-track{min-height:72px}
+  .market-index-card{flex-basis:88%;row-gap:3px;padding:7px 11px 6px}
+  .market-index-headline{grid-template-columns:minmax(0,auto) minmax(0,1fr);column-gap:7px}
+  .market-index-name{font-size:10.5px}
+  .market-index-card[data-market-symbol="VN-INDEX"] .market-index-name{font-size:11px}
+  .market-index-main{font-size:12px}
+  .market-index-change{font-size:9px}
+  .market-index-stats,.market-index-breadth{font-size:9px}
+  .market-index-breadth{gap:3px}
+  .market-edge-nav{width:19px;height:32px;font-size:17px;background:rgba(8,17,27,.7)}
   .market-edge-nav.is-prev{left:1px}.market-edge-nav.is-next{right:1px}
-  .market-overview + .hero{padding-top:34px}
+  .market-overview + .hero{padding-top:30px}
 }
 
-@media (max-width:520px){
-  .market-overview-head{align-items:flex-start;flex-direction:column;gap:4px}
-  .market-overview-status{max-width:100%;width:100%;text-align:left;font-size:9.25px}
-}
-
-@media (max-width:390px){
-  .market-index-card{flex-basis:87%;padding-inline:12px}
-  .market-index-main{font-size:13px}.market-index-change{font-size:9.5px}
-  .market-index-breadth{gap:4px}.market-index-breadth em{display:none}
-}
-
-@media (max-width:340px){
+/* Điện thoại nhỏ: status xuống dòng, card vẫn không vỡ. */
+@media (max-width:430px){
+  .market-overview-head{display:grid;grid-template-columns:1fr;gap:3px}
+  .market-overview-status{max-width:100%;width:100%;text-align:left;font-size:8.8px}
   .market-index-card{flex-basis:90%}
-  .market-index-stats{font-size:9.5px}.market-index-breadth{font-size:9.5px}
+  .market-index-breadth em{display:none}
+}
+
+@media (max-width:360px){
+  .market-index-card{flex-basis:92%;padding-inline:9px}
+  .market-index-name{font-size:10px}
+  .market-index-main{font-size:11.5px}
+  .market-index-change{font-size:8.6px}
+  .market-index-stats,.market-index-breadth{font-size:8.6px}
+  .market-index-breadth small{display:none}
 }
 
 @media (prefers-reduced-motion:reduce){.market-index-viewport{scroll-behavior:auto}.market-index-card,.market-edge-nav{transition:none}}
