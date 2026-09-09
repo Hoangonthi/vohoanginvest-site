@@ -6,6 +6,7 @@ INDEX_MAP = {
     "VN-INDEX": "VNINDEX",
     "VN30": "VN30",
     "VN100": "VN100",
+    "VNXALL": "VNXALL",
     "HNX-INDEX": "HNXINDEX",
     "UPCOM-INDEX": "UPCOMINDEX",
 }
