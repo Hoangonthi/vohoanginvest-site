@@ -46,7 +46,7 @@ def decode_fields(encoded):
 def parse_mi_fields(fields):
     # Expected: MI | floorCode | tradingTime | status | advance | noChange |
     # decline | marketIndex | priorMarketIndex | totalShareTraded |
-    # totalValueTraded | ceilingStock | floorStock
+    # totalValueTraded | ...
     if not fields or fields[0] != "MI" or len(fields) < 11:
         return None
     body = fields[1:]
@@ -61,6 +61,7 @@ def parse_mi_fields(fields):
         "prior_market_index": to_float(body[7] if len(body) > 7 else None),
         "total_share_traded": to_float(body[8] if len(body) > 8 else None),
         "total_value_traded": to_float(body[9] if len(body) > 9 else None),
+        # Keep trailing fields for diagnostics only; the sync does not use them.
         "ceiling_stock": to_float(body[10] if len(body) > 10 else None),
         "floor_stock": to_float(body[11] if len(body) > 11 else None),
     }
@@ -168,12 +169,11 @@ def main():
             raise RuntimeError("CONNECT_TIMEOUT")
 
         deadline = time.time() + 12
+        expected = set(TOPIC_MAP.values())
         while time.time() < deadline:
-            rows = state["rows"]
-            # Stop early once the four primary indexes are received.
-            if all(sym in rows for sym in ("VN-INDEX", "VN30", "UPCOM-INDEX", "HNX-INDEX")):
+            if expected.issubset(state["rows"].keys()):
                 break
-            time.sleep(0.25)
+            time.sleep(0.20)
 
         rows = [state["rows"][s] for s in TOPIC_MAP.values() if s in state["rows"]]
         value_rows = [r for r in rows if r.get("total_value_traded") not in (None, 0)]
