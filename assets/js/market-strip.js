@@ -1,7 +1,7 @@
 const DEFAULT_MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
 const REFRESH_MS = 60_000;
 const CACHE_KEY = "vh-market-strip-last-good-v2";
-const INDEX_PRIORITY = ["VN-INDEX", "VN30", "VN100", "VNXALL", "HNX-INDEX", "UPCOM-INDEX"];
+const INDEX_PRIORITY = ["VN-INDEX", "VN30", "UPCOM-INDEX", "HNX-INDEX", "VN100", "VNXALL"];
 
 const DEMO_DATA = {
   mode: "demo",
