@@ -5,7 +5,7 @@ backButtons.forEach(btn=>btn.addEventListener('click',()=>{
   window.location.href='./';
 }));
 
-const adminPages=new Set(['crm-hom-nay.html','admin-dich-vu.html','nguon-khach.html']);
+const adminPages=new Set(['crm-hom-nay.html','admin-dich-vu.html','nguon-khach.html','admin-market-leads.html']);
 const current=(window.location.pathname.split('/').pop()||'index.html').toLowerCase();
 if(adminPages.has(current)){
   const nav=document.querySelector('.app-nav-links');
@@ -15,5 +15,12 @@ if(adminPages.has(current)){
     link.textContent='Trung tâm';
     const back=nav.querySelector('[data-smart-back]');
     if(back?.nextSibling) nav.insertBefore(link,back.nextSibling); else nav.prepend(link);
+  }
+  if(nav&&!nav.querySelector('a[href="admin-market-leads.html"]')){
+    const link=document.createElement('a');
+    link.href='admin-market-leads.html';
+    link.textContent='Lead thị trường';
+    const logout=nav.querySelector('.app-nav-logout');
+    nav.insertBefore(link,logout||null);
   }
 }
