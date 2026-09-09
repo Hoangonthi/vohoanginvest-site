@@ -18,16 +18,19 @@ function ensureStyles(){
   document.head.appendChild(link);
 }
 function fmt(value, digits = 2) { return Number(value || 0).toLocaleString("vi-VN", { minimumFractionDigits: digits, maximumFractionDigits: digits }); }
+function fmtOptional(value, digits = 2, suffix = "") { return value === null || value === undefined ? "—" : `${fmt(value, digits)}${suffix}`; }
 function tone(change) { return change > 0 ? "up" : change < 0 ? "down" : "flat"; }
 function arrow(change) { return change > 0 ? "▲" : change < 0 ? "▼" : "■"; }
 function modeCopy(mode, updatedAt) {
-  if (mode === "realtime") return `Đang cập nhật trực tiếp${updatedAt ? ` · ${updatedAt}` : ""}`;
+  if (mode === "realtime" || mode === "direct-file") return `Đang cập nhật trực tiếp${updatedAt ? ` · ${updatedAt}` : ""}`;
   if (mode === "eod") return `Dữ liệu cuối phiên${updatedAt ? ` · ${updatedAt}` : ""}`;
-  return "Mẫu giao diện · chưa kết nối AmiBroker";
+  return "Mẫu giao diện · chưa kết nối dữ liệu";
 }
 function card(index) {
   const cls = tone(Number(index.change));
-  return `<article class="market-index-card"><div class="market-index-line"><span class="market-index-name">${index.symbol}</span><span class="market-index-main ${cls}">${arrow(Number(index.change))} ${fmt(index.value)} <small>${Number(index.change) >= 0 ? "+" : ""}${fmt(index.change)} (${Number(index.change_pct) >= 0 ? "+" : ""}${fmt(index.change_pct)}%)</small></span></div><div class="market-index-sub">KL ${fmt(index.volume_m, 3)} triệu cp · GT ${fmt(index.value_b, 1)} tỷ</div><div class="market-index-breadth"><span class="adv">▲ ${index.adv ?? "—"}</span> <em>·</em> <span class="flat">■ ${index.flat ?? "—"}</span> <em>·</em> <span class="dec">▼ ${index.dec ?? "—"}</span></div></article>`;
+  const volumeCopy = fmtOptional(index.volume_m, 3, " triệu cp");
+  const valueCopy = fmtOptional(index.value_b, 1, " tỷ");
+  return `<article class="market-index-card"><div class="market-index-line"><span class="market-index-name">${index.symbol}</span><span class="market-index-main ${cls}">${arrow(Number(index.change))} ${fmt(index.value)} <small>${Number(index.change) >= 0 ? "+" : ""}${fmt(index.change)} (${Number(index.change_pct) >= 0 ? "+" : ""}${fmt(index.change_pct)}%)</small></span></div><div class="market-index-sub">KL ${volumeCopy} · GT ${valueCopy}</div><div class="market-index-breadth"><span class="adv">▲ ${index.adv ?? "—"}</span> <em>·</em> <span class="flat">■ ${index.flat ?? "—"}</span> <em>·</em> <span class="dec">▼ ${index.dec ?? "—"}</span></div></article>`;
 }
 async function loadMarketData() {
   if (!DEFAULT_MARKET_ENDPOINT) return DEMO_DATA;
@@ -38,7 +41,7 @@ async function loadMarketData() {
     if (!payload?.indexes?.length) throw new Error("Thiếu dữ liệu chỉ số");
     return payload;
   } catch (error) {
-    console.warn("AmiBridge chưa sẵn sàng, dùng mẫu giao diện", error);
+    console.warn("Market endpoint chưa sẵn sàng, dùng mẫu giao diện", error);
     return DEMO_DATA;
   }
 }
