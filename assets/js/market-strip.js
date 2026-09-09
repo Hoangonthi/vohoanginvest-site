@@ -1,4 +1,4 @@
-const DEFAULT_MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || "";
+const DEFAULT_MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
 const REFRESH_MS = 60_000;
 
 const DEMO_DATA = {
@@ -64,7 +64,7 @@ function isTradingWindow() {
 async function loadMarketData() {
   if (!DEFAULT_MARKET_ENDPOINT) return DEMO_DATA;
   try {
-    const response = await fetch(`${DEFAULT_MARKET_ENDPOINT.replace(/\/$/, "")}/market/overview`, { cache: "no-store" });
+    const response = await fetch(DEFAULT_MARKET_ENDPOINT, { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload = await response.json();
     if (!payload?.indexes?.length) throw new Error("Thiếu dữ liệu chỉ số");
