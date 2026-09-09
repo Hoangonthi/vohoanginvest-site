@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-# VO HOANG AmiBridge V2.2
+# VO HOANG AmiBridge V2.3
 # Read-only bridge: D:\DataTick\eod MetaStock files -> local JSON HTTP API
 # Supports legacy EMASTER/DAT and XMASTER/MWD.
 
@@ -10,25 +10,30 @@ $Config = @{
     CacheMs = 1500
     SymbolMapCacheMs = 300000
     MarketAliases = [ordered]@{
-        'VN-INDEX'    = @('VNINDEX','VN-INDEX','VNINDEX_INDEX')
-        'VN30'        = @('VN30','VN30-INDEX','VN30INDEX')
-        'VN100'       = @('VN100','VN100-INDEX','VN100INDEX')
-        'VNXALL'      = @('VNXALL','VNX-ALL')
-        'VNMidcap'    = @('VNMIDCAP','VN-MIDCAP')
-        'VNSmallcap'  = @('VNSML','VNSMALLCAP','VN-SMALLCAP')
-        'VNFIN LEAD'  = @('VNFINLEAD','VNFIN-LEAD')
-        'VNFIN'       = @('VNFIN','VN-FIN')
-        'VNREAL'      = @('VNREAL','VN-REAL')
-        'VNIND'       = @('VNIND','VN-IND')
-        'VNIT'        = @('VNIT','VN-IT')
-        'VNMAT'       = @('VNMAT','VN-MAT')
-        'VNCONS'      = @('VNCONS','VN-CONS')
-        'VNCOND'      = @('VNCOND','VN-COND')
-        'VNENE'       = @('VNENE','VN-ENE')
-        'VNHEAL'      = @('VNHEAL','VN-HEAL')
-        'VNUTI'       = @('VNUTI','VN-UTI')
-        'HNX-INDEX'   = @('HNXINDEX','HNX-INDEX','HNX-INDEX_INDEX')
-        'UPCOM-INDEX' = @('UPCOMINDEX','UPCOM-INDEX')
+        'VN-INDEX'     = @('VNINDEX','VN-INDEX','VNINDEX_INDEX')
+        'VN30'         = @('VN30','VN30-INDEX','VN30INDEX')
+        'VN100'        = @('VN100','VN100-INDEX','VN100INDEX')
+        'VNALL'        = @('VNALL','VN-ALL','VNALLSHARE','VNALL-SHARE')
+        'VNXALL'       = @('VNXALL','VNX-ALL','VNXALLSHARE')
+        'VNMidcap'     = @('VNMIDCAP','VN-MIDCAP','VNMID')
+        'VNSmallcap'   = @('VNSML','VNSMALLCAP','VN-SMALLCAP','VNSMALL')
+        'VNDIAMOND'    = @('VNDIAMOND','VN-DIAMOND')
+        'VNFIN LEAD'   = @('VNFINLEAD','VNFIN-LEAD','VNFIN LEAD')
+        'VNFIN SELECT' = @('VNFINSELECT','VNFIN-SELECT','VNFIN SELECT')
+        'VNFIN'        = @('VNFIN','VN-FIN')
+        'VNREAL'       = @('VNREAL','VN-REAL')
+        'VNIND'        = @('VNIND','VN-IND')
+        'VNIT'         = @('VNIT','VN-IT')
+        'VNMAT'        = @('VNMAT','VN-MAT')
+        'VNCONS'       = @('VNCONS','VN-CONS')
+        'VNCOND'       = @('VNCOND','VN-COND')
+        'VNENE'        = @('VNENE','VN-ENE')
+        'VNHEAL'       = @('VNHEAL','VN-HEAL')
+        'VNUTI'        = @('VNUTI','VN-UTI')
+        'VNSI'         = @('VNSI','VN-SI')
+        'HNX-INDEX'    = @('HNXINDEX','HNX-INDEX','HNX-INDEX_INDEX')
+        'HNX30'        = @('HNX30','HNX30INDEX','HNX30-INDEX')
+        'UPCOM-INDEX'  = @('UPCOMINDEX','UPCOM-INDEX')
     }
 }
 
@@ -160,17 +165,17 @@ function Get-MarketOverview{
     }
 }
 
-function Get-Diagnostics{$map=Load-SymbolMap;return [pscustomobject]@{ok=$true;version='2.2';source='metastock-direct';data_root=$Config.DataRoot;symbol_count=$map.Count;has_vnindex=$map.ContainsKey('VNINDEX');has_vn30=$map.ContainsKey('VN30');has_hnxindex=$map.ContainsKey('HNXINDEX');has_upcomindex=$map.ContainsKey('UPCOMINDEX');fpt_mapped=$map.ContainsKey('FPT')}}
+function Get-Diagnostics{$map=Load-SymbolMap;return [pscustomobject]@{ok=$true;version='2.3';source='metastock-direct';data_root=$Config.DataRoot;symbol_count=$map.Count;has_vnindex=$map.ContainsKey('VNINDEX');has_vn30=$map.ContainsKey('VN30');has_vn100=$map.ContainsKey('VN100');has_vnall=$map.ContainsKey('VNALL');has_hnxindex=$map.ContainsKey('HNXINDEX');has_upcomindex=$map.ContainsKey('UPCOMINDEX');fpt_mapped=$map.ContainsKey('FPT')}}
 
 $listener=$null
 try{
     $diag=Get-Diagnostics
-    Write-Host 'VO HOANG AmiBridge V2.2 - MetaStock DAT/MWD direct reader' -ForegroundColor Cyan
+    Write-Host 'VO HOANG AmiBridge V2.3 - MetaStock DAT/MWD direct reader' -ForegroundColor Cyan
     Write-Host "Data root: $($Config.DataRoot)" -ForegroundColor Cyan
-    Write-Host "Symbols: $($diag.symbol_count) | VNINDEX=$($diag.has_vnindex) VN30=$($diag.has_vn30) HNX=$($diag.has_hnxindex) UPCOM=$($diag.has_upcomindex)" -ForegroundColor Cyan
+    Write-Host "Symbols: $($diag.symbol_count) | VNINDEX=$($diag.has_vnindex) VN30=$($diag.has_vn30) VN100=$($diag.has_vn100) VNALL=$($diag.has_vnall) HNX=$($diag.has_hnxindex) UPCOM=$($diag.has_upcomindex)" -ForegroundColor Cyan
     $listener=[Net.HttpListener]::new();$listener.Prefixes.Add($Config.ListenPrefix);$listener.Start()
     Write-Host "AmiBridge dang chay: $($Config.ListenPrefix)" -ForegroundColor Green
     Write-Host 'Market: http://127.0.0.1:8765/market/overview' -ForegroundColor DarkGray
     Write-Host 'Stock:  http://127.0.0.1:8765/stock/FPT' -ForegroundColor DarkGray
-    while($listener.IsListening){$ctx=$listener.GetContext();try{$path=$ctx.Request.Url.AbsolutePath;if($ctx.Request.HttpMethod-eq'OPTIONS'){$ctx.Response.AddHeader('Access-Control-Allow-Origin','*');$ctx.Response.StatusCode=204;$ctx.Response.Close();continue};if($path-eq'/health'){JsonResponse $ctx 200 @{ok=$true;service='vohoang-amibridge';version='2.2';time=(Get-Date).ToString('yyyy-MM-dd HH:mm:ss')}}elseif($path-eq'/debug/diagnostics'){JsonResponse $ctx 200 (Get-Diagnostics)}elseif($path-eq'/market/overview'){JsonResponse $ctx 200 (Get-MarketOverview)}elseif($path-match'^/stock/([A-Za-z0-9._-]+)$'){$p=Get-StockPayload $Matches[1];JsonResponse $ctx ($(if($p.ok){200}else{404})) $p}else{JsonResponse $ctx 404 @{ok=$false;error='NOT_FOUND'}}}catch{try{JsonResponse $ctx 500 @{ok=$false;error='BRIDGE_ERROR';message=$_.Exception.Message}}catch{}}}
+    while($listener.IsListening){$ctx=$listener.GetContext();try{$path=$ctx.Request.Url.AbsolutePath;if($ctx.Request.HttpMethod-eq'OPTIONS'){$ctx.Response.AddHeader('Access-Control-Allow-Origin','*');$ctx.Response.StatusCode=204;$ctx.Response.Close();continue};if($path-eq'/health'){JsonResponse $ctx 200 @{ok=$true;service='vohoang-amibridge';version='2.3';time=(Get-Date).ToString('yyyy-MM-dd HH:mm:ss')}}elseif($path-eq'/debug/diagnostics'){JsonResponse $ctx 200 (Get-Diagnostics)}elseif($path-eq'/market/overview'){JsonResponse $ctx 200 (Get-MarketOverview)}elseif($path-match'^/stock/([A-Za-z0-9._-]+)$'){$p=Get-StockPayload $Matches[1];JsonResponse $ctx ($(if($p.ok){200}else{404})) $p}else{JsonResponse $ctx 404 @{ok=$false;error='NOT_FOUND'}}}catch{try{JsonResponse $ctx 500 @{ok=$false;error='BRIDGE_ERROR';message=$_.Exception.Message}}catch{}}}
 }catch{Write-Host "AmiBridge loi: $($_.Exception.Message)" -ForegroundColor Red;exit 1}finally{if($null-ne$listener){try{$listener.Stop()}catch{}}}
