@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.8
+# VO HOANG Market Sync V1.9
 # Strategy: public API first for official market metrics; DataTick/AmiBroker fallback.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
@@ -27,11 +27,19 @@ function Get-VnNow {
     return [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'SE Asia Standard Time')
 }
 
-function Is-TradingWindow {
+function Get-MarketSession {
     $now = Get-VnNow
-    if ($now.DayOfWeek -eq [DayOfWeek]::Saturday -or $now.DayOfWeek -eq [DayOfWeek]::Sunday) { return $false }
+    if ($now.DayOfWeek -eq [DayOfWeek]::Saturday -or $now.DayOfWeek -eq [DayOfWeek]::Sunday) { return 'closed' }
     $mins = ($now.Hour * 60) + $now.Minute
-    return ($mins -ge (8*60+45) -and $mins -le (15*60))
+    if ($mins -ge (8*60+45) -and $mins -le (11*60+30)) { return 'morning' }
+    if ($mins -ge (13*60) -and $mins -le (15*60)) { return 'afternoon' }
+    if ($mins -gt (11*60+30) -and $mins -lt (13*60)) { return 'lunch' }
+    return 'closed'
+}
+
+function Is-TradingWindow {
+    $session = Get-MarketSession
+    return ($session -eq 'morning' -or $session -eq 'afternoon')
 }
 
 function Get-ErrorDetail($err) {
@@ -208,10 +216,10 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.8' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V1.9' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
-Write-Host ('Chu ky muc tieu: {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
+Write-Host ('Chu ky muc tieu: {0} giay | phien sang 08:45-11:30 | phien chieu 13:00-15:00 | Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 if (Get-Command Test-VnstockAvailable -ErrorAction SilentlyContinue) {
     if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc (Vnstock); timeout 12s -> fallback Ami/DataTick.' -ForegroundColor Green }
@@ -238,7 +246,12 @@ while ($true) {
             Start-Sleep -Seconds $sleepSeconds
         } else {
             if ((Get-Date) -ge $nextOutsideNotice) {
-                Write-Host ('[{0}] Ngoai gio 08:45-15:00, tam dung dong bo.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
+                $session = Get-MarketSession
+                if ($session -eq 'lunch') {
+                    Write-Host ('[{0}] Nghi trua 11:30-13:00, tam dung dong bo. Se tu chay lai luc 13:00.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
+                } else {
+                    Write-Host ('[{0}] Ngoai gio giao dich, tam dung dong bo.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
+                }
                 $nextOutsideNotice = (Get-Date).AddMinutes(5)
             }
             Start-Sleep -Seconds 30
