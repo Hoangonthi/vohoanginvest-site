@@ -52,12 +52,12 @@ function sessionCopy() {
   const s = marketSession();
   if (s === "morning") return "Phiên sáng";
   if (s === "afternoon") return "Phiên chiều";
-  if (s === "lunch") return "Nghỉ trưa · tự cập nhật lại lúc 13:00";
+  if (s === "lunch") return "Nghỉ trưa";
   return "Ngoài giờ giao dịch";
 }
 function modeCopy(mode, updatedAt) {
   const suffix = updatedAt ? ` · ${updatedAt}` : "";
-  if (mode === "direct-file" || mode === "realtime") return `${sessionCopy()}${isTradingWindow() ? " · cập nhật mỗi 1 phút" : ""}${suffix}`;
+  if (mode === "direct-file" || mode === "realtime") return `${sessionCopy()}${suffix}`;
   if (mode === "eod") return `Dữ liệu cuối phiên${suffix}`;
   return "Mẫu giao diện · chưa kết nối nguồn dữ liệu";
 }
@@ -124,11 +124,6 @@ function renderMarket(section, data) {
   if (status) status.innerHTML = `<strong>${modeCopy(data.mode, data.updated_at || "")}</strong>${data.mode === "demo" ? ' <span class="market-demo-note">· dữ liệu minh họa</span>' : ""}`;
   const nav = section.querySelector("[data-market-nav]");
   if (nav) nav.hidden = data.indexes.length <= 4;
-  const provider = section.querySelector("[data-market-provider]");
-  if (provider) {
-    const p = data.market_metrics_provider || "Ami/DataTick";
-    provider.textContent = `Nguồn: ${p}`;
-  }
 }
 
 async function refreshMarket(section) {
@@ -165,7 +160,7 @@ export async function initMarketStrip() {
   if (!main || !hero || document.querySelector("[data-market-overview]")) return;
   const section = document.createElement("section");
   section.className = "market-overview";section.dataset.marketOverview = "";section.dataset.mode = "demo";
-  section.innerHTML = `<div class="market-overview-inner"><div class="market-overview-head"><div class="market-overview-title"><i aria-hidden="true"></i><span>Thị trường Việt Nam</span><small data-market-provider>Nguồn: Ami/DataTick</small></div><div class="market-overview-actions"><div class="market-overview-nav" data-market-nav><button type="button" aria-label="Chỉ số trước" data-market-dir="-1">←</button><button type="button" aria-label="Chỉ số tiếp theo" data-market-dir="1">→</button></div><div class="market-overview-status" data-market-status>Đang tải dữ liệu…</div></div></div><div class="market-index-viewport" data-market-viewport><div class="market-index-track" data-market-track></div></div></div>`;
+  section.innerHTML = `<div class="market-overview-inner"><div class="market-overview-head"><div class="market-overview-title"><i aria-hidden="true"></i><span>Thị trường Việt Nam</span></div><div class="market-overview-actions"><div class="market-overview-nav" data-market-nav><button type="button" aria-label="Chỉ số trước" data-market-dir="-1">←</button><button type="button" aria-label="Chỉ số tiếp theo" data-market-dir="1">→</button></div><div class="market-overview-status" data-market-status>Đang tải dữ liệu…</div></div></div><div class="market-index-viewport" data-market-viewport><div class="market-index-track" data-market-track></div></div></div>`;
   main.insertBefore(section, hero);
   setupCarousel(section);
   await refreshMarket(section);
