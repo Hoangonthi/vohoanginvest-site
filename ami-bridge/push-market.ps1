@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.7
+# VO HOANG Market Sync V1.8
 # Strategy: public API first for official market metrics; DataTick/AmiBroker fallback.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
@@ -131,16 +131,12 @@ function Needs-Breadth($data, [string]$symbol) {
 }
 
 function Enrich-MarketData($data) {
-    # 1) API FIRST: Vnstock Unified UI public API (guest mode).
     if (Get-Command Apply-VnstockSummary -ErrorAction SilentlyContinue) {
-        try {
-            $data = Apply-VnstockSummary $data
-        } catch {
+        try { $data = Apply-VnstockSummary $data } catch {
             Write-Host ('[{0}] Vnstock API bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
         }
     }
 
-    # 2) FALLBACK: only reconstruct breadth locally when API did not provide it.
     if (Needs-Breadth $data 'VN30') {
         try {
             $vn30Symbols = Read-WatchList 'VN30'
@@ -202,7 +198,7 @@ function Push-Once {
                 }
             }
             $detailText = if ($parts.Count) { ' | ' + ($parts -join ' | ') } else { '' }
-            $providerText = if ($null -ne $data.market_metrics_provider) { (' | API=' + $data.market_metrics_provider) } else { ' | API=fallback-local' }
+            $providerText = if ($null -ne $data.market_metrics_provider) { (' | API=' + $data.market_metrics_provider) } else { (' | API=fallback-local(' + $script:VnstockLastStatus + ')') }
             Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}{4}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $detailText, $providerText) -ForegroundColor Green
         } else {
             Write-Host ('[{0}] Relay tu choi du lieu: {1}' -f (Get-Date -Format 'HH:mm:ss'), ($result | ConvertTo-Json -Compress)) -ForegroundColor Yellow
@@ -212,13 +208,13 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.7' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V1.8' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky muc tieu: {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 if (Get-Command Test-VnstockAvailable -ErrorAction SilentlyContinue) {
-    if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc (Vnstock public API); Ami/DataTick chi fallback.' -ForegroundColor Green }
+    if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc (Vnstock); timeout 12s -> fallback Ami/DataTick.' -ForegroundColor Green }
     else { Write-Host 'Market metrics: Vnstock chua san sang; se fallback Ami/DataTick.' -ForegroundColor DarkYellow }
 }
 Write-Host 'GT tren website = gia tri KHOI LENH (matched_value), don vi ty dong.' -ForegroundColor Cyan
