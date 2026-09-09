@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bộ đọc thị trường realtime | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
+  <meta name="description" content="Bộ đọc thị trường realtime: trạng thái, độ rộng, dòng tiền, nhóm dẫn dắt, cảnh báo và hành động tiếp theo dành cho nhà đầu tư cá nhân.">
+  <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html">
+  <link rel="icon" href="LOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/market-reader.css">
+</head>
+<body>
+  <header class="reader-topbar">
+    <div class="reader-topbar-inner">
+      <a class="reader-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a>
+      <nav>
+        <a href="./">Trang chủ</a>
+        <a href="cong-cu-dau-tu-chung-khoan.html">Công cụ</a>
+        <a href="investor-calculator.html">Máy tính đầu tư</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="reader-wrap">
+    <section class="reader-hero">
+      <div>
+        <p class="reader-eyebrow">BỘ ĐỌC THỊ TRƯỜNG REALTIME</p>
+        <h1>Không chỉ nhìn chỉ số.<br>Đọc xem thị trường đang nói gì.</h1>
+        <p>Hệ thống tổng hợp điểm số, độ rộng, dòng tiền và sức mạnh nhóm ngành để trả lời một câu hỏi: <strong>lúc này nên hành động thế nào?</strong></p>
+      </div>
+      <div class="reader-live" id="readerLive"><i></i><span>Đang kết nối dữ liệu…</span></div>
+    </section>
+
+    <section class="reader-state-shell">
+      <article class="reader-score-card" id="readerScoreCard">
+        <span class="reader-label">TRẠNG THÁI THỊ TRƯỜNG</span>
+        <div class="reader-score-row">
+          <strong id="readerState">—</strong>
+          <b><span id="readerScore">—</span><small>/100</small></b>
+        </div>
+        <div class="reader-score-track"><i id="readerScoreBar"></i></div>
+        <p id="readerTrend">Đang tải dữ liệu…</p>
+      </article>
+
+      <article class="reader-action-card">
+        <span class="reader-label">HÀNH ĐỘNG HỆ THỐNG</span>
+        <h2 id="readerAction">Đang đọc thị trường…</h2>
+        <p id="readerActionDetail">Hệ thống sẽ đưa ra việc nên làm tiếp theo từ trạng thái hiện tại.</p>
+        <div class="reader-action-links" id="readerActions"></div>
+      </article>
+    </section>
+
+    <section class="reader-metrics" aria-label="Chỉ số thị trường chính">
+      <article><span>VN-INDEX</span><strong id="vnIndex">—</strong><small id="vnIndexSub">—</small></article>
+      <article><span>ĐỘ RỘNG</span><strong id="breadthState">—</strong><small id="breadthSub">—</small></article>
+      <article><span>DÒNG TIỀN</span><strong id="flowValue">—</strong><small id="flowSub">—</small></article>
+      <article><span>NHÓM DẪN DẮT</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article>
+    </section>
+
+    <section class="reader-grid">
+      <article class="reader-panel">
+        <div class="reader-panel-head">
+          <div><span class="reader-label">DÒNG TIỀN Ở ĐÂU?</span><h2>Xếp hạng nhóm ngành</h2></div>
+          <small>Thay đổi trong phiên</small>
+        </div>
+        <div class="sector-table" id="sectorTable"></div>
+      </article>
+
+      <article class="reader-panel">
+        <div class="reader-panel-head">
+          <div><span class="reader-label">CẢNH BÁO</span><h2>Điều đáng chú ý</h2></div>
+          <small>Tự sinh từ dữ liệu</small>
+        </div>
+        <div class="reader-alerts" id="readerAlerts"></div>
+      </article>
+    </section>
+
+    <section class="reader-grid reader-grid-secondary">
+      <article class="reader-panel">
+        <div class="reader-panel-head">
+          <div><span class="reader-label">THANH KHOẢN</span><h2>Chuẩn cùng thời điểm</h2></div>
+          <small id="baselineStatus">Đang tích lũy</small>
+        </div>
+        <div class="baseline-box">
+          <div><span>GT hiện tại</span><strong id="currentGt">—</strong></div>
+          <div><span>So với TB cùng giờ</span><strong id="sameTimeRatio">—</strong></div>
+          <div><span>Nhịp 15 phút</span><strong id="paceRatio">—</strong></div>
+          <div><span>Dữ liệu chuẩn</span><strong id="baselineDays">—</strong></div>
+        </div>
+        <p class="reader-note">Chuẩn cùng thời điểm cần tối thiểu 5 phiên để bắt đầu so sánh và sẽ tốt dần khi tích lũy đến 20 phiên.</p>
+      </article>
+
+      <article class="reader-panel">
+        <div class="reader-panel-head">
+          <div><span class="reader-label">NGUYÊN TẮC</span><h2>Cách đọc điểm thị trường</h2></div>
+        </div>
+        <div class="reader-rules">
+          <p><b>72–100:</b> Tích cực — có thể duy trì kế hoạch nhưng vẫn phải tính rủi ro từng lệnh.</p>
+          <p><b>58–71:</b> Nghiêng tích cực — tham gia chọn lọc, tránh mua đuổi.</p>
+          <p><b>46–57:</b> Phân hóa — chọn đúng nhóm quan trọng hơn đoán chỉ số.</p>
+          <p><b>32–45:</b> Thận trọng — chưa mở rộng tỷ trọng, hạn chế tăng margin.</p>
+          <p><b>0–31:</b> Rủi ro cao — ưu tiên bảo toàn vốn và xử lý vị thế sai kế hoạch.</p>
+        </div>
+      </article>
+    </section>
+
+    <footer class="reader-footer">
+      <p><strong>Điểm trạng thái không phải tín hiệu mua/bán.</strong> Đây là thước đo tổng hợp để hỗ trợ kỷ luật ra quyết định. Mỗi lệnh vẫn phải đi qua kế hoạch vốn, điểm cắt lỗ và quy mô vị thế.</p>
+      <a href="investor-calculator.html">Mở bộ máy tính đầu tư →</a>
+    </footer>
+  </main>
+
+  <script type="module" src="assets/js/market-reader.js"></script>
+</body>
+</html>
