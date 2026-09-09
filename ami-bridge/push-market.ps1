@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V2.0
-# Strategy: public API first for official market metrics; DataTick/AmiBroker fallback.
+# VO HOANG Market Sync V2.1
+# Strategy: VNDIRECT realtime MI first for GT/breadth; Vnstock and DataTick/AmiBroker fallback.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
@@ -14,6 +14,8 @@ $UniverseRefreshHours = 12
 $BridgeKey = [Environment]::GetEnvironmentVariable('VH_BRIDGE_KEY','User')
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) { $BridgeKey = $env:VH_BRIDGE_KEY }
 
+$vndirectEnrichPath = Join-Path $PSScriptRoot 'vndirect-enrich.ps1'
+if (Test-Path $vndirectEnrichPath) { try { . $vndirectEnrichPath } catch {} }
 $vnstockEnrichPath = Join-Path $PSScriptRoot 'vnstock-enrich.ps1'
 if (Test-Path $vnstockEnrichPath) { try { . $vnstockEnrichPath } catch {} }
 $extraIndexEnrichPath = Join-Path $PSScriptRoot 'index-extra-enrich.ps1'
@@ -141,7 +143,15 @@ function Needs-Breadth($data, [string]$symbol) {
 }
 
 function Enrich-MarketData($data) {
-    if (Get-Command Apply-VnstockSummary -ErrorAction SilentlyContinue) {
+    # Primary source: VNDIRECT realtime MI. It provides GT and breadth for the six main indexes.
+    if (Get-Command Apply-VndirectMarketSummary -ErrorAction SilentlyContinue) {
+        try { $data = Apply-VndirectMarketSummary $data } catch {
+            Write-Host ('[{0}] VNDIRECT realtime bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
+        }
+    }
+
+    # Vnstock remains a fallback only when the VNDIRECT feed is unavailable.
+    if ($script:VndirectLastStatus -ne 'ok' -and (Get-Command Apply-VnstockSummary -ErrorAction SilentlyContinue)) {
         try { $data = Apply-VnstockSummary $data } catch {
             Write-Host ('[{0}] Vnstock API bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
         }
@@ -215,7 +225,13 @@ function Push-Once {
                 }
             }
             $detailText = if ($parts.Count) { ' | ' + ($parts -join ' | ') } else { '' }
-            $providerText = if ($null -ne $data.market_metrics_provider) { (' | API=' + $data.market_metrics_provider) } else { (' | API=fallback-local(' + $script:VnstockLastStatus + ')') }
+            if ($null -ne $data.market_metrics_provider) {
+                $providerText = ' | API=' + $data.market_metrics_provider
+            } elseif ($script:VndirectLastStatus) {
+                $providerText = ' | API=VNDIRECT(' + $script:VndirectLastStatus + ')'
+            } else {
+                $providerText = ' | API=fallback-local'
+            }
             if ($script:ExtraIndexLastStatus) { $providerText += (' | Extra=' + $script:ExtraIndexLastStatus) }
             Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}{4}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $detailText, $providerText) -ForegroundColor Green
         } else {
@@ -226,16 +242,16 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V2.0' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V2.1' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky muc tieu: {0} giay | phien sang 08:45-11:30 | phien chieu 13:00-15:00 | Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
-if (Get-Command Test-VnstockAvailable -ErrorAction SilentlyContinue) {
-    if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc; Ami/DataTick fallback.' -ForegroundColor Green }
-    else { Write-Host 'Market metrics: API thu neu co; Ami/DataTick fallback.' -ForegroundColor DarkYellow }
+if (Get-Command Test-VndirectAvailable -ErrorAction SilentlyContinue) {
+    if (Test-VndirectAvailable) { Write-Host 'Market metrics: VNDIRECT realtime GT + breadth; local fallback.' -ForegroundColor Green }
+    else { Write-Host 'Market metrics: VNDIRECT chua san sang; dung fallback neu co.' -ForegroundColor DarkYellow }
 }
-Write-Host 'Mo rong GT va do rong cho VN100/VNXALL/mid-small/sector indices.' -ForegroundColor Cyan
+Write-Host 'GT cho VN-INDEX/VN30/UPCOM/HNX/VN100/VNXALL lay tu VNDIRECT realtime MI.' -ForegroundColor Cyan
 Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
