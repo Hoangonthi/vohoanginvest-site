@@ -5,13 +5,21 @@ $script:VnstockLastStatus = 'not-run'
 $script:VnstockLastError = $null
 
 function Get-PythonCommand-Vnstock {
-    try {
-        $null = & py -3 --version 2>$null
-        if ($LASTEXITCODE -eq 0) { return @('py','-3') }
-    } catch {}
+    # vnstock 4.x currently depends on numpy<2.3 through vnstock_ezchart.
+    # Python 3.14 may not have a compatible prebuilt numpy wheel, so prefer
+    # stable interpreters that install the dependency stack without a C compiler.
+    foreach ($ver in @('-3.13','-3.12','-3.11','-3.10')) {
+        try {
+            $null = & py $ver --version 2>$null
+            if ($LASTEXITCODE -eq 0) { return @('py',$ver) }
+        } catch {}
+    }
     try {
         $null = & python --version 2>$null
-        if ($LASTEXITCODE -eq 0) { return @('python') }
+        if ($LASTEXITCODE -eq 0) {
+            $v = (& python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')" 2>$null)
+            if ($v -match '^3\.(10|11|12|13)$') { return @('python') }
+        }
     } catch {}
     return @()
 }
