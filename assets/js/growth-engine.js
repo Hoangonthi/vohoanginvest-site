@@ -6,7 +6,12 @@ let initialized = false;
 function ensureStyles(){
   if(document.querySelector('link[data-growth-engine-css]')) return;
   const link=document.createElement('link');
-  link.rel='stylesheet';link.href='./assets/css/growth-engine.css?v=20260909-hub2';link.dataset.growthEngineCss='';document.head.appendChild(link);
+  link.rel='stylesheet';link.href='./assets/css/growth-engine.css?v=20260909-hub3';link.dataset.growthEngineCss='';document.head.appendChild(link);
+}
+function ensureUnifyStyles(){
+  if(document.querySelector('link[data-homepage-unify-css]')) return;
+  const link=document.createElement('link');
+  link.rel='stylesheet';link.href='./assets/css/homepage-unify.css?v=20260909-v1';link.dataset.homepageUnifyCss='';document.head.appendChild(link);
 }
 function addNavLinks(){const nav=document.querySelector('[data-nav]');if(!nav)return;const first=nav.firstElementChild;const entries=[['thi-truong-hom-nay.html','Thị trường'],['sau-phien-cua-toi.html','Sau phiên'],['investor-calculator.html','Máy tính']];entries.reverse().forEach(([href,label])=>{if(nav.querySelector(`a[href="${href}"]`))return;const a=document.createElement('a');a.href=href;a.textContent=label;a.dataset.growthNav='1';nav.insertBefore(a,first)})}
 
@@ -84,7 +89,39 @@ function addLeadMagnet(){
   mountMarketLeadForm(section.querySelector('[data-market-lead-root]'),{source:'HOME_MARKET_BRIEF',metadata:{placement:'homepage'}})
 }
 
+function addConnectHub(){
+  const contact=document.querySelector('#lien-he');
+  if(!contact||document.querySelector('[data-growth-connect]'))return;
+  const section=document.createElement('section');
+  section.className='growth-connect dark-surface';section.id='ket-noi';section.dataset.growthConnect='';
+  section.innerHTML=`<div class="growth-connect-inner">
+    <div class="growth-connect-head">
+      <div><span class="growth-connect-kicker">KẾT NỐI & MỞ TÀI KHOẢN</span><h2>Theo dõi Võ Hoàng ở kênh anh/chị dùng hằng ngày.</h2></div>
+      <p>Nếu cần mở tài khoản chứng khoán, anh/chị có thể dùng liên kết giới thiệu bên dưới để hệ thống ghi nhận đúng mã hỗ trợ.</p>
+    </div>
+    <div class="growth-connect-grid">
+      <article class="growth-connect-card">
+        <span>KÊNH CHÍNH THỨC</span><h3>Nội dung thị trường, hệ thống đầu tư và livestream</h3><p>Ưu tiên theo dõi một kênh quen thuộc; không cần chạy theo tất cả nền tảng.</p>
+        <div class="growth-socials">
+          <a href="https://www.facebook.com/vohoanginvest" target="_blank" rel="noopener noreferrer" data-growth-action="social-facebook">Facebook</a>
+          <a href="https://www.youtube.com/@vohoanginvest" target="_blank" rel="noopener noreferrer" data-growth-action="social-youtube">YouTube</a>
+          <a href="https://www.tiktok.com/@vovuhoang" target="_blank" rel="noopener noreferrer" data-growth-action="social-tiktok">TikTok</a>
+        </div>
+      </article>
+      <article class="growth-connect-card">
+        <span>MỞ TÀI KHOẢN CHỨNG KHOÁN</span><h3>Chọn công ty phù hợp với nhu cầu của anh/chị</h3><p>Đây là liên kết giới thiệu của Võ Hoàng; việc mở tài khoản không đồng nghĩa với cam kết lợi nhuận hay khuyến nghị giao dịch.</p>
+        <div class="growth-brokers">
+          <div class="growth-broker"><div class="growth-broker-head"><strong>VPS</strong><small>ID 7251</small></div><p>Mã giới thiệu: <b>7251</b></p><div class="growth-broker-actions"><a href="https://openaccount.vps.com.vn/?MKTID=7251" target="_blank" rel="noopener noreferrer" data-growth-action="open-vps">Mở tài khoản VPS →</a></div></div>
+          <div class="growth-broker"><div class="growth-broker-head"><strong>TCBS</strong><small>ID D72226</small></div><p>Mã ID: <b>D72226</b></p><div class="growth-broker-actions"><a href="https://iwp.tcbs.com.vn/105CD72226" target="_blank" rel="noopener noreferrer" data-growth-action="open-tcbs">Mở tài khoản TCBS →</a></div></div>
+        </div>
+        <p class="growth-disclosure">Anh/chị nên tự xem biểu phí, sản phẩm, điều kiện giao dịch và mức độ phù hợp trước khi mở hoặc sử dụng tài khoản.</p>
+      </article>
+    </div>
+  </div>`;
+  contact.parentNode.insertBefore(section,contact);
+}
+
 function addStickyMobile(){if(document.querySelector('[data-growth-sticky]'))return;const bar=document.createElement('div');bar.className='growth-sticky';bar.dataset.growthSticky='';bar.innerHTML=`<a href="thi-truong-hom-nay.html" data-growth-action="sticky-market"><span>●</span> Thị trường</a><a href="kiem-tra-nhanh-tai-khoan.html" data-growth-action="sticky-check">Kiểm tra</a><button type="button" data-open-contact data-contact-source="STICKY_CONTACT" data-growth-action="sticky-contact">Trao đổi</button>`;document.body.appendChild(bar)}
 function handleStartParam(){const params=new URLSearchParams(location.search);const start=(params.get('start')||'').toLowerCase();if(!start)return;setTimeout(()=>{if(start==='profile'||start==='assessment')document.querySelector('[data-open-investor-profile]')?.click();if(start==='contact'||start==='talk')document.querySelector('[data-open-contact]')?.click()},550)}
 function trackGrowth(){trackTool('WEBSITE_GROWTH','VIEW',{metadata:{path:location.pathname,session:toolSession()}});document.addEventListener('click',event=>{const el=event.target.closest('[data-growth-action]');if(!el)return;trackTool('WEBSITE_GROWTH','CTA_CLICK',{resultCode:String(el.dataset.growthAction||'CLICK').toUpperCase(),metadata:{path:location.pathname}})})}
-export function initGrowthEngine(){if(initialized)return;initialized=true;ensureStyles();addNavLinks();addDecisionHub();addLeadMagnet();addStickyMobile();handleStartParam();trackGrowth()}
+export function initGrowthEngine(){if(initialized)return;initialized=true;ensureStyles();addNavLinks();addDecisionHub();addLeadMagnet();addConnectHub();ensureUnifyStyles();addStickyMobile();handleStartParam();trackGrowth()}
