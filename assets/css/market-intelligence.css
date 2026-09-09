@@ -113,6 +113,59 @@
   .mi-action-copy p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
 }
 
+/* Mobile compact: giữ đủ thông tin nhưng bỏ khoảng hở không cần thiết. */
+@media (max-width:560px){
+  .market-intelligence{margin-top:4px;border-radius:7px}
+  .mi-state-block{padding:6px 8px 5px}
+  .mi-state-topline{gap:5px;margin-bottom:1px}
+  .mi-kicker,.mi-fresh{font-size:7.4px}
+  .mi-fresh{gap:4px}
+  .mi-fresh i{width:5px;height:5px}
+  .mi-state-row{gap:6px;line-height:1}
+  .mi-state-label{font-size:12px;line-height:1.05}
+  .mi-score-number{font-size:12.5px;line-height:1}
+  .mi-score-number small{font-size:7px}
+  .mi-score-track{height:2px;max-width:165px;margin:3px 0 2px}
+  .mi-state-trend{font-size:7.3px;line-height:1.1}
+
+  .mi-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mi-metric,.mi-metric:nth-child(2),.mi-metric:nth-child(3){grid-column:auto;border-top:0}
+  .mi-metric{padding:5px 6px 4px}
+  .mi-metric:first-child{border-left:0}
+  .mi-metric:nth-child(2),.mi-metric:nth-child(3){border-left:1px solid rgba(255,255,255,.04)}
+  .mi-metric-label{margin-bottom:1px;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mi-metric strong{font-size:9px;line-height:1.08}
+  .mi-metric small{margin-top:1px;min-height:0;font-size:6.8px;line-height:1.12;-webkit-line-clamp:2}
+
+  .mi-action-row{gap:4px;padding:5px 7px}
+  .mi-action-copy{gap:5px}
+  .mi-action-copy>span{margin-top:0;padding:2px 4px;font-size:6.5px;border-radius:4px}
+  .mi-action-copy strong{font-size:8.8px;line-height:1.15}
+  .mi-action-copy p{margin-top:1px;font-size:7.2px;line-height:1.18;-webkit-line-clamp:2}
+  .mi-action-links{gap:3px}
+  .mi-action-links a{min-height:21px;padding:3px 5px;font-size:7px;border-radius:5px}
+
+  .mi-details summary{padding:5px 7px;font-size:7.4px}
+  .mi-details summary span{width:15px;height:15px;font-size:10px}
+  .mi-detail-card{padding:6px 7px}
+  .mi-detail-head{margin-bottom:4px}
+  .mi-sector-list li{min-height:23px}
+  .mi-alert-list{gap:3px}
+  .mi-alert{padding:5px 6px}
+  .mi-history-note{gap:1px 5px;padding:5px 7px;font-size:7px}
+  .mi-history-note strong{font-size:7.6px}
+  .mi-history-note small{font-size:6.8px;line-height:1.15}
+}
+
+@media (max-width:360px){
+  .mi-state-block{padding-left:7px;padding-right:7px}
+  .mi-metric{padding-left:5px;padding-right:5px}
+  .mi-metric-label{font-size:6.5px}
+  .mi-metric strong{font-size:8.4px}
+  .mi-metric small{font-size:6.4px}
+  .mi-action-links a{font-size:6.7px}
+}
+
 @media (prefers-reduced-motion:reduce){
   .mi-details summary span,.mi-action-links a{transition:none}
 }
