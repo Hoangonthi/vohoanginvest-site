@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title VO HOANG - AmiBridge Launcher
+title VO HOANG - AmiBridge + Market Sync
 
 set "PSRUN=%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe"
 if not exist "%PSRUN%" set "PSRUN=powershell.exe"
@@ -31,10 +31,10 @@ if errorlevel 1 (
 
 echo AmiBridge da san sang.
 echo ==== BAT MARKET SYNC ====
-start "VO HOANG - Market Sync" "%PSRUN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-market.ps1"
+echo CUA SO NAY SE GIU MARKET SYNC CHAY. KHONG DONG TRONG GIO GIAO DICH.
+echo.
+"%PSRUN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-market.ps1"
 
 echo.
-echo Da khoi dong AmiBridge va Market Sync thanh cong.
-echo Co the dong cua so launcher nay; hai cua so dich vu van tiep tuc chay.
-timeout /t 3 >nul
-exit /b 0
+echo Market Sync da dung.
+pause
