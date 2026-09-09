@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$DatabasePath = 'C:\AmiBroker\Data\fpts'
+$DatabasePath = 'D:\AmiBroker\eod'
 $SymbolsToTry = @('VN-INDEX','VNINDEX','VN30','VN100','HNX-INDEX','HNXINDEX','FPT')
 
 function Get-LastQuote($stock) {
@@ -53,7 +53,6 @@ try {
             $row = Get-LastQuote $stock
             if ($null -ne $row) { $rows += $row }
         } catch {
-            # Mã không tồn tại trong database hiện tại -> bỏ qua.
         }
     }
 
