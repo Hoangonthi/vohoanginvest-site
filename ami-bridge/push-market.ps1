@@ -1,5 +1,8 @@
 $ErrorActionPreference = 'Continue'
 
+# Force modern TLS for Windows PowerShell 5.1
+try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
+
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
 $RelayUrl = 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed'
 $IntervalSeconds = 60
@@ -13,6 +16,22 @@ function Is-TradingWindow {
     return ($mins -ge (8*60+45) -and $mins -le (15*60))
 }
 
+function Get-ErrorDetail($err) {
+    try {
+        $resp = $err.Exception.Response
+        if ($null -ne $resp) {
+            $stream = $resp.GetResponseStream()
+            if ($null -ne $stream) {
+                $reader = New-Object IO.StreamReader($stream)
+                $txt = $reader.ReadToEnd()
+                if ($txt) { return $txt }
+            }
+        }
+    } catch {}
+    if ($err.Exception.InnerException) { return ($err.Exception.Message + ' | Inner: ' + $err.Exception.InnerException.Message) }
+    return $err.Exception.Message
+}
+
 function Push-Once {
     try {
         $data = Invoke-RestMethod -UseBasicParsing -Uri $BridgeUrl -Method Get -TimeoutSec 10
@@ -22,21 +41,22 @@ function Push-Once {
         }
         $json = $data | ConvertTo-Json -Depth 10 -Compress
         $headers = @{ 'x-bridge-key' = $BridgeKey }
-        $result = Invoke-RestMethod -UseBasicParsing -Uri $RelayUrl -Method Post -Headers $headers -ContentType 'application/json' -Body $json -TimeoutSec 15
+        $result = Invoke-RestMethod -UseBasicParsing -Uri $RelayUrl -Method Post -Headers $headers -ContentType 'application/json' -Body $json -TimeoutSec 20
         if ($result.ok) {
             Write-Host ('[{0}] Da dong bo {1} chi so len website.' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count) -ForegroundColor Green
         } else {
-            Write-Host ('[{0}] Relay tu choi du lieu.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor Yellow
+            Write-Host ('[{0}] Relay tu choi du lieu: {1}' -f (Get-Date -Format 'HH:mm:ss'), ($result | ConvertTo-Json -Compress)) -ForegroundColor Yellow
         }
     } catch {
-        Write-Host ('[{0}] Dong bo loi: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor Red
+        Write-Host ('[{0}] Dong bo loi: {1}' -f (Get-Date -Format 'HH:mm:ss'), (Get-ErrorDetail $_)) -ForegroundColor Red
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.0' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V1.1' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky:  {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
+Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
     Write-Host 'THIEU VH_BRIDGE_KEY. Chay lenh setup 1 lan theo huong dan.' -ForegroundColor Red
