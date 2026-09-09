@@ -191,6 +191,15 @@ function renderIntelligence(data) {
   `;
 }
 
+async function refreshFromEndpoint() {
+  if (!document.querySelector("[data-market-overview]")) return;
+  try {
+    const response = await fetch(ENDPOINT, { cache: "no-store" });
+    if (!response.ok) return;
+    renderIntelligence(await response.json());
+  } catch {}
+}
+
 export function initMarketIntelligence() {
   if (initialized) return;
   initialized = true;
@@ -200,13 +209,12 @@ export function initMarketIntelligence() {
     renderIntelligence(event.detail || {});
   });
 
-  setTimeout(async () => {
-    if (document.querySelector("[data-market-intelligence]")) return;
-    if (!document.querySelector("[data-market-overview]")) return;
-    try {
-      const response = await fetch(ENDPOINT, { cache: "no-store" });
-      if (!response.ok) return;
-      renderIntelligence(await response.json());
-    } catch {}
-  }, 1200);
+  setTimeout(refreshFromEndpoint, 700);
+  setInterval(() => {
+    if (!document.hidden) refreshFromEndpoint();
+  }, 60_000);
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshFromEndpoint();
+  });
 }
