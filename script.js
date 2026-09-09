@@ -4,6 +4,7 @@ import { initContact } from "./assets/js/contact.js";
 import { initMeeting } from "./assets/js/meeting.js";
 import { initProfile } from "./assets/js/profile.js";
 import { initMarketStrip } from "./assets/js/market-strip.js";
+import { initMarketIntelligence } from "./assets/js/market-intelligence.js";
 import { openModal } from "./assets/js/supabase-client.js";
 
 const toggle = document.querySelector("[data-menu-toggle]");
@@ -44,6 +45,7 @@ initAssessment();
 initProfile();
 initLegalFooter();
 initToolsEntry();
+initMarketIntelligence();
 initMarketStrip();
 
 function initToolsEntry(){
