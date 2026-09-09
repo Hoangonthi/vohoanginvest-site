@@ -44,51 +44,56 @@ function Invoke-VndirectMarketSummary {
     }
 
     $py = Get-PythonCommand-Vndirect
-    $outFile = Join-Path $env:TEMP ('vh-vndirect-' + [Guid]::NewGuid().ToString('N') + '.out')
     $errFile = Join-Path $env:TEMP ('vh-vndirect-' + [Guid]::NewGuid().ToString('N') + '.err')
 
     try {
-        $exe = $py[0]
-        $args = @()
-        if ($py.Count -eq 2) { $args += $py[1] }
-        # Start-Process flattens ArgumentList to one command line. Quote the script path
-        # explicitly because the user's ami-bridge directory can contain spaces.
-        $args += ('"' + $scriptPath + '"')
-
-        $p = Start-Process -FilePath $exe -ArgumentList $args -WorkingDirectory $PSScriptRoot -NoNewWindow -PassThru -RedirectStandardOutput $outFile -RedirectStandardError $errFile
-        if (-not $p.WaitForExit(18000)) {
-            try { $p.Kill() } catch {}
-            $script:VndirectLastStatus = 'timeout'
-            $script:VndirectLastError = 'VNDIRECT feed exceeded 18 seconds'
-            return $null
+        # Invoke Python directly instead of Start-Process. This is the exact execution
+        # path that works interactively and PowerShell preserves script paths with spaces.
+        $oldLocation = Get-Location
+        try {
+            Set-Location -LiteralPath $PSScriptRoot
+            if ($py.Count -eq 2) {
+                $lines = @(& $py[0] $py[1] $scriptPath 2>$errFile)
+            } else {
+                $lines = @(& $py[0] $scriptPath 2>$errFile)
+            }
+        } finally {
+            Set-Location $oldLocation
         }
 
-        $txt = if (Test-Path $outFile) { Get-Content -LiteralPath $outFile -Raw -ErrorAction SilentlyContinue } else { '' }
+        $exitCode = $LASTEXITCODE
+        $txt = ($lines | ForEach-Object { [string]$_ }) -join "`n"
         $errTxt = if (Test-Path $errFile) { Get-Content -LiteralPath $errFile -Raw -ErrorAction SilentlyContinue } else { '' }
+
         if ([string]::IsNullOrWhiteSpace($txt)) {
             $script:VndirectLastStatus = 'empty'
-            $script:VndirectLastError = if ([string]::IsNullOrWhiteSpace($errTxt)) { 'Probe returned no stdout' } else { $errTxt.Trim() }
+            $script:VndirectLastError = if ([string]::IsNullOrWhiteSpace($errTxt)) { "Probe returned no stdout (exit=$exitCode)" } else { $errTxt.Trim() }
             return $null
         }
 
-        # Keep only the last JSON-looking line in case a dependency prints a notice.
+        # Keep the last JSON line in case a dependency prints a notice/banner.
         $jsonLine = @($txt -split "`r?`n" | Where-Object { $_.Trim().StartsWith('{') }) | Select-Object -Last 1
-        if ([string]::IsNullOrWhiteSpace($jsonLine)) { $jsonLine = $txt }
-        $obj = $jsonLine | ConvertFrom-Json
+        if ([string]::IsNullOrWhiteSpace($jsonLine)) {
+            $script:VndirectLastStatus = 'parse-error'
+            $script:VndirectLastError = 'Probe stdout did not contain JSON'
+            return $null
+        }
 
+        $obj = $jsonLine | ConvertFrom-Json
         if ($obj.ok -and $obj.rows) {
             $script:VndirectLastStatus = 'ok'
-        } else {
-            $script:VndirectLastStatus = 'feed-error'
-            $script:VndirectLastError = if ($obj.error) { $obj.error } else { 'No VNDIRECT rows returned' }
+            return $obj
         }
+
+        $script:VndirectLastStatus = 'feed-error'
+        $script:VndirectLastError = if ($obj.error) { [string]$obj.error } else { 'No VNDIRECT rows returned' }
         return $obj
     } catch {
         $script:VndirectLastStatus = 'exception'
         $script:VndirectLastError = $_.Exception.Message
         return $null
     } finally {
-        Remove-Item -LiteralPath $outFile,$errFile -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $errFile -Force -ErrorAction SilentlyContinue
     }
 }
 
