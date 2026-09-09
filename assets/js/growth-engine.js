@@ -11,7 +11,7 @@ function ensureStyles(){
 function ensureUnifyStyles(){
   if(document.querySelector('link[data-homepage-unify-css]')) return;
   const link=document.createElement('link');
-  link.rel='stylesheet';link.href='./assets/css/homepage-unify.css?v=20260909-v1';link.dataset.homepageUnifyCss='';document.head.appendChild(link);
+  link.rel='stylesheet';link.href='./assets/css/homepage-unify.css?v=20260909-v2';link.dataset.homepageUnifyCss='';document.head.appendChild(link);
 }
 function addNavLinks(){const nav=document.querySelector('[data-nav]');if(!nav)return;const first=nav.firstElementChild;const entries=[['thi-truong-hom-nay.html','Thị trường'],['sau-phien-cua-toi.html','Sau phiên'],['investor-calculator.html','Máy tính']];entries.reverse().forEach(([href,label])=>{if(nav.querySelector(`a[href="${href}"]`))return;const a=document.createElement('a');a.href=href;a.textContent=label;a.dataset.growthNav='1';nav.insertBefore(a,first)})}
 
