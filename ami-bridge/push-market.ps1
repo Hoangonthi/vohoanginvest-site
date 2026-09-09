@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.9
+# VO HOANG Market Sync V2.0
 # Strategy: public API first for official market metrics; DataTick/AmiBroker fallback.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
@@ -16,6 +16,8 @@ if ([string]::IsNullOrWhiteSpace($BridgeKey)) { $BridgeKey = $env:VH_BRIDGE_KEY 
 
 $vnstockEnrichPath = Join-Path $PSScriptRoot 'vnstock-enrich.ps1'
 if (Test-Path $vnstockEnrichPath) { try { . $vnstockEnrichPath } catch {} }
+$extraIndexEnrichPath = Join-Path $PSScriptRoot 'index-extra-enrich.ps1'
+if (Test-Path $extraIndexEnrichPath) { try { . $extraIndexEnrichPath } catch {} }
 
 $UniverseSources = [ordered]@{
     HSX = 'https://raw.githubusercontent.com/minh-1105/vndirect-real-time-data-crawl/main/StockIDs/HSX.txt'
@@ -145,6 +147,13 @@ function Enrich-MarketData($data) {
         }
     }
 
+    # Broader enrichment for VN100/VNXALL/mid-small/sector indices.
+    if (Get-Command Apply-IndexExtraEnrichment -ErrorAction SilentlyContinue) {
+        try { $data = Apply-IndexExtraEnrichment $data } catch {
+            Write-Host ('[{0}] Extra index enrichment bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
+        }
+    }
+
     if (Needs-Breadth $data 'VN30') {
         try {
             $vn30Symbols = Read-WatchList 'VN30'
@@ -197,7 +206,7 @@ function Push-Once {
         if ($result.ok) {
             $elapsed = [Math]::Round(((Get-Date) - $started).TotalSeconds, 1)
             $parts = @()
-            foreach ($sym in @('VN-INDEX','VN30','VN100','HNX-INDEX','UPCOM-INDEX')) {
+            foreach ($sym in @('VN-INDEX','VN30','VN100','VNXALL','VNMidcap','VNSmallcap','VNFIN LEAD','HNX-INDEX','UPCOM-INDEX')) {
                 $x = @($data.indexes | Where-Object { $_.symbol -eq $sym }) | Select-Object -First 1
                 if ($null -ne $x) {
                     $breadth = if ($null -ne $x.adv) { (' +{0} ={1} -{2}' -f $x.adv,$x.flat,$x.dec) } else { '' }
@@ -207,6 +216,7 @@ function Push-Once {
             }
             $detailText = if ($parts.Count) { ' | ' + ($parts -join ' | ') } else { '' }
             $providerText = if ($null -ne $data.market_metrics_provider) { (' | API=' + $data.market_metrics_provider) } else { (' | API=fallback-local(' + $script:VnstockLastStatus + ')') }
+            if ($script:ExtraIndexLastStatus) { $providerText += (' | Extra=' + $script:ExtraIndexLastStatus) }
             Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}{4}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $detailText, $providerText) -ForegroundColor Green
         } else {
             Write-Host ('[{0}] Relay tu choi du lieu: {1}' -f (Get-Date -Format 'HH:mm:ss'), ($result | ConvertTo-Json -Compress)) -ForegroundColor Yellow
@@ -216,16 +226,16 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.9' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V2.0' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky muc tieu: {0} giay | phien sang 08:45-11:30 | phien chieu 13:00-15:00 | Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 if (Get-Command Test-VnstockAvailable -ErrorAction SilentlyContinue) {
-    if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc (Vnstock); timeout 12s -> fallback Ami/DataTick.' -ForegroundColor Green }
-    else { Write-Host 'Market metrics: Vnstock chua san sang; se fallback Ami/DataTick.' -ForegroundColor DarkYellow }
+    if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc; Ami/DataTick fallback.' -ForegroundColor Green }
+    else { Write-Host 'Market metrics: API thu neu co; Ami/DataTick fallback.' -ForegroundColor DarkYellow }
 }
-Write-Host 'GT tren website = gia tri KHOI LENH (matched_value), don vi ty dong.' -ForegroundColor Cyan
+Write-Host 'Mo rong GT va do rong cho VN100/VNXALL/mid-small/sector indices.' -ForegroundColor Cyan
 Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
