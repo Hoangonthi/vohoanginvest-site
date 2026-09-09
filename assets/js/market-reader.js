@@ -1,3 +1,6 @@
+import { mountMarketLeadForm } from "./market-lead.js";
+import { trackTool } from "./tool-events.js";
+
 const ENDPOINT = window.VH_MARKET_ENDPOINT || "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
 const REFRESH_MS = 60_000;
 const SECTORS = {
@@ -12,6 +15,9 @@ const SECTORS = {
   VNHEAL: "Y tế",
   VNUTI: "Tiện ích"
 };
+
+let latestData = null;
+let viewTracked = false;
 
 function n(value){const x=Number(value);return Number.isFinite(x)?x:null}
 function fmt(value,digits=2){const x=n(value);return x===null?"—":x.toLocaleString("vi-VN",{minimumFractionDigits:digits,maximumFractionDigits:digits})}
@@ -53,7 +59,7 @@ function renderState(mi){
   setText("readerAction",mi?.action?.headline||"Theo dõi thêm dữ liệu.");
   setText("readerActionDetail",mi?.action?.detail||"");
   const links=Array.isArray(mi?.action?.links)?mi.action.links:[];
-  setHtml("readerActions",links.map(x=>`<a href="${safeHref(x?.href)}">${esc(x?.label||"Mở công cụ")}</a>`).join(""));
+  setHtml("readerActions",links.map(x=>`<a href="${safeHref(x?.href)}" data-reader-cta="tool">${esc(x?.label||"Mở công cụ")}</a>`).join(""));
 }
 
 function renderMetrics(data,mi){
@@ -115,7 +121,61 @@ function renderBaseline(mi){
   setText("baselineStatus",mi?.history?.same_time_baseline_ready?"Đã có chuẩn tối thiểu":"Đang tích lũy");
 }
 
+function buildBrief(data){
+  const mi=data?.market_intelligence||{};
+  const state=mi.state||{};
+  const vn=index(data,"VN-INDEX")||{};
+  const breadth=mi.breadth||{};
+  const flow=mi.flow||{};
+  const leader=mi.leadership?.leader||null;
+  const action=mi.action||{};
+  const alert=Array.isArray(mi.alerts)&&mi.alerts.length?mi.alerts[0]:null;
+  const lines=[
+    `BẢN ĐỒ THỊ TRƯỜNG – VÕ HOÀNG`,
+    `Trạng thái: ${state.label||"—"} · ${state.score??"—"}/100${state.trend?` · ${state.trend}`:""}`,
+    `VN-Index: ${n(vn.value)===null?"—":fmt(vn.value,2)} · ${pct(vn.change_pct)}`,
+    `Độ rộng: ${breadth.label||"—"}${breadth.adv===null||breadth.adv===undefined?"":` · ${breadth.adv} tăng / ${breadth.flat} TC / ${breadth.dec} giảm`}`,
+    `Dòng tiền: ${flow.value_b===null||flow.value_b===undefined?"—":`${fmtTrim(flow.value_b,1)} tỷ`} · ${flow.label||"đang theo dõi"}`,
+    `Dẫn dắt: ${leader?`${leader.name} ${pct(leader.change_pct)}`:"Chưa xác định"}`
+  ];
+  if(alert) lines.push(`Lưu ý: ${alert.title}. ${alert.detail}`);
+  if(action.headline) lines.push(`Hành động: ${action.headline} ${action.detail||""}`);
+  lines.push(`Xem realtime: ${location.origin}${location.pathname}`);
+  lines.push(`Điểm trạng thái là công cụ hỗ trợ kỷ luật, không phải tín hiệu mua/bán.`);
+  return lines.join("\n");
+}
+
+async function copyBrief(){
+  if(!latestData) return;
+  const text=buildBrief(latestData);
+  const message=document.getElementById("readerShareMessage");
+  try{
+    if(navigator.clipboard?.writeText) await navigator.clipboard.writeText(text);
+    else{
+      const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove();
+    }
+    if(message) message.textContent="Đã sao chép nhận định. Có thể dán thẳng vào Zalo/Facebook/Threads.";
+    trackTool("MARKET_READER","COPY_BRIEF",{resultCode:"SUCCESS",metadata:{score:latestData?.market_intelligence?.state?.score??null}});
+  }catch{
+    if(message) message.textContent="Chưa sao chép được trên trình duyệt này.";
+  }
+}
+
+async function shareBrief(){
+  if(!latestData) return;
+  const text=buildBrief(latestData);
+  if(navigator.share){
+    try{
+      await navigator.share({title:"Bản đồ thị trường – Võ Hoàng",text,url:location.href});
+      trackTool("MARKET_READER","SHARE",{resultCode:"SUCCESS"});
+      return;
+    }catch(error){if(error?.name==="AbortError")return}
+  }
+  await copyBrief();
+}
+
 function render(data){
+  latestData=data;
   const mi=data?.market_intelligence;
   if(!mi){
     const live=document.getElementById("readerLive");
@@ -128,6 +188,10 @@ function render(data){
   renderSectors(data,mi);
   renderAlerts(mi);
   renderBaseline(mi);
+  if(!viewTracked){
+    viewTracked=true;
+    trackTool("MARKET_READER","VIEW",{resultCode:String(mi?.state?.label||"UNKNOWN").slice(0,80),score:n(mi?.state?.score),metadata:{freshness:mi?.freshness?.status||null}});
+  }
 }
 
 async function refresh(){
@@ -141,6 +205,22 @@ async function refresh(){
   }
 }
 
+function initConversion(){
+  const leadRoot=document.querySelector('[data-market-lead-root]');
+  if(leadRoot) mountMarketLeadForm(leadRoot,{source:'MARKET_READER_BRIEF',metadata:{placement:'market_reader'}});
+  document.getElementById("copyReaderBrief")?.addEventListener("click",copyBrief);
+  document.getElementById("shareReaderBrief")?.addEventListener("click",shareBrief);
+  document.addEventListener("click",event=>{
+    const link=event.target.closest("a[href]");
+    if(!link) return;
+    const href=link.getAttribute("href")||"";
+    if(href.includes("investor-calculator")||href.includes("start=assessment")||href.includes("start=contact")){
+      trackTool("MARKET_READER","CTA_CLICK",{resultCode:href.includes("assessment")?"ASSESSMENT":href.includes("contact")?"CONTACT":"CALCULATOR",metadata:{href:href.slice(0,120)}});
+    }
+  });
+}
+
+initConversion();
 refresh();
 setInterval(()=>{if(!document.hidden)refresh()},REFRESH_MS);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
