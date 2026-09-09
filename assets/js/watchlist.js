@@ -1,4 +1,4 @@
-import { SECTORS, esc, num, pct, fmt, localGet, localSet, fetchMarket, marketContext, getSession, googleLogin, logout, supabaseClient, trackTool } from './investor-hub-shared.js';
+import { SECTORS, esc, num, pct, fmt, todayVN, localGet, localSet, fetchMarket, marketContext, getSession, googleLogin, logout, supabaseClient, trackTool } from './investor-hub-shared.js';
 
 const GUEST_KEY='vh_watchlist_guest_v1';
 const MOVE_KEY='vh_watchlist_moves_v1';
@@ -8,7 +8,7 @@ const box=document.getElementById('watchlistBox');
 const statusEl=document.getElementById('saveStatus');
 
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
-function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(new Date())}
+function todayKey(){return todayVN()}
 function sectorChange(name){return market?.sectors?.get(name)?.change??null}
 function renderMarket(){if(!market)return;setText('marketScore',`${market.state?.score??'—'}/100`);setText('marketState',market.state?.label||'—');setText('vnChange',pct(market.vnChange));setText('leaderName',market.leader?.name||'—');setText('leaderSub',market.leader?pct(market.leader.change_pct):'—');document.getElementById('marketLive').innerHTML=`<b>${esc(market.freshness?.label||'Dữ liệu thị trường')}</b> · ${esc(market.state?.label||'—')}`}
 function readMoves(){const all=localGet(MOVE_KEY,{});return all[todayKey()]||{}}
