@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 # Database is only read. No order placement, no trading automation.
 
 $Config = @{
-    DatabasePath = 'C:\AmiBroker\Data\fpts'
+    DatabasePath = 'D:\AmiBroker\eod'
     ListenPrefix = 'http://127.0.0.1:8765/'
     CacheMs = 1500
     SymbolAliases = @{
@@ -119,7 +119,6 @@ function Get-MarketOverview {
                     change = $q.change
                     change_pct = $q.change_pct
                     volume = $q.volume
-                    # Breadth / traded value are left null until we map actual AmiBroker symbols or auxiliary data.
                     volume_m = if ($q.volume -gt 0) { $q.volume / 1000000 } else { 0 }
                     value_b = $null
                     adv = $null
