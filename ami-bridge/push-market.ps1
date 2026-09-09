@@ -1,8 +1,7 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.6
-# DataTick remains the primary quote source. SSI FastConnect is optional enrichment
-# for exact traded value and official market breadth when credentials are configured.
+# VO HOANG Market Sync V1.7
+# Strategy: public API first for official market metrics; DataTick/AmiBroker fallback.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
@@ -15,8 +14,8 @@ $UniverseRefreshHours = 12
 $BridgeKey = [Environment]::GetEnvironmentVariable('VH_BRIDGE_KEY','User')
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) { $BridgeKey = $env:VH_BRIDGE_KEY }
 
-$ssiEnrichPath = Join-Path $PSScriptRoot 'ssi-enrich.ps1'
-if (Test-Path $ssiEnrichPath) { try { . $ssiEnrichPath } catch {} }
+$vnstockEnrichPath = Join-Path $PSScriptRoot 'vnstock-enrich.ps1'
+if (Test-Path $vnstockEnrichPath) { try { . $vnstockEnrichPath } catch {} }
 
 $UniverseSources = [ordered]@{
     HSX = 'https://raw.githubusercontent.com/minh-1105/vndirect-real-time-data-crawl/main/StockIDs/HSX.txt'
@@ -125,18 +124,37 @@ function Set-Breadth($data, [string]$indexSymbol, $breadth, [string]$source) {
     }
 }
 
-function Enrich-MarketData($data) {
-    Ensure-UniverseCache
+function Needs-Breadth($data, [string]$symbol) {
+    $idx = @($data.indexes | Where-Object { $_.symbol -eq $symbol }) | Select-Object -First 1
+    if ($null -eq $idx) { return $false }
+    return ($null -eq $idx.adv -or $null -eq $idx.flat -or $null -eq $idx.dec)
+}
 
-    try {
-        $vn30Symbols = Read-WatchList 'VN30'
-        if ($vn30Symbols.Count -gt 0) {
-            $b = Get-Breadth $vn30Symbols
-            Set-Breadth $data 'VN30' $b 'AmiBroker WatchLists/VN30.tls'
+function Enrich-MarketData($data) {
+    # 1) API FIRST: Vnstock Unified UI public API (guest mode).
+    if (Get-Command Apply-VnstockSummary -ErrorAction SilentlyContinue) {
+        try {
+            $data = Apply-VnstockSummary $data
+        } catch {
+            Write-Host ('[{0}] Vnstock API bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
         }
-    } catch {
-        Write-Host ('[{0}] Khong tinh duoc breadth VN30: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
     }
+
+    # 2) FALLBACK: only reconstruct breadth locally when API did not provide it.
+    if (Needs-Breadth $data 'VN30') {
+        try {
+            $vn30Symbols = Read-WatchList 'VN30'
+            if ($vn30Symbols.Count -gt 0) {
+                $b = Get-Breadth $vn30Symbols
+                Set-Breadth $data 'VN30' $b 'AmiBroker WatchLists/VN30.tls + DataTick quotes'
+            }
+        } catch {
+            Write-Host ('[{0}] Khong tinh duoc breadth VN30 fallback: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
+        }
+    }
+
+    $needExchangeFallback = (Needs-Breadth $data 'VN-INDEX') -or (Needs-Breadth $data 'HNX-INDEX') -or (Needs-Breadth $data 'UPCOM-INDEX')
+    if ($needExchangeFallback) { Ensure-UniverseCache }
 
     $jobs = @(
         @{ universe='HSX'; index='VN-INDEX' },
@@ -144,22 +162,18 @@ function Enrich-MarketData($data) {
         @{ universe='UPC'; index='UPCOM-INDEX' }
     )
     foreach ($j in $jobs) {
+        if (-not (Needs-Breadth $data $j.index)) { continue }
         try {
             $symbols = Read-Universe $j.universe
             if ($symbols.Count -gt 0) {
                 $b = Get-Breadth $symbols
-                Set-Breadth $data $j.index $b ('Exchange universe metadata/' + $j.universe + ' + DataTick quotes')
+                Set-Breadth $data $j.index $b ('Fallback exchange universe/' + $j.universe + ' + DataTick quotes')
             }
         } catch {
-            Write-Host ('[{0}] Khong tinh duoc breadth {1}: {2}' -f (Get-Date -Format 'HH:mm:ss'), $j.index, $_.Exception.Message) -ForegroundColor DarkYellow
+            Write-Host ('[{0}] Khong tinh duoc breadth {1} fallback: {2}' -f (Get-Date -Format 'HH:mm:ss'), $j.index, $_.Exception.Message) -ForegroundColor DarkYellow
         }
     }
 
-    if (Get-Command Apply-SsiSummary -ErrorAction SilentlyContinue) {
-        try { $data = Apply-SsiSummary $data } catch {
-            Write-Host ('[{0}] SSI enrichment bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
-        }
-    }
     return $data
 }
 
@@ -179,15 +193,17 @@ function Push-Once {
         if ($result.ok) {
             $elapsed = [Math]::Round(((Get-Date) - $started).TotalSeconds, 1)
             $parts = @()
-            foreach ($sym in @('VN-INDEX','VN30','HNX-INDEX','UPCOM-INDEX')) {
+            foreach ($sym in @('VN-INDEX','VN30','VN100','HNX-INDEX','UPCOM-INDEX')) {
                 $x = @($data.indexes | Where-Object { $_.symbol -eq $sym }) | Select-Object -First 1
-                if ($null -ne $x -and $null -ne $x.adv) {
+                if ($null -ne $x) {
+                    $breadth = if ($null -ne $x.adv) { (' +{0} ={1} -{2}' -f $x.adv,$x.flat,$x.dec) } else { '' }
                     $gt = if ($null -ne $x.value_b) { (' GT={0}ty' -f ([Math]::Round([double]$x.value_b,1))) } else { '' }
-                    $parts += ('{0} +{1} ={2} -{3}{4}' -f $sym,$x.adv,$x.flat,$x.dec,$gt)
+                    if ($breadth -or $gt) { $parts += ($sym + $breadth + $gt) }
                 }
             }
-            $breadthText = if ($parts.Count) { ' | ' + ($parts -join ' | ') } else { '' }
-            Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $breadthText) -ForegroundColor Green
+            $detailText = if ($parts.Count) { ' | ' + ($parts -join ' | ') } else { '' }
+            $providerText = if ($null -ne $data.market_metrics_provider) { (' | API=' + $data.market_metrics_provider) } else { ' | API=fallback-local' }
+            Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}{4}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $detailText, $providerText) -ForegroundColor Green
         } else {
             Write-Host ('[{0}] Relay tu choi du lieu: {1}' -f (Get-Date -Format 'HH:mm:ss'), ($result | ConvertTo-Json -Compress)) -ForegroundColor Yellow
         }
@@ -196,16 +212,16 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.6' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V1.7' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky muc tieu: {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
-Write-Host 'Breadth: VN30 tu WatchList; VN-INDEX/HNX/UPCOM tu danh sach san + gia DataTick.' -ForegroundColor Cyan
-if (Get-Command Test-SsiConfigured -ErrorAction SilentlyContinue) {
-    if (Test-SsiConfigured) { Write-Host 'GTGD: SSI FastConnect da cau hinh; se lay totalTradeValue chinh xac.' -ForegroundColor Green }
-    else { Write-Host 'GTGD: chua co SSI FastConnect credentials; tam giu dau —.' -ForegroundColor DarkYellow }
+if (Get-Command Test-VnstockAvailable -ErrorAction SilentlyContinue) {
+    if (Test-VnstockAvailable) { Write-Host 'Market metrics: API truoc (Vnstock public API); Ami/DataTick chi fallback.' -ForegroundColor Green }
+    else { Write-Host 'Market metrics: Vnstock chua san sang; se fallback Ami/DataTick.' -ForegroundColor DarkYellow }
 }
+Write-Host 'GT tren website = gia tri KHOI LENH (matched_value), don vi ty dong.' -ForegroundColor Cyan
 Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
