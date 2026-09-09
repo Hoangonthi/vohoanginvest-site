@@ -1,8 +1,8 @@
 $ErrorActionPreference = 'Stop'
 
-# VÕ HOÀNG AmiBridge V1
+# VO HOANG AmiBridge V1.1
 # Local read-only bridge: AmiBroker COM -> JSON HTTP API
-# Database is only read. No order placement, no trading automation.
+# Prefer the AmiBroker instance already opened by the user so plugin/database state is preserved.
 
 $Config = @{
     DatabasePath = 'D:\AmiBroker\eod'
@@ -17,6 +17,7 @@ $Config = @{
 }
 
 $script:AB = $null
+$script:ConnectionMode = 'unknown'
 $script:Cache = @{}
 $script:CacheTime = @{}
 
@@ -34,15 +35,49 @@ function JsonResponse($context, $statusCode, $obj) {
     $response.Close()
 }
 
+function Get-StockCount($ab) {
+    try { return [int]$ab.Stocks.Count } catch { return 0 }
+}
+
+function Get-DatabasePathSafe($ab) {
+    try {
+        $p = [string]$ab.DatabasePath
+        if (-not [string]::IsNullOrWhiteSpace($p)) { return $p }
+    } catch {}
+    return ''
+}
+
 function Connect-AmiBroker {
+    if ($null -ne $script:AB) { return $script:AB }
+
+    # First attach to the AmiBroker window the user already has open.
+    try {
+        $active = [Runtime.InteropServices.Marshal]::GetActiveObject('Broker.Application')
+        if ($null -ne $active) {
+            $script:AB = $active
+            $script:ConnectionMode = 'active-instance'
+        }
+    } catch {}
+
+    # Fallback: create an automation instance.
     if ($null -eq $script:AB) {
         $script:AB = New-Object -ComObject 'Broker.Application'
+        $script:ConnectionMode = 'new-com-instance'
     }
-    $current = [string]$script:AB.DatabasePath
-    if ($current -ne $Config.DatabasePath) {
-        $ok = $script:AB.LoadDatabase($Config.DatabasePath)
-        if (-not $ok) { throw "Không thể mở AmiBroker database: $($Config.DatabasePath)" }
+
+    # Only force-load the configured DB when the attached instance has no symbols.
+    $count = Get-StockCount $script:AB
+    if ($count -lt 1) {
+        try {
+            [void]$script:AB.LoadDatabase($Config.DatabasePath)
+            Start-Sleep -Milliseconds 500
+            try { [void]$script:AB.RefreshAll() } catch {}
+            Start-Sleep -Milliseconds 500
+        } catch {
+            Write-Host "Khong the nap database $($Config.DatabasePath): $($_.Exception.Message)" -ForegroundColor Yellow
+        }
     }
+
     return $script:AB
 }
 
@@ -131,7 +166,10 @@ function Get-MarketOverview {
             ok = $true
             mode = 'realtime'
             updated_at = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
-            database_path = $Config.DatabasePath
+            configured_database = $Config.DatabasePath
+            active_database = Get-DatabasePathSafe (Connect-AmiBroker)
+            connection_mode = $script:ConnectionMode
+            stock_count = Get-StockCount (Connect-AmiBroker)
             indexes = $indexes
         }
     }
@@ -141,7 +179,15 @@ function Get-StockPayload([string]$symbol) {
     $symbol = $symbol.Trim().ToUpperInvariant()
     return Get-Cached "stock:$symbol" {
         $stock = Get-StockSafe $symbol
-        if ($null -eq $stock) { return [pscustomobject]@{ ok=$false; error='SYMBOL_NOT_FOUND'; symbol=$symbol } }
+        if ($null -eq $stock) {
+            return [pscustomobject]@{
+                ok=$false
+                error='SYMBOL_NOT_FOUND'
+                symbol=$symbol
+                stock_count=Get-StockCount (Connect-AmiBroker)
+                connection_mode=$script:ConnectionMode
+            }
+        }
         [pscustomobject]@{
             ok = $true
             mode = 'realtime'
@@ -152,19 +198,45 @@ function Get-StockPayload([string]$symbol) {
     }
 }
 
+function Get-DebugStocks {
+    $ab = Connect-AmiBroker
+    $count = Get-StockCount $ab
+    $symbols = @()
+    $max = [Math]::Min($count, 30)
+    for ($i = 0; $i -lt $max; $i++) {
+        try {
+            $s = $ab.Stocks.Item($i)
+            if ($null -ne $s) { $symbols += [string]$s.Ticker }
+        } catch {}
+    }
+    return [pscustomobject]@{
+        ok = $true
+        connection_mode = $script:ConnectionMode
+        configured_database = $Config.DatabasePath
+        active_database = Get-DatabasePathSafe $ab
+        stock_count = $count
+        sample_symbols = $symbols
+    }
+}
+
+$listener = $null
 try {
     $ab = Connect-AmiBroker
-    Write-Host "AmiBroker: $($ab.Version)" -ForegroundColor Cyan
-    Write-Host "Database: $($ab.DatabasePath)" -ForegroundColor Cyan
+    $db = Get-DatabasePathSafe $ab
+    $count = Get-StockCount $ab
+    Write-Host "AmiBroker ket noi: $($script:ConnectionMode)" -ForegroundColor Cyan
+    Write-Host "Database dang mo: $db" -ForegroundColor Cyan
+    Write-Host "So ma AmiBroker thay: $count" -ForegroundColor Cyan
 
     $listener = [System.Net.HttpListener]::new()
     $listener.Prefixes.Add($Config.ListenPrefix)
     $listener.Start()
-    Write-Host "AmiBridge đang chạy: $($Config.ListenPrefix)" -ForegroundColor Green
-    Write-Host "Health:  http://127.0.0.1:8765/health" -ForegroundColor DarkGray
-    Write-Host "Market:  http://127.0.0.1:8765/market/overview" -ForegroundColor DarkGray
-    Write-Host "Stock:   http://127.0.0.1:8765/stock/FPT" -ForegroundColor DarkGray
-    Write-Host "Nhấn Ctrl+C để dừng." -ForegroundColor Yellow
+    Write-Host "AmiBridge dang chay: $($Config.ListenPrefix)" -ForegroundColor Green
+    Write-Host "Health: http://127.0.0.1:8765/health" -ForegroundColor DarkGray
+    Write-Host "Debug:  http://127.0.0.1:8765/debug/stocks" -ForegroundColor DarkGray
+    Write-Host "Market: http://127.0.0.1:8765/market/overview" -ForegroundColor DarkGray
+    Write-Host "Stock:  http://127.0.0.1:8765/stock/FPT" -ForegroundColor DarkGray
+    Write-Host "Nhan Ctrl+C de dung." -ForegroundColor Yellow
 
     while ($listener.IsListening) {
         $ctx = $listener.GetContext()
@@ -182,7 +254,19 @@ try {
             }
             $path = $ctx.Request.Url.AbsolutePath
             if ($path -eq '/health') {
-                JsonResponse $ctx 200 @{ ok=$true; service='vohoang-amibridge'; database=[string]$script:AB.DatabasePath; time=(Get-Date).ToString('yyyy-MM-dd HH:mm:ss') }
+                $abNow = Connect-AmiBroker
+                JsonResponse $ctx 200 @{
+                    ok=$true
+                    service='vohoang-amibridge'
+                    connection_mode=$script:ConnectionMode
+                    configured_database=$Config.DatabasePath
+                    active_database=Get-DatabasePathSafe $abNow
+                    stock_count=Get-StockCount $abNow
+                    time=(Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+                }
+            }
+            elseif ($path -eq '/debug/stocks') {
+                JsonResponse $ctx 200 (Get-DebugStocks)
             }
             elseif ($path -eq '/market/overview') {
                 JsonResponse $ctx 200 (Get-MarketOverview)
@@ -201,7 +285,7 @@ try {
     }
 }
 catch {
-    Write-Host "AmiBridge lỗi: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "AmiBridge loi: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
 finally {
