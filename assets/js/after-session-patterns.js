@@ -1,0 +1,17 @@
+import { esc, num, localGet, getSession, supabaseClient, trackTool } from './investor-hub-shared.js';
+const FLAG_LABELS={BUY_CHASE:'Mua đuổi',AVERAGE_DOWN:'Bình quân giá xuống',INCREASE_MARGIN:'Tăng margin',PANIC_SELL:'Bán vì hoảng',BREAK_STOP:'Phá điểm cắt lỗ',NO_PLAN:'Giao dịch không kế hoạch'};
+function getRowsGuest(){return localGet('vh_after_session_guest_v1',[])}
+function checkin(row){return row?.checkin||row||{}}
+function render(rows){const history=document.getElementById('historyBox');if(!history)return;let host=document.getElementById('patternBox');if(!host){host=document.createElement('div');host.id='patternBox';host.className='ih-insight-list';host.style.marginBottom='8px';history.parentNode.insertBefore(host,history)}
+  const sample=(rows||[]).slice(0,20);if(sample.length<2){host.innerHTML='<div class="ih-insight"><b>Đang tạo hồ sơ hành vi</b><p>Cần ít nhất 2 phiên để bắt đầu phát hiện lỗi lặp lại. Giá trị sẽ tăng nhanh sau 5–10 phiên.</p></div>';return}
+  const counts={};let under=0,highMarginRisk=0,emotional=0,planned=0;
+  sample.forEach(r=>{const c=checkin(r),f=c.behavior_flags||{};Object.entries(f).forEach(([k,v])=>{if(v)counts[k]=(counts[k]||0)+1});const a=num(c.account_return_pct),vn=num(c.vn_change_pct);if(a!==null&&vn!==null&&a-vn<-.6)under++;if(num(c.margin_pct)!==null&&Number(c.margin_pct)>=20&&num(c.market_score)!==null&&Number(c.market_score)<=45)highMarginRisk++;if(c.mood&&c.mood!=='CALM')emotional++;if(c.followed_plan===true)planned++});
+  const repeated=Object.entries(counts).sort((a,b)=>b[1]-a[1]).filter(([,n])=>n>=2);const insights=[];
+  if(repeated.length){const [flag,n]=repeated[0];insights.push(`<div class="ih-insight danger"><b>Lỗi lặp lại nổi bật: ${esc(FLAG_LABELS[flag]||flag)}</b><p>Xuất hiện ${n}/${sample.length} phiên gần nhất. Đây là tín hiệu đáng ưu tiên xử lý hơn việc liên tục đổi cổ phiếu.</p></div>`)}
+  if(under>=Math.max(2,Math.ceil(sample.length*.4)))insights.push(`<div class="ih-insight warning"><b>Danh mục thường yếu hơn thị trường</b><p>${under}/${sample.length} phiên tài khoản thấp hơn VN-Index từ 0,6 điểm % trở lên. Nên rà lại chọn mã, tỷ trọng và mức tập trung.</p></div>`);
+  if(highMarginRisk>=2)insights.push(`<div class="ih-insight warning"><b>Margin thường xuất hiện khi thị trường thận trọng</b><p>${highMarginRisk} phiên có margin ≥20% trong lúc Market Score ≤45. Đây là mẫu rủi ro cần kiểm soát.</p></div>`);
+  if(planned>=Math.ceil(sample.length*.7))insights.push(`<div class="ih-insight positive"><b>Kỷ luật đang tạo thành thói quen</b><p>${planned}/${sample.length} phiên anh/chị xác nhận vẫn bám kế hoạch. Hãy giữ điều này ngay cả khi kết quả ngắn hạn biến động.</p></div>`);
+  if(!insights.length)insights.push(`<div class="ih-insight positive"><b>Chưa thấy lỗi lặp lại rõ</b><p>${sample.length} phiên hiện chưa tạo ra một mẫu vi phạm nổi trội. Tiếp tục ghi đều để hệ thống phân biệt sự cố đơn lẻ với thói quen.</p></div>`);
+  host.innerHTML=`<span class="ih-label">MẪU HÀNH VI NHIỀU PHIÊN</span>${insights.join('')}`;trackTool('AFTER_SESSION','PATTERN_VIEW',{metadata:{sample:sample.length,repeated:repeated.length,underperform:under}})}
+async function init(){const session=await getSession();if(session){const {data,error}=await supabaseClient.rpc('investor_get_after_session_v1',{p_days:30});if(!error)render(data?.checkins||[])}else render(getRowsGuest())}
+setTimeout(init,700);window.addEventListener('focus',()=>setTimeout(init,200));
