@@ -1,8 +1,8 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.5
-# DataTick remains the quote source. Public exchange symbol lists are used only
-# as membership metadata to calculate market breadth for HOSE/HNX/UPCOM.
+# VO HOANG Market Sync V1.6
+# DataTick remains the primary quote source. SSI FastConnect is optional enrichment
+# for exact traded value and official market breadth when credentials are configured.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
@@ -14,6 +14,9 @@ $CacheRoot = Join-Path $PSScriptRoot 'universe-cache'
 $UniverseRefreshHours = 12
 $BridgeKey = [Environment]::GetEnvironmentVariable('VH_BRIDGE_KEY','User')
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) { $BridgeKey = $env:VH_BRIDGE_KEY }
+
+$ssiEnrichPath = Join-Path $PSScriptRoot 'ssi-enrich.ps1'
+if (Test-Path $ssiEnrichPath) { try { . $ssiEnrichPath } catch {} }
 
 $UniverseSources = [ordered]@{
     HSX = 'https://raw.githubusercontent.com/minh-1105/vndirect-real-time-data-crawl/main/StockIDs/HSX.txt'
@@ -151,6 +154,12 @@ function Enrich-MarketData($data) {
             Write-Host ('[{0}] Khong tinh duoc breadth {1}: {2}' -f (Get-Date -Format 'HH:mm:ss'), $j.index, $_.Exception.Message) -ForegroundColor DarkYellow
         }
     }
+
+    if (Get-Command Apply-SsiSummary -ErrorAction SilentlyContinue) {
+        try { $data = Apply-SsiSummary $data } catch {
+            Write-Host ('[{0}] SSI enrichment bo qua: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
+        }
+    }
     return $data
 }
 
@@ -172,7 +181,10 @@ function Push-Once {
             $parts = @()
             foreach ($sym in @('VN-INDEX','VN30','HNX-INDEX','UPCOM-INDEX')) {
                 $x = @($data.indexes | Where-Object { $_.symbol -eq $sym }) | Select-Object -First 1
-                if ($null -ne $x -and $null -ne $x.adv) { $parts += ('{0} +{1} ={2} -{3}' -f $sym,$x.adv,$x.flat,$x.dec) }
+                if ($null -ne $x -and $null -ne $x.adv) {
+                    $gt = if ($null -ne $x.value_b) { (' GT={0}ty' -f ([Math]::Round([double]$x.value_b,1))) } else { '' }
+                    $parts += ('{0} +{1} ={2} -{3}{4}' -f $sym,$x.adv,$x.flat,$x.dec,$gt)
+                }
             }
             $breadthText = if ($parts.Count) { ' | ' + ($parts -join ' | ') } else { '' }
             Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s){3}' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed, $breadthText) -ForegroundColor Green
@@ -184,12 +196,16 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.5' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V1.6' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky muc tieu: {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 Write-Host 'Breadth: VN30 tu WatchList; VN-INDEX/HNX/UPCOM tu danh sach san + gia DataTick.' -ForegroundColor Cyan
+if (Get-Command Test-SsiConfigured -ErrorAction SilentlyContinue) {
+    if (Test-SsiConfigured) { Write-Host 'GTGD: SSI FastConnect da cau hinh; se lay totalTradeValue chinh xac.' -ForegroundColor Green }
+    else { Write-Host 'GTGD: chua co SSI FastConnect credentials; tam giu dau —.' -ForegroundColor DarkYellow }
+}
 Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
