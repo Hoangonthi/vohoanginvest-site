@@ -60,41 +60,52 @@
   .market-overview + .hero{padding-top:38px}
 }
 
-/* Mobile: 1 card rõ + hé card sau, vẫn giữ đúng 3 hàng. */
+/* Mobile: nội dung gom về trái, không kéo giãn theo bề ngang card. */
 @media (max-width:767px){
   .market-overview{margin-top:88px}
-  .market-overview-inner{padding:6px 9px 7px}
+  .market-overview-inner{padding:6px 7px 7px}
   .market-overview-head{gap:6px;margin-bottom:5px;font-size:9.5px}
   .market-overview-title{font-size:10px}
   .market-overview-status{max-width:56%;font-size:9px}
   .market-index-track{min-height:72px}
-  .market-index-card{flex-basis:88%;row-gap:3px;padding:7px 11px 6px}
-  .market-index-headline{grid-template-columns:minmax(0,auto) minmax(0,1fr);column-gap:7px}
-  .market-index-name{font-size:10.5px}
+  .market-index-card{flex-basis:min(84%,360px);row-gap:3px;padding:7px 10px 6px}
+
+  /* Hàng 1 không dùng 1fr trên mobile để tránh tên ở trái, giá bị đẩy sát mép phải. */
+  .market-index-headline{display:flex;align-items:baseline;justify-content:flex-start;gap:8px;min-width:0}
+  .market-index-name{flex:0 0 auto;font-size:10.5px}
   .market-index-card[data-market-symbol="VN-INDEX"] .market-index-name{font-size:11px}
+  .market-index-quote{flex:0 1 auto;min-width:0;margin-left:0;justify-content:flex-start;gap:4px}
   .market-index-main{font-size:12px}
   .market-index-change{font-size:9px}
-  .market-index-stats,.market-index-breadth{font-size:9px}
-  .market-index-breadth{gap:3px}
+
+  /* KL/GT và độ rộng cũng gom theo cụm thay vì trải kín cả card. */
+  .market-index-stats{gap:4px;font-size:9px}
+  .market-index-breadth{display:grid;grid-template-columns:max-content max-content max-content;justify-content:start;column-gap:14px;font-size:9px}
+  .market-index-breadth span,.market-index-breadth span:nth-child(2),.market-index-breadth span:nth-child(3){justify-content:flex-start}
+
   .market-edge-nav{width:19px;height:32px;font-size:17px;background:rgba(8,17,27,.7)}
   .market-edge-nav.is-prev{left:1px}.market-edge-nav.is-next{right:1px}
   .market-overview + .hero{padding-top:30px}
 }
 
-/* Điện thoại nhỏ: status xuống dòng, card vẫn không vỡ. */
+/* Điện thoại nhỏ: status xuống dòng và giảm thêm khoảng cách giữa các cụm. */
 @media (max-width:430px){
   .market-overview-head{display:grid;grid-template-columns:1fr;gap:3px}
   .market-overview-status{max-width:100%;width:100%;text-align:left;font-size:8.8px}
-  .market-index-card{flex-basis:90%}
+  .market-index-card{flex-basis:86%}
+  .market-index-headline{gap:7px}
+  .market-index-breadth{column-gap:10px}
   .market-index-breadth em{display:none}
 }
 
 @media (max-width:360px){
-  .market-index-card{flex-basis:92%;padding-inline:9px}
+  .market-index-card{flex-basis:88%;padding-inline:9px}
+  .market-index-headline{gap:6px}
   .market-index-name{font-size:10px}
   .market-index-main{font-size:11.5px}
   .market-index-change{font-size:8.6px}
   .market-index-stats,.market-index-breadth{font-size:8.6px}
+  .market-index-breadth{column-gap:8px}
   .market-index-breadth small{display:none}
 }
 
