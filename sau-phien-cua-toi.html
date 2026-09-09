@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sau phiên của tôi | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
+  <meta name="description" content="Đối chiếu hiệu quả tài khoản với thị trường, kiểm tra danh mục, margin, hành vi và việc cần làm sau mỗi phiên.">
+  <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/sau-phien-cua-toi.html">
+  <link rel="icon" href="LOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/investor-hub.css">
+</head>
+<body>
+<header class="ih-topbar"><div class="ih-topbar-inner">
+  <a class="ih-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a>
+  <nav class="ih-nav"><a href="thi-truong-hom-nay.html">Thị trường</a><a href="watchlist.html">Watchlist</a><a href="nhat-ky-he-thong.html">Nhật ký hệ thống</a><a href="investor-calculator.html">Máy tính</a><button id="authButton" type="button">Đăng nhập</button></nav>
+</div></header>
+<main class="ih-wrap">
+  <section class="ih-hero">
+    <div><span class="ih-eyebrow">SAU PHIÊN CỦA TÔI</span><h1>Hôm nay tài khoản của anh/chị thực sự đang nói gì?</h1><p>Không chỉ nhìn lời/lỗ. Hệ thống đối chiếu tài khoản với VN-Index, trạng thái thị trường, ngành đang nắm giữ, margin và chính hành vi trong phiên để tách phần do thị trường và phần do cách mình ra quyết định.</p></div>
+    <div class="ih-live" id="marketLive">Đang đọc thị trường…</div>
+  </section>
+
+  <section class="ih-metrics" aria-label="Bối cảnh thị trường"><article class="ih-metric"><span>MARKET SCORE</span><strong id="marketScore">—</strong><small id="marketState">—</small></article><article class="ih-metric"><span>VN-INDEX</span><strong id="vnChange">—</strong><small id="vnValue">—</small></article><article class="ih-metric"><span>ĐỘ RỘNG</span><strong id="breadthLabel">—</strong><small id="breadthSub">—</small></article><article class="ih-metric"><span>DẪN DẮT</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article></section>
+
+  <div class="ih-login-box" id="loginBox"><p><strong>Dùng ngay không cần đăng nhập.</strong> Đăng nhập chỉ khi anh/chị muốn lưu lịch sử nhiều phiên và dùng lại trên thiết bị khác.</p><button class="ih-button" id="loginButton" type="button">Đăng nhập với Google</button></div>
+
+  <section class="ih-grid wide-left">
+    <article class="ih-card">
+      <span class="ih-label">1 · KẾT QUẢ THẬT</span><h2>Phiên hôm nay của anh/chị</h2>
+      <div class="ih-form-grid">
+        <label class="ih-field"><span>Ngày</span><input id="marketDate" type="date"></label>
+        <label class="ih-field"><span>Tài khoản hôm nay (%)</span><input id="accountReturn" type="number" step="0.01" placeholder="VD: -1.25"></label>
+        <label class="ih-field"><span>Tiền mặt (%)</span><input id="cashPct" type="number" step="0.1" min="0" max="100" placeholder="VD: 35"></label>
+        <label class="ih-field"><span>Margin đang dùng (%)</span><input id="marginPct" type="number" step="0.1" min="0" max="300" placeholder="VD: 20"></label>
+      </div>
+      <div class="ih-choice-row" id="moodChoices" aria-label="Cảm xúc sau phiên">
+        <label class="ih-choice"><input type="radio" name="mood" value="CALM"><span>Bình tĩnh</span></label><label class="ih-choice"><input type="radio" name="mood" value="WORRIED"><span>Lo lắng</span></label><label class="ih-choice"><input type="radio" name="mood" value="FOMO"><span>Sợ mất cơ hội</span></label><label class="ih-choice"><input type="radio" name="mood" value="FRUSTRATED"><span>Bực bội</span></label><label class="ih-choice"><input type="radio" name="mood" value="EXCITED"><span>Hưng phấn</span></label><label class="ih-choice"><input type="radio" name="mood" value="CONFUSED"><span>Không biết làm gì</span></label>
+      </div>
+      <div class="ih-form-grid two" style="margin-top:8px"><label class="ih-field"><span>Điều băn khoăn nhất</span><select id="primaryWorry"><option value="">Chọn điều đang lo nhất</option><option>Tài khoản giảm mạnh hơn thị trường</option><option>Mã đang cầm có vẻ yếu</option><option>Sợ bán xong lại tăng</option><option>Sợ bỏ lỡ cơ hội mới</option><option>Margin đang quá cao</option><option>Không biết ngày mai nên làm gì</option><option>Không rõ mình sai hay thị trường xấu</option></select></label><label class="ih-field"><span>Ghi chú ngắn</span><input id="sessionNote" maxlength="300" placeholder="Điều gì khiến anh/chị chưa yên tâm?"></label></div>
+    </article>
+
+    <article class="ih-card">
+      <span class="ih-label">2 · KỶ LUẬT</span><h2>Hôm nay tôi có làm sai quy trình không?</h2><p>Đánh dấu đúng sự thật. Đây là phần giúp hệ thống phát hiện lỗi lặp lại theo thời gian.</p>
+      <div class="ih-choice-row"><label class="ih-choice"><input type="checkbox" data-flag="BUY_CHASE"><span>Mua đuổi</span></label><label class="ih-choice"><input type="checkbox" data-flag="AVERAGE_DOWN"><span>Bình quân giá xuống</span></label><label class="ih-choice"><input type="checkbox" data-flag="INCREASE_MARGIN"><span>Tăng margin</span></label><label class="ih-choice"><input type="checkbox" data-flag="PANIC_SELL"><span>Bán vì hoảng</span></label><label class="ih-choice"><input type="checkbox" data-flag="BREAK_STOP"><span>Phá điểm cắt lỗ</span></label><label class="ih-choice"><input type="checkbox" data-flag="NO_PLAN"><span>Giao dịch không kế hoạch</span></label></div>
+      <div class="ih-choice-row"><label class="ih-choice"><input id="followedPlan" type="checkbox"><span>Nhìn chung tôi vẫn làm đúng kế hoạch</span></label></div>
+    </article>
+  </section>
+
+  <section class="ih-card" style="margin-bottom:10px">
+    <span class="ih-label">3 · DANH MỤC / WATCHLIST</span><h2>Mã nào đang khỏe hoặc yếu hơn thị trường?</h2><p>Chỉ cần nhập % tăng/giảm hôm nay. Hệ thống sẽ so với VN-Index và đúng nhóm ngành, thay vì nhìn mỗi màu xanh/đỏ.</p>
+    <div class="ih-table" id="itemTable"><div class="ih-row head"><span>Mã</span><span>Loại / ngành</span><span>% hôm nay</span><span>Tỷ trọng</span><span>So ngành</span><span></span></div></div>
+    <div class="ih-actions"><button class="ih-button" id="addItem" type="button">+ Thêm mã</button><a class="ih-button ghost" href="watchlist.html">Mở Watchlist có lý do</a></div>
+  </section>
+
+  <section class="ih-card" style="margin-bottom:10px">
+    <div class="ih-actions" style="margin-top:0"><button class="ih-button primary" id="analyzeButton" type="button">PHÂN TÍCH SAU PHIÊN</button><span class="ih-status" id="saveStatus"></span></div>
+    <div class="ih-result" id="resultBox" style="margin-top:10px"><div class="ih-empty">Nhập kết quả tài khoản rồi bấm “Phân tích sau phiên”.</div></div>
+  </section>
+
+  <section class="ih-grid">
+    <article class="ih-card"><span class="ih-label">LỊCH SỬ CỦA TÔI</span><h2>Nhìn lại nhiều phiên mới thấy lỗi thật</h2><div class="ih-history" id="historyBox"><div class="ih-empty">Chưa có dữ liệu lịch sử.</div></div></article>
+    <article class="ih-card"><span class="ih-label">BƯỚC TIẾP THEO</span><h2>Đừng để kết quả dừng ở một con số</h2><p>Nếu hôm nay tài khoản yếu hơn thị trường, margin cao hoặc có vi phạm quy trình, hãy xử lý nguyên nhân trước khi tìm mã mới.</p><div class="ih-actions"><a class="ih-button" href="tinh-rui-ro-danh-muc.html">Kiểm tra rủi ro danh mục</a><a class="ih-button" href="tinh-margin-chung-khoan.html">Kiểm tra sức chịu margin</a><a class="ih-button" href="./?start=assessment">Đánh giá 17 câu</a><a class="ih-button primary" href="./?start=contact">Trao đổi cùng Võ Hoàng</a></div></article>
+  </section>
+
+  <footer class="ih-footer"><span>“Sau phiên của tôi” là công cụ tự rà soát, không phải tín hiệu mua/bán. Dữ liệu cá nhân chỉ được lưu vào tài khoản khi anh/chị đăng nhập.</span><a href="nhat-ky-he-thong.html">Xem Nhật ký hệ thống →</a></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="assets/js/after-session.js"></script>
+</body></html>
