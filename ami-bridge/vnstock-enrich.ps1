@@ -1,6 +1,9 @@
 # API-first enrichment using Vnstock Unified UI.
 # Guest mode is enough for a few index requests per minute.
 
+$script:VnstockLastStatus = 'not-run'
+$script:VnstockLastError = $null
+
 function Get-PythonCommand-Vnstock {
     try {
         $null = & py -3 --version 2>$null
@@ -24,17 +27,44 @@ function Test-VnstockAvailable {
 }
 
 function Invoke-VnstockMarketSummary {
-    if (-not (Test-VnstockAvailable)) { return $null }
+    $script:VnstockLastStatus = 'starting'
+    $script:VnstockLastError = $null
+    if (-not (Test-VnstockAvailable)) { $script:VnstockLastStatus='unavailable'; return $null }
     $scriptPath = Join-Path $PSScriptRoot 'vnstock-market-summary.py'
-    if (-not (Test-Path $scriptPath)) { return $null }
+    if (-not (Test-Path $scriptPath)) { $script:VnstockLastStatus='script-missing'; return $null }
     $py = Get-PythonCommand-Vnstock
+
+    $outFile = Join-Path $env:TEMP ('vh-vnstock-' + [Guid]::NewGuid().ToString('N') + '.out')
+    $errFile = Join-Path $env:TEMP ('vh-vnstock-' + [Guid]::NewGuid().ToString('N') + '.err')
     try {
-        if ($py.Count -eq 2) { $raw = & $py[0] $py[1] $scriptPath 2>$null }
-        else { $raw = & $py[0] $scriptPath 2>$null }
-        $txt = ($raw -join "`n")
-        if ([string]::IsNullOrWhiteSpace($txt)) { return $null }
-        return ($txt | ConvertFrom-Json)
-    } catch { return $null }
+        $exe = $py[0]
+        $args = @()
+        if ($py.Count -eq 2) { $args += $py[1] }
+        $args += $scriptPath
+        $p = Start-Process -FilePath $exe -ArgumentList $args -NoNewWindow -PassThru -RedirectStandardOutput $outFile -RedirectStandardError $errFile
+        if (-not $p.WaitForExit(12000)) {
+            try { $p.Kill() } catch {}
+            $script:VnstockLastStatus = 'timeout'
+            $script:VnstockLastError = 'API call exceeded 12 seconds'
+            return $null
+        }
+        $txt = if (Test-Path $outFile) { (Get-Content -LiteralPath $outFile -Raw -ErrorAction SilentlyContinue) } else { '' }
+        $errTxt = if (Test-Path $errFile) { (Get-Content -LiteralPath $errFile -Raw -ErrorAction SilentlyContinue) } else { '' }
+        if ([string]::IsNullOrWhiteSpace($txt)) {
+            $script:VnstockLastStatus = 'empty'
+            $script:VnstockLastError = $errTxt
+            return $null
+        }
+        $obj = $txt | ConvertFrom-Json
+        if ($obj.ok) { $script:VnstockLastStatus = 'ok' } else { $script:VnstockLastStatus = 'api-error'; $script:VnstockLastError = $obj.error }
+        return $obj
+    } catch {
+        $script:VnstockLastStatus = 'exception'
+        $script:VnstockLastError = $_.Exception.Message
+        return $null
+    } finally {
+        Remove-Item -LiteralPath $outFile,$errFile -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Convert-VndToBillions($value) {
@@ -52,7 +82,6 @@ function Apply-VnstockSummary($data) {
         $idx = @($data.indexes | Where-Object { $_.symbol -eq $row.symbol }) | Select-Object -First 1
         if ($null -eq $idx) { continue }
 
-        # Website GT = matched trading value, which is the standard board-style traded value.
         $valueB = Convert-VndToBillions $row.matched_value
         if ($null -ne $valueB -and $valueB -gt 0) {
             $idx.value_b = $valueB
@@ -62,7 +91,6 @@ function Apply-VnstockSummary($data) {
         $idx | Add-Member -NotePropertyName api_matched_volume_m -NotePropertyValue ($(if ($null -ne $row.matched_volume) { [Math]::Round(([double]$row.matched_volume / 1000000.0),3) } else { $null })) -Force
         $idx | Add-Member -NotePropertyName api_total_volume_m -NotePropertyValue ($(if ($null -ne $row.total_volume) { [Math]::Round(([double]$row.total_volume / 1000000.0),3) } else { $null })) -Force
 
-        # Official summary breadth from API has priority over locally reconstructed breadth.
         if ($null -ne $row.advance) { $idx.adv = [int]$row.advance }
         if ($null -ne $row.steady) { $idx.flat = [int]$row.steady }
         if ($null -ne $row.decline) { $idx.dec = [int]$row.decline }
