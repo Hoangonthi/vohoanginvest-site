@@ -3,14 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Bộ đọc thị trường realtime | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
-  <meta name="description" content="Bộ đọc thị trường realtime: trạng thái, độ rộng, dòng tiền, nhóm dẫn dắt, cảnh báo và hành động tiếp theo dành cho nhà đầu tư cá nhân.">
+  <title>Thị trường hôm nay realtime | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
+  <meta name="description" content="Đọc thị trường chứng khoán Việt Nam realtime: Market Score, độ rộng, dòng tiền, nhóm ngành dẫn dắt, cảnh báo rủi ro và hành động tiếp theo.">
+  <meta name="theme-color" content="#050b12">
   <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VÕ HOÀNG – Đầu tư chuẩn hệ thống">
+  <meta property="og:title" content="Thị trường hôm nay realtime | Võ Hoàng">
+  <meta property="og:description" content="Không chỉ nhìn chỉ số. Đọc trạng thái, độ rộng, dòng tiền, nhóm dẫn dắt và việc nên làm tiếp theo.">
+  <meta property="og:url" content="https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html">
+  <meta property="og:image" content="https://hoangonthi.github.io/vohoanginvest-site/LOGO.png">
   <link rel="icon" href="LOGO.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/market-reader.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Bộ đọc thị trường realtime – Võ Hoàng","applicationCategory":"FinanceApplication","operatingSystem":"Web","url":"https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html","description":"Công cụ đọc trạng thái thị trường chứng khoán Việt Nam từ dữ liệu realtime.","author":{"@type":"Person","name":"Võ Hoàng"}}</script>
 </head>
 <body>
   <header class="reader-topbar">
@@ -18,8 +26,9 @@
       <a class="reader-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a>
       <nav>
         <a href="./">Trang chủ</a>
-        <a href="cong-cu-dau-tu-chung-khoan.html">Công cụ</a>
         <a href="investor-calculator.html">Máy tính đầu tư</a>
+        <a href="./?start=assessment&utm_source=market_reader">Đánh giá 17 câu</a>
+        <a href="./?start=contact&utm_source=market_reader">Trao đổi</a>
       </nav>
     </div>
   </header>
@@ -30,6 +39,7 @@
         <p class="reader-eyebrow">BỘ ĐỌC THỊ TRƯỜNG REALTIME</p>
         <h1>Không chỉ nhìn chỉ số.<br>Đọc xem thị trường đang nói gì.</h1>
         <p>Hệ thống tổng hợp điểm số, độ rộng, dòng tiền và sức mạnh nhóm ngành để trả lời một câu hỏi: <strong>lúc này nên hành động thế nào?</strong></p>
+        <div class="reader-proof"><b>Realtime</b><b>Cập nhật theo nhịp 60 giây</b><b>Không phím hàng</b></div>
       </div>
       <div class="reader-live" id="readerLive"><i></i><span>Đang kết nối dữ liệu…</span></div>
     </section>
@@ -51,6 +61,12 @@
         <p id="readerActionDetail">Hệ thống sẽ đưa ra việc nên làm tiếp theo từ trạng thái hiện tại.</p>
         <div class="reader-action-links" id="readerActions"></div>
       </article>
+    </section>
+
+    <section class="reader-sharebar" aria-label="Chia sẻ nhận định thị trường">
+      <div><span>CHIA SẺ NHANH</span><strong>Biến dữ liệu thành một đoạn nhận định có thể gửi cho ACE.</strong></div>
+      <div class="reader-share-actions"><button id="copyReaderBrief" type="button">Sao chép nhận định</button><button id="shareReaderBrief" type="button">Chia sẻ</button></div>
+      <p id="readerShareMessage" aria-live="polite"></p>
     </section>
 
     <section class="reader-metrics" aria-label="Chỉ số thị trường chính">
@@ -107,12 +123,27 @@
       </article>
     </section>
 
+    <section class="reader-lead">
+      <div class="reader-lead-copy">
+        <span class="reader-label">NHẬN BẢN ĐỒ THỊ TRƯỜNG</span>
+        <h2>Không cần mở bảng giá cả ngày để biết điều gì đáng chú ý.</h2>
+        <p>Đăng ký để Võ Hoàng có thể gửi nội dung thị trường khi có điểm đáng lưu ý: trạng thái, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.</p>
+      </div>
+      <div class="reader-lead-form" data-market-lead-root data-lead-source="MARKET_READER_BRIEF"></div>
+    </section>
+
+    <section class="reader-convert">
+      <div><span class="reader-label">TỪ THỊ TRƯỜNG → TÀI KHOẢN CỦA ANH/CHỊ</span><h2>Biết thị trường là một nửa. Nửa còn lại là biết tài khoản của mình được phép làm gì.</h2><p>Đừng để một trạng thái chung biến thành quyết định chung cho mọi tài khoản.</p></div>
+      <div class="reader-convert-actions"><a href="./?start=assessment&utm_source=market_reader&utm_medium=cta">Đánh giá hồ sơ 17 câu</a><a href="investor-calculator.html?utm_source=market_reader&utm_medium=cta">Mở máy tính đầu tư</a><a href="./?start=contact&utm_source=market_reader&utm_medium=cta">Trao đổi cùng Võ Hoàng</a></div>
+    </section>
+
     <footer class="reader-footer">
       <p><strong>Điểm trạng thái không phải tín hiệu mua/bán.</strong> Đây là thước đo tổng hợp để hỗ trợ kỷ luật ra quyết định. Mỗi lệnh vẫn phải đi qua kế hoạch vốn, điểm cắt lỗ và quy mô vị thế.</p>
       <a href="investor-calculator.html">Mở bộ máy tính đầu tư →</a>
     </footer>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module" src="assets/js/market-reader.js"></script>
 </body>
 </html>
