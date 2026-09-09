@@ -82,12 +82,18 @@ function Apply-VnstockSummary($data) {
         $idx = @($data.indexes | Where-Object { $_.symbol -eq $row.symbol }) | Select-Object -First 1
         if ($null -eq $idx) { continue }
 
-        $valueB = Convert-VndToBillions $row.matched_value
-        if ($null -ne $valueB -and $valueB -gt 0) {
-            $idx.value_b = $valueB
+        $matchedValueB = Convert-VndToBillions $row.matched_value
+        $totalValueB = Convert-VndToBillions $row.total_value
+        $idx | Add-Member -NotePropertyName total_value_b -NotePropertyValue $totalValueB -Force
+
+        if ($null -ne $matchedValueB -and $matchedValueB -gt 0) {
+            $idx.value_b = $matchedValueB
             $idx | Add-Member -NotePropertyName value_source -NotePropertyValue 'Vnstock public API / index trade_history / matched_value' -Force
+        } elseif ($null -ne $totalValueB -and $totalValueB -gt 0) {
+            $idx.value_b = $totalValueB
+            $idx | Add-Member -NotePropertyName value_source -NotePropertyValue 'Vnstock public API / index trade_history / total_value fallback' -Force
         }
-        $idx | Add-Member -NotePropertyName total_value_b -NotePropertyValue (Convert-VndToBillions $row.total_value) -Force
+
         $idx | Add-Member -NotePropertyName api_matched_volume_m -NotePropertyValue ($(if ($null -ne $row.matched_volume) { [Math]::Round(([double]$row.matched_volume / 1000000.0),3) } else { $null })) -Force
         $idx | Add-Member -NotePropertyName api_total_volume_m -NotePropertyValue ($(if ($null -ne $row.total_volume) { [Math]::Round(([double]$row.total_volume / 1000000.0),3) } else { $null })) -Force
 
