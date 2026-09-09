@@ -18,6 +18,7 @@ function addNavLinks(){
   const first=nav.firstElementChild;
   const entries=[
     ['thi-truong-hom-nay.html','Thị trường'],
+    ['sau-phien-cua-toi.html','Sau phiên'],
     ['investor-calculator.html','Máy tính']
   ];
   entries.reverse().forEach(([href,label])=>{
@@ -35,18 +36,21 @@ function addStartPaths(){
   section.dataset.growthStart='';
   section.innerHTML=`<div class="growth-start-inner">
     <div class="growth-start-head">
-      <div><span>BẮT ĐẦU TỪ VIỆC CẦN LÀM</span><strong>Đừng đi vòng. Chọn đúng việc anh/chị đang cần lúc này.</strong></div>
-      <div class="growth-proof"><b>Realtime</b><b>16 máy tính</b><b>17 câu đánh giá</b></div>
+      <div><span>BẮT ĐẦU TỪ VIỆC CẦN LÀM</span><strong>Đừng đi vòng. Chọn đúng câu hỏi đang làm anh/chị băn khoăn.</strong></div>
+      <div class="growth-proof"><b>Realtime</b><b>Sau phiên cá nhân</b><b>16 máy tính</b><b>17 câu đánh giá</b></div>
     </div>
     <div class="growth-path-grid">
       <a class="growth-path is-market" href="thi-truong-hom-nay.html" data-growth-action="market">
-        <span>01 · TRƯỚC KHI QUYẾT ĐỊNH</span><strong>Thị trường đang ở trạng thái nào?</strong><p>Đọc điểm thị trường, độ rộng, dòng tiền, nhóm dẫn dắt và hành động hệ thống.</p><b>Mở Bộ đọc realtime →</b>
+        <span>01 · TRƯỚC / TRONG PHIÊN</span><strong>Thị trường đang ở trạng thái nào?</strong><p>Đọc điểm thị trường, độ rộng, dòng tiền, nhóm dẫn dắt và hành động hệ thống.</p><b>Mở Bộ đọc realtime →</b>
+      </a>
+      <a class="growth-path is-personal" href="sau-phien-cua-toi.html" data-growth-action="after-session">
+        <span>02 · SAU PHIÊN</span><strong>Tài khoản tôi hôm nay có ổn không?</strong><p>So tài khoản với VN-Index, ngành, margin và hành vi để biết phần nào do thị trường, phần nào do chính danh mục.</p><b>Mở Sau phiên của tôi →</b>
       </a>
       <a class="growth-path" href="investor-calculator.html" data-growth-action="calculator">
-        <span>02 · TRƯỚC KHI BẤM LỆNH</span><strong>Con số này có đúng không?</strong><p>Tính quy mô lệnh, hòa vốn, margin, cổ tức, rủi ro danh mục và các phép tính dễ nhầm.</p><b>Mở máy tính đầu tư →</b>
+        <span>03 · TRƯỚC KHI BẤM LỆNH</span><strong>Con số này có đúng không?</strong><p>Tính quy mô lệnh, hòa vốn, margin, cổ tức, rủi ro danh mục và các phép tính dễ nhầm.</p><b>Mở máy tính đầu tư →</b>
       </a>
       <button class="growth-path" type="button" data-open-investor-profile data-growth-action="assessment">
-        <span>03 · KHI KẾT QUẢ KHÔNG NHƯ Ý</span><strong>Tôi đang sai ở đâu?</strong><p>17 câu để nhìn lại vốn, rủi ro, danh mục, chiến lược, hành vi và hệ thống đầu tư.</p><b>Làm đánh giá 3 phút →</b>
+        <span>04 · KHI KẾT QUẢ KHÔNG NHƯ Ý</span><strong>Tôi đang sai ở đâu?</strong><p>17 câu để nhìn lại vốn, rủi ro, danh mục, chiến lược, hành vi và hệ thống đầu tư.</p><b>Làm đánh giá 3 phút →</b>
       </button>
     </div>
   </div>`;
@@ -77,7 +81,7 @@ function addStickyMobile(){
   const bar=document.createElement('div');
   bar.className='growth-sticky';
   bar.dataset.growthSticky='';
-  bar.innerHTML=`<a href="thi-truong-hom-nay.html" data-growth-action="sticky-market"><span>●</span> Thị trường</a><a href="investor-calculator.html" data-growth-action="sticky-calc">Máy tính</a><button type="button" data-open-contact data-contact-source="STICKY_CONTACT" data-growth-action="sticky-contact">Trao đổi</button>`;
+  bar.innerHTML=`<a href="thi-truong-hom-nay.html" data-growth-action="sticky-market"><span>●</span> Thị trường</a><a href="sau-phien-cua-toi.html" data-growth-action="sticky-after">Sau phiên</a><button type="button" data-open-contact data-contact-source="STICKY_CONTACT" data-growth-action="sticky-contact">Trao đổi</button>`;
   document.body.appendChild(bar);
 }
 
