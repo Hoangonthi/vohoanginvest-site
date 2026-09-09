@@ -33,6 +33,14 @@ function finiteNumber(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function firstPositiveMetric(...values) {
+  for (const value of values) {
+    const number = finiteNumber(value);
+    if (number !== null && number > 0) return number;
+  }
+  return null;
+}
+
 function fmt(value, digits = 2) {
   const number = finiteNumber(value);
   if (number === null) return "—";
@@ -140,13 +148,26 @@ function breadthMeta(index) {
 }
 
 function statsHtml(index) {
-  const volume = finiteNumber(index.volume_m ?? index.api_matched_volume_m);
-  const tradeValue = finiteNumber(index.value_b);
-  const parts = [];
-  if (volume !== null) parts.push(`<span><b>KL</b> ${fmtTrim(volume, 3)} triệu cp</span>`);
-  if (tradeValue !== null) parts.push(`<span><b>GT</b> ${fmtTrim(tradeValue, 1)} tỷ</span>`);
-  if (!parts.length) return `<div class="market-index-stats is-empty">Chưa có dữ liệu giao dịch</div>`;
-  return `<div class="market-index-stats">${parts.join('<span class="market-stat-sep" aria-hidden="true">·</span>')}</div>`;
+  const volume = firstPositiveMetric(
+    index.volume_m,
+    index.api_matched_volume_m,
+    index.api_total_volume_m
+  );
+  const tradeValue = firstPositiveMetric(
+    index.value_b,
+    index.total_match_value_b,
+    index.total_value_b,
+    index.total_trade_value_b
+  );
+
+  const volumeText = volume === null ? "—" : `${fmtTrim(volume, 3)} triệu cp`;
+  const valueText = tradeValue === null ? "—" : `${fmtTrim(tradeValue, 1)} tỷ`;
+
+  return `<div class="market-index-stats${volume === null && tradeValue === null ? " is-empty" : ""}">
+    <span><b>KL</b> ${volumeText}</span>
+    <span class="market-stat-sep" aria-hidden="true">·</span>
+    <span><b>GT</b> ${valueText}</span>
+  </div>`;
 }
 
 function breadthHtml(index) {
@@ -154,10 +175,14 @@ function breadthHtml(index) {
   if (!breadth) {
     return `<div class="market-index-breadth is-empty" aria-label="Chưa có dữ liệu độ rộng thị trường"><span class="adv">▲ —</span><span class="flat">■ —</span><span class="dec">▼ —</span></div>`;
   }
+  const ceiling = finiteNumber(index.ceiling);
+  const floor = finiteNumber(index.floor);
+  const ceilingText = ceiling !== null && ceiling > 0 ? ` <small>(${Math.round(ceiling)})</small>` : "";
+  const floorText = floor !== null && floor > 0 ? ` <small>(${Math.round(floor)})</small>` : "";
   return `<div class="market-index-breadth" aria-label="Độ rộng thị trường: tăng ${breadth.adv}, tham chiếu ${breadth.flat}, giảm ${breadth.dec}">
-    <span class="adv">▲ <b>${breadth.adv}</b> <em>tăng</em></span>
+    <span class="adv">▲ <b>${breadth.adv}</b>${ceilingText} <em>tăng</em></span>
     <span class="flat">■ <b>${breadth.flat}</b> <em>TC</em></span>
-    <span class="dec">▼ <b>${breadth.dec}</b> <em>giảm</em></span>
+    <span class="dec">▼ <b>${breadth.dec}</b>${floorText} <em>giảm</em></span>
   </div>`;
 }
 
