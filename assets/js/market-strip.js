@@ -274,6 +274,7 @@ function renderMarket(section, data) {
   }
   const status = section.querySelector("[data-market-status]");
   if (status) status.textContent = modeCopy(data.mode, data.updated_at || "");
+  document.dispatchEvent(new CustomEvent("vh:market-data", { detail: data }));
   requestAnimationFrame(() => updateCarouselControls(section));
 }
 
