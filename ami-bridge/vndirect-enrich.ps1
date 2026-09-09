@@ -51,13 +51,15 @@ function Invoke-VndirectMarketSummary {
         $exe = $py[0]
         $args = @()
         if ($py.Count -eq 2) { $args += $py[1] }
-        $args += $scriptPath
+        # Start-Process flattens ArgumentList to one command line. Quote the script path
+        # explicitly because the user's ami-bridge directory can contain spaces.
+        $args += ('"' + $scriptPath + '"')
 
-        $p = Start-Process -FilePath $exe -ArgumentList $args -NoNewWindow -PassThru -RedirectStandardOutput $outFile -RedirectStandardError $errFile
-        if (-not $p.WaitForExit(15000)) {
+        $p = Start-Process -FilePath $exe -ArgumentList $args -WorkingDirectory $PSScriptRoot -NoNewWindow -PassThru -RedirectStandardOutput $outFile -RedirectStandardError $errFile
+        if (-not $p.WaitForExit(18000)) {
             try { $p.Kill() } catch {}
             $script:VndirectLastStatus = 'timeout'
-            $script:VndirectLastError = 'VNDIRECT feed exceeded 15 seconds'
+            $script:VndirectLastError = 'VNDIRECT feed exceeded 18 seconds'
             return $null
         }
 
@@ -65,7 +67,7 @@ function Invoke-VndirectMarketSummary {
         $errTxt = if (Test-Path $errFile) { Get-Content -LiteralPath $errFile -Raw -ErrorAction SilentlyContinue } else { '' }
         if ([string]::IsNullOrWhiteSpace($txt)) {
             $script:VndirectLastStatus = 'empty'
-            $script:VndirectLastError = $errTxt
+            $script:VndirectLastError = if ([string]::IsNullOrWhiteSpace($errTxt)) { 'Probe returned no stdout' } else { $errTxt.Trim() }
             return $null
         }
 
@@ -78,7 +80,7 @@ function Invoke-VndirectMarketSummary {
             $script:VndirectLastStatus = 'ok'
         } else {
             $script:VndirectLastStatus = 'feed-error'
-            $script:VndirectLastError = $obj.error
+            $script:VndirectLastError = if ($obj.error) { $obj.error } else { 'No VNDIRECT rows returned' }
         }
         return $obj
     } catch {
