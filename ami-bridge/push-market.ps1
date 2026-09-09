@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V1.4
+# VO HOANG Market Sync V1.5
 # DataTick remains the quote source. Public exchange symbol lists are used only
 # as membership metadata to calculate market breadth for HOSE/HNX/UPCOM.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
@@ -81,7 +81,6 @@ function Ensure-UniverseCache {
 function Read-Universe([string]$name) {
     $path = Join-Path $CacheRoot ($name + '.txt')
     if (-not (Test-Path $path)) { return @() }
-    # Vietnamese common stocks use 3-character stock codes; this removes ETF/index/warrant rows.
     return @(Get-Content -LiteralPath $path -ErrorAction SilentlyContinue |
         ForEach-Object { $_.Trim().ToUpperInvariant() } |
         Where-Object { $_ -match '^[A-Z0-9]{3}$' } |
@@ -126,7 +125,6 @@ function Set-Breadth($data, [string]$indexSymbol, $breadth, [string]$source) {
 function Enrich-MarketData($data) {
     Ensure-UniverseCache
 
-    # VN30: exact current composition from the user's AmiBroker watchlist.
     try {
         $vn30Symbols = Read-WatchList 'VN30'
         if ($vn30Symbols.Count -gt 0) {
@@ -137,7 +135,6 @@ function Enrich-MarketData($data) {
         Write-Host ('[{0}] Khong tinh duoc breadth VN30: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
     }
 
-    # Exchange breadth: quotes come from DataTick; lists are membership metadata only.
     $jobs = @(
         @{ universe='HSX'; index='VN-INDEX' },
         @{ universe='HNX'; index='HNX-INDEX' },
@@ -187,10 +184,10 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.4' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V1.5' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
-Write-Host ('Chu ky:  {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
+Write-Host ('Chu ky muc tieu: {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 Write-Host 'Breadth: VN30 tu WatchList; VN-INDEX/HNX/UPCOM tu danh sach san + gia DataTick.' -ForegroundColor Cyan
 Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
@@ -204,10 +201,13 @@ $nextOutsideNotice = [DateTime]::MinValue
 while ($true) {
     try {
         if (Is-TradingWindow) {
+            $cycleStart = Get-Date
             Push-Once
-            $next = (Get-Date).AddSeconds($IntervalSeconds)
-            Write-Host ('          Lan tiep theo: {0}' -f $next.ToString('HH:mm:ss')) -ForegroundColor DarkGray
-            Start-Sleep -Seconds $IntervalSeconds
+            $spent = ((Get-Date) - $cycleStart).TotalSeconds
+            $sleepSeconds = [Math]::Max(1, [Math]::Ceiling($IntervalSeconds - $spent))
+            $next = (Get-Date).AddSeconds($sleepSeconds)
+            Write-Host ('          Lan tiep theo: {0} | nghi {1}s' -f $next.ToString('HH:mm:ss'), $sleepSeconds) -ForegroundColor DarkGray
+            Start-Sleep -Seconds $sleepSeconds
         } else {
             if ((Get-Date) -ge $nextOutsideNotice) {
                 Write-Host ('[{0}] Ngoai gio 08:45-15:00, tam dung dong bo.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
