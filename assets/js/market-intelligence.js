@@ -109,10 +109,20 @@ function renderIntelligence(data) {
   const flow = mi.flow || {};
   const leader = mi.leadership?.leader || null;
   const fresh = mi.freshness || {};
+  const freshnessBlocksAction = ["delayed", "stale"].includes(String(fresh.status || ""));
+  const displayAction = freshnessBlocksAction
+    ? {
+        headline: fresh.status === "stale" ? "Tạm dừng quyết định mới từ dữ liệu này." : "Chờ dữ liệu bắt kịp trước khi mở vị thế mới.",
+        detail: fresh.status === "stale"
+          ? "Nguồn realtime đã quá cũ. Hệ thống vẫn hiển thị snapshot gần nhất để tham khảo nhưng không coi đây là trạng thái đang diễn ra."
+          : "Dữ liệu đang chậm hơn nhịp bình thường. Ưu tiên kiểm tra lại nguồn realtime trước khi dùng Market Score để hành động.",
+        links: []
+      }
+    : (mi.action || {});
   const alerts = Array.isArray(mi.alerts) ? mi.alerts : [];
   const leaders = Array.isArray(mi.leadership?.leaders) ? mi.leadership.leaders : [];
   const laggards = Array.isArray(mi.leadership?.laggards) ? mi.leadership.laggards : [];
-  const links = Array.isArray(mi.action?.links) ? mi.action.links : [];
+  const links = Array.isArray(displayAction?.links) ? displayAction.links : [];
   const score = Math.max(0, Math.min(100, Number(state.score) || 0));
   const breadthNet = breadth.balance === null || breadth.balance === undefined
     ? "Chưa đủ dữ liệu"
@@ -127,7 +137,7 @@ function renderIntelligence(data) {
     ? (leader?.momentum || "Đang theo dõi")
     : `${leader.momentum || "ổn định"} · 15 phút ${fmtPct(leader.delta_15m)}`;
 
-  panel.dataset.tone = tone(state.tone);
+  panel.dataset.tone = freshnessBlocksAction ? tone(fresh.tone) : tone(state.tone);
   panel.innerHTML = `
     <div class="mi-summary">
       <div class="mi-state-block">
@@ -156,8 +166,8 @@ function renderIntelligence(data) {
       <div class="mi-action-copy">
         <span>HÀNH ĐỘNG</span>
         <div>
-          <strong>${esc(mi.action?.headline || "Theo dõi thêm dữ liệu.")}</strong>
-          <p>${esc(mi.action?.detail || "")}</p>
+          <strong>${esc(displayAction?.headline || "Theo dõi thêm dữ liệu.")}</strong>
+          <p>${esc(displayAction?.detail || "")}</p>
         </div>
       </div>
       <div class="mi-action-links">
