@@ -37,6 +37,13 @@ function updateStats(){
   document.querySelector('#statContacted').textContent=rows.filter(r=>r.status==='CONTACTED').length;
   document.querySelector('#statConverted').textContent=rows.filter(r=>r.status==='CONVERTED').length;
 }
+function renderFunnel(f={}){
+  document.querySelector('#funnelViews').textContent=f.market_reader_views??'—';
+  document.querySelector('#funnelLeads').textContent=f.new_market_leads??'—';
+  document.querySelector('#funnelRate').textContent=f.view_to_lead_pct===null||f.view_to_lead_pct===undefined?'—':`${f.view_to_lead_pct}%`;
+  document.querySelector('#funnelCta').textContent=f.market_reader_cta_sessions??'—';
+  document.querySelector('#funnelMeetings').textContent=f.market_attributed_meetings??'—';
+}
 function render(){
   const filtered=visibleRows();count.textContent=`${filtered.length} lead`;
   list.innerHTML=filtered.length?filtered.map(r=>`<article class="card lead">
@@ -49,9 +56,13 @@ function render(){
 }
 async function load(){
   list.innerHTML='<div class="card">Đang tải lead...</div>';
-  const {data,error}=await supabaseClient.rpc('admin_list_market_brief_leads_v1',{p_status:status.value||null,p_limit:500});
-  if(error){list.innerHTML=`<div class="card">Không tải được dữ liệu: ${esc(error.message)}</div>`;return}
-  rows=data||[];render();
+  const [leadResult,funnelResult]=await Promise.all([
+    supabaseClient.rpc('admin_list_market_brief_leads_v1',{p_status:status.value||null,p_limit:500}),
+    supabaseClient.rpc('admin_growth_funnel_v1',{p_days:7})
+  ]);
+  if(funnelResult.error) renderFunnel({}); else renderFunnel(funnelResult.data||{});
+  if(leadResult.error){list.innerHTML=`<div class="card">Không tải được dữ liệu: ${esc(leadResult.error.message)}</div>`;return}
+  rows=leadResult.data||[];render();
 }
 async function showApp(){loginBox.classList.add('hidden');app.classList.remove('hidden');logout.classList.remove('hidden');await load()}
 function showLogin(){loginBox.classList.remove('hidden');app.classList.add('hidden');logout.classList.add('hidden')}
