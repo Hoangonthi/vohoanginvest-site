@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Continue'
 
-# Force modern TLS for Windows PowerShell 5.1
+# VO HOANG Market Sync V1.2
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
@@ -9,8 +9,12 @@ $IntervalSeconds = 60
 $BridgeKey = [Environment]::GetEnvironmentVariable('VH_BRIDGE_KEY','User')
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) { $BridgeKey = $env:VH_BRIDGE_KEY }
 
+function Get-VnNow {
+    return [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'SE Asia Standard Time')
+}
+
 function Is-TradingWindow {
-    $now = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'SE Asia Standard Time')
+    $now = Get-VnNow
     if ($now.DayOfWeek -eq [DayOfWeek]::Saturday -or $now.DayOfWeek -eq [DayOfWeek]::Sunday) { return $false }
     $mins = ($now.Hour * 60) + $now.Minute
     return ($mins -ge (8*60+45) -and $mins -le (15*60))
@@ -33,6 +37,7 @@ function Get-ErrorDetail($err) {
 }
 
 function Push-Once {
+    $started = Get-Date
     try {
         $data = Invoke-RestMethod -UseBasicParsing -Uri $BridgeUrl -Method Get -TimeoutSec 10
         if (-not $data.ok -or -not $data.indexes -or $data.indexes.Count -lt 1) {
@@ -43,7 +48,8 @@ function Push-Once {
         $headers = @{ 'x-bridge-key' = $BridgeKey }
         $result = Invoke-RestMethod -UseBasicParsing -Uri $RelayUrl -Method Post -Headers $headers -ContentType 'application/json' -Body $json -TimeoutSec 20
         if ($result.ok) {
-            Write-Host ('[{0}] Da dong bo {1} chi so len website.' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count) -ForegroundColor Green
+            $elapsed = [Math]::Round(((Get-Date) - $started).TotalSeconds, 1)
+            Write-Host ('[{0}] Da dong bo {1} chi so len website. ({2}s)' -f (Get-Date -Format 'HH:mm:ss'), $data.indexes.Count, $elapsed) -ForegroundColor Green
         } else {
             Write-Host ('[{0}] Relay tu choi du lieu: {1}' -f (Get-Date -Format 'HH:mm:ss'), ($result | ConvertTo-Json -Compress)) -ForegroundColor Yellow
         }
@@ -52,25 +58,35 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V1.1' -ForegroundColor Cyan
-Write-Host ('Bridge: ' + $BridgeUrl)
+Write-Host 'VO HOANG Market Sync V1.2' -ForegroundColor Cyan
+Write-Host ('Bridge: http://127.0.0.1:8765/market/overview')
 Write-Host ('Relay:  ' + $RelayUrl)
 Write-Host ('Chu ky:  {0} giay | chi gui 08:45-15:00, Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
+Write-Host 'GIU CUA SO NAY MO TRONG GIO GIAO DICH.' -ForegroundColor Yellow
 
 if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
     Write-Host 'THIEU VH_BRIDGE_KEY. Chay lenh setup 1 lan theo huong dan.' -ForegroundColor Red
-    Write-Host 'Nhan Enter de dong.'
-    [void](Read-Host)
     exit 2
 }
 
+$nextOutsideNotice = [DateTime]::MinValue
 while ($true) {
-    if (Is-TradingWindow) {
-        Push-Once
-        Start-Sleep -Seconds $IntervalSeconds
-    } else {
-        Write-Host ('[{0}] Ngoai gio 08:45-15:00, tam dung dong bo.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
-        Start-Sleep -Seconds 300
+    try {
+        if (Is-TradingWindow) {
+            Push-Once
+            $next = (Get-Date).AddSeconds($IntervalSeconds)
+            Write-Host ('          Lan tiep theo: {0}' -f $next.ToString('HH:mm:ss')) -ForegroundColor DarkGray
+            Start-Sleep -Seconds $IntervalSeconds
+        } else {
+            if ((Get-Date) -ge $nextOutsideNotice) {
+                Write-Host ('[{0}] Ngoai gio 08:45-15:00, tam dung dong bo.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
+                $nextOutsideNotice = (Get-Date).AddMinutes(5)
+            }
+            Start-Sleep -Seconds 30
+        }
+    } catch {
+        Write-Host ('[{0}] Vong dong bo gap loi, se thu lai sau 10 giay: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor Red
+        Start-Sleep -Seconds 10
     }
 }
