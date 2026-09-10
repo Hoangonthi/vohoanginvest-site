@@ -34,7 +34,7 @@ if errorlevel 1 (
 )
 
 echo AmiBridge da san sang.
-echo ==== BAT MARKET SYNC ====
+echo ==== BAT MARKET SYNC + HOT STOCKS + DERIVATIVES ====
 echo CUA SO NAY SE GIU MARKET SYNC CHAY. KHONG DONG TRONG GIO GIAO DICH.
 echo.
 "%PSRUN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-market.ps1"

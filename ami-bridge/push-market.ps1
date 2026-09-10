@@ -1,12 +1,19 @@
-$ErrorActionPreference = 'Continue'
+﻿$ErrorActionPreference = 'Continue'
 
-# VO HOANG Market Sync V2.1
+# VO HOANG Market Sync V2.3 + Hot Stocks + Derivatives
 # Strategy: VNDIRECT realtime MI first for GT/breadth; Vnstock and DataTick/AmiBroker fallback.
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
 
 $BridgeUrl = 'http://127.0.0.1:8765/market/overview'
 $StockBaseUrl = 'http://127.0.0.1:8765/stock'
 $RelayUrl = 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed'
+$HotStocksRelayUrl = 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed'
+$HotStocksCsv = 'C:\Users\USER\Desktop\AMIBRO\tplus_pro_snapshot.csv'
+$script:LastHotStocksWriteUtc = [DateTime]::MinValue
+$DerivativesRelayUrl = 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed'
+$DerivativesCsv = 'C:\Users\USER\Desktop\AMIBRO\psvn_trend_snapshot.csv'
+$DerivativesIntervalSeconds = 2
+$script:LastDerivativesWriteUtc = [DateTime]::MinValue
 $IntervalSeconds = 60
 $WatchListRoot = 'D:\AmiBroker\eod\WatchLists'
 $CacheRoot = Join-Path $PSScriptRoot 'universe-cache'
@@ -200,6 +207,160 @@ function Enrich-MarketData($data) {
     return $data
 }
 
+
+function Convert-HotNum($value) {
+    if ($null -eq $value) { return $null }
+    $s = [string]$value
+    if ([string]::IsNullOrWhiteSpace($s)) { return $null }
+    $n = 0.0
+    if ([double]::TryParse($s, [Globalization.NumberStyles]::Float, [Globalization.CultureInfo]::InvariantCulture, [ref]$n)) {
+        return $n
+    }
+    if ([double]::TryParse($s, [ref]$n)) { return $n }
+    return $null
+}
+
+function Push-HotStocksOnce {
+    try {
+        if (-not (Test-Path -LiteralPath $HotStocksCsv)) {
+            Write-Host ('[{0}] Hot Stocks: chua thay CSV AmiBroker.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkYellow
+            return
+        }
+
+        $file = Get-Item -LiteralPath $HotStocksCsv -ErrorAction Stop
+
+        # Chi day khi AmiBroker vua tao snapshot moi.
+        if ($file.LastWriteTimeUtc -le $script:LastHotStocksWriteUtc) { return }
+
+        # Tranh doc dung luc AmiBroker dang ghi file.
+        $beforeWrite = $file.LastWriteTimeUtc
+        Start-Sleep -Milliseconds 700
+        $rows = @(Import-Csv -LiteralPath $HotStocksCsv -ErrorAction Stop)
+        $afterWrite = (Get-Item -LiteralPath $HotStocksCsv -ErrorAction Stop).LastWriteTimeUtc
+        if ($afterWrite -ne $beforeWrite) {
+            Write-Host ('[{0}] Hot Stocks: CSV dang duoc AmiBroker cap nhat, doi vong sau.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
+            return
+        }
+
+        # Snapshot AFL binh thuong co nhieu ma. Neu chi co header thi xem nhu file dang ghi do.
+        if ($rows.Count -eq 0) {
+            Write-Host ('[{0}] Hot Stocks: CSV chua co dong du lieu, doi vong sau.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkGray
+            return
+        }
+
+        # Bam sat AFL hien tai:
+        # - signalClass MANH / THAM GIA = tScore dat nguong va khong mua duoi
+        # - reason DAT = cac dieu kien gia, RVOL, vol/phien truoc, GTGD, market filter deu dat
+        $selected = @(
+            $rows |
+            Where-Object {
+                $cls = ([string]$_.signalClass).Trim().ToUpperInvariant()
+                $reason = ([string]$_.reason).Trim().ToUpperInvariant()
+                (($cls -eq 'MANH') -or ($cls -eq 'THAM GIA')) -and ($reason -eq 'DAT')
+            } |
+            Sort-Object `
+                @{ Expression = { [double](Convert-HotNum $_.tScore) }; Descending = $true }, `
+                @{ Expression = { [double](Convert-HotNum $_.changePct) }; Descending = $true }, `
+                @{ Expression = { [double](Convert-HotNum $_.valueTradedBn) }; Descending = $true }
+        )
+
+        $stocks = @()
+        foreach ($r in $selected) {
+            $symbol = ([string]$r.symbol).Trim().ToUpperInvariant()
+            if ([string]::IsNullOrWhiteSpace($symbol)) { continue }
+
+            $stocks += [ordered]@{
+                symbol                = $symbol
+                signalClass           = ([string]$r.signalClass).Trim()
+                reason                = ([string]$r.reason).Trim()
+                baseType              = ([string]$r.baseType).Trim()
+                tScore                = Convert-HotNum $r.tScore
+                price                 = Convert-HotNum $r.price
+                changePct             = Convert-HotNum $r.changePct
+                projectedVolRatio     = Convert-HotNum $r.projectedVolRatio
+                projectedPrevVolRatio = Convert-HotNum $r.projectedPrevVolRatio
+                valueTradedBn         = Convert-HotNum $r.valueTradedBn
+                riskRewardRatio       = Convert-HotNum $r.riskRewardRatio
+                stopLoss              = Convert-HotNum $r.stopLoss
+                stopLossPct           = Convert-HotNum $r.stopLossPct
+                marketText            = ([string]$r.marketText).Trim()
+                updatedAt             = ([string]$r.updatedAt).Trim()
+            }
+        }
+
+        $sourceUpdated = ([DateTimeOffset]$afterWrite.ToLocalTime()).ToString('o')
+        $body = [ordered]@{
+            stocks = $stocks
+            source_updated_at = $sourceUpdated
+        } | ConvertTo-Json -Depth 8 -Compress
+
+        $headers = @{ 'x-bridge-key' = $BridgeKey }
+        $result = Invoke-RestMethod -UseBasicParsing -Uri $HotStocksRelayUrl -Method Post -Headers $headers -ContentType 'application/json' -Body $body -TimeoutSec 20
+
+        if ($result.ok) {
+            $script:LastHotStocksWriteUtc = $afterWrite
+            $symbols = @($stocks | ForEach-Object { $_.symbol })
+            $list = if ($symbols.Count -gt 0) { $symbols -join ', ' } else { '(khong co ma)' }
+            Write-Host ('[{0}] Hot Stocks: da dong bo {1} ma | {2}' -f (Get-Date -Format 'HH:mm:ss'), $symbols.Count, $list) -ForegroundColor Cyan
+        } else {
+            Write-Host ('[{0}] Hot Stocks: relay tu choi du lieu.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor Yellow
+        }
+    } catch {
+        Write-Host ('[{0}] Hot Stocks loi: {1}' -f (Get-Date -Format 'HH:mm:ss'), (Get-ErrorDetail $_)) -ForegroundColor DarkYellow
+    }
+}
+
+
+function Push-DerivativesOnce {
+    try {
+        if (-not (Test-Path -LiteralPath $DerivativesCsv)) {
+            return
+        }
+
+        $file = Get-Item -LiteralPath $DerivativesCsv -ErrorAction Stop
+        if ($file.LastWriteTimeUtc -le $script:LastDerivativesWriteUtc) { return }
+
+        # AFL ghi lai file moi giay; doi rat ngan de tranh doc trung luc dang ghi.
+        $beforeWrite = $file.LastWriteTimeUtc
+        Start-Sleep -Milliseconds 120
+        $rows = @(Import-Csv -LiteralPath $DerivativesCsv -ErrorAction Stop)
+        $afterWrite = (Get-Item -LiteralPath $DerivativesCsv -ErrorAction Stop).LastWriteTimeUtc
+        if ($afterWrite -ne $beforeWrite -or $rows.Count -lt 1) { return }
+
+        $r = $rows[0]
+        $symbol = ([string]$r.symbol).Trim().ToUpperInvariant()
+        $trend = ([string]$r.trend).Trim().ToUpperInvariant()
+        if ([string]::IsNullOrWhiteSpace($symbol) -or (($trend -ne 'TANG') -and ($trend -ne 'GIAM'))) {
+            Write-Host ('[{0}] Phai sinh: snapshot khong hop le.' -f (Get-Date -Format 'HH:mm:ss')) -ForegroundColor DarkYellow
+            return
+        }
+
+        $body = [ordered]@{
+            symbol = $symbol
+            trend = $trend
+            system_price = Convert-HotNum $r.systemPrice
+            t1 = Convert-HotNum $r.t1
+            t2 = Convert-HotNum $r.t2
+            t3 = Convert-HotNum $r.t3
+            reversal_price = Convert-HotNum $r.reversalPrice
+            last_price = Convert-HotNum $r.lastPrice
+            source_updated_at = ([DateTimeOffset]$afterWrite.ToLocalTime()).ToString('o')
+        } | ConvertTo-Json -Depth 6 -Compress
+
+        $headers = @{ 'x-bridge-key' = $BridgeKey }
+        $result = Invoke-RestMethod -UseBasicParsing -Uri $DerivativesRelayUrl -Method Post -Headers $headers -ContentType 'application/json' -Body $body -TimeoutSec 10
+
+        if ($result.ok) {
+            $script:LastDerivativesWriteUtc = $afterWrite
+            $trendUi = if ($trend -eq 'TANG') { 'TANG' } else { 'GIAM' }
+            Write-Host ('[{0}] PS {1}: {2} | He thong {3} | T1 {4} | T2 {5} | T3 {6} | Dao chieu {7}' -f `
+                (Get-Date -Format 'HH:mm:ss'), $symbol, $trendUi, $r.systemPrice, $r.t1, $r.t2, $r.t3, $r.reversalPrice) -ForegroundColor Magenta
+        }
+    } catch {
+        Write-Host ('[{0}] Phai sinh loi: {1}' -f (Get-Date -Format 'HH:mm:ss'), (Get-ErrorDetail $_)) -ForegroundColor DarkYellow
+    }
+}
+
 function Push-Once {
     $started = Get-Date
     try {
@@ -242,9 +403,14 @@ function Push-Once {
     }
 }
 
-Write-Host 'VO HOANG Market Sync V2.1' -ForegroundColor Cyan
+Write-Host 'VO HOANG Market Sync V2.3 + Hot Stocks + Derivatives' -ForegroundColor Cyan
 Write-Host ('Bridge: ' + $BridgeUrl)
 Write-Host ('Relay:  ' + $RelayUrl)
+Write-Host ('Hot:    ' + $HotStocksRelayUrl)
+Write-Host ('CSV:    ' + $HotStocksCsv)
+Write-Host ('PS:     ' + $DerivativesRelayUrl)
+Write-Host ('PS CSV: ' + $DerivativesCsv)
+Write-Host ('PS realtime: kiem tra snapshot moi moi {0}s' -f $DerivativesIntervalSeconds)
 Write-Host ('Chu ky muc tieu: {0} giay | phien sang 08:45-11:30 | phien chieu 13:00-15:00 | Thu 2-Thu 6' -f $IntervalSeconds)
 Write-Host ('TLS:     ' + [Net.ServicePointManager]::SecurityProtocol)
 if (Get-Command Test-VndirectAvailable -ErrorAction SilentlyContinue) {
@@ -260,16 +426,30 @@ if ([string]::IsNullOrWhiteSpace($BridgeKey)) {
 }
 
 $nextOutsideNotice = [DateTime]::MinValue
+$nextMarketSync = [DateTime]::MinValue
+
 while ($true) {
     try {
         if (Is-TradingWindow) {
-            $cycleStart = Get-Date
-            Push-Once
-            $spent = ((Get-Date) - $cycleStart).TotalSeconds
-            $sleepSeconds = [Math]::Max(1, [Math]::Ceiling($IntervalSeconds - $spent))
-            $next = (Get-Date).AddSeconds($sleepSeconds)
-            Write-Host ('          Lan tiep theo: {0} | nghi {1}s' -f $next.ToString('HH:mm:ss'), $sleepSeconds) -ForegroundColor DarkGray
-            Start-Sleep -Seconds $sleepSeconds
+            $nowLoop = Get-Date
+
+            # Phai sinh doc snapshot AmiBroker thuong xuyen, doc lap chu ky market 60s.
+            Push-DerivativesOnce
+
+            if ($nowLoop -ge $nextMarketSync) {
+                $cycleStart = Get-Date
+                Push-Once
+                Push-HotStocksOnce
+                Push-DerivativesOnce
+                $spent = ((Get-Date) - $cycleStart).TotalSeconds
+                $nextMarketSync = $cycleStart.AddSeconds($IntervalSeconds)
+                if ($nextMarketSync -lt (Get-Date)) {
+                    $nextMarketSync = (Get-Date).AddSeconds(1)
+                }
+                Write-Host ('          Market lan tiep theo: {0} | PS van theo doi realtime' -f $nextMarketSync.ToString('HH:mm:ss')) -ForegroundColor DarkGray
+            }
+
+            Start-Sleep -Seconds $DerivativesIntervalSeconds
         } else {
             if ((Get-Date) -ge $nextOutsideNotice) {
                 $session = Get-MarketSession
@@ -283,7 +463,7 @@ while ($true) {
             Start-Sleep -Seconds 30
         }
     } catch {
-        Write-Host ('[{0}] Vong dong bo gap loi, se thu lai sau 10 giay: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor Red
-        Start-Sleep -Seconds 10
+        Write-Host ('[{0}] Vong dong bo gap loi, se thu lai sau 5 giay: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor Red
+        Start-Sleep -Seconds 5
     }
 }

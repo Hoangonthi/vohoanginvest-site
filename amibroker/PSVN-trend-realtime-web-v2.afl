@@ -1,0 +1,1073 @@
+﻿    _SECTION_BEGIN("TREND");
+
+    SetBarsRequired(100000,0);
+    GraphXSpace = 15;
+
+    // ================== PRICE TREND ==================
+    ea = EMA(C,10);
+    eb = EMA(C,20);
+
+    SetBarFillColor(IIf(ea > eb, colorGreen, colorRed));
+    Plot(C, "Price", IIf(ea > eb, colorGreen, colorRed), styleCandle);
+
+    Buy  = ea > eb AND TimeNum() > 092000 AND TimeNum() < 150000;
+    Sell = eb > ea OR TimeNum() > 150000;
+
+    Short = 0;
+    Cover = 0;
+
+    Buy   = ExRem(Buy,Sell);
+    Sell  = ExRem(Sell,Buy);
+    Short = ExRem(Short,Cover);
+    Cover = ExRem(Cover,Short);
+
+    SetTradeDelays(1,1,1,1);
+
+    _N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}",
+    O, H, L, C, SelectedValue(ROC(C,1))));
+
+    // ================== SUPER TREND ==================
+    Factor = Param("Factor",4,1,10,1);
+    Pd     = Param("ATR Periods",10,1,100,1);
+
+    Up   = (H+L)/2 + (Factor * ATR(Pd));
+    Dn   = (H+L)/2 - (Factor * ATR(Pd));
+    iATR = ATR(Pd);
+
+    TrendUp = TrendDown = Null;
+    trend[0] = 1;
+    changeOfTrend = 0;
+    flag = flagh = 0;
+
+    for(i = 1; i < BarCount; i++)
+    {
+        TrendUp[i] = Null;
+        TrendDown[i] = Null;
+        trend[i] = 1;
+
+        if(Close[i] > Up[i-1])
+        {
+            trend[i] = 1;
+            if(trend[i-1] == -1) changeOfTrend = 1;
+        }
+        else
+        if(Close[i] < Dn[i-1])
+        {
+            trend[i] = -1;
+            if(trend[i-1] == 1) changeOfTrend = 1;
+        }
+        else
+        if(trend[i-1] == 1)
+        {
+            trend[i] = 1;
+            changeOfTrend = 0;
+        }
+        else
+        if(trend[i-1] == -1)
+        {
+            trend[i] = -1;
+            changeOfTrend = 0;
+        }
+
+        flag  = IIf(trend[i] < 0 AND trend[i-1] > 0, 1, 0);
+        flagh = IIf(trend[i] > 0 AND trend[i-1] < 0, 1, 0);
+
+        if(trend[i] > 0 AND Dn[i] < Dn[i-1]) Dn[i] = Dn[i-1];
+        if(trend[i] < 0 AND Up[i] > Up[i-1]) Up[i] = Up[i-1];
+
+        if(flag == 1)  Up[i] = (H[i]+L[i])/2 + (Factor*iATR[i]);
+        if(flagh == 1) Dn[i] = (H[i]+L[i])/2 - (Factor*iATR[i]);
+
+        if(trend[i] == 1)
+        {
+            TrendUp[i] = Dn[i];
+
+            if(changeOfTrend == 1)
+            {
+                TrendUp[i-1] = TrendDown[i-1];
+                changeOfTrend = 0;
+            }
+        }
+        else
+        if(trend[i] == -1)
+        {
+            TrendDown[i] = Up[i];
+
+            if(changeOfTrend == 1)
+            {
+                TrendDown[i-1] = TrendUp[i-1];
+                changeOfTrend = 0;
+            }
+        }
+    }
+
+    Plot(TrendUp, "Trend", colorGreen);
+    Plot(TrendDown, "Down", colorRed);
+
+    Buy  = trend == 1;
+    Sell = trend == -1;
+
+    Buy  = ExRem(Buy,Sell);
+    Sell = ExRem(Sell,Buy);
+
+    Short = Sell;
+    Cover = Buy;
+
+    BuyPrice   = ValueWhen(Buy,C);
+    SellPrice  = ValueWhen(Sell,C);
+    ShortPrice = ValueWhen(Short,C);
+    CoverPrice = ValueWhen(Cover,C);
+
+    Title = EncodeColor(colorWhite) + "win" + " - " + Name() + " - " + EncodeColor(colorRed) + Interval(2) + EncodeColor(colorWhite) +
+    " - " + Date() + "\n" +
+    EncodeColor(colorRed) + "Op-" + O + " Hi-" + H + " Lo-" + L + " Cl-" + C + " Vol= " + WriteVal(V) + "\n" +
+    EncodeColor(colorLime) +
+    WriteIf(Buy, " B ", "") +
+    WriteIf(Sell, " S ", "") + "\n" +
+    EncodeColor(colorBlue) +
+    WriteIf(Sell, "Total Profit/Loss for the Last Trade Rs." + (C-BuyPrice), "") +
+    WriteIf(Buy, "Total Profit/Loss for the Last trade Rs." + (SellPrice-C), "");
+
+    // ================== ARROWS ==================
+    PlotShapes(IIf(Buy, shapeSquare, shapeNone), colorGreen, 0, L, Offset=-40);
+    PlotShapes(IIf(Buy, shapeSquare, shapeNone), colorLime, 0, L, Offset=-50);
+    PlotShapes(IIf(Buy, shapeUpArrow, shapeNone), colorWhite, 0, L, Offset=-45);
+
+    PlotShapes(IIf(Short, shapeSquare, shapeNone), colorRed, 0, H, Offset=40);
+    PlotShapes(IIf(Short, shapeSquare, shapeNone), colorOrange, 0, H, Offset=50);
+    PlotShapes(IIf(Short, shapeDownArrow, shapeNone), colorWhite, 0, H, Offset=-45);
+
+    TrendSL = IIf(trend == 1, TrendUp, TrendDown);
+
+    // Ðã b? ph?n g?i tín hi?u Telegram / âm thanh.
+
+    // ================== TARGET LINES ==================
+    for(i = BarCount-1; i > 1; i--)
+    {
+        if(Buy[i] == 1)
+        {
+            entry = C[i];
+            sig = "B";
+            sl = TrendSL[i];
+            tar1 = entry + (entry * .0050);
+            tar2 = entry + (entry * .0092);
+            tar3 = entry + (entry * .0179);
+            bars = i;
+            i = 0;
+        }
+
+        if(Sell[i] == 1)
+        {
+            sig = "S";
+            entry = C[i];
+            sl = TrendSL[i];
+            tar1 = entry - (entry * .0050);
+            tar2 = entry - (entry * .0112);
+            tar3 = entry - (entry * .0212);
+            bars = i;
+            i = 0;
+        }
+    }
+
+    // ================== TELEGRAM CONFIG ==================
+    // Dien token va chat id tai day. Khong lap lai token o nhieu cho.
+    telegramEnable = ParamToggle("Telegram Signal", "Off|On", 0);
+    telegramModeKey = "PSVN_TG_MODE_" + Name() + "_" + Interval(2);
+    telegramMode = StaticVarGetText(telegramModeKey);
+    if(telegramMode == "")
+    {
+        telegramMode = "Long Short";
+        StaticVarSetText(telegramModeKey, telegramMode, True);
+    }
+    allowLongTG = telegramMode != "Chi Short";
+    allowShortTG = telegramMode != "Chi Long";
+    systemSignalKeyTG = "PSVN_SYSTEM_SIGNAL_" + Name() + "_" + Interval(2);
+    systemSignalEnabledTG = Nz(StaticVarGet(systemSignalKeyTG), 1);
+    TELEGRAM_TOKEN = ""; // KHONG luu token trong repo public
+    TELEGRAM_CHAT_ID = ""; // Cau hinh rieng tren may local
+
+    function UrlEncode(txt)
+    {
+        txt = StrReplace(txt, "%", "%25");
+        txt = StrReplace(txt, " ", "%20");
+        txt = StrReplace(txt, "\n", "%0A");
+        txt = StrReplace(txt, "&", "%26");
+        txt = StrReplace(txt, "+", "%2B");
+        txt = StrReplace(txt, "#", "%23");
+        txt = StrReplace(txt, "?", "%3F");
+        txt = StrReplace(txt, "=", "%3D");
+        txt = StrReplace(txt, ":", "%3A");
+        txt = StrReplace(txt, "/", "%2F");
+        txt = StrReplace(txt, "@", "%40");
+        txt = StrReplace(txt, "|", "%7C");
+        txt = StrReplace(txt, "(", "%28");
+        txt = StrReplace(txt, ")", "%29");
+        txt = StrReplace(txt, ",", "%2C");
+        txt = StrReplace(txt, ";", "%3B");
+        return txt;
+    }
+
+    function TelegramSend(encodedText, token, chatId)
+    {
+        tgUrl = "https://api.telegram.org/bot" + token
+            + "/sendMessage?chat_id=" + chatId
+            + "&text=" + encodedText;
+
+        ih = InternetOpenURL(tgUrl);
+
+        if(ih)
+            InternetClose(ih);
+    }
+
+    Offset = 20;
+    Clr = IIf(sig == "B", colorLime, colorRed);
+    ssl = IIf(bars == BarCount-1, TrendSL[BarCount-1], Ref(TrendSL,-1));
+
+    sl = ssl[BarCount-1];
+
+    // ================== PSVN REALTIME SNAPSHOT FOR WEBSITE ==================
+    // Chi xuat trang thai; KHONG thay doi logic Long/Short hien co.
+    psSnapshotEnable = ParamToggle("PS Snapshot CSV", "Off|On", 1);
+    psSnapshotFile = ParamStr("PS Snapshot File", "C:\\Users\\USER\\Desktop\\AMIBRO\\psvn_trend_snapshot.csv");
+
+    if(psSnapshotEnable)
+    {
+        psFh = fopen(psSnapshotFile, "w");
+
+        if(psFh)
+        {
+            psTrendText = WriteIf(sig == "B", "TANG", "GIAM");
+            psHeader = "symbol,trend,systemPrice,t1,t2,t3,reversalPrice,lastPrice,updatedAt\n";
+            psLine = Name() + ","
+                + psTrendText + ","
+                + NumToStr(entry, 1.2, False) + ","
+                + NumToStr(tar1, 1.2, False) + ","
+                + NumToStr(tar2, 1.2, False) + ","
+                + NumToStr(tar3, 1.2, False) + ","
+                + NumToStr(sl, 1.2, False) + ","
+                + NumToStr(LastValue(C, 1), 1.2, False) + ","
+                + DateTimeToStr(LastValue(DateTime(), 1)) + "\n";
+
+            fputs(psHeader, psFh);
+            fputs(psLine, psFh);
+            fclose(psFh);
+        }
+    }
+
+
+    Plot(LineArray(bars-Offset, tar1, BarCount, tar1, 1), "", Clr, styleLine|styleDots, Null, Null, Offset);
+    Plot(LineArray(bars-Offset, tar2, BarCount, tar2, 1), "", Clr, styleLine|styleDots, Null, Null, Offset);
+    Plot(LineArray(bars-Offset, tar3, BarCount, tar3, 1), "", Clr, styleLine|styleDots, Null, Null, Offset);
+
+    for(i = bars; i < BarCount; i++)
+    {
+        PlotText(sig, BarCount+1, entry, Null, colorBlue);
+
+        lastPrice = LastValue(C, 1);
+        t1Role = WriteIf(sig == "S", WriteIf(lastPrice > tar1, "KC ", "HT "), WriteIf(lastPrice > tar1, "HT ", "KC "));
+        t2Role = WriteIf(sig == "S", WriteIf(lastPrice > tar2, "KC ", "HT "), WriteIf(lastPrice > tar2, "HT ", "KC "));
+        t3Role = WriteIf(sig == "S", WriteIf(lastPrice > tar3, "KC ", "HT "), WriteIf(lastPrice > tar3, "HT ", "KC "));
+
+        PlotText(t1Role + "T1@" + tar1, BarCount+3, tar1, Null, Clr);
+        PlotText(t2Role + "T2@" + tar2, BarCount+3, tar2, Null, Clr);
+        PlotText(t3Role + "T3@" + tar3, BarCount+3, tar3, Null, Clr);
+    }
+
+    // ================== TELEGRAM SEND SIGNAL ==================
+    // Chi gui khi cay nen cuoi vua co tin hieu moi, tranh spam khi AmiBroker refresh.
+    lastB = LastValue(Buy, 1);
+    lastS = LastValue(Sell, 1);
+    lastSignal = WriteIf(lastB, "B", WriteIf(lastS, "S", ""));
+    telegramSignalText = WriteIf(lastB, "LONG", WriteIf(lastS, "SHORT", ""));
+    telegramSignalAllowed = systemSignalEnabledTG AND ((lastB AND allowLongTG) OR (lastS AND allowShortTG));
+
+    if(telegramEnable AND telegramSignalAllowed AND TELEGRAM_CHAT_ID != "")
+    {
+        lastPriceTG = LastValue(C, 1);
+        lastTrendTG = WriteIf(LastValue(trend, 1) == 1, "Tich cuc", "Tieu cuc");
+
+        tnTG = LastValue(TimeNum(), 1);
+        hhTG = int(tnTG / 10000);
+        mmTG = int((tnTG - hhTG * 10000) / 100);
+        timeTextTG = StrFormat("%02.0f:%02.0f", hhTG, mmTG);
+
+        htkcTextTG = t1Role + "T1 " + NumToStr(tar1, 1.2)
+            + " | " + t2Role + "T2 " + NumToStr(tar2, 1.2)
+            + " | " + t3Role + "T3 " + NumToStr(tar3, 1.2);
+
+        signalKeyTG = Name() + "_" + Interval(2) + "_" + NumToStr(LastValue(DateTime(), 1), 1.0) + "_" + lastSignal;
+        staticKeyTG = "PSVN_TG_LAST_" + Name() + "_" + Interval(2);
+
+        if(StaticVarGetText(staticKeyTG) != signalKeyTG)
+        {
+            encodedMsgTG = "PSVN123%20-%20M%C3%A3%3A%20" + UrlEncode(Name())
+                + "%0A" + "T%C3%ADn%20hi%E1%BB%87u%3A%20" + UrlEncode(telegramSignalText)
+                + "%20-%3E%20Gi%C3%A1%3A%20" + UrlEncode(NumToStr(lastPriceTG, 1.2) + " +-")
+                + "%0A" + "Th%E1%BB%9Di%20gian%3A%20" + UrlEncode(timeTextTG);
+
+            TelegramSend(encodedMsgTG, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID);
+            StaticVarSetText(staticKeyTG, signalKeyTG);
+        }
+    }
+
+    // ================== LOCAL DAILY P/L STATS ==================
+    // Luu local bang StaticVar persistent. Moi trade chi ghi 1 lan.
+    // Chi reset sau 16:00 hang ngay.
+    statsPrefix = "PSVN_PL_" + Name() + "_" + Interval(2) + "_";
+    statsDateKey = statsPrefix + "DATE";
+    statsResetDateKey = statsPrefix + "RESET_DATE";
+    statsLastTradeKey = statsPrefix + "LAST_TRADE";
+    statsCountKey = statsPrefix + "COUNT";
+    statsWinKey = statsPrefix + "WIN";
+    statsLossKey = statsPrefix + "LOSS";
+    statsTotalKey = statsPrefix + "TOTAL";
+    statsLastPLKey = statsPrefix + "LAST_PL";
+    manualPosDirKey = statsPrefix + "MANUAL_DIR";
+    manualPosEntryKey = statsPrefix + "MANUAL_ENTRY";
+
+    statsDate = LastValue(DateNum(), 1);
+    statsTime = Now(4);
+    storedStatsDate = Nz(StaticVarGet(statsDateKey), 0);
+    storedResetDate = Nz(StaticVarGet(statsResetDateKey), 0);
+
+    needResetStats = storedStatsDate == 0 OR (statsTime >= 160000 AND storedResetDate != statsDate);
+
+    if(needResetStats)
+    {
+        StaticVarSet(statsDateKey, statsDate, True);
+        StaticVarSet(statsResetDateKey, IIf(statsTime >= 160000, statsDate, 0), True);
+        StaticVarSet(statsCountKey, 0, True);
+        StaticVarSet(statsWinKey, 0, True);
+        StaticVarSet(statsLossKey, 0, True);
+        StaticVarSet(statsTotalKey, 0, True);
+        StaticVarSet(statsLastPLKey, 0, True);
+        StaticVarSetText(statsLastTradeKey, "", True);
+        StaticVarSetText(manualPosDirKey, "", True);
+        StaticVarSet(manualPosEntryKey, 0, True);
+    }
+
+    closedTradeKey = Name() + "_" + Interval(2) + "_" + NumToStr(LastValue(DateTime(), 1), 1.0) + "_" + lastSignal;
+
+    if(systemSignalEnabledTG AND (lastB OR lastS) AND statsTime < 160000 AND StaticVarGetText(statsLastTradeKey) != closedTradeKey)
+    {
+        systemOrderDirTG = WriteIf(lastB, "LONG", "SHORT");
+        systemOrderPriceTG = LastValue(C, 1);
+        currentPosDirTG = StaticVarGetText(manualPosDirKey);
+        currentPosEntryTG = Nz(StaticVarGet(manualPosEntryKey), 0);
+
+        if(currentPosDirTG != "" AND currentPosDirTG != systemOrderDirTG AND currentPosEntryTG > 0)
+        {
+            closedTradePL = IIf(currentPosDirTG == "LONG", systemOrderPriceTG - currentPosEntryTG, currentPosEntryTG - systemOrderPriceTG);
+
+            StaticVarSet(statsCountKey, Nz(StaticVarGet(statsCountKey), 0) + 1, True);
+            StaticVarSet(statsTotalKey, Nz(StaticVarGet(statsTotalKey), 0) + closedTradePL, True);
+            StaticVarSet(statsLastPLKey, closedTradePL, True);
+
+            if(closedTradePL >= 0)
+                StaticVarSet(statsWinKey, Nz(StaticVarGet(statsWinKey), 0) + 1, True);
+            else
+                StaticVarSet(statsLossKey, Nz(StaticVarGet(statsLossKey), 0) + 1, True);
+        }
+
+        StaticVarSetText(manualPosDirKey, systemOrderDirTG, True);
+        StaticVarSet(manualPosEntryKey, systemOrderPriceTG, True);
+        StaticVarSetText(statsLastTradeKey, closedTradeKey, True);
+    }
+
+    statsCount = Nz(StaticVarGet(statsCountKey), 0);
+    statsWin = Nz(StaticVarGet(statsWinKey), 0);
+    statsLoss = Nz(StaticVarGet(statsLossKey), 0);
+    statsTotal = Nz(StaticVarGet(statsTotalKey), 0);
+    statsLastPL = Nz(StaticVarGet(statsLastPLKey), 0);
+
+    // ================== MANUAL TELEGRAM BUTTONS ==================
+    // Bam nut tren chart de gui tin thu cong, khong doi he thong bao tin hieu moi.
+    manualCloseBtnId = 901;
+    manualLongBtnId = 902;
+    manualShortBtnId = 903;
+    modeBothBtnId = 904;
+    modeLongBtnId = 905;
+    modeShortBtnId = 906;
+    systemToggleBtnId = 907;
+    manualBtnW = 145;
+    manualBtnH = 24;
+    manualBtnGap = 6;
+    modeGroupGap = 115;
+    manualRowW = manualBtnW * 6 + manualBtnGap * 4 + modeGroupGap;
+    manualBtnX = Max(5, Status("pxchartwidth") - manualRowW - 20);
+    manualBtnY = 140;
+    modeBtnX = manualBtnX + manualBtnW * 3 + manualBtnGap * 2 + modeGroupGap;
+
+    GuiButton("BAO CHOT", manualCloseBtnId, manualBtnX, manualBtnY, manualBtnW, manualBtnH, 1);
+    GuiButton("BAO LONG", manualLongBtnId, manualBtnX + manualBtnW + manualBtnGap, manualBtnY, manualBtnW, manualBtnH, 1);
+    GuiButton("BAO SHORT", manualShortBtnId, manualBtnX + manualBtnW * 2 + manualBtnGap * 2, manualBtnY, manualBtnW, manualBtnH, 1);
+    GuiButton(WriteIf(telegramMode == "Long Short", "* LONG+SHORT", "LONG+SHORT"), modeBothBtnId, modeBtnX, manualBtnY, manualBtnW, manualBtnH, 1);
+    GuiButton(WriteIf(telegramMode == "Chi Long", "* CHI LONG", "CHI LONG"), modeLongBtnId, modeBtnX + manualBtnW + manualBtnGap, manualBtnY, manualBtnW, manualBtnH, 1);
+    GuiButton(WriteIf(telegramMode == "Chi Short", "* CHI SHORT", "CHI SHORT"), modeShortBtnId, modeBtnX + manualBtnW * 2 + manualBtnGap * 2, manualBtnY, manualBtnW, manualBtnH, 1);
+    GuiButton(WriteIf(systemSignalEnabledTG, "HE THONG: ON", "CHI BAO TAY"), systemToggleBtnId, manualBtnX, manualBtnY + manualBtnH + 5, manualBtnW, manualBtnH, 1);
+
+    for(guiN = 0; (guiId = GuiGetEvent(guiN, 0)) != 0; guiN++)
+    {
+        guiCode = GuiGetEvent(guiN, 1);
+
+        if(guiCode == 1 AND (guiId == modeBothBtnId OR guiId == modeLongBtnId OR guiId == modeShortBtnId))
+        {
+            telegramMode = WriteIf(guiId == modeBothBtnId, "Long Short", WriteIf(guiId == modeLongBtnId, "Chi Long", "Chi Short"));
+            StaticVarSetText(telegramModeKey, telegramMode, True);
+            allowLongTG = telegramMode != "Chi Short";
+            allowShortTG = telegramMode != "Chi Long";
+        }
+
+        if(guiCode == 1 AND guiId == systemToggleBtnId)
+        {
+            systemSignalEnabledTG = 1 - systemSignalEnabledTG;
+            StaticVarSet(systemSignalKeyTG, systemSignalEnabledTG, True);
+        }
+
+        if(guiId == manualCloseBtnId AND guiCode == 1 AND TELEGRAM_CHAT_ID != "")
+        {
+            manualPriceTG = LastValue(C, 1);
+            manualOpenDirTG = StaticVarGetText(manualPosDirKey);
+            manualOpenEntryTG = Nz(StaticVarGet(manualPosEntryKey), 0);
+            manualSignalTG = WriteIf(manualOpenDirTG != "", manualOpenDirTG, WriteIf(sig == "B", "LONG", "SHORT"));
+
+            if(manualOpenDirTG != "" AND manualOpenEntryTG > 0 AND statsTime < 160000)
+            {
+                manualClosePLTG = IIf(manualOpenDirTG == "LONG", manualPriceTG - manualOpenEntryTG, manualOpenEntryTG - manualPriceTG);
+
+                StaticVarSet(statsCountKey, Nz(StaticVarGet(statsCountKey), 0) + 1, True);
+                StaticVarSet(statsTotalKey, Nz(StaticVarGet(statsTotalKey), 0) + manualClosePLTG, True);
+                StaticVarSet(statsLastPLKey, manualClosePLTG, True);
+
+                if(manualClosePLTG >= 0)
+                    StaticVarSet(statsWinKey, Nz(StaticVarGet(statsWinKey), 0) + 1, True);
+                else
+                    StaticVarSet(statsLossKey, Nz(StaticVarGet(statsLossKey), 0) + 1, True);
+
+                manualStatsKeyTG = WriteIf(lastSignal != "", closedTradeKey, Name() + "_" + Interval(2) + "_MANUAL_CLOSE_" + NumToStr(Now(4), 1.0));
+                StaticVarSetText(statsLastTradeKey, manualStatsKeyTG, True);
+                StaticVarSetText(manualPosDirKey, "", True);
+                StaticVarSet(manualPosEntryKey, 0, True);
+
+                statsCount = Nz(StaticVarGet(statsCountKey), 0);
+                statsWin = Nz(StaticVarGet(statsWinKey), 0);
+                statsLoss = Nz(StaticVarGet(statsLossKey), 0);
+                statsTotal = Nz(StaticVarGet(statsTotalKey), 0);
+                statsLastPL = Nz(StaticVarGet(statsLastPLKey), 0);
+            }
+
+            manualTnTG = Now(4);
+            manualHhTG = int(manualTnTG / 10000);
+            manualMmTG = int((manualTnTG - manualHhTG * 10000) / 100);
+            manualTimeTextTG = StrFormat("%02.0f:%02.0f", manualHhTG, manualMmTG);
+
+            manualMsgTG = "PSVN123%20-%20CH%E1%BB%90T"
+                + "%0A" + "M%C3%A3%3A%20" + UrlEncode(Name())
+                + "%20-%3E%20Gi%C3%A1%20quanh%3A%20" + UrlEncode(NumToStr(manualPriceTG, 1.2))
+                + "%0A" + "L%E1%BB%87nh%20%C4%91ang%20theo%3A%20" + UrlEncode(manualSignalTG)
+                + "%20-%20Th%E1%BB%9Di%20gian%3A%20" + UrlEncode(manualTimeTextTG)
+                + "%0A" + "ACE%20ch%E1%BB%9D%20h%E1%BB%87%20th%E1%BB%91ng%20b%C3%A1o%20l%E1%BB%87nh%20m%E1%BB%9Bi.";
+
+            TelegramSend(manualMsgTG, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID);
+        }
+
+        if((guiId == manualLongBtnId OR guiId == manualShortBtnId) AND guiCode == 1 AND TELEGRAM_CHAT_ID != "")
+        {
+            manualOrderPriceTG = LastValue(C, 1);
+            manualOrderTG = WriteIf(guiId == manualLongBtnId, "LONG", "SHORT");
+            manualSystemTrendTG = WriteIf(sig == "B", "LONG", "SHORT");
+            manualOrderAllowedTG = 1;
+
+            if(manualOrderAllowedTG)
+            {
+                manualPrevDirTG = StaticVarGetText(manualPosDirKey);
+                manualPrevEntryTG = Nz(StaticVarGet(manualPosEntryKey), 0);
+
+                if(manualPrevDirTG != "" AND manualPrevDirTG != manualOrderTG AND manualPrevEntryTG > 0 AND statsTime < 160000)
+                {
+                    manualFlipPLTG = IIf(manualPrevDirTG == "LONG", manualOrderPriceTG - manualPrevEntryTG, manualPrevEntryTG - manualOrderPriceTG);
+
+                    StaticVarSet(statsCountKey, Nz(StaticVarGet(statsCountKey), 0) + 1, True);
+                    StaticVarSet(statsTotalKey, Nz(StaticVarGet(statsTotalKey), 0) + manualFlipPLTG, True);
+                    StaticVarSet(statsLastPLKey, manualFlipPLTG, True);
+
+                    if(manualFlipPLTG >= 0)
+                        StaticVarSet(statsWinKey, Nz(StaticVarGet(statsWinKey), 0) + 1, True);
+                    else
+                        StaticVarSet(statsLossKey, Nz(StaticVarGet(statsLossKey), 0) + 1, True);
+
+                    manualFlipStatsKeyTG = WriteIf(lastSignal != "", closedTradeKey, Name() + "_" + Interval(2) + "_MANUAL_FLIP_" + NumToStr(Now(4), 1.0));
+                    StaticVarSetText(statsLastTradeKey, manualFlipStatsKeyTG, True);
+
+                    statsCount = Nz(StaticVarGet(statsCountKey), 0);
+                    statsWin = Nz(StaticVarGet(statsWinKey), 0);
+                    statsLoss = Nz(StaticVarGet(statsLossKey), 0);
+                    statsTotal = Nz(StaticVarGet(statsTotalKey), 0);
+                    statsLastPL = Nz(StaticVarGet(statsLastPLKey), 0);
+                }
+
+                StaticVarSetText(manualPosDirKey, manualOrderTG, True);
+                StaticVarSet(manualPosEntryKey, manualOrderPriceTG, True);
+
+                manualOrderTnTG = Now(4);
+                manualOrderHhTG = int(manualOrderTnTG / 10000);
+                manualOrderMmTG = int((manualOrderTnTG - manualOrderHhTG * 10000) / 100);
+                manualOrderTimeTextTG = StrFormat("%02.0f:%02.0f", manualOrderHhTG, manualOrderMmTG);
+
+                manualOrderMsgTG = "PSVN123%20-%20B%C3%81O%20L%E1%BB%86NH"
+                    + "%0A" + "M%C3%A3%3A%20" + UrlEncode(Name())
+                    + "%0A" + "T%C3%ADn%20hi%E1%BB%87u%3A%20" + UrlEncode(manualOrderTG)
+                    + "%20-%3E%20Gi%C3%A1%20quanh%3A%20" + UrlEncode(NumToStr(manualOrderPriceTG, 1.2) + " +-")
+                    + "%0A" + "H%E1%BB%87%20th%E1%BB%91ng%20%C4%91ang%20theo%3A%20" + UrlEncode(manualSystemTrendTG)
+                    + "%20-%20Th%E1%BB%9Di%20gian%3A%20" + UrlEncode(manualOrderTimeTextTG)
+                    + "%0A" + "B%C3%A1o%20th%E1%BB%A7%20c%C3%B4ng%20t%E1%BB%AB%20n%C3%BAt%20tr%C3%AAn%20chart.";
+
+                TelegramSend(manualOrderMsgTG, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID);
+            }
+        }
+    }
+
+    statsCount = Nz(StaticVarGet(statsCountKey), 0);
+    statsWin = Nz(StaticVarGet(statsWinKey), 0);
+    statsLoss = Nz(StaticVarGet(statsLossKey), 0);
+    statsTotal = Nz(StaticVarGet(statsTotalKey), 0);
+    statsLastPL = Nz(StaticVarGet(statsLastPLKey), 0);
+
+    // ================== MESSAGE BOARD ==================
+    messageboard = ParamToggle("Message Board","Show|Hide",1);
+
+    if(messageboard == 1)
+    {
+        GfxSelectFont("Tahoma", 11, 700);
+        GfxSetBkMode(1);
+        GfxSetTextColor(colorWhite);
+
+        if(sig == "B")
+            GfxSelectSolidBrush(ColorRGB(0,70,135));
+        else
+            GfxSelectSolidBrush(ColorRGB(155,25,25));
+
+        xx = Status("pxchartwidth");
+
+        imgWTrend = 555;
+        x = Max(5, xx - imgWTrend + 10);
+        x2 = xx - 60;
+        y = 92;
+
+        GfxSelectPen(ColorRGB(240,240,240), 1);
+        GfxRoundRect(x - 5, y - 3, x2, y + 43, 5, 5);
+
+        trendLine = "HUONG: " + sig + " " + (BarCount-bars-1) * Interval()/60 + " phút" + " | " + sig + " | ST: " + TrendSL + " (" + WriteVal(IIf(sig == "S", entry-sl, sl-entry), 2.2) + ")" + " |LN: " + WriteVal(IIf(sig == "B", C-entry, entry-C), 2.2);
+
+        GfxTextOut(trendLine, x, y);
+    }
+
+    _SECTION_END();
+
+
+    // ================== RIBBON ==================
+    _SECTION_BEGIN("trend with pivot levels");
+
+    uptrend = Signal(29) < MACD(13);
+    downtrend = Signal(29) > MACD(13);
+
+    Plot(2, "ribbon",
+    IIf(uptrend, colorGreen, IIf(downtrend, colorRed, 0)),
+    styleOwnScale|styleArea|styleNoLabel, -0.5, 100);
+
+    _SECTION_END();
+
+
+    // ================== BACKGROUND PRICE ==================
+    _SECTION_BEGIN("Price");
+
+    SetChartBkGradientFill(
+        ColorRGB(240,243,250),
+        ColorRGB(220,228,240),
+        ColorRGB(240,243,250)
+    );
+    SetChartOptions(0, chartShowDates|chartShowArrows|chartLogarithmic|chartWrapTitle);
+    GraphXSpace = 5;
+
+    Plot(C, "", colorWhite, styleCandle);
+
+    _SECTION_END();
+
+
+    // ================== PREVIOUS DAY HIGH LOW ==================
+    DayH  = TimeFrameGetPrice("H", inDaily, -1);
+    DayHI = LastValue(DayH,1);
+
+    DayL  = TimeFrameGetPrice("L", inDaily, -1);
+    DayLI = LastValue(DayL,1);
+
+    DayC = TimeFrameGetPrice("C", inDaily, -1);
+    DayO = TimeFrameGetPrice("O", inDaily);
+
+    DayH2  = TimeFrameGetPrice("H", inDaily, -2);
+    DayH2I = LastValue(DayH2,1);
+
+    DayL2  = TimeFrameGetPrice("L", inDaily, -2);
+    DayL2I = LastValue(DayL2,1);
+
+    DayH3  = TimeFrameGetPrice("H", inDaily, -3);
+    DayH3I = LastValue(DayH3,1);
+
+    DayL3  = TimeFrameGetPrice("L", inDaily, -3);
+    DayL3I = LastValue(DayL3,1);
+
+    numbars = LastValue(Cum(Status("barvisible")));
+    hts = -33.5;
+
+    YHL = ParamToggle("Yesterday HI LO","Show|Hide",1);
+
+    if(YHL == 1)
+    {
+        Plot(DayL, "YL", colorTurquoise, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(DayH, "YH", colorTurquoise, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+
+        PlotText(" YH ", LastValue(BarIndex())-(numbars/Hts), DayHI, colorTurquoise);
+        PlotText(" YL ", LastValue(BarIndex())-(numbars/Hts), DayLI, colorTurquoise);
+    }
+
+    TDBHL = ParamToggle("2/3Days before HI LO","Show|Hide",0);
+
+    if(TDBHL == 1)
+    {
+        Plot(DayL2, "2DBL", colorTurquoise, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(DayH2, "2DBH", colorTurquoise, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(DayL3, "3DBL", colorTurquoise, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(DayH3, "3DBH", colorTurquoise, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+
+        PlotText(" 2DBH ", LastValue(BarIndex())-(numbars/Hts), DayH2I, colorTurquoise);
+        PlotText(" 2DBL ", LastValue(BarIndex())-(numbars/Hts), DayL2I, colorTurquoise);
+        PlotText(" 3DBH ", LastValue(BarIndex())-(numbars/Hts), DayH3I, colorTurquoise);
+        PlotText(" 3DBL ", LastValue(BarIndex())-(numbars/Hts), DayL3I, colorTurquoise);
+    }
+
+
+    // ================== PIVOT LEVELS ==================
+    PP  = (DayL + DayH + DayC)/3;
+    PPI = LastValue(PP,1);
+
+    R1  = (PP * 2) - DayL;
+    R1I = LastValue(R1,1);
+
+    S1  = (PP * 2) - DayH;
+    S1I = LastValue(S1,1);
+
+    R2  = PP + R1 - S1;
+    R2I = LastValue(R2,1);
+
+    S2  = PP - R1 + S1;
+    S2I = LastValue(S2,1);
+
+    R3  = PP + R2 - S1;
+    R3I = LastValue(R3,1);
+
+    S3  = PP - R2 + S1;
+    S3I = LastValue(S3,1);
+
+    ppl = ParamToggle("Pivot Levels","Show|Hide",1);
+
+    if(ppl == 1)
+    {
+        Plot(PP, "PP", colorBlack, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(R1, "R1", colorViolet, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(S1, "S1", colorViolet, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(R2, "R2", colorViolet, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(S2, "S2", colorViolet, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(R3, "R3", colorViolet, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+        Plot(S3, "S3", colorViolet, styleDots|styleNoLine|styleNoRescale|styleNoTitle);
+
+        pivotTextOffset = 0.08 * LastValue(ATR(14), 1);
+        pivotTextX = LastValue(BarIndex())-(numbars/Hts);
+
+        PlotText(" Pivot ", pivotTextX, PPI + pivotTextOffset, colorBlue);
+        PlotText(" R1 ", pivotTextX, R1I + pivotTextOffset, colorViolet);
+        PlotText(" S1 ", pivotTextX, S1I + pivotTextOffset, colorViolet);
+        PlotText(" R2 ", pivotTextX, R2I + pivotTextOffset, colorViolet);
+        PlotText(" S2 ", pivotTextX, S2I + pivotTextOffset, colorViolet);
+        PlotText(" R3 ", pivotTextX, R3I + pivotTextOffset, colorViolet);
+        PlotText(" S3 ", pivotTextX, S3I + pivotTextOffset, colorViolet);
+    }
+
+
+    // ================== TODAY HIGH LOW ==================
+    THL = ParamToggle("Todays Hi Lo","Show|Hide",1);
+
+    if(THL == 1)
+    {
+        isRth  = TimeNum() >= 084500 AND TimeNum() <= 085959;
+        isdRth = TimeNum() >= 084500 AND TimeNum() <= 160000;
+
+        aRthH  = IIf(isdRth, H, Null);
+        aRthLd = IIf(isdRth, L, 1000000);
+
+        DayH = TimeFrameCompress(aRthH, inDaily, compressHigh);
+        DayH = TimeFrameExpand(DayH, inDaily, expandFirst);
+
+        DayL = TimeFrameCompress(aRthLd, inDaily, compressLow);
+        DayL = TimeFrameExpand(DayL, inDaily, expandFirst);
+
+        Bars = BarsSince(TimeNum() >= 94500 AND TimeNum() < 095959);
+
+        x0 = BarCount - LastValue(Bars);
+        x1 = BarCount - 1;
+
+        DayHline = LineArray(x0, LastValue(DayH), x1, LastValue(DayH), 0);
+        DayLline = LineArray(x0, LastValue(DayL), x1, LastValue(DayL), 0);
+
+        DayHlineI = LastValue(DayHline,1);
+        DayLlineI = LastValue(DayLline,1);
+
+        Plot(DayHline, "DayH", colorBrown, styleBar|styleNoRescale|styleNoTitle);
+        Plot(DayLline, "DayL", colorBrown, styleBar|styleNoRescale|styleNoTitle);
+
+        PlotText(" KC Day Hi ", LastValue(BarIndex())-(numbars/Hts), DayHlineI + 0.05, colorBrown);
+        PlotText(" HT Day Lo ", LastValue(BarIndex())-(numbars/Hts), DayLlineI + 0.05, colorBrown);
+    }
+
+
+    // ================== MAGNIFIED PRICE ==================
+    _SECTION_BEGIN("Magnified Market Price");
+
+    FS = Param("Font Size",28,11,100,1);
+
+    GfxSelectFont("Arial", FS, 700, False, False, True);
+    GfxSetBkMode(colorWhite);
+    GfxSetTextColor(ParamColor("Color",colorViolet));
+
+    Hor = Param("Horizontal Position",766,1,1200,1);
+    Ver = Param("Vertical Position",1,1,1,1);
+
+    GfxTextOut("" + C, Hor, Ver);
+    GfxTextOut(Name(), Hor, Ver-50);
+
+    YC = TimeFrameGetPrice("C", inDaily, -1);
+    DD = Prec(C-YC,2);
+    xx = Prec((DD/YC)*100,2);
+
+    GfxSelectFont("Arial", 12, 700, False, False, True);
+    GfxSetBkMode(colorWhite);
+    GfxSetTextColor(ParamColor("Color",colorViolet));
+    GfxTextOut("" + DD + " (" + xx + "%)", Hor+5, Ver+45);
+
+    _SECTION_END();
+
+
+    // ================== TIME LEFT - NO SOUND ==================
+    _SECTION_BEGIN("Time Left");
+
+    function GetSecondNum()
+    {
+        Time = Now(4);
+        Seconds = int(Time % 100);
+        Minutes = int(Time / 100 % 100);
+        Hours = int(Time / 10000 % 100);
+        SecondNum = int(Hours * 60 * 60 + Minutes * 60 + Seconds);
+        return SecondNum;
+    }
+
+    RequestTimedRefresh(1);
+
+    TimeFrame = Interval();
+    SecNumber = GetSecondNum();
+
+    Newperiod = SecNumber % TimeFrame == 0;
+    SecsLeft = SecNumber - int(SecNumber / TimeFrame) * TimeFrame;
+    SecsToGo = TimeFrame - SecsLeft;
+
+    x = Param("xposn",300,0,1000,1);
+    y = Param("yposn",50,0,1000,1);
+
+    GfxSelectSolidBrush(ColorRGB(230,230,230));
+    GfxSelectPen(ColorRGB(230,230,230), 2);
+
+    if(Newperiod)
+    {
+        GfxSelectSolidBrush(colorBrown);
+        GfxSelectPen(colorBrown, 2);
+
+        // ÐÃ B? ÂM THANH
+    }
+
+    GfxRoundRect(x+45, y+17, x-3, y-2, 0, 0);
+    GfxSetBkMode(1);
+    GfxSelectFont("Arial", 12, 700, False);
+    GfxSetTextColor(colorBlack);
+    GfxTextOut("" + SecsToGo + " / " + NumToStr(TimeFrame,1.0), x, y);
+
+    _SECTION_END();
+
+
+    // ================== PRICE STYLE ==================
+    _SECTION_BEGIN("Price");
+
+    SetChartOptions(0, chartShowArrows|chartShowDates);
+    _N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}",
+    O, H, L, C, SelectedValue(ROC(C,1))));
+
+    Plot(C, "Close", ParamColor("Color", colorBlack), styleNoTitle | ParamStyle("Style") | GetPriceStyle());
+
+    _SECTION_END();
+
+
+    // ================== DARVAS BOX ==================
+    box1 = 0;
+    box2 = 0;
+
+    SetBarsRequired(10000,10000);
+
+    procedure fillDarvas(start, end, swap, top, bottom)
+    {
+        for(j = start; j < end; j++)
+        {
+            if(box1[j] == swap)
+                box1[j] = top;
+            else
+                box1[j] = bottom;
+
+            if(box2[j] == swap)
+                box2[j] = bottom;
+            else
+                box2[j] = top;
+        }
+    }
+
+    BoxArr1 = 0;
+    BoxArr2 = 0;
+    StateArray = 0;
+    DBuy = 0;
+    DSell = 0;
+    TopArray = 0;
+    BotArray = 0;
+    tick = 0;
+
+    BoxTop = High[0];
+    BoxBot = Low[0];
+
+    swap = 0;
+    state = 0;
+    BoxStart = 0;
+
+    for(i = 0; i < BarCount; i++)
+    {
+        if(state == 5)
+        {
+            TopArray[i] = BoxTop;
+            BotArray[i] = BoxBot;
+
+            if(Low[i] < (BoxBot * (1 - tick/100)) OR High[i] > (BoxTop * (1 + tick/100)))
+            {
+                fillDarvas(BoxStart, i, swap, BoxTop, BoxBot);
+
+                state = 1;
+                swap = !swap;
+                BoxTop = High[i];
+                BoxStart = i;
+            }
+        }
+        else
+        {
+            if(High[i] < BoxTop)
+            {
+                if((state < 3) OR (Low[i] > BoxBot))
+                    state++;
+                else
+                    state = 3;
+
+                if(state == 3)
+                    BoxBot = Low[i];
+            }
+            else
+            {
+                state = 1;
+                BoxTop = High[i];
+            }
+        }
+
+        StateArray[i] = state;
+    }
+
+    fillDarvas(BoxStart, BarCount, swap, BoxTop, BoxBot);
+
+    Buyrule  = H > Ref(box1,-1) AND H > Ref(box2,-1) AND Ref(statearray,-1) == 5;
+    Sellrule = L < Ref(box1,-1) AND L < Ref(box2,-1) AND Ref(statearray,-1) == 5;
+
+    _SECTION_BEGIN("Darvas box");
+
+    Buy = Cover = H > Ref(box1,-1) AND H > Ref(box2,-1) AND Ref(statearray,-1) == 5;
+    Short = Sell = L < Ref(box1,-1) AND L < Ref(box2,-1) AND Ref(statearray,-1) == 5;
+
+    Plot(C, "", 1, 64);
+    Plot(box1, " Status = " + WriteVal(statearray,1.0), 1 + statearray, styleLine);
+    Plot(box2, "", 1 + statearray, styleLine);
+
+    // Mui tên
+    PlotShapes(shapeUpArrow * Buy, colorGreen, 0, L, Offset=-20);
+    PlotShapes(shapeDownArrow * Sell, colorRed, 0, H, Offset=20);
+
+    // ================== B / S TEXT THEO CAN - HO TRO ==================
+    distText = 1.2 * ATR(7);
+
+    for(i = 0; i < BarCount; i++)
+    {
+        if(Buy[i])
+        {
+            PlotText("B", i, box2[i] - distText[i], colorLime);
+            PlotText("B", i + 0.05, box2[i] - distText[i], colorLime);
+        }
+
+        if(Sell[i])
+        {
+            PlotText("S", i, box1[i] + distText[i], colorRed);
+            PlotText("S", i + 0.05, box1[i] + distText[i], colorRed);
+        }
+    }
+
+    _SECTION_END();
+
+    Buy = Buyrule;
+
+    statopt = Optimize("statopt var", 3, 1, 5, 1);
+    lossopt = Optimize("lossopt var", 5, 3, 10, 1);
+
+    topvalue = IIf(box1 > box2, box1, box2);
+
+    Sellrule2 = (((topvalue - Close) * 100 / topvalue) > lossopt) AND (statearray == statopt);
+
+    Sell = Sellrule OR Sellrule2;
+
+    Short = Sell;
+    Cover = Buy;
+
+
+    // ================== STOCK INFO PANEL ==================
+    lastClose = C;
+    prevClose = Ref(C,-1);
+
+    pctChange = 100 * (lastClose - prevClose) / prevClose;
+    priceChange = lastClose - prevClose;
+
+    selClose  = SelectedValue(lastClose);
+    selChange = SelectedValue(priceChange);
+    selPct    = SelectedValue(pctChange);
+
+    line1 = Name() + " : " + NumToStr(selClose,1.1);
+
+    changeText =
+        WriteIf(selChange >= 0,"+","")
+        + NumToStr(selChange,1.1)
+        + " ("
+        + WriteIf(selPct >= 0,"+","")
+        + NumToStr(selPct,1.2)
+        + "%)";
+
+    infoLine = line1 + "   " + changeText;
+
+    GfxSetBkMode(1);
+    GfxSelectFont("Tahoma",16,700);
+
+    colChange =
+        IIf(selChange > 0,colorLime,
+        IIf(selChange < 0,colorRed,colorBrown));
+
+    GfxSetTextColor(colChange);
+
+    GfxTextOut(infoLine,950,108);
+
+    // ================== FIXED VIC / VHM PRICE ==================
+    vicClose = Foreign("VIC", "C");
+    vhmClose = Foreign("VHM", "C");
+    vniClose = Foreign("VNINDEX", "C");
+    vn30Close = Foreign("VN30", "C");
+
+    SetForeign("VIC");
+    vicPrevClose = TimeFrameGetPrice("C", inDaily, -1);
+    RestorePriceArrays();
+
+    SetForeign("VHM");
+    vhmPrevClose = TimeFrameGetPrice("C", inDaily, -1);
+    RestorePriceArrays();
+
+    SetForeign("VNINDEX");
+    vniPrevClose = TimeFrameGetPrice("C", inDaily, -1);
+    RestorePriceArrays();
+
+    SetForeign("VN30");
+    vn30PrevClose = TimeFrameGetPrice("C", inDaily, -1);
+    RestorePriceArrays();
+
+    vicSelClose = SelectedValue(vicClose);
+    vhmSelClose = SelectedValue(vhmClose);
+    vniSelClose = SelectedValue(vniClose);
+    vn30SelClose = SelectedValue(vn30Close);
+    vicSelChange = SelectedValue(vicClose - vicPrevClose);
+    vhmSelChange = SelectedValue(vhmClose - vhmPrevClose);
+    vniSelChange = SelectedValue(vniClose - vniPrevClose);
+    vn30SelChange = SelectedValue(vn30Close - vn30PrevClose);
+    vicSelPrevClose = SelectedValue(vicPrevClose);
+    vhmSelPrevClose = SelectedValue(vhmPrevClose);
+    vniSelPrevClose = SelectedValue(vniPrevClose);
+    vn30SelPrevClose = SelectedValue(vn30PrevClose);
+    vicSelPct = IIf(vicSelPrevClose != 0, 100 * vicSelChange / vicSelPrevClose, 0);
+    vhmSelPct = IIf(vhmSelPrevClose != 0, 100 * vhmSelChange / vhmSelPrevClose, 0);
+    vniSelPct = IIf(vniSelPrevClose != 0, 100 * vniSelChange / vniSelPrevClose, 0);
+    vn30SelPct = IIf(vn30SelPrevClose != 0, 100 * vn30SelChange / vn30SelPrevClose, 0);
+
+    vicText = "VIC : " + NumToStr(vicSelClose, 1.1)
+        + "  " + WriteIf(vicSelChange >= 0, "+", "")
+        + NumToStr(vicSelChange, 1.1)
+        + " (" + WriteIf(vicSelPct >= 0, "+", "")
+        + NumToStr(vicSelPct, 1.2) + "%)";
+
+    vhmText = "VHM : " + NumToStr(vhmSelClose, 1.1)
+        + "  " + WriteIf(vhmSelChange >= 0, "+", "")
+        + NumToStr(vhmSelChange, 1.1)
+        + " (" + WriteIf(vhmSelPct >= 0, "+", "")
+        + NumToStr(vhmSelPct, 1.2) + "%)";
+
+    vniText = "VNINDEX : " + NumToStr(vniSelClose, 1.1)
+        + "  " + WriteIf(vniSelChange >= 0, "+", "")
+        + NumToStr(vniSelChange, 1.1)
+        + " (" + WriteIf(vniSelPct >= 0, "+", "")
+        + NumToStr(vniSelPct, 1.2) + "%)";
+
+    vn30Text = "VN30 : " + NumToStr(vn30SelClose, 1.1)
+        + "  " + WriteIf(vn30SelChange >= 0, "+", "")
+        + NumToStr(vn30SelChange, 1.1)
+        + " (" + WriteIf(vn30SelPct >= 0, "+", "")
+        + NumToStr(vn30SelPct, 1.2) + "%)";
+
+    GfxSelectFont("Tahoma", 14, 700);
+
+    GfxSetTextColor(IIf(vicSelChange > 0, colorLime, IIf(vicSelChange < 0, colorRed, colorBrown)));
+    GfxTextOut(vicText, 850, 162);
+
+    GfxSetTextColor(IIf(vhmSelChange > 0, colorLime, IIf(vhmSelChange < 0, colorRed, colorBrown)));
+    GfxTextOut(vhmText, 850, 182);
+
+    GfxSetTextColor(IIf(vniSelChange > 0, colorLime, IIf(vniSelChange < 0, colorRed, colorBrown)));
+    GfxTextOut(vniText, 1150, 162);
+
+    GfxSetTextColor(IIf(vn30SelChange > 0, colorLime, IIf(vn30SelChange < 0, colorRed, colorBrown)));
+    GfxTextOut(vn30Text, 1150, 182);
+
+
+    // ================== OVERLAY PNG BRANDING ==================
+    filename = "D:\\AmiBroker\\Formulas\\Custom\\PS2.png";
+
+    imgW = 555;
+    imgH = 120;
+
+    margin = -3;
+    pxw = Status("pxwidth");
+
+    x = pxw - imgW - margin;
+    y = margin;
+
+    GfxSetOverlayMode(0);
+    GfxDrawImage(filename, x, y);
+
+    _SECTION_END();
