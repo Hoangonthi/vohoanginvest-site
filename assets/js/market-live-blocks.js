@@ -44,7 +44,11 @@
       #vh-live-intelligence .vh-live-title{
         margin:0 0 14px;
         color:#f2e7ce;
-        font:700 22px/1.2 Georgia,"Times New Roman",serif
+        font-family:"Be Vietnam Pro",system-ui,sans-serif;
+        font-size:21px;
+        font-weight:700;
+        line-height:1.35;
+        letter-spacing:-0.02em;
       }
 
       #vh-live-intelligence .vh-live-row{
@@ -147,7 +151,7 @@
         </article>
 
         <article class="vh-live-card" id="vh-hot-card">
-          <h2 class="vh-live-title">Cổ phiếu nổi bật theo dòng tiền</h2>
+          <h2 class="vh-live-title">Cổ phiếu đáng chú ý hôm nay</h2>
 
           <div class="vh-hot-symbols" id="vh-hot-symbols">—</div>
 
