@@ -197,7 +197,7 @@
 
       const d = await r.json();
 
-      if (!d || d.fresh !== true || !d.trend) {
+      if (!d || !d.trend) {
         // Feed chậm tạm thời:
         // giữ nguyên dữ liệu tốt gần nhất, không làm card biến mất.
         return;
@@ -252,7 +252,7 @@
         ? d.symbols.filter(Boolean)
         : [];
 
-      if (!d || d.fresh !== true || symbols.length === 0) {
+      if (!d || symbols.length === 0) {
         // Feed chậm tạm thời:
         // giữ nguyên danh sách tốt gần nhất.
         return;
