@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tạo Bản tin Môi giới | Võ Hoàng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#07101d;--panel:#0d1727;--line:rgba(214,180,106,.23);--gold:#d8b76f;--text:#f3f4f6;--muted:#98a2b3}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#13223a 0,#07101d 45%);color:var(--text);font-family:"Be Vietnam Pro",system-ui,sans-serif}
+    .top{position:sticky;top:0;z-index:5;background:rgba(7,16,29,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .topin{max-width:1180px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:800;letter-spacing:.02em}.brand span{color:var(--gold);font-weight:600}.who{font-size:12px;color:var(--muted)}
+    .wrap{max-width:1180px;margin:auto;padding:28px 20px 60px}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px}
+    h1{font-size:34px;margin:0 0 8px;letter-spacing:-.03em}.sub{color:var(--muted);line-height:1.6;margin:0}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#111d30;color:#fff;border-radius:12px;padding:10px 14px;font:600 13px inherit;cursor:pointer}
+    .btn.primary{background:#d8b76f;color:#0a1220;border-color:#d8b76f}.btn.danger{background:#3b1c23;border-color:#6b3039}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.metric,.card{background:rgba(13,23,39,.93);border:1px solid var(--line);border-radius:18px}
+    .metric{padding:16px}.metric span{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}.metric strong{font-size:18px}
+    .status[data-status="DRAFT"]{color:#e6c979}.status[data-status="REVIEWED"]{color:#89c9ff}.status[data-status="PUBLISHED"]{color:#8fe2a7}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.card{padding:20px;margin-bottom:16px}.card h2{font-size:18px;margin:0 0 15px}
+    label.field{display:block;margin-bottom:14px}.field span{display:block;color:#c9d0da;font-size:12px;font-weight:700;margin-bottom:7px}
+    input,textarea{width:100%;background:#081221;border:1px solid rgba(255,255,255,.11);border-radius:11px;color:#fff;padding:11px 12px;font:500 14px/1.55 inherit;outline:none}
+    textarea{min-height:90px;resize:vertical} input:focus,textarea:focus{border-color:rgba(216,183,111,.65)}
+    .watch{display:grid;gap:8px}.news-row{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.07);cursor:pointer}
+    .news-row:first-child{border-top:0}.news-row input{width:auto;margin-top:4px}.news-row b{display:block;font-size:13px;line-height:1.5}.news-row small{display:block;color:var(--gold);margin-top:4px}.news-row em{display:block;color:var(--muted);font-size:12px;line-height:1.5;font-style:normal;margin-top:6px}
+    .scenario{padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;margin-bottom:10px}.scenario strong{display:block;margin-bottom:8px;color:var(--gold);font-size:12px}.scenario input,.scenario textarea{margin-top:7px}.scenario textarea{min-height:72px}
+    .msg{margin:12px 0;color:var(--muted);font-size:13px;line-height:1.5}.msg.ok{color:#8fe2a7}.msg.warn{color:#e6c979}.msg.error{color:#ff9f9f}
+    .login{max-width:520px;margin:70px auto;background:rgba(13,23,39,.96);border:1px solid var(--line);border-radius:20px;padding:24px}.login h2{margin-top:0}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}.meta{grid-template-columns:repeat(2,1fr)}.hero{display:block}.btns{margin-top:15px}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="topin"><div class="brand">VÕ HOÀNG <span>· BẢN TIN MÔI GIỚI</span></div><div><span class="who" id="who"></span> <button class="btn" id="logout" hidden>Đăng xuất</button></div></div></header>
+  <main class="wrap">
+    <section id="login" class="login" hidden>
+      <h2>Đăng nhập khu vực môi giới</h2>
+      <p class="sub">Dùng email quản trị. Hệ thống gửi liên kết đăng nhập, không lưu mật khẩu trên trang.</p>
+      <form id="loginForm" style="margin-top:16px">
+        <label class="field"><span>Email</span><input id="email" type="email" required placeholder="email của bạn"></label>
+        <button class="btn primary" type="submit">Gửi liên kết đăng nhập</button>
+      </form>
+    </section>
+
+    <section id="editor" hidden>
+      <div class="hero">
+        <div>
+          <h1>Tạo Bản tin Môi giới</h1>
+          <p class="sub">Hệ thống gom dữ liệu và tin đã lọc. Bạn chỉnh góc nhìn, chọn 3–7 tin, duyệt rồi mới xuất bản.</p>
+        </div>
+        <div class="btns">
+          <button class="btn" id="btnReload">Tải lại</button>
+          <button class="btn" id="btnSave">Lưu nháp</button>
+          <button class="btn" id="btnReopen" hidden>Mở lại để sửa</button>
+          <button class="btn" id="btnReview">Đánh dấu đã duyệt</button>
+          <button class="btn primary" id="btnPublish" hidden>Xuất bản</button>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div class="metric"><span>NGÀY</span><strong id="briefDate">—</strong></div>
+        <div class="metric"><span>TRẠNG THÁI THỊ TRƯỜNG</span><strong id="marketState">—</strong></div>
+        <div class="metric"><span>MARKET SCORE</span><strong id="marketScore">—</strong></div>
+        <div class="metric"><span>TRẠNG THÁI BẢN TIN</span><strong class="status" id="status">—</strong></div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <section class="card">
+            <h2>Nội dung chính</h2>
+            <label class="field"><span>Tiêu đề bản tin</span><textarea id="headline"></textarea></label>
+            <label class="field"><span>Góc nhìn Võ Hoàng</span><textarea id="voView" style="min-height:150px" placeholder="Quan điểm của bạn sau khi xem dữ liệu và tin tức…"></textarea></label>
+          </section>
+
+          <section class="card">
+            <h2>3 điều cần nhìn</h2>
+            <div class="watch">
+              <input id="watch1" placeholder="Điều cần nhìn 1">
+              <input id="watch2" placeholder="Điều cần nhìn 2">
+              <input id="watch3" placeholder="Điều cần nhìn 3">
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Kịch bản & hành động</h2>
+            <div id="scenarios"></div>
+          </section>
+        </div>
+
+        <div>
+          <section class="card">
+            <h2>Chọn tin để xuất bản <small style="color:var(--muted);font-weight:500">(3–7 tin)</small></h2>
+            <div id="newsList"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <div id="msg" class="msg"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/broker-brief-admin.js"></script>
+</body>
+</html>
