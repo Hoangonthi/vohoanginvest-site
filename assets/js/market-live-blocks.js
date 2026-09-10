@@ -45,6 +45,7 @@
         <article class="vh-live-card" id="vh-derivatives-card" hidden>
           <h2 class="vh-live-title">Xu hướng phái sinh</h2>
           <div class="vh-live-row"><span class="vh-live-label">Xu hướng</span><span class="vh-live-value" id="vh-ps-trend">—</span></div>
+          <div class="vh-live-row"><span class="vh-live-label">Giá hiện tại</span><span class="vh-live-value" id="vh-ps-current">—</span></div>
           <div class="vh-live-row"><span class="vh-live-label">Giá hệ thống báo</span><span class="vh-live-value" id="vh-ps-entry">—</span></div>
           <div class="vh-live-row"><span class="vh-live-label">Mục tiêu xu hướng</span><span class="vh-live-value" id="vh-ps-targets">—</span></div>
           <div class="vh-live-row"><span class="vh-live-label">Đảo chiều xu hướng</span><span class="vh-live-value" id="vh-ps-reversal">—</span></div>
@@ -90,6 +91,7 @@
       trendEl.className = "vh-live-value " + (trend.toLowerCase() === "tăng" ? "vh-live-trend-up" : "vh-live-trend-down");
 
       document.getElementById("vh-ps-entry").textContent = num(d.system_price);
+      document.getElementById("vh-ps-current").textContent = num(d.last_price);
       document.getElementById("vh-ps-targets").textContent =
         `T1 ${num(d.targets?.t1)} · T2 ${num(d.targets?.t2)} · T3 ${num(d.targets?.t3)}`;
       document.getElementById("vh-ps-reversal").textContent = num(d.reversal_price);
