@@ -122,7 +122,7 @@
       <div class="vh-live-grid">
 
         <article class="vh-live-card" id="vh-derivatives-card">
-          <h2 class="vh-live-title">Xu hướng phái sinh</h2>
+          <h2 class="vh-live-title">Xu hướng phái sinh (thay đổi theo thời gian thực)</h2>
 
           <div class="vh-live-row">
             <span class="vh-live-label">Xu hướng</span>
