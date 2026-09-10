@@ -82,7 +82,7 @@ function addLeadMagnet(){
   const contact=document.querySelector('#lien-he');if(!contact||document.querySelector('[data-growth-lead]'))return;
   const section=document.createElement('section');section.className='growth-lead dark-surface';section.dataset.growthLead='';
   section.innerHTML=`<div class="growth-lead-inner">
-    <div class="growth-lead-copy"><span>GIỮ NHỊP VỚI THỊ TRƯỜNG</span><h2>Nhận “Bản đồ thị trường” khi có điều thực sự đáng chú ý.</h2><p>Không chạy theo từng mã. Nội dung tập trung vào trạng thái thị trường, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.</p><div class="growth-lead-points"><b>Không phím hàng</b><b>Không spam</b><b>Có hành động cụ thể</b></div><small>Để lại kênh liên hệ phù hợp. Anh/chị có thể yêu cầu dừng bất cứ lúc nào.</small></div>
+    <div class="growth-lead-copy"><span>GIỮ NHỊP VỚI THỊ TRƯỜNG</span><h2>Nhận “Nhận cập nhật thị trường” khi trạng thái, dòng tiền hoặc rủi ro có thay đổi đáng chú ý.</h2><p>Ưu tiên cổ phiếu phù hợp với bối cảnh và chiến lược. Nội dung tập trung vào trạng thái thị trường, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.</p><div class="growth-lead-points"><b>Có cơ sở</b><b>Đúng bối cảnh</b><b>Có hành động cụ thể</b></div><small>Để lại kênh liên hệ phù hợp. Anh/chị có thể yêu cầu dừng bất cứ lúc nào.</small></div>
     <div class="growth-lead-form" data-market-lead-root data-lead-source="HOME_MARKET_BRIEF"></div>
   </div>`;
   contact.parentNode.insertBefore(section,contact);
@@ -96,8 +96,8 @@ function addConnectHub(){
   section.className='growth-connect dark-surface';section.id='ket-noi';section.dataset.growthConnect='';
   section.innerHTML=`<div class="growth-connect-inner">
     <div class="growth-connect-head">
-      <div><span class="growth-connect-kicker">KẾT NỐI & MỞ TÀI KHOẢN</span><h2>Theo dõi Võ Hoàng ở kênh anh/chị dùng hằng ngày.</h2></div>
-      <p>Nếu cần mở tài khoản chứng khoán, anh/chị có thể dùng liên kết giới thiệu bên dưới để hệ thống ghi nhận đúng mã hỗ trợ.</p>
+      <div><span class="growth-connect-kicker">KẾT NỐI & MỞ TÀI KHOẢN</span><h2>Theo dõi Võ Hoàng ở các kênh mỗi ngày.</h2></div>
+      <p>Anh/chị có thể mở tài khoản qua liên kết bên dưới để Võ Hoàng thuận tiện đồng hành và hỗ trợ trong quá trình sử dụng</p>
     </div>
     <div class="growth-connect-grid">
       <article class="growth-connect-card">
@@ -114,7 +114,7 @@ function addConnectHub(){
           <div class="growth-broker"><div class="growth-broker-head"><strong>VPS</strong><small>ID 7251</small></div><p>Mã giới thiệu: <b>7251</b></p><div class="growth-broker-actions"><a href="https://openaccount.vps.com.vn/?MKTID=7251" target="_blank" rel="noopener noreferrer" data-growth-action="open-vps">Mở tài khoản VPS →</a></div></div>
           <div class="growth-broker"><div class="growth-broker-head"><strong>TCBS</strong><small>ID D72226</small></div><p>Mã ID: <b>D72226</b></p><div class="growth-broker-actions"><a href="https://iwp.tcbs.com.vn/105CD72226" target="_blank" rel="noopener noreferrer" data-growth-action="open-tcbs">Mở tài khoản TCBS →</a></div></div>
         </div>
-        <p class="growth-disclosure">Anh/chị nên tự xem biểu phí, sản phẩm, điều kiện giao dịch và mức độ phù hợp trước khi mở hoặc sử dụng tài khoản.</p>
+        <p class="growth-disclosure">Anh/chị có thể trao đổi cùng Võ Hoàng để chọn tài khoản phù hợp với nhu cầu giao dịch, biểu phí và sản phẩm trước khi bắt đầu.</p>
       </article>
     </div>
   </div>`;
