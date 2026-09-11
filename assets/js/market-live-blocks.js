@@ -26,7 +26,7 @@
         padding:0 20px;
         font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
       }
-
+      
       #vh-live-intelligence .vh-live-grid{
         display:grid;
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -50,7 +50,17 @@
         line-height:1.35;
         letter-spacing:-0.02em;
       }
-
+      #vh-live-intelligence .vh-live-status{
+        margin:-6px 0 14px;
+        color:rgba(255,255,255,.46);
+        font-size:12px;
+        font-weight:500;
+      }
+      
+      #vh-live-intelligence .vh-live-row{
+        display:flex;
+        ...
+      }
       #vh-live-intelligence .vh-live-row{
         display:flex;
         justify-content:space-between;
@@ -122,7 +132,8 @@
       <div class="vh-live-grid">
 
         <article class="vh-live-card" id="vh-derivatives-card">
-          <h2 class="vh-live-title">Xu hướng phái sinh (thay đổi theo thời gian thực)</h2>
+          <h2 class="vh-live-title">Xu hướng phái sinh</h2>
+          <div class="vh-live-status" id="vh-ps-status">—</div>
 
           <div class="vh-live-row">
             <span class="vh-live-label">Xu hướng</span>
@@ -152,6 +163,7 @@
 
         <article class="vh-live-card" id="vh-hot-card">
           <h2 class="vh-live-title">Cổ phiếu đáng chú ý hôm nay</h2>
+          <div class="vh-live-status" id="vh-hot-status">—</div>
 
           <div class="vh-hot-symbols" id="vh-hot-symbols">—</div>
 
@@ -198,10 +210,11 @@
       const d = await r.json();
 
       if (!d || !d.trend) {
-        // Feed chậm tạm thời:
-        // giữ nguyên dữ liệu tốt gần nhất, không làm card biến mất.
-        return;
+      return;
       }
+
+      const statusText =
+      d.fresh === true ? "Realtime" : "Dữ liệu cuối cùng";
 
       const trend = String(d.trend);
 
@@ -226,7 +239,8 @@
 
       document.getElementById("vh-ps-reversal").textContent =
         num(d.reversal_price);
-
+      document.getElementById("vh-ps-status").textContent = statusText;
+      
     } catch (_) {
       // Lỗi mạng tạm thời:
       // giữ nguyên dữ liệu lần cập nhật tốt gần nhất.
@@ -260,6 +274,8 @@
 
       document.getElementById("vh-hot-symbols").textContent =
         symbols.join(", ");
+      const statusText = d.fresh === true ? "Realtime" : "Dữ liệu cuối cùng";
+      document.getElementById("vh-hot-status").textContent = statusText;
 
     } catch (_) {
       // Lỗi mạng tạm thời:
