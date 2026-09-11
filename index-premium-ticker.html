@@ -116,7 +116,14 @@
       text-decoration:none;
       min-width:230px;
     }
-
+    .brand-logo{
+    width:42px;
+    height:42px;
+  
+    object-fit:contain;
+  
+    flex:none;
+    }
     .brand-mark{
       display:flex;
       align-items:flex-end;
@@ -969,39 +976,30 @@
       color:#414141;
     }
 
-    .portrait{
-      aspect-ratio:4/5;
-
-      border-radius:18px;
-
-      background:
-        linear-gradient(
-          160deg,
-          #d8c5a1,
-          #233346 65%,
-          #101a25
-        );
-
-      display:grid;
-      place-items:center;
-
-      color:#fff;
-
-      font-family:
-        "Playfair Display",
-        serif;
-
-      font-size:58px;
-
-      box-shadow:
-        0 20px 45px
-        rgba(
-          0,
-          0,
-          0,
-          .18
-        );
-    }
+      .portrait{
+    aspect-ratio:4/5;
+  
+    border-radius:18px;
+  
+    overflow:hidden;
+  
+    background:#101a25;
+  
+    box-shadow:
+      0 20px 45px
+      rgba(0,0,0,.18);
+  }
+  
+  .portrait img{
+    width:100%;
+    height:100%;
+  
+    display:block;
+  
+    object-fit:cover;
+  
+    object-position:center 18%;
+  }
 
     .quote-panel{
       background:
@@ -1121,33 +1119,51 @@
       font-weight:700;
     }
 
-    .copyright{
-      border-top:
-        1px solid
-        rgba(
-          255,
-          255,
-          255,
-          .08
-        );
+.legal-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 18px;
 
-      margin-top:
-        24px;
+  margin-top:24px;
+  padding-top:18px;
 
-      padding-top:
-        18px;
+  border-top:
+    1px solid
+    rgba(255,255,255,.08);
+}
 
-      font-size:11px;
+.legal-links a{
+  color:#aeb8c4;
+  text-decoration:none;
+  font-size:11px;
+}
 
-      color:#7e8b97;
+.legal-links a:hover{
+  color:var(--gold2);
+}
 
-      display:flex;
-
-      justify-content:
-        space-between;
-
-      gap:20px;
-    }
+  .copyright{
+    margin-top:16px;
+    padding-top:16px;
+  
+    border-top:
+      1px solid
+      rgba(255,255,255,.06);
+  
+    font-size:11px;
+    line-height:1.7;
+  
+    color:#7e8b97;
+  
+    display:flex;
+    justify-content:space-between;
+    gap:30px;
+  }
+  
+  .copyright span:last-child{
+    max-width:620px;
+    text-align:right;
+  }
 
     @media(
       max-width:980px
@@ -1279,10 +1295,20 @@
         margin-left:0;
       }
 
-      .copyright{
-        flex-direction:
-          column;
-      }
+      .legal-links{
+      flex-direction:column;
+      gap:8px;
+    }
+    
+    .copyright{
+      flex-direction:column;
+      gap:8px;
+    }
+    
+    .copyright span:last-child{
+      max-width:none;
+      text-align:left;
+    }
 
     }
 
@@ -1301,11 +1327,11 @@
         href="index.html"
       >
 
-        <span class="brand-mark">
-          <i></i>
-          <i></i>
-          <i></i>
-        </span>
+        <img
+        class="brand-logo"
+        src="LOGO.png"
+        alt="VÕ HOÀNG"
+        >
 
         <span>
 
@@ -1782,7 +1808,12 @@
         </div>
 
         <div class="portrait">
-          VH
+
+        <img
+        src="AVATAR2.png"
+        alt="Võ Hoàng"
+        >
+
         </div>
 
         <div class="quote-panel">
@@ -1837,11 +1868,11 @@
           href="index.html"
         >
 
-          <span class="brand-mark">
-            <i></i>
-            <i></i>
-            <i></i>
-          </span>
+          <img
+          class="brand-logo"
+          src="LOGO.png"
+          alt="VÕ HOÀNG"
+          >
 
           <span>
 
@@ -1903,22 +1934,42 @@
 
       </div>
 
-      <div class="copyright">
+  <div class="legal-links">
 
-        <span>
-          © 2026 Võ Hoàng.
-          All rights reserved.
-        </span>
+  <a href="mien-tru-trach-nhiem.html">
+    Miễn trừ trách nhiệm
+  </a>
 
-        <span>
-          Điều khoản
-          &nbsp; | &nbsp;
-          Bảo mật
-          &nbsp; | &nbsp;
-          Liên hệ
-        </span>
+  <a href="chinh-sach-bao-mat.html">
+    Chính sách bảo mật
+  </a>
 
-      </div>
+  <a href="dieu-khoan-su-dung.html">
+    Điều khoản sử dụng
+  </a>
+
+  <a href="du-lieu-bai-danh-gia.html">
+    Dữ liệu bài đánh giá
+  </a>
+
+    <a href="lien-he.html">
+      Liên hệ
+    </a>
+  
+  </div>
+  
+  <div class="copyright">
+  
+    <span>
+      © 2026 VÕ HOÀNG. All rights reserved.
+    </span>
+  
+    <span>
+      Đầu tư chứng khoán rủi ro thường trực.
+      Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+    </span>
+  
+  </div>
 
     </div>
 
