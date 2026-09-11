@@ -8,43 +8,124 @@
     "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
 
   const ROOT_ID = "vh-market-ticker";
-  const STORAGE_KEY = "vh_market_ticker_last_good_v1";
+  const STORAGE_KEY =
+    "vh_market_ticker_last_good_v2";
 
-  const fmt = new Intl.NumberFormat("vi-VN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
+  const REFRESH_MS = 15000;
 
-  const fmt0 = new Intl.NumberFormat("vi-VN", {
-    maximumFractionDigits: 0
-  });
+  /*
+   * Tốc độ chạy ticker.
+   * Số càng lớn chạy càng nhanh.
+   * 38px/giây = khá dễ đọc.
+   */
+  const SPEED_PX_PER_SECOND = 38;
 
-  function n(v, digits = 2) {
+  const fmt2 =
+    new Intl.NumberFormat(
+      "vi-VN",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+  const fmt1 =
+    new Intl.NumberFormat(
+      "vi-VN",
+      {
+        minimumFractionDigits:1,
+        maximumFractionDigits:1
+      }
+    );
+
+  const fmt0 =
+    new Intl.NumberFormat(
+      "vi-VN",
+      {
+        maximumFractionDigits:0
+      }
+    );
+
+  let tickerOffset = 0;
+  let lastFrameTime = 0;
+  let animationFrameId = null;
+  let tickerPaused = false;
+
+
+  /* =========================
+     TIỆN ÍCH
+  ========================= */
+
+  function numberValue(v) {
     const x = Number(v);
 
-    if (!Number.isFinite(x)) {
+    return Number.isFinite(x)
+      ? x
+      : null;
+  }
+
+
+  function formatNumber(
+    v,
+    digits = 2
+  ) {
+    const x = numberValue(v);
+
+    if (x === null) {
       return "—";
     }
 
-    return digits === 0
-      ? fmt0.format(x)
-      : fmt.format(x);
+    if (digits === 0) {
+      return fmt0.format(x);
+    }
+
+    if (digits === 1) {
+      return fmt1.format(x);
+    }
+
+    return fmt2.format(x);
   }
 
-  function signed(v) {
-    const x = Number(v);
 
-    if (!Number.isFinite(x)) {
+  function formatSignedNumber(v) {
+    const x = numberValue(v);
+
+    if (x === null) {
       return "—";
     }
 
-    return `${x > 0 ? "+" : ""}${fmt.format(x)}%`;
+    const sign =
+      x > 0
+        ? "+"
+        : "";
+
+    return `${sign}${fmt2.format(x)}`;
   }
+
+
+  function formatPercent(v) {
+    const x = numberValue(v);
+
+    if (x === null) {
+      return "—";
+    }
+
+    const sign =
+      x > 0
+        ? "+"
+        : "";
+
+    return `${sign}${fmt2.format(x)}%`;
+  }
+
 
   function tone(v) {
-    const x = Number(v);
+    const x = numberValue(v);
 
-    if (!Number.isFinite(x) || x === 0) {
+    if (
+      x === null ||
+      x === 0
+    ) {
       return "flat";
     }
 
@@ -53,15 +134,368 @@
       : "down";
   }
 
-  function getIndex(data, symbol) {
-    return Array.isArray(data?.indexes)
-      ? data.indexes.find(
-          x =>
-            String(x?.symbol || "") ===
-            symbol
-        )
-      : null;
+
+  function firstValue(
+    obj,
+    keys
+  ) {
+    if (!obj) {
+      return null;
+    }
+
+    for (
+      const key of keys
+    ) {
+      const value =
+        key
+          .split(".")
+          .reduce(
+            (
+              acc,
+              part
+            ) =>
+              acc?.[part],
+            obj
+          );
+
+      if (
+        value !== undefined &&
+        value !== null &&
+        value !== ""
+      ) {
+        return value;
+      }
+    }
+
+    return null;
   }
+
+
+  function esc(value) {
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+  }
+
+
+  /* =========================
+     INDEX
+  ========================= */
+
+  function getIndex(
+    data,
+    symbol
+  ) {
+    if (
+      !Array.isArray(
+        data?.indexes
+      )
+    ) {
+      return null;
+    }
+
+    return (
+      data.indexes.find(
+        item =>
+          String(
+            item?.symbol || ""
+          ).toUpperCase() ===
+          symbol.toUpperCase()
+      ) || null
+    );
+  }
+
+
+  function indexPrice(index) {
+    return firstValue(
+      index,
+      [
+        "value",
+        "close",
+        "last",
+        "price",
+        "current",
+        "current_price",
+        "index_value"
+      ]
+    );
+  }
+
+
+  function indexPercent(index) {
+    return firstValue(
+      index,
+      [
+        "change_pct",
+        "change_percent",
+        "percent_change",
+        "pct_change",
+        "changePercent"
+      ]
+    );
+  }
+
+
+  function indexPointChange(index) {
+    /*
+     * Ưu tiên điểm tăng/giảm
+     * do backend gửi trực tiếp.
+     */
+    const direct =
+      firstValue(
+        index,
+        [
+          "change",
+          "change_point",
+          "change_points",
+          "point_change",
+          "change_value",
+          "delta",
+          "diff"
+        ]
+      );
+
+    if (
+      numberValue(direct) !== null
+    ) {
+      return Number(direct);
+    }
+
+    /*
+     * Nếu backend chưa gửi điểm thay đổi,
+     * tính ngược từ:
+     * giá hiện tại + % thay đổi.
+     */
+    const current =
+      numberValue(
+        indexPrice(index)
+      );
+
+    const pct =
+      numberValue(
+        indexPercent(index)
+      );
+
+    if (
+      current === null ||
+      pct === null
+    ) {
+      return null;
+    }
+
+    const denominator =
+      1 + pct / 100;
+
+    if (
+      denominator === 0
+    ) {
+      return null;
+    }
+
+    const previous =
+      current / denominator;
+
+    return (
+      current -
+      previous
+    );
+  }
+
+
+  function indexVolume(index) {
+    return firstValue(
+      index,
+      [
+        "volume",
+        "total_volume",
+        "matched_volume",
+        "match_volume",
+        "trading_volume",
+        "totalVolume",
+        "vol"
+      ]
+    );
+  }
+
+
+  function formatVolume(v) {
+    const x = numberValue(v);
+
+    if (x === null) {
+      return "—";
+    }
+
+    if (
+      Math.abs(x) >=
+      1000000000
+    ) {
+      return (
+        `${fmt2.format(
+          x / 1000000000
+        )} tỷ`
+      );
+    }
+
+    if (
+      Math.abs(x) >=
+      1000000
+    ) {
+      return (
+        `${fmt1.format(
+          x / 1000000
+        )}tr`
+      );
+    }
+
+    if (
+      Math.abs(x) >=
+      1000
+    ) {
+      return (
+        `${fmt1.format(
+          x / 1000
+        )}k`
+      );
+    }
+
+    return fmt0.format(x);
+  }
+
+
+  /* =========================
+     PHÁI SINH
+  ========================= */
+
+  function derivativeTrend(ps) {
+    return (
+      firstValue(
+        ps,
+        [
+          "trend",
+          "direction",
+          "signal",
+          "system_trend",
+          "system.direction"
+        ]
+      ) || "—"
+    );
+  }
+
+
+  function derivativeCurrentPrice(ps) {
+    return firstValue(
+      ps,
+      [
+        "last_price",
+        "price",
+        "current_price",
+        "last",
+        "close"
+      ]
+    );
+  }
+
+
+  function derivativeSystemPrice(ps) {
+    return firstValue(
+      ps,
+      [
+        "system_price",
+        "price_system",
+        "signal_price",
+        "model_price",
+        "system.price",
+        "systemPrice",
+        "entry_price",
+        "reference_price"
+      ]
+    );
+  }
+
+
+  function derivativeVolume(ps) {
+    return firstValue(
+      ps,
+      [
+        "volume",
+        "total_volume",
+        "matched_volume",
+        "match_volume",
+        "trading_volume",
+        "totalVolume",
+        "vol"
+      ]
+    );
+  }
+
+
+  function derivativeDifference(ps) {
+    const direct =
+      firstValue(
+        ps,
+        [
+          "difference",
+          "diff",
+          "basis",
+          "spread",
+          "system_diff",
+          "price_diff"
+        ]
+      );
+
+    if (
+      numberValue(direct) !== null
+    ) {
+      return Number(direct);
+    }
+
+    const systemPrice =
+      numberValue(
+        derivativeSystemPrice(ps)
+      );
+
+    const currentPrice =
+      numberValue(
+        derivativeCurrentPrice(ps)
+      );
+
+    if (
+      systemPrice === null ||
+      currentPrice === null
+    ) {
+      return null;
+    }
+
+    return (
+      currentPrice -
+      systemPrice
+    );
+  }
+
+
+  /* =========================
+     CSS
+  ========================= */
 
   function ensureStyle() {
     if (
@@ -73,7 +507,9 @@
     }
 
     const style =
-      document.createElement("style");
+      document.createElement(
+        "style"
+      );
 
     style.id =
       "vh-market-ticker-style";
@@ -82,17 +518,24 @@
       #${ROOT_ID}{
         position:relative;
         z-index:45;
+
         width:100%;
-        height:38px;
+        height:44px;
+
         overflow:hidden;
+
         background:#06101b;
+
         border-top:
           1px solid
-          rgba(255,255,255,.035);
+          rgba(255,255,255,.04);
+
         border-bottom:
           1px solid
-          rgba(224,187,103,.16);
+          rgba(224,187,103,.18);
+
         color:#dbe3eb;
+
         font-family:
           "Be Vietnam Pro",
           Inter,
@@ -103,152 +546,272 @@
           sans-serif;
       }
 
+
       #${ROOT_ID}
       .vh-ticker-viewport{
-        width:100%;
+        position:relative;
+
+        width:
+          calc(100% - 20px);
+
         height:100%;
+
+        margin:
+          0 10px;
+
         overflow:hidden;
+
         display:flex;
+
         align-items:center;
       }
+
 
       #${ROOT_ID}
       .vh-ticker-track{
         display:flex;
+
         align-items:center;
+
+        flex:none;
+
         width:max-content;
+
         white-space:nowrap;
-        will-change:transform;
-        transform:translate3d(0,0,0);
-        animation:
-          vhTickerMove
-          22s linear infinite;
+
+        transform:
+          translate3d(
+            0,
+            0,
+            0
+          );
+
+        will-change:
+          transform;
       }
 
-      #${ROOT_ID}:hover
-      .vh-ticker-track{
-        animation-play-state:paused;
-      }
 
       #${ROOT_ID}
       .vh-ticker-set{
         display:flex;
+
         align-items:center;
+
         flex:none;
-        min-width:max-content;
+
+        width:max-content;
+
+        white-space:nowrap;
       }
+
 
       #${ROOT_ID}
       .vh-ticker-item{
+        flex:none;
+
         display:flex;
+
         align-items:center;
-        gap:7px;
-        padding:0 18px;
-        height:38px;
+
+        gap:6px;
+
+        height:44px;
+
+        padding:
+          0 13px;
+
         border-right:
           1px solid
-          rgba(255,255,255,.07);
+          rgba(
+            255,
+            255,
+            255,
+            .075
+          );
+
         font-size:12px;
+
+        line-height:1;
+
+        white-space:nowrap;
       }
+
 
       #${ROOT_ID}
       .vh-ticker-label{
         color:
-          rgba(255,255,255,.58);
+          rgba(
+            255,
+            255,
+            255,
+            .58
+          );
+
         font-weight:600;
       }
 
+
+      #${ROOT_ID}
+      .vh-ticker-name{
+        color:#dce5ed;
+
+        font-weight:700;
+      }
+
+
       #${ROOT_ID}
       .vh-ticker-value{
-        color:#f7f8fa;
+        color:#fff;
+
         font-weight:800;
       }
+
 
       #${ROOT_ID}
       .vh-ticker-change{
         font-weight:800;
       }
 
+
       #${ROOT_ID}
       .vh-ticker-change.up{
-        color:#76d7a7;
+        color:#72d9a5;
       }
+
 
       #${ROOT_ID}
       .vh-ticker-change.down{
-        color:#ff8f86;
+        color:#ff8179;
       }
+
 
       #${ROOT_ID}
       .vh-ticker-change.flat{
         color:#aeb8c4;
       }
 
+
       #${ROOT_ID}
       .vh-ticker-state{
         color:#e0bb67;
+
         font-weight:800;
       }
+
+
+      #${ROOT_ID}
+      .vh-ticker-separator{
+        color:
+          rgba(
+            255,
+            255,
+            255,
+            .22
+          );
+      }
+
 
       #${ROOT_ID}
       .vh-ticker-status{
         position:absolute;
+
         right:8px;
-        top:7px;
-        z-index:2;
-        padding:3px 8px;
+        top:50%;
+
+        transform:
+          translateY(-50%);
+
+        z-index:3;
+
+        padding:
+          3px 7px;
+
         border-radius:999px;
+
         background:
-          rgba(6,16,27,.92);
+          rgba(
+            6,
+            16,
+            27,
+            .94
+          );
+
         border:
           1px solid
-          rgba(255,255,255,.08);
+          rgba(
+            255,
+            255,
+            255,
+            .08
+          );
+
         color:
-          rgba(255,255,255,.48);
+          rgba(
+            255,
+            255,
+            255,
+            .48
+          );
+
         font-size:9px;
-        letter-spacing:.04em;
+
+        line-height:1;
+
         pointer-events:none;
       }
 
-      @keyframes vhTickerMove{
-        0%{
-          transform:translate3d(0,0,0);
-        }
 
-        100%{
-          transform:translate3d(-50%,0,0);
-        }
-      }
+      @media(
+        max-width:760px
+      ){
 
-      @media(max-width:760px){
         #${ROOT_ID}{
-          height:36px;
+          height:42px;
         }
+
 
         #${ROOT_ID}
-        .vh-ticker-track{
-          animation-duration:22s;
+        .vh-ticker-viewport{
+          width:
+            calc(
+              100% - 12px
+            );
+
+          margin:
+            0 6px;
         }
+
 
         #${ROOT_ID}
         .vh-ticker-item{
-          height:36px;
-          padding:0 14px;
+          height:42px;
+
+          padding:
+            0 10px;
+
           font-size:11px;
+
+          gap:5px;
         }
+
 
         #${ROOT_ID}
         .vh-ticker-status{
           display:none;
         }
-      }
 
+      }
     `;
 
     document.head.appendChild(
       style
     );
   }
+
+
+  /* =========================
+     DOM
+  ========================= */
 
   function ensureRoot() {
     let root =
@@ -263,7 +826,9 @@
     ensureStyle();
 
     root =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     root.id =
       ROOT_ID;
@@ -274,7 +839,9 @@
     );
 
     root.innerHTML = `
-      <div class="vh-ticker-viewport">
+      <div
+        class="vh-ticker-viewport"
+      >
 
         <div
           class="vh-ticker-track"
@@ -329,122 +896,371 @@
       );
     }
 
+    root.addEventListener(
+      "mouseenter",
+      () => {
+        tickerPaused = true;
+      }
+    );
+
+    root.addEventListener(
+      "mouseleave",
+      () => {
+        tickerPaused = false;
+      }
+    );
+
     return root;
   }
 
-  function item(
+
+  /* =========================
+     HTML ITEM
+  ========================= */
+
+  function indexItem(
     label,
-    value,
-    change = null
+    index
   ) {
+    const price =
+      numberValue(
+        indexPrice(index)
+      );
+
+    const change =
+      indexPointChange(index);
+
+    const pct =
+      numberValue(
+        indexPercent(index)
+      );
+
+    const volume =
+      indexVolume(index);
+
+    const toneClass =
+      tone(
+        pct !== null
+          ? pct
+          : change
+      );
+
     return `
-      <div class="vh-ticker-item">
+      <div
+        class="vh-ticker-item"
+      >
 
-        <span class="vh-ticker-label">
-          ${label}
+        <span
+          class="vh-ticker-name"
+        >
+          ${esc(label)}
         </span>
 
-        <span class="vh-ticker-value">
-          ${value}
+        <span
+          class="vh-ticker-value"
+        >
+          ${formatNumber(price)}
         </span>
 
-        ${
-          change === null
-            ? ""
-            : `
-              <span
-                class="vh-ticker-change ${tone(change)}"
-              >
-                ${signed(change)}
-              </span>
-            `
-        }
+        <span
+          class="vh-ticker-change ${toneClass}"
+        >
+          ${formatSignedNumber(change)}
+        </span>
+
+        <span
+          class="vh-ticker-change ${toneClass}"
+        >
+          ${formatPercent(pct)}
+        </span>
+
+        <span
+          class="vh-ticker-label"
+        >
+          KL
+        </span>
+
+        <span
+          class="vh-ticker-value"
+        >
+          ${formatVolume(volume)}
+        </span>
 
       </div>
     `;
   }
 
-  function stateItem(
+
+  function valueItem(
     label,
-    state
+    value
   ) {
     return `
-      <div class="vh-ticker-item">
+      <div
+        class="vh-ticker-item"
+      >
 
-        <span class="vh-ticker-label">
-          ${label}
+        <span
+          class="vh-ticker-label"
+        >
+          ${esc(label)}
         </span>
 
-        <span class="vh-ticker-state">
-          ${state || "—"}
+        <span
+          class="vh-ticker-value"
+        >
+          ${esc(value)}
         </span>
 
       </div>
     `;
   }
+
 
   function breadthItem(b) {
     if (!b) {
-      return item(
+      return valueItem(
         "Độ rộng",
         "—"
       );
     }
 
     const adv =
-      Number.isFinite(
-        Number(b.adv)
-      )
-        ? Number(b.adv)
-        : null;
+      numberValue(b.adv);
 
     const dec =
-      Number.isFinite(
-        Number(b.dec)
-      )
-        ? Number(b.dec)
-        : null;
+      numberValue(b.dec);
 
     const flat =
-      Number.isFinite(
-        Number(b.flat)
-      )
-        ? Number(b.flat)
-        : null;
+      numberValue(b.flat);
 
     if (
       adv === null ||
       dec === null ||
       flat === null
     ) {
-      return item(
+      return valueItem(
         "Độ rộng",
         b.label || "—"
       );
     }
 
     return `
-      <div class="vh-ticker-item">
+      <div
+        class="vh-ticker-item"
+      >
 
-        <span class="vh-ticker-label">
+        <span
+          class="vh-ticker-label"
+        >
           Độ rộng
         </span>
 
-        <span class="vh-ticker-change up">
+        <span
+          class="vh-ticker-change up"
+        >
           ${fmt0.format(adv)}↑
         </span>
 
-        <span class="vh-ticker-value">
+        <span
+          class="vh-ticker-value"
+        >
           ${fmt0.format(flat)}→
         </span>
 
-        <span class="vh-ticker-change down">
+        <span
+          class="vh-ticker-change down"
+        >
           ${fmt0.format(dec)}↓
         </span>
 
       </div>
     `;
   }
+
+
+  function stateItem(state) {
+    return `
+      <div
+        class="vh-ticker-item"
+      >
+
+        <span
+          class="vh-ticker-label"
+        >
+          Trạng thái
+        </span>
+
+        <span
+          class="vh-ticker-state"
+        >
+          ${esc(
+            state || "—"
+          )}
+        </span>
+
+      </div>
+    `;
+  }
+
+
+  function derivativeItem(ps) {
+    const trend =
+      derivativeTrend(ps);
+
+    const systemPrice =
+      numberValue(
+        derivativeSystemPrice(ps)
+      );
+
+    const currentPrice =
+      numberValue(
+        derivativeCurrentPrice(ps)
+      );
+
+    const diff =
+      derivativeDifference(ps);
+
+    const volume =
+      derivativeVolume(ps);
+
+    const trendText =
+      String(
+        trend || ""
+      ).toUpperCase();
+
+    let trendClass =
+      "flat";
+
+    if (
+      trendText.includes("TĂNG") ||
+      trendText.includes("UP") ||
+      trendText.includes("LONG")
+    ) {
+      trendClass =
+        "up";
+    }
+
+    if (
+      trendText.includes("GIẢM") ||
+      trendText.includes("DOWN") ||
+      trendText.includes("SHORT")
+    ) {
+      trendClass =
+        "down";
+    }
+
+    return `
+      <div
+        class="vh-ticker-item"
+      >
+
+        <span
+          class="vh-ticker-name"
+        >
+          Phái sinh
+        </span>
+
+        <span
+          class="vh-ticker-label"
+        >
+          Xu hướng
+        </span>
+
+        <span
+          class="vh-ticker-change ${trendClass}"
+        >
+          ${esc(trend)}
+        </span>
+
+        <span
+          class="vh-ticker-separator"
+        >
+          |
+        </span>
+
+        <span
+          class="vh-ticker-label"
+        >
+          Giá HT
+        </span>
+
+        <span
+          class="vh-ticker-value"
+        >
+          ${formatNumber(
+            systemPrice
+          )}
+        </span>
+
+        <span
+          class="vh-ticker-separator"
+        >
+          |
+        </span>
+
+        <span
+          class="vh-ticker-label"
+        >
+          Hiện tại
+        </span>
+
+        <span
+          class="vh-ticker-value"
+        >
+          ${formatNumber(
+            currentPrice
+          )}
+        </span>
+
+        <span
+          class="vh-ticker-separator"
+        >
+          |
+        </span>
+
+        <span
+          class="vh-ticker-label"
+        >
+          Lệch
+        </span>
+
+        <span
+          class="vh-ticker-change ${tone(diff)}"
+        >
+          ${formatSignedNumber(
+            diff
+          )}
+        </span>
+
+        <span
+          class="vh-ticker-separator"
+        >
+          |
+        </span>
+
+        <span
+          class="vh-ticker-label"
+        >
+          KL
+        </span>
+
+        <span
+          class="vh-ticker-value"
+        >
+          ${formatVolume(
+            volume
+          )}
+        </span>
+
+      </div>
+    `;
+  }
+
+
+  /* =========================
+     RENDER
+  ========================= */
 
   function render(
     data,
@@ -478,69 +1294,51 @@
       );
 
     const intel =
-      data?.market_intelligence || {};
+      data?.market_intelligence ||
+      {};
 
     const flow =
-      intel?.flow || {};
+      intel?.flow ||
+      {};
 
     const breadth =
-      intel?.breadth || {};
+      intel?.breadth ||
+      {};
 
     const state =
-      intel?.state || {};
+      intel?.state ||
+      {};
 
     const fresh =
-      intel?.freshness || {};
+      intel?.freshness ||
+      {};
 
     const html = [
-      item(
+
+      indexItem(
         "VN-Index",
-        n(
-          vn?.value ??
-          vn?.close ??
-          vn?.last ??
-          vn?.price
-        ),
-        vn?.change_pct
+        vn
       ),
 
-      item(
+      indexItem(
         "VN30",
-        n(
-          vn30?.value ??
-          vn30?.close ??
-          vn30?.last ??
-          vn30?.price
-        ),
-        vn30?.change_pct
+        vn30
       ),
 
-      item(
+      indexItem(
         "HNX-Index",
-        n(
-          hnx?.value ??
-          hnx?.close ??
-          hnx?.last ??
-          hnx?.price
-        ),
-        hnx?.change_pct
+        hnx
       ),
 
-      item(
+      indexItem(
         "UPCOM",
-        n(
-          upcom?.value ??
-          upcom?.close ??
-          upcom?.last ??
-          upcom?.price
-        ),
-        upcom?.change_pct
+        upcom
       ),
 
-      item(
+      valueItem(
         "GTGD",
         flow?.value_b != null
-          ? `${n(
+          ? `${formatNumber(
               flow.value_b,
               0
             )} tỷ`
@@ -552,22 +1350,15 @@
       ),
 
       stateItem(
-        "Trạng thái",
         state?.label
       ),
 
-      ps?.trend
-        ? item(
-            "Phái sinh",
-            `${ps.trend} · ${n(
-              ps.last_price
-            )}`
-          )
-        : item(
-            "Phái sinh",
-            "—"
-          )
+      derivativeItem(
+        ps || {}
+      )
+
     ].join("");
+
 
     const setA =
       document.getElementById(
@@ -579,6 +1370,7 @@
         "vh-ticker-set-b"
       );
 
+
     if (setA) {
       setA.innerHTML =
         html;
@@ -589,33 +1381,143 @@
         html;
     }
 
+
     const status =
       document.getElementById(
         "vh-ticker-status"
       );
 
     if (status) {
-      const label =
+      status.textContent =
         source === "cache"
           ? "Dữ liệu cuối cùng"
-          : fresh?.label ||
-            "Realtime";
-
-      status.textContent =
-        label;
+          : (
+              fresh?.label ||
+              "Realtime"
+            );
     }
+
 
     try {
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
-          at: Date.now(),
-          market: data,
+          at:Date.now(),
+          market:data,
           ps
         })
       );
     } catch (_) {}
   }
+
+
+  /* =========================
+     MARQUEE CHẠY BẰNG JS
+  ========================= */
+
+  function animateTicker(
+    timestamp
+  ) {
+    const track =
+      document.getElementById(
+        "vh-ticker-track"
+      );
+
+    const setA =
+      document.getElementById(
+        "vh-ticker-set-a"
+      );
+
+    if (
+      !track ||
+      !setA
+    ) {
+      animationFrameId =
+        requestAnimationFrame(
+          animateTicker
+        );
+
+      return;
+    }
+
+
+    if (!lastFrameTime) {
+      lastFrameTime =
+        timestamp;
+    }
+
+
+    const deltaSeconds =
+      Math.min(
+        (
+          timestamp -
+          lastFrameTime
+        ) / 1000,
+        0.1
+      );
+
+    lastFrameTime =
+      timestamp;
+
+
+    const setWidth =
+      setA.scrollWidth;
+
+
+    if (
+      !tickerPaused &&
+      setWidth > 0
+    ) {
+      tickerOffset +=
+        SPEED_PX_PER_SECOND *
+        deltaSeconds;
+
+
+      if (
+        tickerOffset >=
+        setWidth
+      ) {
+        tickerOffset -=
+          setWidth;
+      }
+
+
+      track.style.transform =
+        `translate3d(
+          ${-tickerOffset}px,
+          0,
+          0
+        )`;
+    }
+
+
+    animationFrameId =
+      requestAnimationFrame(
+        animateTicker
+      );
+  }
+
+
+  function startAnimation() {
+    if (
+      animationFrameId !==
+      null
+    ) {
+      return;
+    }
+
+    lastFrameTime = 0;
+
+    animationFrameId =
+      requestAnimationFrame(
+        animateTicker
+      );
+  }
+
+
+  /* =========================
+     CACHE
+  ========================= */
 
   function renderCache() {
     try {
@@ -631,7 +1533,9 @@
       const cached =
         JSON.parse(raw);
 
-      if (!cached?.market) {
+      if (
+        !cached?.market
+      ) {
         return false;
       }
 
@@ -642,15 +1546,22 @@
       );
 
       return true;
+
     } catch (_) {
       return false;
     }
   }
 
+
+  /* =========================
+     LOAD DATA
+  ========================= */
+
   async function load() {
     ensureRoot();
 
     try {
+
       const [
         marketResp,
         psResp
@@ -673,8 +1584,13 @@
           )
         ]);
 
-      let market = null;
-      let ps = null;
+
+      let market =
+        null;
+
+      let ps =
+        null;
+
 
       if (
         marketResp.status ===
@@ -682,8 +1598,11 @@
         marketResp.value.ok
       ) {
         market =
-          await marketResp.value.json();
+          await marketResp
+            .value
+            .json();
       }
+
 
       if (
         psResp.status ===
@@ -691,13 +1610,18 @@
         psResp.value.ok
       ) {
         ps =
-          await psResp.value.json();
+          await psResp
+            .value
+            .json();
       }
+
 
       if (
         !market?.indexes?.length
       ) {
-        if (!renderCache()) {
+        if (
+          !renderCache()
+        ) {
           const status =
             document.getElementById(
               "vh-ticker-status"
@@ -712,6 +1636,7 @@
         return;
       }
 
+
       render(
         market,
         ps,
@@ -723,18 +1648,26 @@
     }
   }
 
+
+  /* =========================
+     START
+  ========================= */
+
   function start() {
     ensureRoot();
 
     renderCache();
 
+    startAnimation();
+
     load();
 
     setInterval(
       load,
-      15000
+      REFRESH_MS
     );
   }
+
 
   if (
     document.readyState ===
