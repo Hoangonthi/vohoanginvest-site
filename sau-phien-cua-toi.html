@@ -179,10 +179,11 @@
 
     /* MARKET STRIP */
     .market-area{position:relative;z-index:5;margin-top:-8px}
-    .market-grid{
-      display:grid;
-      grid-template-columns:1.05fr 1.05fr 1.05fr 1.05fr .48fr;
-      gap:10px;
+      .market-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px;
+    width:100%;
     }
     .market-card,.panel,.mini-panel{
       border:1px solid rgba(255,255,255,.11);
@@ -380,7 +381,36 @@
       .search{display:none}.nav-cta{padding:9px 12px}
       .hero{min-height:auto}.hero-copy{padding:34px 0 24px}.hero h1{font-size:38px}.hero p{font-size:13px}
       .hero-art img{content:url("sau-phien-hero-mobile.webp");object-position:center}
-      .market-area{margin-top:0}.market-grid{grid-template-columns:1fr 1fr}
+      .market-area{margin-top:0}
+
+            .market-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+        width:100%;
+      }
+      
+      .market-card{
+        min-width:0;
+        width:100%;
+        padding:12px;
+        overflow:hidden;
+      }
+      
+      .market-card > div:first-child{
+        min-width:0;
+      }
+      
+      .market-main{
+        font-size:20px;
+        overflow-wrap:anywhere;
+      }
+      
+      .score-bars,
+      .spark,
+      .breadth-bars{
+        max-width:38%;
+        flex-shrink:1;
+      }
       .form-grid,.bottom-fields,.watch-grid,.watch-row,.next-actions{grid-template-columns:1fr}
       .panel{padding:16px}.watch-row{padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
       .realtime{min-height:90px}
@@ -467,10 +497,6 @@
       </div>
     </div>
 
-    <div class="market-card realtime">
-      <div class="pill"><span class="dot"></span>Realtime</div>
-      <div class="time">Cập nhật<br><span id="clock">--:--:--</span></div>
-    </div>
   </div>
 </section>
 
@@ -684,13 +710,6 @@
     }
     return null;
   };
-
-  function tickClock(){
-    document.getElementById("clock").textContent =
-      new Date().toLocaleTimeString("vi-VN",{hour12:false});
-  }
-  tickClock();
-  setInterval(tickClock,1000);
 
   async function loadMarket(){
     try{
