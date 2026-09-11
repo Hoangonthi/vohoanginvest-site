@@ -1389,13 +1389,33 @@
           1fr;
       }
 
-      .section-head{
-        align-items:
-          flex-start;
-
-        flex-direction:
-          column;
-      }
+         .section-head{
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      width:100%;
+    }
+    
+    .section-head > div{
+      width:100%;
+      text-align:center;
+    }
+    
+    .section-head .kicker{
+      text-align:center;
+    }
+    
+    .section-head h2{
+      text-align:center;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    
+    .section-head > a{
+      align-self:center;
+      text-align:center;
+    }
 
       .performance h2,
       .about h2{
@@ -1438,15 +1458,20 @@
 }
 
 .legal-links{
-  flex-direction:column;
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
   align-items:center;
   justify-content:center;
   text-align:center;
-  gap:8px;
+  gap:8px 16px;
+  width:100%;
 }
 
 .legal-links a{
+  display:inline-block;
   text-align:center;
+  white-space:nowrap;
 }
 
 .copyright{
