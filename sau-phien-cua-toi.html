@@ -3,70 +3,839 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sau phiên của tôi | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
-  <meta name="description" content="Đối chiếu hiệu quả tài khoản với thị trường, kiểm tra danh mục, margin, hành vi và việc cần làm sau mỗi phiên.">
-  <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/sau-phien-cua-toi.html">
-  <link rel="icon" href="LOGO.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/investor-hub.css">
+  <title>Sau phiên của tôi | Võ Hoàng</title>
+  <meta name="description" content="Nhìn lại phiên giao dịch theo hệ thống: hiệu quả, kỷ luật, danh mục, cảm xúc và bước tiếp theo.">
+  <link rel="icon" type="image/png" href="/vohoanginvest-site/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="sau-phien-hero.webp" media="(min-width:681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="sau-phien-hero-mobile.webp" media="(max-width:680px)" fetchpriority="high">
+
+  <style>
+    :root{
+      --bg:#06111d;
+      --bg2:#071824;
+      --card:#0b1d2c;
+      --card2:#0e2233;
+      --line:rgba(255,255,255,.10);
+      --gold:#f2cf7c;
+      --gold2:#d6a53b;
+      --gold3:#ffc84e;
+      --text:#f9f6ef;
+      --muted:#9eacb9;
+      --green:#2bd88e;
+      --red:#ff5d62;
+      --cyan:#55cfff;
+      --amber:#f5bc4f;
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+      background:
+        radial-gradient(circle at 4% 45%,rgba(224,187,103,.10),transparent 26%),
+        radial-gradient(circle at 95% 58%,rgba(224,187,103,.08),transparent 24%),
+        linear-gradient(180deg,#06111d,#06131f);
+    }
+    a{color:inherit}
+    button,input,select,textarea{font:inherit}
+    .wrap{width:min(var(--max),calc(100% - 40px));margin:auto}
+
+    /* HEADER */
+    .topbar{
+      position:sticky;top:0;z-index:60;
+      height:70px;display:flex;align-items:center;
+      background:rgba(5,15,25,.95);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{display:flex;align-items:center;gap:26px;width:100%}
+    .brand{
+      display:flex;align-items:center;gap:11px;
+      text-decoration:none;min-width:220px;
+    }
+    .brand img{width:46px;height:46px;object-fit:contain}
+    .brand strong{display:block;color:var(--gold);font-size:17px;line-height:1;letter-spacing:.04em}
+    .brand small{display:block;color:#d0b469;font-size:8px;letter-spacing:.12em;margin-top:4px}
+    .navlinks{display:flex;gap:30px;align-items:center;margin-left:auto}
+    .navlinks a{font-size:12px;text-decoration:none;color:#e4ebf1}
+    .navlinks a.active{color:var(--gold);border-bottom:2px solid var(--gold);padding-bottom:8px}
+    .navlinks a:hover{color:var(--gold)}
+    .search{margin-left:12px;font-size:18px;color:#e4ebf1}
+    .nav-cta{
+      margin-left:8px;padding:11px 22px;border-radius:9px;
+      background:linear-gradient(180deg,#f7d47d,#e4b657);
+      color:#17202a;text-decoration:none;font-size:13px;font-weight:800;
+    }
+
+    /* HERO */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      min-height:335px;
+      border-bottom:1px solid rgba(224,187,103,.14);
+      background:#07131f;
+    }
+    .hero-art{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      overflow:hidden;
+      pointer-events:none;
+    }
+    .hero-art img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+      opacity:.90;
+    }
+    .hero-art:after{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        linear-gradient(90deg,#06111d 0%,rgba(6,17,29,.97) 34%,rgba(6,17,29,.62) 57%,rgba(6,17,29,.18) 82%,rgba(6,17,29,.24) 100%),
+        linear-gradient(180deg,rgba(5,15,25,.10),rgba(5,15,25,.20));
+    }
+    .hero-grid{
+      position:relative;z-index:3;
+      min-height:335px;
+      display:grid;
+      grid-template-columns:minmax(0,1.22fr) minmax(300px,.68fr);
+      gap:28px;
+      align-items:center;
+    }
+    .hero-copy{padding:38px 0 30px;max-width:700px}
+    .eyebrow{
+      color:var(--gold);font-size:12px;font-weight:800;
+      letter-spacing:.18em;margin-bottom:8px;
+    }
+    .hero h1{
+      margin:0 0 12px;
+      font-family:"Playfair Display",serif;
+      font-size:56px;line-height:1.03;
+      max-width:760px;
+    }
+    .hero h1 span{color:var(--gold)}
+    .hero p{
+      margin:0;max-width:720px;
+      font-size:15px;line-height:1.7;color:#d8e0e7;
+    }
+    .hero-quote{
+      justify-self:end;
+      width:min(100%,260px);
+      padding:18px;
+      border-radius:12px;
+      background:rgba(5,15,25,.48);
+      border:1px solid rgba(242,207,124,.14);
+      backdrop-filter:blur(6px);
+    }
+    .hero-quote blockquote{
+      margin:0 0 12px;
+      font-family:"Playfair Display",serif;
+      font-size:19px;line-height:1.45;
+    }
+    .signature{
+      font-family:"Playfair Display",serif;
+      font-size:25px;font-style:italic;
+      color:#fff;display:inline-block;transform:rotate(-6deg);
+      margin-left:28px;
+    }
+    .quote-tags{
+      margin-top:14px;padding-left:10px;
+      border-left:2px solid var(--gold2);
+      color:#d8b149;font-size:9px;line-height:1.8;
+      letter-spacing:.10em;text-transform:uppercase;font-weight:700;
+    }
+
+    /* MARKET STRIP */
+    .market-area{position:relative;z-index:5;margin-top:-8px}
+    .market-grid{
+      display:grid;
+      grid-template-columns:1.05fr 1.05fr 1.05fr 1.05fr .48fr;
+      gap:10px;
+    }
+    .market-card,.panel,.mini-panel{
+      border:1px solid rgba(255,255,255,.11);
+      background:linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
+      box-shadow:0 14px 30px rgba(0,0,0,.15);
+    }
+    .market-card{
+      border-radius:10px;padding:14px 16px;min-height:100px;
+      display:flex;justify-content:space-between;gap:10px;align-items:center;
+    }
+    .market-label{
+      color:#9aa8b5;font-size:10px;text-transform:uppercase;
+      letter-spacing:.11em;font-weight:700;
+    }
+    .market-main{margin-top:6px;font-size:24px;font-weight:800;line-height:1.15}
+    .market-sub{margin-top:6px;font-size:9px;color:#8695a2;line-height:1.5}
+    .up{color:var(--green)} .down{color:var(--red)}
+    .score-bars{width:64px;height:46px;display:flex;align-items:flex-end;gap:4px;flex:none}
+    .score-bars i{width:7px;display:block;background:linear-gradient(180deg,#f6d47c,#9b6817);border-radius:2px 2px 0 0}
+    .score-bars i:nth-child(1){height:12px}.score-bars i:nth-child(2){height:18px}.score-bars i:nth-child(3){height:26px}.score-bars i:nth-child(4){height:34px}.score-bars i:nth-child(5){height:44px}
+    .spark{width:84px;height:42px;flex:none}
+    .spark polyline{fill:none;stroke:var(--green);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .breadth-bars{width:76px;height:46px;display:flex;align-items:flex-end;gap:4px;flex:none}
+    .breadth-bars i{width:7px;display:block;border-radius:2px 2px 0 0}
+    .breadth-bars i:nth-child(1){height:15px;background:var(--red)}
+    .breadth-bars i:nth-child(2){height:31px;background:var(--red)}
+    .breadth-bars i:nth-child(3){height:44px;background:var(--red)}
+    .breadth-bars i:nth-child(4){height:29px;background:var(--green)}
+    .breadth-bars i:nth-child(5){height:20px;background:var(--green)}
+    .breadth-bars i:nth-child(6){height:14px;background:var(--green)}
+    .realtime{
+      border-radius:10px;padding:14px 10px;text-align:center;min-height:100px;
+      display:flex;flex-direction:column;justify-content:center;
+    }
+    .realtime .pill{
+      display:inline-flex;align-items:center;justify-content:center;gap:7px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:8px;padding:7px 9px;font-size:10px;
+      background:rgba(255,255,255,.03)
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+    .time{margin-top:8px;font-size:9px;color:#82909d}
+
+    /* MAIN */
+    main{padding:12px 0 18px}
+    .row-2{display:grid;grid-template-columns:1.3fr .9fr;gap:12px}
+    .panel{border-radius:12px;padding:18px 20px}
+    .section-head{
+      display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;
+    }
+    .section-icon{
+      width:44px;height:44px;border-radius:9px;flex:none;
+      display:grid;place-items:center;color:#16202a;
+      background:linear-gradient(180deg,#f7d57d,#e5b85a);
+      font-size:21px;font-weight:800;
+    }
+    .section-kicker{
+      color:var(--gold);font-size:10px;font-weight:800;letter-spacing:.14em;
+      text-transform:uppercase;margin-bottom:4px;
+    }
+    .section-head h2{
+      margin:0;font-family:"Playfair Display",serif;font-size:23px;line-height:1.2;
+    }
+    .section-head p{
+      margin:4px 0 0;color:#8f9da9;font-size:10px;line-height:1.5;
+    }
+
+    .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .field label{
+      display:block;margin-bottom:6px;color:#cfd8e0;font-size:10px;
+    }
+    .field input,.field select,.field textarea{
+      width:100%;border-radius:8px;
+      border:1px solid rgba(255,255,255,.13);
+      background:#081725;color:#fff;outline:none;
+    }
+    .field input,.field select{height:42px;padding:0 12px}
+    .field textarea{min-height:72px;padding:10px 12px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{
+      border-color:rgba(242,207,124,.72);
+      box-shadow:0 0 0 3px rgba(242,207,124,.06);
+    }
+    .bad-value{color:var(--red)!important;font-weight:800}
+    .emotion-row,.discipline-row{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.16);
+      background:transparent;color:#dce3e9;
+      padding:8px 15px;border-radius:999px;
+      font-size:10px;cursor:pointer;
+    }
+    .chip.active{
+      color:#19212a;border-color:var(--gold);
+      background:linear-gradient(180deg,#f7d47d,#e6b95b);
+      font-weight:800;
+    }
+    .bottom-fields{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;margin-top:10px}
+
+    .discipline-row{margin-bottom:12px}
+    .discipline-row .chip.active{
+      color:#ffd06d;background:transparent;
+      border-color:var(--gold);font-weight:700;
+    }
+    .discipline-note{
+      margin-top:12px;padding:12px 14px;border-radius:8px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.025);
+      font-size:10px;color:#b8c3cc;
+    }
+
+    /* WATCHLIST */
+    .watch-panel{margin-top:12px}
+    .watch-head{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px;
+    }
+    .watch-title{display:flex;gap:14px;align-items:flex-start}
+    .add-btn{
+      border:1px solid var(--gold2);
+      color:var(--gold);background:transparent;
+      padding:9px 14px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:800;
+    }
+    .watch-grid{
+      display:grid;grid-template-columns:1fr 1.2fr 1.8fr .8fr .9fr;gap:10px;
+    }
+    .watch-grid input,.watch-grid select{
+      width:100%;height:40px;border-radius:7px;
+      border:1px solid rgba(255,255,255,.13);
+      background:#081725;color:#fff;padding:0 10px;
+    }
+    .watch-rows{display:grid;gap:8px;margin-top:8px}
+    .watch-row{
+      display:grid;grid-template-columns:1fr 1.2fr 1.8fr .8fr .9fr 34px;gap:10px;
+    }
+    .remove-btn{
+      border:1px solid rgba(255,95,95,.28);color:var(--red);background:transparent;
+      border-radius:7px;cursor:pointer;
+    }
+
+    /* BOTTOM PANELS */
+    .bottom-grid{
+      display:grid;grid-template-columns:1.1fr .75fr 1fr;gap:12px;margin-top:12px;
+    }
+    .mini-panel{border-radius:12px;padding:16px 18px;min-height:145px}
+    .notes-area textarea{
+      width:100%;min-height:60px;border-radius:8px;
+      border:1px solid rgba(255,255,255,.11);
+      background:#081725;color:#fff;padding:10px 12px;resize:vertical;
+    }
+    .history-box p,.next-box p{margin:5px 0 12px;color:#8f9da9;font-size:10px;line-height:1.5}
+    .outline-btn{
+      display:inline-flex;text-decoration:none;
+      border:1px solid var(--gold2);color:var(--gold);
+      border-radius:8px;padding:9px 13px;font-size:10px;font-weight:800;
+    }
+    .next-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .next-actions a{
+      min-height:62px;border-radius:8px;text-decoration:none;
+      border:1px solid rgba(242,207,124,.28);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      gap:5px;text-align:center;color:var(--gold);font-size:9px;padding:7px;
+    }
+    .next-actions a.primary{background:linear-gradient(180deg,#f7d47d,#e4b657);color:#17202a;font-weight:800}
+
+    /* FOOTER */
+    footer{margin-top:14px;border-top:1px solid var(--line);background:#06111d;padding:18px 0 22px}
+    .foot{display:flex;align-items:center;gap:20px}
+    .foot .brand{min-width:auto}
+    .foot-links{display:flex;gap:18px;flex-wrap:wrap;margin-left:auto}
+    .foot-links a{font-size:10px;text-decoration:none;color:#a7b4bf}
+    .social{display:flex;gap:9px;margin-left:10px}
+    .social a{
+      width:26px;height:26px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.15);
+      display:grid;place-items:center;text-decoration:none;color:#e6edf3;font-size:10px;
+    }
+    .eco{margin-left:10px;background:var(--gold);color:#17202a;padding:9px 13px;border-radius:9px;text-decoration:none;font-size:10px;font-weight:800}
+    .legal{margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#748391;font-size:9px}
+
+    @media(max-width:980px){
+      .navlinks{display:none}.search{margin-left:auto}
+      .hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}
+      .hero h1{margin-left:auto;margin-right:auto;font-size:46px}.hero p{margin:auto}
+      .hero-quote{display:none}
+      .market-grid{grid-template-columns:repeat(2,1fr)}
+      .row-2{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:repeat(2,1fr)}
+      .bottom-grid{grid-template-columns:1fr}
+      .foot{flex-direction:column;text-align:center}.foot-links{margin-left:0;justify-content:center}.social{margin-left:0}.eco{margin-left:0}.legal{justify-content:center;text-align:center}
+    }
+
+    @media(max-width:680px){
+      .wrap{width:min(100% - 24px,var(--max))}
+      .topbar{height:64px}.brand{min-width:auto}.brand img{width:40px;height:40px}.brand strong{font-size:15px}
+      .search{display:none}.nav-cta{padding:9px 12px}
+      .hero{min-height:auto}.hero-copy{padding:34px 0 24px}.hero h1{font-size:38px}.hero p{font-size:13px}
+      .hero-art img{content:url("sau-phien-hero-mobile.webp");object-position:60% center}
+      .market-area{margin-top:0}.market-grid{grid-template-columns:1fr 1fr}
+      .form-grid,.bottom-fields,.watch-grid,.watch-row,.next-actions{grid-template-columns:1fr}
+      .panel{padding:16px}.watch-row{padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+      .realtime{min-height:90px}
+    }
+  </style>
 </head>
+
 <body>
-<header class="ih-topbar"><div class="ih-topbar-inner">
-  <a class="ih-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a>
-  <nav class="ih-nav"><a href="thi-truong-hom-nay.html">Thị trường</a><a href="watchlist.html">Watchlist</a><a href="nhat-ky-he-thong.html">Nhật ký hệ thống</a><a href="investor-calculator.html">Máy tính</a><button id="authButton" type="button">Đăng nhập</button></nav>
-</div></header>
-<main class="ih-wrap">
-  <section class="ih-hero">
-    <div><span class="ih-eyebrow">SAU PHIÊN CỦA TÔI</span><h1>Hôm nay tài khoản của anh/chị thực sự đang nói gì?</h1><p>Không chỉ nhìn lời/lỗ. Hệ thống đối chiếu tài khoản với VN-Index, trạng thái thị trường, ngành đang nắm giữ, margin và chính hành vi trong phiên để tách phần do thị trường và phần do cách mình ra quyết định.</p></div>
-    <div class="ih-live" id="marketLive">Đang đọc thị trường…</div>
-  </section>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="LOGO.webp" alt="Võ Hoàng">
+      <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
+    </a>
+    <nav class="navlinks">
+      <a href="thi-truong-hom-nay.html">Thị trường</a>
+      <a class="active" href="sau-phien-cua-toi.html">Sau phiên</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="index.html">Trang chủ</a>
+      <a href="#">Kiến thức</a>
+      <a href="investor-calculator.html">Công cụ</a>
+      <a href="index.html#ve-toi">Về tôi</a>
+    </nav>
+    <div class="search">⌕</div>
+    <a class="nav-cta" href="index.html">Đăng nhập</a>
+  </div>
+</header>
 
-  <section class="ih-metrics" aria-label="Bối cảnh thị trường"><article class="ih-metric"><span>MARKET SCORE</span><strong id="marketScore">—</strong><small id="marketState">—</small></article><article class="ih-metric"><span>VN-INDEX</span><strong id="vnChange">—</strong><small id="vnValue">—</small></article><article class="ih-metric"><span>ĐỘ RỘNG</span><strong id="breadthLabel">—</strong><small id="breadthSub">—</small></article><article class="ih-metric"><span>DẪN DẮT</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article></section>
+<section class="hero">
+  <picture class="hero-art" aria-hidden="true">
+    <source media="(max-width:680px)" srcset="sau-phien-hero-mobile.webp">
+    <img src="sau-phien-hero.webp" alt="" width="1400" height="900" fetchpriority="high" decoding="async">
+  </picture>
 
-  <div class="ih-login-box" id="loginBox"><p><strong>Dùng ngay không cần đăng nhập.</strong> Đăng nhập chỉ khi anh/chị muốn lưu lịch sử nhiều phiên và dùng lại trên thiết bị khác.</p><button class="ih-button" id="loginButton" type="button">Đăng nhập với Google</button></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">SAU PHIÊN CỦA TÔI</div>
+      <h1>Hôm nay tài khoản của anh/chị <span>thực sự đang nói gì?</span></h1>
+      <p>Không chỉ nhìn lời/lỗ. Hệ thống giúp anh/chị nhìn lại toàn diện: hiệu quả, rủi ro, hành vi và cảm xúc trong phiên – để mỗi ngày đầu tư là một bước tiến vững chắc hơn.</p>
+    </div>
 
-  <section class="ih-grid wide-left">
-    <article class="ih-card">
-      <span class="ih-label">1 · KẾT QUẢ THẬT</span><h2>Phiên hôm nay của anh/chị</h2>
-      <div class="ih-form-grid">
-        <label class="ih-field"><span>Ngày</span><input id="marketDate" type="date"></label>
-        <label class="ih-field"><span>Tài khoản hôm nay (%)</span><input id="accountReturn" type="number" step="0.01" placeholder="VD: -1.25"></label>
-        <label class="ih-field"><span>Tiền mặt (%)</span><input id="cashPct" type="number" step="0.1" min="0" max="100" placeholder="VD: 35"></label>
-        <label class="ih-field"><span>Margin đang dùng (%)</span><input id="marginPct" type="number" step="0.1" min="0" max="300" placeholder="VD: 20"></label>
+    <aside class="hero-quote">
+      <blockquote>“Kỷ luật hôm nay<br>là tự do tài chính<br>ngày mai.”</blockquote>
+      <span class="signature">Võ Hoàng</span>
+      <div class="quote-tags">Kiến thức<br>Kỷ luật<br>Hệ thống<br>Tài sản tự do</div>
+    </aside>
+  </div>
+</section>
+
+<section class="market-area">
+  <div class="wrap market-grid">
+    <div class="market-card">
+      <div>
+        <div class="market-label">Market Score</div>
+        <div class="market-main" id="marketScore">—</div>
+        <div class="market-sub" id="marketScoreNote">Đang đọc thị trường...</div>
       </div>
-      <div class="ih-choice-row" id="moodChoices" aria-label="Cảm xúc sau phiên">
-        <label class="ih-choice"><input type="radio" name="mood" value="CALM"><span>Bình tĩnh</span></label><label class="ih-choice"><input type="radio" name="mood" value="WORRIED"><span>Lo lắng</span></label><label class="ih-choice"><input type="radio" name="mood" value="FOMO"><span>Sợ mất cơ hội</span></label><label class="ih-choice"><input type="radio" name="mood" value="FRUSTRATED"><span>Bực bội</span></label><label class="ih-choice"><input type="radio" name="mood" value="EXCITED"><span>Hưng phấn</span></label><label class="ih-choice"><input type="radio" name="mood" value="CONFUSED"><span>Không biết làm gì</span></label>
+      <div class="score-bars"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="market-card">
+      <div>
+        <div class="market-label">VN-Index</div>
+        <div class="market-main" id="vniValue">—</div>
+        <div class="market-sub" id="vniChange">Đang tải...</div>
       </div>
-      <div class="ih-form-grid two" style="margin-top:8px"><label class="ih-field"><span>Điều băn khoăn nhất</span><select id="primaryWorry"><option value="">Chọn điều đang lo nhất</option><option>Tài khoản giảm mạnh hơn thị trường</option><option>Mã đang cầm có vẻ yếu</option><option>Sợ bán xong lại tăng</option><option>Sợ bỏ lỡ cơ hội mới</option><option>Margin đang quá cao</option><option>Không biết ngày mai nên làm gì</option><option>Không rõ mình sai hay thị trường xấu</option></select></label><label class="ih-field"><span>Ghi chú ngắn</span><input id="sessionNote" maxlength="300" placeholder="Điều gì khiến anh/chị chưa yên tâm?"></label></div>
-    </article>
+      <svg class="spark" viewBox="0 0 120 44"><polyline points="2,36 10,31 18,34 27,24 35,28 44,19 52,23 61,15 70,19 79,10 88,14 98,8 108,11 118,3"></polyline></svg>
+    </div>
 
-    <article class="ih-card">
-      <span class="ih-label">2 · KỶ LUẬT</span><h2>Hôm nay tôi có làm sai quy trình không?</h2><p>Đánh dấu đúng sự thật. Đây là phần giúp hệ thống phát hiện lỗi lặp lại theo thời gian.</p>
-      <div class="ih-choice-row"><label class="ih-choice"><input type="checkbox" data-flag="BUY_CHASE"><span>Mua đuổi</span></label><label class="ih-choice"><input type="checkbox" data-flag="AVERAGE_DOWN"><span>Bình quân giá xuống</span></label><label class="ih-choice"><input type="checkbox" data-flag="INCREASE_MARGIN"><span>Tăng margin</span></label><label class="ih-choice"><input type="checkbox" data-flag="PANIC_SELL"><span>Bán vì hoảng</span></label><label class="ih-choice"><input type="checkbox" data-flag="BREAK_STOP"><span>Phá điểm cắt lỗ</span></label><label class="ih-choice"><input type="checkbox" data-flag="NO_PLAN"><span>Giao dịch không kế hoạch</span></label></div>
-      <div class="ih-choice-row"><label class="ih-choice"><input id="followedPlan" type="checkbox"><span>Nhìn chung tôi vẫn làm đúng kế hoạch</span></label></div>
-    </article>
-  </section>
+    <div class="market-card">
+      <div>
+        <div class="market-label">Độ rộng thị trường</div>
+        <div class="market-main" id="breadthValue">—</div>
+        <div class="market-sub" id="breadthNote">Số mã tăng / giảm</div>
+      </div>
+      <div class="breadth-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
 
-  <section class="ih-card" style="margin-bottom:10px">
-    <span class="ih-label">3 · DANH MỤC / WATCHLIST</span><h2>Mã nào đang khỏe hoặc yếu hơn thị trường?</h2><p>Chỉ cần nhập % tăng/giảm hôm nay. Hệ thống sẽ so với VN-Index và đúng nhóm ngành, thay vì nhìn mỗi màu xanh/đỏ.</p>
-    <div class="ih-table" id="itemTable"><div class="ih-row head"><span>Mã</span><span>Loại / ngành</span><span>% hôm nay</span><span>Tỷ trọng</span><span>So ngành</span><span></span></div></div>
-    <div class="ih-actions"><button class="ih-button" id="addItem" type="button">+ Thêm mã</button><a class="ih-button ghost" href="watchlist.html">Mở Watchlist có lý do</a></div>
-  </section>
+    <div class="market-card">
+      <div>
+        <div class="market-label">Nhóm dẫn dắt</div>
+        <div class="market-main" style="font-size:20px" id="leadersValue">Theo dõi</div>
+        <div class="market-sub">Dòng tiền tập trung, hút thanh khoản</div>
+      </div>
+    </div>
 
-  <section class="ih-card" style="margin-bottom:10px">
-    <div class="ih-actions" style="margin-top:0"><button class="ih-button primary" id="analyzeButton" type="button">PHÂN TÍCH SAU PHIÊN</button><span class="ih-status" id="saveStatus"></span></div>
-    <div class="ih-result" id="resultBox" style="margin-top:10px"><div class="ih-empty">Nhập kết quả tài khoản rồi bấm “Phân tích sau phiên”.</div></div>
-  </section>
+    <div class="market-card realtime">
+      <div class="pill"><span class="dot"></span>Realtime</div>
+      <div class="time">Cập nhật<br><span id="clock">--:--:--</span></div>
+    </div>
+  </div>
+</section>
 
-  <section class="ih-grid">
-    <article class="ih-card"><span class="ih-label">LỊCH SỬ CỦA TÔI</span><h2>Nhìn lại nhiều phiên mới thấy lỗi thật</h2><div class="ih-history" id="historyBox"><div class="ih-empty">Chưa có dữ liệu lịch sử.</div></div></article>
-    <article class="ih-card"><span class="ih-label">BƯỚC TIẾP THEO</span><h2>Đừng để kết quả dừng ở một con số</h2><p>Nếu hôm nay tài khoản yếu hơn thị trường, margin cao hoặc có vi phạm quy trình, hãy xử lý nguyên nhân trước khi tìm mã mới.</p><div class="ih-actions"><a class="ih-button" href="tinh-rui-ro-danh-muc.html">Kiểm tra rủi ro danh mục</a><a class="ih-button" href="tinh-margin-chung-khoan.html">Kiểm tra sức chịu margin</a><a class="ih-button" href="./?start=assessment&utm_source=after_session&utm_medium=cta">Đánh giá 17 câu</a><a class="ih-button primary" href="./?start=contact&utm_source=after_session&utm_medium=cta">Trao đổi cùng Võ Hoàng</a></div></article>
-  </section>
+<main>
+  <div class="wrap">
+    <div class="row-2">
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">▥</div>
+          <div>
+            <div class="section-kicker">01. Kết quả thật</div>
+            <h2>Phiên hôm nay của anh/chị</h2>
+            <p>Nhập các thông tin cơ bản để nhìn lại hiệu quả trong phiên.</p>
+          </div>
+        </div>
 
-  <footer class="ih-footer"><span>“Sau phiên của tôi” là công cụ tự rà soát, không phải tín hiệu mua/bán. Dữ liệu cá nhân chỉ được lưu vào tài khoản khi anh/chị đăng nhập.</span><a href="nhat-ky-he-thong.html">Xem Nhật ký hệ thống →</a></footer>
+        <div class="form-grid">
+          <div class="field">
+            <label>Ngày</label>
+            <input id="dateInput" type="date">
+          </div>
+          <div class="field">
+            <label>Tài khoản hôm nay (%)</label>
+            <input id="dailyPnl" class="bad-value" type="number" step="0.01" placeholder="-0.85">
+          </div>
+          <div class="field">
+            <label>Tiền mặt (%)</label>
+            <input id="cashPct" type="number" step="1" placeholder="35">
+          </div>
+          <div class="field">
+            <label>Margin đang dùng (%)</label>
+            <input id="marginPct" type="number" step="1" placeholder="20">
+          </div>
+        </div>
+
+        <div style="margin-top:10px;font-size:10px;color:#cfd8df">Cảm xúc trong phiên</div>
+        <div class="emotion-row" id="emotionRow">
+          <button class="chip active" data-value="Bình tĩnh">Bình tĩnh</button>
+          <button class="chip" data-value="Lo lắng">Lo lắng</button>
+          <button class="chip" data-value="FOMO">FOMO</button>
+          <button class="chip" data-value="Bị cuốn theo TT">Bị cuốn theo TT</button>
+          <button class="chip" data-value="Tự tin">Tự tin</button>
+          <button class="chip" data-value="Khác">Khác</button>
+        </div>
+
+        <div class="bottom-fields">
+          <div class="field">
+            <label>Điều bạn tâm đắc nhất trong phiên</label>
+            <select id="highlightSelect">
+              <option value="">Chọn điều đáng nhớ nhất</option>
+              <option>Tuân thủ đúng kế hoạch</option>
+              <option>Giữ được kỷ luật</option>
+              <option>Quản trị rủi ro tốt</option>
+              <option>Chọn mã tốt hơn thị trường</option>
+              <option>Cần cải thiện cách vào lệnh</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Ghi chú thêm (tùy chọn)</label>
+            <input id="quickNote" type="text" placeholder="Điều gì khiến anh/chị hài lòng hoặc chưa hài lòng?">
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">◇</div>
+          <div>
+            <div class="section-kicker">02. Kỷ luật</div>
+            <h2>Hôm nay tôi có làm sai quy trình không?</h2>
+            <p>Đánh dấu những hành vi (nếu có) ảnh hưởng đến kỷ luật đầu tư của bạn.</p>
+          </div>
+        </div>
+
+        <div class="discipline-row" id="disciplineRow">
+          <button class="chip active" data-value="Mua đuổi">Mua đuổi</button>
+          <button class="chip" data-value="Bán quá sớm">Bán quá sớm</button>
+          <button class="chip" data-value="Tăng margin">Tăng margin</button>
+          <button class="chip" data-value="Bán vì hoảng loạn">Bán vì hoảng loạn</button>
+          <button class="chip" data-value="Giao dịch ngoài kế hoạch">Giao dịch ngoài kế hoạch</button>
+          <button class="chip" data-value="Vi phạm tỷ trọng">Vi phạm tỷ trọng</button>
+          <button class="chip" data-value="Bị ảnh hưởng bởi tin đồn">Bị ảnh hưởng bởi tin đồn</button>
+          <button class="chip" data-value="Không có">Không có (tôi đã tuân thủ)</button>
+        </div>
+
+        <div class="discipline-note">⚠ Kỷ luật hôm nay là nền tảng cho kết quả ngày mai.</div>
+      </section>
+    </div>
+
+    <section class="panel watch-panel">
+      <div class="watch-head">
+        <div class="watch-title">
+          <div class="section-icon">▥</div>
+          <div>
+            <div class="section-kicker">03. Danh mục / Watchlist</div>
+            <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:22px">Mã nào đang khỏe hoặc yếu hơn thị trường?</h2>
+            <p style="margin:4px 0 0;color:#8f9da9;font-size:10px">Nhập các mã quan trọng trong danh mục hoặc watchlist để theo dõi và đánh giá nhanh.</p>
+          </div>
+        </div>
+        <button class="add-btn" id="addStockBtn">＋ Thêm mã</button>
+      </div>
+
+      <div class="watch-grid">
+        <div class="field"><label>Mã cổ phiếu</label><input id="stockCode" placeholder="VD: VCB"></div>
+        <div class="field"><label>Vai trò</label><select id="stockRole"><option value="">Chọn vai trò</option><option>Đang nắm giữ</option><option>Watchlist</option><option>Ứng viên mua</option><option>Cần bán/giảm</option></select></div>
+        <div class="field"><label>Ngành</label><select id="stockSector"><option value="">Chọn ngành</option><option>Ngân hàng</option><option>Chứng khoán</option><option>Bất động sản</option><option>Thép</option><option>Bán lẻ</option><option>Công nghệ</option><option>Khác</option></select></div>
+        <div class="field"><label>Tỷ trọng (%)</label><input id="stockWeight" type="number" step="1" placeholder="%"></div>
+        <div class="field"><label>Thay đổi hôm nay</label><input id="stockChange" type="number" step="0.01" placeholder="%"></div>
+      </div>
+
+      <div class="watch-rows" id="watchRows"></div>
+    </section>
+
+    <div class="bottom-grid">
+      <section class="mini-panel notes-area">
+        <div class="section-head">
+          <div class="section-icon">▣</div>
+          <div>
+            <div class="section-kicker">04. Phân tích sau phiên</div>
+            <h2>Nhận định và ghi chú của tôi</h2>
+            <p>Tổng hợp lại suy nghĩ, bài học, cơ hội và rủi ro sau phiên hôm nay.</p>
+          </div>
+        </div>
+        <textarea id="reviewNote" placeholder="Nhập nhận định, bài học, hoặc kế hoạch cho phiên tới..."></textarea>
+      </section>
+
+      <section class="mini-panel history-box">
+        <div class="section-head">
+          <div class="section-icon">◷</div>
+          <div>
+            <div class="section-kicker">05. Lịch sử của tôi</div>
+            <h2>Nhìn lại những phiên quan trọng</h2>
+            <p>Xem lại các phiên đã ghi chú để nhận ra mẫu hình và tiến bộ của bản thân.</p>
+          </div>
+        </div>
+        <a class="outline-btn" href="#" id="historyBtn">Xem lịch sử →</a>
+      </section>
+
+      <section class="mini-panel next-box">
+        <div class="section-head">
+          <div class="section-icon">◎</div>
+          <div>
+            <div class="section-kicker">06. Bước tiếp theo</div>
+            <h2>Đừng để kết quả dừng lại ở một con số</h2>
+            <p>Chủ động kiểm tra và chuẩn bị cho phiên tiếp theo.</p>
+          </div>
+        </div>
+
+        <div class="next-actions">
+          <a href="investor-calculator.html">▥<span>Kiểm tra rủi ro danh mục</span></a>
+          <a href="investor-calculator.html">◇<span>Kiểm tra sức chịu margin</span></a>
+          <a href="kiem-tra-nhanh-tai-khoan.html">☷<span>Đánh giá hôm nay</span></a>
+          <a class="primary" href="lien-he.html">◎<span>Trao đổi cùng Võ Hoàng</span></a>
+        </div>
+      </section>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:12px">
+      <button id="saveBtn" class="add-btn" style="background:var(--gold);color:#17202a">LƯU PHIÊN HÔM NAY</button>
+    </div>
+  </div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module" src="assets/js/after-session.js"></script>
-<script type="module" src="assets/js/after-session-patterns.js"></script>
-</body></html>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="brand" href="index.html">
+        <img src="LOGO.webp" alt="Võ Hoàng">
+        <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
+      </a>
+      <div class="foot-links">
+        <a href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="index.html">Trang chủ</a>
+        <a href="#">Kiến thức</a>
+        <a href="investor-calculator.html">Công cụ</a>
+        <a href="index.html#ve-toi">Về tôi</a>
+        <a href="lien-he.html">Liên hệ</a>
+      </div>
+      <div class="social">
+        <a href="https://www.youtube.com/@vohoanginvest" target="_blank" rel="noopener">▶</a>
+        <a href="https://www.facebook.com/vohoanginvest" target="_blank" rel="noopener">f</a>
+        <a href="https://vohoanginvest.com" target="_blank" rel="noopener">◎</a>
+      </div>
+      <a class="eco" href="https://onthiplus.com" target="_blank" rel="noopener">Ôn Thi Plus →</a>
+    </div>
+
+    <div class="legal">
+      <span>© 2026 VÕ HOÀNG. All rights reserved.</span>
+      <span>Đầu tư tốt hơn cho một cuộc sống tốt hơn.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+  const STORAGE_KEY = "vh_after_session_v2";
+  const WATCH_KEY = "vh_after_session_watch_v2";
+
+  const fmt2 = new Intl.NumberFormat("vi-VN",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const num = v => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+  const first = (obj, keys) => {
+    for(const k of keys){
+      const v = k.split(".").reduce((a,p)=>a?.[p],obj);
+      if(v !== undefined && v !== null && v !== "") return v;
+    }
+    return null;
+  };
+
+  function tickClock(){
+    document.getElementById("clock").textContent =
+      new Date().toLocaleTimeString("vi-VN",{hour12:false});
+  }
+  tickClock();
+  setInterval(tickClock,1000);
+
+  async function loadMarket(){
+    try{
+      const r = await fetch(MARKET_URL,{cache:"no-store"});
+      if(!r.ok) throw new Error("market");
+      const data = await r.json();
+      const indexes = Array.isArray(data?.indexes) ? data.indexes : [];
+      const vni = indexes.find(x => String(x?.symbol||"").toUpperCase()==="VN-INDEX") || indexes[0] || {};
+      const value = num(first(vni,["value","close","last","price","current"]));
+      const pct = num(first(vni,["change_pct","change_percent","percent_change","pct_change"]));
+      const intel = data?.market_intelligence || {};
+      const breadth = intel?.breadth || {};
+      const adv = num(first(breadth,["adv","advance","up"]));
+      const dec = num(first(breadth,["dec","decline","down"]));
+
+      document.getElementById("vniValue").textContent = value===null ? "—" : fmt2.format(value);
+      const ch = document.getElementById("vniChange");
+      if(pct !== null){
+        ch.textContent = `${pct>0?"+":""}${fmt2.format(pct)}%`;
+        ch.className = "market-sub " + (pct>0?"up":pct<0?"down":"");
+      }
+
+      if(adv !== null || dec !== null){
+        document.getElementById("breadthValue").innerHTML =
+          `<span class="up">${adv??"—"} Tăng</span> <span style="color:#627381">|</span> <span class="down">${dec??"—"} Giảm</span>`;
+      }
+
+      const leaders = first(intel,["leaders.label","leaders.text","leading.label","leading.text","leaders"]);
+      if(typeof leaders === "string") document.getElementById("leadersValue").textContent = leaders;
+
+      let score = 70;
+      if(pct !== null) score += Math.max(-15,Math.min(15,pct*10));
+      if(adv !== null && dec !== null && adv+dec>0){
+        score += ((adv-dec)/(adv+dec))*15;
+      }
+      score = Math.max(0,Math.min(100,Math.round(score)));
+      document.getElementById("marketScore").textContent = `${score}/100`;
+      document.getElementById("marketScoreNote").textContent =
+        score>=75 ? "Tâm lý thị trường tích cực" :
+        score>=55 ? "Thị trường trung tính" :
+        "Rủi ro thị trường đang cao";
+    }catch(e){
+      document.getElementById("marketScoreNote").textContent = "Chưa lấy được dữ liệu thị trường.";
+    }
+  }
+
+  function setupSingleSelect(containerId){
+    const box = document.getElementById(containerId);
+    box.addEventListener("click",e=>{
+      const btn = e.target.closest(".chip");
+      if(!btn) return;
+      box.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  }
+
+  function setupMultiSelect(containerId){
+    const box = document.getElementById(containerId);
+    box.addEventListener("click",e=>{
+      const btn = e.target.closest(".chip");
+      if(!btn) return;
+      if(btn.dataset.value==="Không có"){
+        box.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+        btn.classList.add("active");
+      }else{
+        box.querySelector('[data-value="Không có"]')?.classList.remove("active");
+        btn.classList.toggle("active");
+      }
+    });
+  }
+
+  setupSingleSelect("emotionRow");
+  setupMultiSelect("disciplineRow");
+
+  document.getElementById("dateInput").valueAsDate = new Date();
+
+  function getWatchRows(){
+    try{return JSON.parse(localStorage.getItem(WATCH_KEY)||"[]")}catch(_){return[]}
+  }
+
+  function saveWatchRows(rows){
+    localStorage.setItem(WATCH_KEY,JSON.stringify(rows.slice(0,20)));
+  }
+
+  function renderWatch(){
+    const box = document.getElementById("watchRows");
+    const rows = getWatchRows();
+    box.innerHTML = rows.map((r,i)=>`
+      <div class="watch-row">
+        <input value="${r.code||""}" disabled>
+        <input value="${r.role||""}" disabled>
+        <input value="${r.sector||""}" disabled>
+        <input value="${r.weight??""}" disabled>
+        <input value="${r.change??""}" disabled>
+        <button class="remove-btn" data-i="${i}">×</button>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("addStockBtn").addEventListener("click",()=>{
+    const code = document.getElementById("stockCode").value.trim().toUpperCase();
+    if(!code){alert("Bạn nhập mã cổ phiếu trước.");return;}
+    const rows = getWatchRows();
+    rows.push({
+      code,
+      role:document.getElementById("stockRole").value,
+      sector:document.getElementById("stockSector").value,
+      weight:document.getElementById("stockWeight").value,
+      change:document.getElementById("stockChange").value
+    });
+    saveWatchRows(rows);
+    renderWatch();
+    document.getElementById("stockCode").value="";
+  });
+
+  document.getElementById("watchRows").addEventListener("click",e=>{
+    const btn = e.target.closest(".remove-btn");
+    if(!btn) return;
+    const rows = getWatchRows();
+    rows.splice(Number(btn.dataset.i),1);
+    saveWatchRows(rows);
+    renderWatch();
+  });
+
+  function currentEmotion(){
+    return document.querySelector("#emotionRow .chip.active")?.dataset.value || "";
+  }
+
+  function currentDiscipline(){
+    return [...document.querySelectorAll("#disciplineRow .chip.active")].map(x=>x.dataset.value);
+  }
+
+  document.getElementById("saveBtn").addEventListener("click",()=>{
+    const item = {
+      time:Date.now(),
+      date:document.getElementById("dateInput").value,
+      pnl:document.getElementById("dailyPnl").value,
+      cash:document.getElementById("cashPct").value,
+      margin:document.getElementById("marginPct").value,
+      emotion:currentEmotion(),
+      highlight:document.getElementById("highlightSelect").value,
+      quickNote:document.getElementById("quickNote").value,
+      discipline:currentDiscipline(),
+      review:document.getElementById("reviewNote").value,
+      watch:getWatchRows()
+    };
+    let all=[];
+    try{all=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(_){}
+    all.unshift(item);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(all.slice(0,30)));
+    alert("Đã lưu phiên hôm nay trên thiết bị này.");
+  });
+
+  document.getElementById("historyBtn").addEventListener("click",e=>{
+    e.preventDefault();
+    let all=[];
+    try{all=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(_){}
+    if(!all.length){alert("Chưa có lịch sử đã lưu trên thiết bị này.");return;}
+    const lines = all.slice(0,10).map(x=>{
+      const d = new Date(x.time).toLocaleString("vi-VN");
+      return `${d} • ${x.pnl||"—"}% • ${x.emotion||"—"}`;
+    }).join("\n");
+    alert("10 phiên gần nhất:\n\n"+lines);
+  });
+
+  renderWatch();
+  loadMarket();
+})();
+</script>
+</body>
+</html>
