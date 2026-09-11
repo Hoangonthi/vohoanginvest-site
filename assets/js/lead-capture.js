@@ -412,25 +412,36 @@
       </div>
     `;
 
-    const footer =
-      document.querySelector("footer");
-
-    const main =
-      document.querySelector("main");
-
-    if (
-      footer &&
-      footer.parentNode
-    ) {
-      footer.parentNode.insertBefore(
-        root,
-        footer
-      );
-    } else if (main) {
-      main.appendChild(root);
-    } else {
-      document.body.appendChild(root);
-    }
+  const liveBlock =
+    document.getElementById("vh-live-intelligence");
+  
+  const footer =
+    document.querySelector("footer");
+  
+  const main =
+    document.querySelector("main");
+  
+  if (
+    liveBlock &&
+    liveBlock.parentNode
+  ) {
+    liveBlock.insertAdjacentElement(
+      "afterend",
+      root
+    );
+  } else if (
+    footer &&
+    footer.parentNode
+  ) {
+    footer.parentNode.insertBefore(
+      root,
+      footer
+    );
+  } else if (main) {
+    main.appendChild(root);
+  } else {
+    document.body.appendChild(root);
+  }
 
     document
       .getElementById("vh-lead-form")
