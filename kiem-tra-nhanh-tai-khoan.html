@@ -1,1 +1,823 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kiểm tra nhanh tài khoản 30 giây | Võ Hoàng</title><meta name="description" content="Kiểm tra nhanh tài khoản chứng khoán so với VN-Index, trạng thái thị trường và margin trong 30 giây."><link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/kiem-tra-nhanh-tai-khoan.html"><link rel="icon" href="LOGO.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/investor-hub.css"></head><body><header class="ih-topbar"><div class="ih-topbar-inner"><a class="ih-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a><nav class="ih-nav"><a href="thi-truong-hom-nay.html">Thị trường</a><a href="sau-phien-cua-toi.html">Sau phiên</a><a href="watchlist.html">Watchlist</a><a href="./">Trang chủ</a></nav></div></header><main class="ih-wrap"><section class="ih-hero"><div><span class="ih-eyebrow">KIỂM TRA 30 GIÂY</span><h1>Tài khoản hôm nay có ổn không?</h1><p>Chỉ cần 3 thông tin. Hệ thống đối chiếu tài khoản của anh/chị với VN-Index, trạng thái thị trường và mức margin để chỉ ra điều cần kiểm tra trước tiên.</p></div><div class="ih-live" id="marketLive">Đang đọc thị trường…</div></section><section class="ih-metrics"><article class="ih-metric"><span>MARKET SCORE</span><strong id="marketScore">—</strong><small id="marketState">—</small></article><article class="ih-metric"><span>VN-INDEX HÔM NAY</span><strong id="vnChange">—</strong><small id="vnValue">—</small></article><article class="ih-metric"><span>ĐỘ RỘNG</span><strong id="breadthLabel">—</strong><small id="breadthSub">—</small></article><article class="ih-metric"><span>DẪN DẮT</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article></section><section class="ih-grid wide-left"><article class="ih-card"><span class="ih-label">NHẬP 3 CON SỐ</span><h2>Không cần nhập danh mục chi tiết</h2><div class="ih-form-grid"><label class="ih-field"><span>Tài khoản hôm nay (%)</span><input id="accountReturn" type="number" step="0.01" placeholder="VD: -1.2"></label><label class="ih-field"><span>Margin đang dùng (%)</span><input id="marginPct" type="number" step="0.1" min="0" max="300" placeholder="VD: 25"></label><label class="ih-field"><span>Số mã đang giữ</span><input id="holdingCount" type="number" step="1" min="0" max="100" placeholder="VD: 6"></label></div><div class="ih-actions"><button class="ih-button primary" id="checkButton" type="button">KIỂM TRA NGAY</button><span class="ih-status" id="status"></span></div></article><article class="ih-card"><span class="ih-label">KẾT QUẢ</span><div class="ih-result" id="resultBox"><div class="ih-empty">Nhập 3 thông tin rồi bấm “Kiểm tra ngay”.</div></div></article></section><section class="ih-card"><span class="ih-label">NẾU MUỐN ĐI SÂU HƠN</span><h2>30 giây chỉ để biết mình nên nhìn vào đâu trước.</h2><p>Muốn tách rõ hơn phần do thị trường, phần do chọn mã, ngành, tỷ trọng và hành vi, dùng “Sau phiên của tôi”.</p><div class="ih-actions"><a class="ih-button" href="sau-phien-cua-toi.html">Mở Sau phiên của tôi</a><a class="ih-button" href="tinh-margin-chung-khoan.html">Kiểm tra sức chịu margin</a><a class="ih-button" href="tinh-rui-ro-danh-muc.html">Rủi ro danh mục</a><a class="ih-button primary" href="./?start=contact&topic=quick-check">Trao đổi đúng vấn đề này</a></div></section><footer class="ih-footer"><span>Công cụ hỗ trợ tự rà soát, không phải tín hiệu mua/bán.</span><a href="thi-truong-hom-nay.html">Xem thị trường realtime →</a></footer></main><script type="module" src="assets/js/quick-account-check.js"></script></body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kiểm tra nhanh tài khoản | Võ Hoàng</title>
+  <meta name="description" content="Kiểm tra nhanh trạng thái tài khoản đầu tư trong 30 giây.">
+  <link rel="icon" type="image/png" href="/vohoanginvest-site/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --navy:#07121f;
+      --navy2:#0b1928;
+      --navy3:#0d2032;
+      --gold:#e0bb67;
+      --gold2:#f2cf7c;
+      --gold3:#ffcf55;
+      --text:#f8f5ee;
+      --muted:#aeb9c7;
+      --line:rgba(255,255,255,.09);
+      --green:#35d98c;
+      --red:#ff5f5f;
+      --cyan:#62d8ff;
+      --amber:#f6b84a;
+      --card:rgba(10,28,44,.88);
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+      background:
+        radial-gradient(circle at 12% 35%,rgba(224,187,103,.12),transparent 24%),
+        radial-gradient(circle at 88% 28%,rgba(224,187,103,.10),transparent 22%),
+        linear-gradient(180deg,#06111d,#061522 55%,#06111d);
+    }
+    a{color:inherit}
+    button,input{font:inherit}
+    .wrap{width:min(var(--max),calc(100% - 36px));margin:auto}
+
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(4,14,25,.92);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      min-height:72px;
+      display:flex;align-items:center;gap:26px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      text-decoration:none;min-width:230px;
+    }
+    .brand img{width:44px;height:44px;object-fit:contain}
+    .brand strong{
+      display:block;color:var(--gold2);
+      letter-spacing:.04em;font-size:17px;
+    }
+    .brand small{
+      display:block;color:#d9bb78;
+      font-size:8px;letter-spacing:.12em;
+      margin-top:2px;
+    }
+    .navlinks{
+      display:flex;gap:24px;align-items:center;margin-left:auto;
+    }
+    .navlinks a{
+      color:#e7edf3;text-decoration:none;font-size:13px;
+    }
+    .navlinks a:hover{color:var(--gold2)}
+    .start-btn{
+      margin-left:8px;
+      text-decoration:none;background:var(--gold2);color:#14202b;
+      font-weight:800;font-size:13px;border-radius:10px;padding:11px 17px;
+    }
+
+    .hero{
+      position:relative;overflow:hidden;
+      border-bottom:1px solid rgba(224,187,103,.16);
+    }
+    .hero:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(4,15,26,.98),rgba(4,15,26,.86) 45%,rgba(4,15,26,.62) 72%,rgba(4,15,26,.88)),
+        radial-gradient(circle at 73% 30%,rgba(224,187,103,.16),transparent 30%);
+    }
+    .hero:after{
+      content:"";position:absolute;right:-8%;top:-15%;width:58%;height:130%;
+      opacity:.32;transform:skewY(-8deg);
+      background:
+        repeating-linear-gradient(120deg,transparent 0 56px,rgba(242,207,124,.34) 57px 59px,transparent 60px 108px);
+    }
+    .hero-grid{
+      position:relative;z-index:2;
+      min-height:360px;
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
+      align-items:end;
+      gap:26px;
+    }
+    .hero-copy{padding:56px 0 42px}
+    .eyebrow{
+      color:var(--gold2);
+      font-size:12px;font-weight:800;letter-spacing:.18em;
+      margin-bottom:10px;
+    }
+    .hero h1{
+      font-family:"Playfair Display",serif;
+      font-size:56px;line-height:1.02;margin:0 0 16px;max-width:670px;
+    }
+    .hero h1 span{color:var(--gold2)}
+    .hero p{
+      margin:0 0 20px;max-width:670px;
+      color:#d8e0e8;line-height:1.7;font-size:15px;
+    }
+    .quick-trust{display:flex;flex-wrap:wrap;gap:14px 22px;color:#dce4ec;font-size:12px}
+    .quick-trust span{display:flex;align-items:center;gap:8px}
+    .quick-trust i{
+      width:22px;height:22px;border:1px solid var(--gold);
+      color:var(--gold2);display:grid;place-items:center;border-radius:50%;font-style:normal;
+    }
+
+    .hero-person{
+      align-self:end;justify-self:end;
+      width:min(100%,390px);position:relative;
+    }
+    .hero-person:before{
+      content:"";position:absolute;inset:auto 7% 5% 7%;height:54%;
+      background:radial-gradient(circle,rgba(224,187,103,.14),transparent 68%);
+      filter:blur(6px);
+    }
+    .hero-person img{
+      width:100%;display:block;position:relative;z-index:2;
+      filter:drop-shadow(0 28px 40px rgba(0,0,0,.42));
+    }
+
+    .market-strip{
+      position:relative;z-index:4;margin-top:-1px;
+      padding:14px 0 0;
+    }
+    .market-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+    }
+    .market-card,.panel,.mini-card,.tool-card,.history-shell{
+      background:linear-gradient(145deg,rgba(14,33,51,.94),rgba(6,20,32,.96));
+      border:1px solid rgba(255,255,255,.11);
+      box-shadow:0 16px 34px rgba(0,0,0,.17);
+    }
+    .market-card{
+      border-radius:12px;padding:16px 18px;min-height:106px;
+    }
+    .market-label{
+      color:#9aa8b5;text-transform:uppercase;font-size:10px;letter-spacing:.12em;font-weight:700;
+    }
+    .market-value{font-size:26px;font-weight:800;margin-top:8px}
+    .market-sub{margin-top:7px;font-size:11px;color:#9eabb8;line-height:1.5}
+    .up{color:var(--green)!important}.down{color:var(--red)!important}
+    .neutral{color:#d6dee7!important}
+    .market-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .pill{
+      display:inline-flex;align-items:center;gap:7px;
+      border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+    }
+    .dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--green)}
+
+    main{padding:14px 0 42px}
+    .main-grid{
+      display:grid;grid-template-columns:1.04fr .96fr;gap:14px;
+    }
+    .panel{border-radius:14px;padding:24px}
+    .panel-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+    .panel-icon{
+      width:48px;height:48px;border:1px solid rgba(224,187,103,.55);
+      border-radius:11px;display:grid;place-items:center;
+      color:var(--gold2);font-size:23px;flex:none;
+      background:rgba(224,187,103,.05);
+    }
+    .panel h2{
+      font-family:"Playfair Display",serif;
+      margin:0;font-size:28px;line-height:1.15;
+    }
+    .panel-head p{margin:6px 0 0;color:#aeb9c7;font-size:12px}
+    .inputs{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+    }
+    label{display:block;font-size:11px;color:#d7dfe7;margin-bottom:7px}
+    .input-wrap{position:relative}
+    .input-wrap input{
+      width:100%;height:48px;border-radius:9px;
+      border:1px solid rgba(255,255,255,.14);
+      background:#081725;color:#fff;padding:0 42px 0 14px;outline:none;
+    }
+    .input-wrap input:focus{border-color:rgba(242,207,124,.7);box-shadow:0 0 0 3px rgba(242,207,124,.08)}
+    .suffix{
+      position:absolute;right:12px;top:50%;transform:translateY(-50%);
+      color:#9ca9b6;font-size:12px;
+    }
+    .hint{font-size:10px;color:#7f8d9b;margin-top:6px;line-height:1.5}
+    .check-btn{
+      width:100%;height:50px;border:0;border-radius:9px;
+      margin-top:20px;cursor:pointer;
+      background:linear-gradient(180deg,#f7d47f,#e4b95a);
+      color:#15202b;font-weight:800;font-size:14px;
+      box-shadow:0 8px 24px rgba(224,187,103,.16);
+    }
+    .note{font-size:10px;color:#8795a3;margin-top:10px}
+
+    .result-layout{
+      display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;min-height:220px;
+    }
+    .score-ring{
+      --score:72;
+      width:155px;height:155px;border-radius:50%;display:grid;place-items:center;position:relative;
+      background:conic-gradient(var(--gold3) calc(var(--score)*1%),#394653 0);
+      margin:auto;
+    }
+    .score-ring:before{
+      content:"";position:absolute;inset:11px;border-radius:50%;background:#091827;
+      box-shadow:inset 0 0 25px rgba(0,0,0,.28);
+    }
+    .score-inner{position:relative;text-align:center;z-index:2}
+    .score-num{font-size:52px;font-weight:800;color:var(--gold2);line-height:1}
+    .score-den{font-size:13px;color:#d0d8df;margin-top:5px}
+    .result-status{
+      display:inline-flex;align-items:center;gap:7px;
+      border:1px solid rgba(246,184,74,.35);
+      background:rgba(246,184,74,.11);
+      color:#ffd374;border-radius:8px;padding:8px 11px;font-size:12px;font-weight:800;
+    }
+    .result-copy{font-size:12px;color:#d5dde5;line-height:1.65;margin:10px 0}
+    .checks{display:grid;gap:7px;margin-top:12px}
+    .checkline{
+      padding:8px 10px;border:1px solid rgba(255,255,255,.07);border-radius:8px;
+      font-size:10px;color:#b9c4cf;background:rgba(255,255,255,.02)
+    }
+
+    .section{margin-top:14px}
+    .section-title{
+      display:flex;align-items:center;gap:10px;margin:0 0 10px;
+      font-family:"Playfair Display",serif;font-size:23px;
+    }
+    .section-title i{font-style:normal;color:var(--gold2)}
+    .section-sub{color:#8896a4;font-size:11px;margin:-5px 0 14px 36px}
+    .action-grid,.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .mini-card{
+      border-radius:12px;padding:17px;display:flex;gap:13px;align-items:flex-start;min-height:104px;
+    }
+    .mini-icon{
+      width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;
+      border:1px solid var(--gold);color:var(--gold2);font-size:19px;
+    }
+    .mini-card b{display:block;font-size:13px;margin-bottom:5px}
+    .mini-card p{margin:0;color:#9ba8b5;font-size:10px;line-height:1.55}
+    .scenario-grid .bad .mini-icon{border:0;background:rgba(255,95,95,.18);color:var(--red)}
+    .scenario-grid .good .mini-icon{border:0;background:rgba(53,217,140,.16);color:var(--green)}
+    .scenario-grid .mid .mini-icon{border:0;background:rgba(174,185,199,.14);color:#d7e0e8}
+
+    .tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .tool-card{
+      border-radius:11px;padding:15px;text-decoration:none;display:flex;align-items:center;gap:11px;
+      min-height:74px;
+    }
+    .tool-card .ico{color:var(--gold2);font-size:21px}
+    .tool-card b{font-size:11px;display:block}
+    .tool-card span{font-size:9px;color:#8f9daa;display:block;margin-top:3px}
+    .tool-card:hover{border-color:rgba(224,187,103,.45)}
+
+    .history-shell{border-radius:12px;overflow:hidden}
+    .history-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+    .history-top h3{margin:0;font-family:"Playfair Display",serif;font-size:20px}
+    .history-top button{background:none;border:0;color:var(--gold2);font-size:10px;cursor:pointer}
+    table{width:100%;border-collapse:collapse;font-size:10px}
+    th,td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
+    th{color:#8f9daa;font-weight:600;background:rgba(255,255,255,.025)}
+    td{color:#d8e0e8}
+    .status-chip{
+      display:inline-block;padding:5px 9px;border-radius:999px;font-size:9px;font-weight:800;
+      background:rgba(246,184,74,.14);color:#ffd374;border:1px solid rgba(246,184,74,.2);
+    }
+
+    footer{
+      border-top:1px solid var(--line);padding:25px 0 30px;background:#06111d;
+    }
+    .foot{display:flex;align-items:center;gap:28px}
+    .foot .brand{min-width:auto}
+    .foot-links{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+    .foot-links a{font-size:11px;color:#aeb9c7;text-decoration:none}
+    .legal{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:#748391;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+    @media(max-width:980px){
+      .navlinks{display:none}
+      .hero-grid{grid-template-columns:1fr}
+      .hero-copy{text-align:center;padding-bottom:18px}
+      .hero h1{margin-left:auto;margin-right:auto;font-size:46px}
+      .hero p{margin-left:auto;margin-right:auto}
+      .quick-trust{justify-content:center}
+      .hero-person{justify-self:center;width:min(72vw,340px)}
+      .market-grid{grid-template-columns:repeat(2,1fr)}
+      .main-grid{grid-template-columns:1fr}
+      .tool-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:680px){
+      .wrap{width:min(100% - 24px,var(--max))}
+      .nav{min-height:64px}
+      .brand{min-width:auto}
+      .brand img{width:38px;height:38px}
+      .brand strong{font-size:15px}
+      .start-btn{padding:9px 12px}
+      .hero h1{font-size:39px}
+      .hero-copy{padding-top:38px}
+      .hero-person{width:min(88vw,320px)}
+      .market-grid{grid-template-columns:1fr 1fr;gap:9px}
+      .market-card{padding:13px;min-height:96px}
+      .market-value{font-size:20px}
+      .panel{padding:18px}
+      .panel h2{font-size:24px}
+      .inputs{grid-template-columns:1fr}
+      .result-layout{grid-template-columns:1fr;text-align:center}
+      .result-copy{text-align:center}
+      .checks{text-align:left}
+      .action-grid,.scenario-grid{grid-template-columns:1fr}
+      .tool-grid{grid-template-columns:1fr}
+      .section-title{justify-content:center;text-align:center}
+      .section-sub{text-align:center;margin-left:0}
+      .history-shell{overflow-x:auto}
+      table{min-width:680px}
+      .foot{flex-direction:column;text-align:center}
+      .foot-links{margin-left:0;justify-content:center}
+      .legal{justify-content:center;text-align:center}
+    }
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="LOGO.webp" alt="Võ Hoàng">
+      <span>
+        <strong>VÕ HOÀNG</strong>
+        <small>ĐẦU TƯ CHUẨN HỆ THỐNG</small>
+      </span>
+    </a>
+
+    <nav class="navlinks">
+      <a href="thi-truong-hom-nay.html">Thị trường</a>
+      <a href="sau-phien-cua-toi.html">Sau phiên</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="index.html">Trang chủ</a>
+    </nav>
+
+    <a class="start-btn" href="index.html">Trang chủ</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">KIỂM TRA 30 GIÂY</div>
+      <h1>Tài khoản hôm nay <span>có ổn không?</span></h1>
+      <p>Chỉ cần 3 thông tin. Hệ thống giúp bạn đánh giá nhanh tình trạng tài khoản và mức độ rủi ro trong bối cảnh thị trường hiện tại.</p>
+      <div class="quick-trust">
+        <span><i>✓</i>Mất khoảng 30 giây</span>
+        <span><i>✓</i>Không cần nhập danh mục chi tiết</span>
+        <span><i>✓</i>Không lưu dữ liệu cá nhân</span>
+      </div>
+    </div>
+
+    <div class="hero-person">
+      <img src="AVATAR2.webp" alt="Võ Hoàng" width="800" height="800" fetchpriority="high">
+    </div>
+  </div>
+</section>
+
+<div class="market-strip">
+  <div class="wrap market-grid">
+    <div class="market-card">
+      <div class="market-label">VN-Index hôm nay</div>
+      <div class="market-row">
+        <div class="market-value" id="vniValue">—</div>
+        <div class="pill neutral" id="vniChange">Đang tải</div>
+      </div>
+      <div class="market-sub" id="vniNote">Đang đọc dữ liệu thị trường...</div>
+    </div>
+
+    <div class="market-card">
+      <div class="market-label">Độ rộng thị trường</div>
+      <div class="market-value" id="breadthValue">—</div>
+      <div class="market-sub" id="breadthNote">Số mã tăng / giảm</div>
+    </div>
+
+    <div class="market-card">
+      <div class="market-label">Dẫn dắt</div>
+      <div class="market-value" style="font-size:18px" id="leadersValue">—</div>
+      <div class="market-sub">Nhóm/mã hỗ trợ vận động thị trường</div>
+    </div>
+
+    <div class="market-card">
+      <div class="market-label">Trạng thái thị trường</div>
+      <div class="market-row" style="margin-top:10px">
+        <span class="dot" id="stateDot"></span>
+        <strong id="stateValue">Đang tải...</strong>
+      </div>
+      <div class="market-sub" id="stateNote">Đang xác định trạng thái.</div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="main-grid">
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-icon">▦</div>
+          <div>
+            <h2>Nhập 3 con số của tài khoản</h2>
+            <p>Điền thông tin hiện tại để hệ thống phân tích nhanh cho bạn.</p>
+          </div>
+        </div>
+
+        <div class="inputs">
+          <div>
+            <label for="pnlInput">Hiệu quả tài khoản (%)</label>
+            <div class="input-wrap">
+              <input id="pnlInput" type="number" step="0.1" placeholder="VD: -1.2">
+              <span class="suffix">%</span>
+            </div>
+            <div class="hint">Lợi nhuận/lỗ hiện tại của tài khoản</div>
+          </div>
+
+          <div>
+            <label for="marginInput">Margin đang dùng (%)</label>
+            <div class="input-wrap">
+              <input id="marginInput" type="number" step="1" min="0" max="100" placeholder="VD: 25">
+              <span class="suffix">%</span>
+            </div>
+            <div class="hint">Tỷ lệ margin hiện tại</div>
+          </div>
+
+          <div>
+            <label for="stocksInput">Số mã đang giữ</label>
+            <div class="input-wrap">
+              <input id="stocksInput" type="number" step="1" min="0" placeholder="VD: 6">
+              <span class="suffix">mã</span>
+            </div>
+            <div class="hint">Tổng số cổ phiếu đang nắm giữ</div>
+          </div>
+        </div>
+
+        <button class="check-btn" id="checkBtn">KIỂM TRA TÀI KHOẢN →</button>
+        <div class="note">ⓘ Công cụ hỗ trợ rà soát, không phải khuyến nghị mua/bán.</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head" style="margin-bottom:10px">
+          <div class="panel-icon">▥</div>
+          <div style="flex:1">
+            <h2>Kết quả tài khoản</h2>
+            <p id="updatedAt">Nhập 3 thông tin để kiểm tra.</p>
+          </div>
+        </div>
+
+        <div class="result-layout">
+          <div class="score-ring" id="scoreRing" style="--score:0">
+            <div class="score-inner">
+              <div class="score-num" id="scoreNum">—</div>
+              <div class="score-den">/100</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="result-status" id="resultStatus">CHƯA KIỂM TRA</div>
+            <div class="result-copy" id="resultCopy">Nhập 3 con số bên trái để hệ thống đánh giá nhanh mức độ an toàn của tài khoản.</div>
+            <div class="checks">
+              <div class="checkline" id="check1">• Mức sử dụng margin: —</div>
+              <div class="checkline" id="check2">• Hiệu quả hiện tại: —</div>
+              <div class="checkline" id="check3">• Mức độ tập trung danh mục: —</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section">
+      <h2 class="section-title"><i>◎</i> Việc nên làm ngay</h2>
+      <div class="section-sub">Những hành động ưu tiên dựa trên trạng thái tài khoản hiện tại.</div>
+      <div class="action-grid">
+        <div class="mini-card">
+          <div class="mini-icon">Ⅱ</div>
+          <div><b id="action1Title">Chưa tăng thêm tỷ trọng</b><p id="action1Text">Ưu tiên quan sát, hạn chế mua mới trong giai đoạn này.</p></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-icon">⌕</div>
+          <div><b>Kiểm tra 2 mã yếu nhất</b><p>Rà soát vị trí yếu hơn thị trường và chuẩn bị plan xử lý.</p></div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-icon">◇</div>
+          <div><b id="action3Title">Đặt ngưỡng rủi ro</b><p id="action3Text">Xác định trước mức giảm khiến bạn phải hạ tỷ trọng.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i>▥</i> Nếu thị trường thay đổi thì sao?</h2>
+      <div class="section-sub">Một số kịch bản phổ biến và tác động dự kiến đến tài khoản.</div>
+      <div class="scenario-grid">
+        <div class="mini-card bad">
+          <div class="mini-icon">↘</div>
+          <div><b>VN-Index giảm thêm 2%</b><p id="scenarioDown">Tài khoản có thể chịu áp lực cao hơn. Cần chú ý tỷ trọng và margin.</p></div>
+        </div>
+        <div class="mini-card mid">
+          <div class="mini-icon">↔</div>
+          <div><b>Giảm tỷ trọng / margin</b><p id="scenarioCut">Giảm sử dụng vốn giúp tài khoản ổn định hơn trong giai đoạn biến động.</p></div>
+        </div>
+        <div class="mini-card good">
+          <div class="mini-icon">↗</div>
+          <div><b>Thị trường cải thiện độ rộng</b><p>Tài khoản có thể phục hồi tốt hơn nếu các mã đang giữ đồng thuận.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i>◉</i> Đi tiếp theo đúng nhu cầu</h2>
+      <div class="tool-grid">
+        <a class="tool-card" href="sau-phien-cua-toi.html"><span class="ico">▤</span><span><b>Sau phiên của tôi</b><span>Phân tích danh mục sau phiên</span></span></a>
+        <a class="tool-card" href="investor-calculator.html"><span class="ico">◔</span><span><b>Kiểm tra sức chịu margin</b><span>Đánh giá an toàn sử dụng vốn</span></span></a>
+        <a class="tool-card" href="investor-calculator.html"><span class="ico">◇</span><span><b>Rủi ro danh mục</b><span>Kiểm tra mức độ tập trung</span></span></a>
+        <a class="tool-card" href="thi-truong-hom-nay.html"><span class="ico">▥</span><span><b>Xem thị trường realtime</b><span>Cập nhật biến động mới nhất</span></span></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="history-shell">
+        <div class="history-top">
+          <h3>◷ Lịch sử kiểm tra gần đây</h3>
+          <button id="clearHistoryBtn">Xóa lịch sử</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Thời gian</th>
+              <th>Hiệu quả</th>
+              <th>Margin</th>
+              <th>Số mã</th>
+              <th>Kết quả</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr><td colspan="5" style="color:#758391">Chưa có lần kiểm tra nào trên thiết bị này.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="brand" href="index.html">
+        <img src="LOGO.webp" alt="Võ Hoàng">
+        <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
+      </a>
+      <div class="foot-links">
+        <a href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="index.html">Trang chủ</a>
+        <a href="lien-he.html">Liên hệ</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 VÕ HOÀNG. All rights reserved.</span>
+      <span>Đầu tư chứng khoán luôn có rủi ro. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+  const HISTORY_KEY = "vh_quick_account_history_v2";
+  let marketContext = { pct: 0, state: "TRUNG TÍNH" };
+
+  const fmt2 = new Intl.NumberFormat("vi-VN",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt0 = new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0});
+
+  function num(v){
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function first(obj, keys){
+    for(const k of keys){
+      const v = k.split(".").reduce((a,p)=>a?.[p],obj);
+      if(v !== undefined && v !== null && v !== "") return v;
+    }
+    return null;
+  }
+
+  async function loadMarket(){
+    try{
+      const r = await fetch(MARKET_URL,{cache:"no-store"});
+      if(!r.ok) throw new Error("market");
+      const data = await r.json();
+
+      const indexes = Array.isArray(data?.indexes) ? data.indexes : [];
+      const vni = indexes.find(x => String(x?.symbol||"").toUpperCase() === "VN-INDEX") || indexes[0] || {};
+      const value = num(first(vni,["value","close","last","price","current"]));
+      const pct = num(first(vni,["change_pct","change_percent","percent_change","pct_change"]));
+      const change = num(first(vni,["change","change_point","change_points","point_change","delta"]));
+
+      document.getElementById("vniValue").textContent = value === null ? "—" : fmt2.format(value);
+
+      const chEl = document.getElementById("vniChange");
+      if(pct !== null){
+        chEl.textContent = `${pct > 0 ? "+" : ""}${fmt2.format(pct)}%`;
+        chEl.className = `pill ${pct > 0 ? "up" : pct < 0 ? "down" : "neutral"}`;
+      } else if(change !== null){
+        chEl.textContent = `${change > 0 ? "+" : ""}${fmt2.format(change)} điểm`;
+        chEl.className = `pill ${change > 0 ? "up" : change < 0 ? "down" : "neutral"}`;
+      } else {
+        chEl.textContent = "—";
+      }
+
+      marketContext.pct = pct || 0;
+
+      const intel = data?.market_intelligence || {};
+      const breadth = intel?.breadth || {};
+      const adv = num(first(breadth,["adv","advance","up"]));
+      const dec = num(first(breadth,["dec","decline","down"]));
+      const flat = num(first(breadth,["flat","unchanged"]));
+
+      if(adv !== null || dec !== null){
+        document.getElementById("breadthValue").innerHTML =
+          `<span class="up">${adv ?? "—"} Tăng</span> <span style="color:#667786">|</span> <span class="down">${dec ?? "—"} Giảm</span>`;
+        document.getElementById("breadthNote").textContent =
+          flat !== null ? `${flat} mã tham chiếu` : "Độ rộng toàn thị trường";
+      }
+
+      const leaders = first(intel,["leaders.label","leaders.text","leading.label","leading.text","leaders"]);
+      document.getElementById("leadersValue").textContent =
+        typeof leaders === "string" ? leaders : "Theo dõi nhóm dẫn dắt";
+
+      const stateLabel = String(first(intel,["state.label","state.name","state"]) || "TRUNG TÍNH");
+      marketContext.state = stateLabel;
+      const stateEl = document.getElementById("stateValue");
+      const dotEl = document.getElementById("stateDot");
+      const stateUpper = stateLabel.toUpperCase();
+
+      stateEl.textContent = stateLabel;
+      if(stateUpper.includes("TÍCH") || stateUpper.includes("TỐT") || stateUpper.includes("LOW")){
+        stateEl.className = "up";
+        dotEl.style.background = "var(--green)";
+        document.getElementById("stateNote").textContent = "Bối cảnh hỗ trợ hơn cho việc nắm giữ.";
+      }else if(stateUpper.includes("RỦI") || stateUpper.includes("XẤU") || stateUpper.includes("HIGH")){
+        stateEl.className = "down";
+        dotEl.style.background = "var(--red)";
+        document.getElementById("stateNote").textContent = "Ưu tiên kiểm soát rủi ro và tỷ trọng.";
+      }else{
+        stateEl.className = "neutral";
+        dotEl.style.background = "var(--amber)";
+        document.getElementById("stateNote").textContent = "Cần quan sát thêm trước khi tăng rủi ro.";
+      }
+
+      document.getElementById("vniNote").textContent =
+        pct === null ? "Dữ liệu thị trường đã cập nhật." :
+        pct > .6 ? "Động lượng tích cực, nhưng vẫn cần nhìn độ rộng." :
+        pct < -.6 ? "Áp lực giảm đang tăng, ưu tiên quản trị rủi ro." :
+        "Biến động trong biên vừa phải.";
+    }catch(e){
+      document.getElementById("vniNote").textContent = "Chưa lấy được dữ liệu thị trường.";
+      document.getElementById("stateValue").textContent = "CHƯA CÓ DỮ LIỆU";
+    }
+  }
+
+  function scoreAccount(pnl, margin, stocks){
+    let score = 100;
+
+    if(pnl < 0) score -= Math.min(28, Math.abs(pnl) * 4);
+    if(pnl < -5) score -= 8;
+
+    if(margin > 20) score -= (margin - 20) * .35;
+    if(margin > 50) score -= 10;
+    if(margin > 70) score -= 12;
+
+    if(stocks <= 0) score -= 8;
+    if(stocks === 1) score -= 10;
+    if(stocks > 8) score -= Math.min(14,(stocks - 8)*2);
+
+    if(marketContext.pct < -1) score -= 8;
+    else if(marketContext.pct < -.4) score -= 4;
+    else if(marketContext.pct > .8) score += 3;
+
+    const state = marketContext.state.toUpperCase();
+    if(state.includes("RỦI") || state.includes("XẤU") || state.includes("HIGH")) score -= 8;
+    if(state.includes("TÍCH") || state.includes("TỐT") || state.includes("LOW")) score += 3;
+
+    return Math.max(0,Math.min(100,Math.round(score)));
+  }
+
+  function classification(score){
+    if(score >= 82) return {label:"ỔN ĐỊNH", color:"var(--green)", text:"Tài khoản đang ở trạng thái tương đối ổn. Tiếp tục giữ kỷ luật và theo dõi bối cảnh thị trường."};
+    if(score >= 65) return {label:"CẦN CHÚ Ý", color:"var(--amber)", text:"Tài khoản chưa ở trạng thái nguy hiểm, nhưng cần quản trị rủi ro chặt hơn trong giai đoạn hiện tại."};
+    return {label:"RỦI RO CAO", color:"var(--red)", text:"Rủi ro tài khoản đang cao. Ưu tiên giảm áp lực vốn, rà soát các vị trí yếu và tránh gia tăng rủi ro."};
+  }
+
+  function updateResult(pnl, margin, stocks){
+    const score = scoreAccount(pnl,margin,stocks);
+    const cls = classification(score);
+
+    const ring = document.getElementById("scoreRing");
+    ring.style.setProperty("--score",score);
+    document.getElementById("scoreNum").textContent = score;
+
+    const status = document.getElementById("resultStatus");
+    status.textContent = cls.label;
+    status.style.color = cls.color;
+    status.style.borderColor = `color-mix(in srgb, ${cls.color} 40%, transparent)`;
+
+    document.getElementById("resultCopy").textContent = cls.text;
+    document.getElementById("updatedAt").textContent = "Cập nhật: " + new Date().toLocaleString("vi-VN");
+
+    document.getElementById("check1").textContent =
+      margin <= 20 ? "✓ Margin đang ở mức thấp." :
+      margin <= 50 ? "• Margin ở mức vừa, cần theo dõi." :
+      "⚠ Margin đang cao, cần kiểm soát chặt.";
+
+    document.getElementById("check2").textContent =
+      pnl >= 0 ? "✓ Tài khoản đang có lãi." :
+      pnl > -3 ? "• Mức lỗ hiện tại còn trong vùng cần theo dõi." :
+      "⚠ Mức lỗ đang mở rộng, cần rà soát vị trí yếu.";
+
+    document.getElementById("check3").textContent =
+      stocks <= 1 ? "⚠ Danh mục đang tập trung cao." :
+      stocks <= 8 ? "✓ Số lượng mã đang ở mức vừa phải." :
+      "• Danh mục khá dàn trải, nên rà soát mức độ hiệu quả.";
+
+    if(score < 65){
+      document.getElementById("action1Title").textContent = "Ưu tiên hạ rủi ro";
+      document.getElementById("action1Text").textContent = "Không tăng tỷ trọng; rà soát margin và các mã yếu trước.";
+    }else{
+      document.getElementById("action1Title").textContent = "Chưa tăng thêm tỷ trọng";
+      document.getElementById("action1Text").textContent = "Quan sát phản ứng thị trường trước khi mở thêm vị thế.";
+    }
+
+    const extraLoss = Math.max(1, Math.round((100-score)/18));
+    document.getElementById("scenarioDown").textContent =
+      `Nếu thị trường giảm thêm 2%, mức rủi ro có thể tăng đáng kể. Ưu tiên giữ mức lỗ phát sinh thêm quanh ${extraLoss}% hoặc thấp hơn.`;
+
+    document.getElementById("scenarioCut").textContent =
+      margin > 20
+        ? `Nếu giảm margin từ ${fmt0.format(margin)}% xuống khoảng ${fmt0.format(Math.max(0,margin-20))}%, trạng thái an toàn sẽ cải thiện rõ.`
+        : "Margin hiện không cao; ưu tiên chất lượng danh mục hơn là giảm thêm vốn.";
+
+    saveHistory({pnl,margin,stocks,score,label:cls.label,time:Date.now()});
+    renderHistory();
+  }
+
+  function saveHistory(item){
+    try{
+      const old = JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]");
+      old.unshift(item);
+      localStorage.setItem(HISTORY_KEY,JSON.stringify(old.slice(0,12)));
+    }catch(_){}
+  }
+
+  function renderHistory(){
+    const body = document.getElementById("historyBody");
+    let rows = [];
+    try{ rows = JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]"); }catch(_){}
+    if(!rows.length){
+      body.innerHTML = `<tr><td colspan="5" style="color:#758391">Chưa có lần kiểm tra nào trên thiết bị này.</td></tr>`;
+      return;
+    }
+    body.innerHTML = rows.map(x => `
+      <tr>
+        <td>${new Date(x.time).toLocaleString("vi-VN")}</td>
+        <td class="${x.pnl >= 0 ? "up" : "down"}">${x.pnl > 0 ? "+" : ""}${fmt2.format(x.pnl)}%</td>
+        <td>${fmt0.format(x.margin)}%</td>
+        <td>${fmt0.format(x.stocks)}</td>
+        <td><span class="status-chip">${x.score} · ${x.label}</span></td>
+      </tr>
+    `).join("");
+  }
+
+  document.getElementById("checkBtn").addEventListener("click",()=>{
+    const pnl = num(document.getElementById("pnlInput").value);
+    const margin = num(document.getElementById("marginInput").value);
+    const stocks = num(document.getElementById("stocksInput").value);
+
+    if(pnl === null || margin === null || stocks === null){
+      alert("Bạn nhập đủ 3 con số trước khi kiểm tra nhé.");
+      return;
+    }
+    if(margin < 0 || margin > 100 || stocks < 0){
+      alert("Vui lòng kiểm tra lại Margin và số mã đang giữ.");
+      return;
+    }
+    updateResult(pnl,margin,stocks);
+  });
+
+  document.getElementById("clearHistoryBtn").addEventListener("click",()=>{
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+  });
+
+  renderHistory();
+  loadMarket();
+})();
+</script>
+</body>
+</html>
