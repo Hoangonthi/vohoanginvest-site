@@ -81,12 +81,27 @@
       border-bottom:1px solid rgba(224,187,103,.14);
       background:#07131f;
     }
-    .hero-art{
+       .hero-art{
       position:absolute;
-      inset:0;
       z-index:1;
+    
+      top:0;
+      bottom:0;
+    
+      right:max(
+        20px,
+        calc((100vw - var(--max)) / 2)
+      );
+    
+      width:min(
+        48%,
+        600px
+      );
+    
       overflow:hidden;
       pointer-events:none;
+    
+      border-radius:0 0 12px 12px;
     }
     .hero-art img{
       width:100%;
@@ -104,11 +119,19 @@
         linear-gradient(180deg,rgba(5,15,25,.10),rgba(5,15,25,.20));
     }
     .hero-grid{
-      position:relative;z-index:3;
+      position:relative;
+      z-index:3;
+    
       min-height:335px;
+    
       display:grid;
-      grid-template-columns:minmax(0,1.22fr) minmax(300px,.68fr);
-      gap:28px;
+    
+      grid-template-columns:
+        minmax(0,1.3fr)
+        minmax(240px,.5fr);
+    
+      gap:22px;
+    
       align-items:center;
     }
     .hero-copy{padding:38px 0 30px;max-width:700px}
@@ -356,7 +379,7 @@
       .topbar{height:64px}.brand{min-width:auto}.brand img{width:40px;height:40px}.brand strong{font-size:15px}
       .search{display:none}.nav-cta{padding:9px 12px}
       .hero{min-height:auto}.hero-copy{padding:34px 0 24px}.hero h1{font-size:38px}.hero p{font-size:13px}
-      .hero-art img{content:url("sau-phien-hero-mobile.webp");object-position:60% center}
+      .hero-art img{content:url("sau-phien-hero-mobile.webp");object-position:center}
       .market-area{margin-top:0}.market-grid{grid-template-columns:1fr 1fr}
       .form-grid,.bottom-fields,.watch-grid,.watch-row,.next-actions{grid-template-columns:1fr}
       .panel{padding:16px}.watch-row{padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -388,8 +411,8 @@
 
 <section class="hero">
   <picture class="hero-art" aria-hidden="true">
-    <source media="(max-width:680px)" srcset="sau-phien-hero-mobile.webp">
-    <img src="sau-phien-hero.webp" alt="" width="1400" height="900" fetchpriority="high" decoding="async">
+    <source media="(max-width:680px)" srcset="hero-sau-phien-mobile.webp">
+    <img src="hero-sau-phien-desktop.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async" >
   </picture>
 
   <div class="wrap hero-grid">
