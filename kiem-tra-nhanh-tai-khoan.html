@@ -634,13 +634,33 @@
       margin-left:14px;
       align-items:center;
     }
-    .social span{
-      width:26px;height:26px;
-      display:grid;place-items:center;
+        .social a{
+      width:26px;
+      height:26px;
+    
+      display:grid;
+      place-items:center;
+    
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.15);
+    
+      border:
+        1px solid
+        rgba(255,255,255,.15);
+    
       font-size:10px;
+    
       color:#e7edf2;
+    
+      text-decoration:none;
+    
+      transition:
+        .2s ease;
+    }
+    
+    .social a:hover{
+      color:var(--gold);
+      border-color:var(--gold);
+      transform:translateY(-2px);
     }
     .eco{
       margin-left:10px;
@@ -977,11 +997,36 @@
         <a href="lien-he.html">Liên hệ</a>
       </div>
 
-      <div class="social">
-        <span>▶</span>
-        <span>f</span>
-        <span>◎</span>
-      </div>
+    <div class="social">
+
+    <a
+      href="https://www.youtube.com/@vohoanginvest"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="YouTube Võ Hoàng"
+    >
+      ▶
+    </a>
+  
+    <a
+      href="https://www.facebook.com/vohoanginvest"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Facebook Võ Hoàng"
+    >
+      f
+    </a>
+  
+    <a
+      href="https://vohoanginvest.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Website Võ Hoàng"
+    >
+      ◎
+    </a>
+  
+    </div>
 
       <a class="eco" href="https://onthiplus.com" target="_blank" rel="noopener">
         Ôn Thi Plus →
