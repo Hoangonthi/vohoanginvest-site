@@ -4,336 +4,446 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kiểm tra nhanh tài khoản | Võ Hoàng</title>
-  <meta name="description" content="Kiểm tra nhanh trạng thái tài khoản đầu tư trong 30 giây.">
+  <meta name="description" content="Kiểm tra nhanh tình trạng tài khoản đầu tư trong 30 giây.">
   <link rel="icon" type="image/png" href="/vohoanginvest-site/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-
   <style>
     :root{
-      --navy:#07121f;
-      --navy2:#0b1928;
-      --navy3:#0d2032;
-      --gold:#e0bb67;
-      --gold2:#f2cf7c;
-      --gold3:#ffcf55;
-      --text:#f8f5ee;
-      --muted:#aeb9c7;
-      --line:rgba(255,255,255,.09);
-      --green:#35d98c;
-      --red:#ff5f5f;
-      --cyan:#62d8ff;
-      --amber:#f6b84a;
-      --card:rgba(10,28,44,.88);
-      --max:1180px;
+      --bg:#06111d;
+      --bg2:#071824;
+      --card:#0b1c2b;
+      --card2:#0e2334;
+      --line:rgba(255,255,255,.10);
+      --gold:#f2cf7c;
+      --gold2:#d9aa42;
+      --text:#f8f6f0;
+      --muted:#a8b5c2;
+      --green:#32d589;
+      --red:#ff5b5b;
+      --blue:#52c8ff;
+      --amber:#f4b94b;
+      --max:1280px;
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
-      color:var(--text);
       font-family:"Be Vietnam Pro",system-ui,sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(circle at 12% 35%,rgba(224,187,103,.12),transparent 24%),
-        radial-gradient(circle at 88% 28%,rgba(224,187,103,.10),transparent 22%),
-        linear-gradient(180deg,#06111d,#061522 55%,#06111d);
+        radial-gradient(circle at 10% 30%,rgba(224,187,103,.08),transparent 24%),
+        linear-gradient(180deg,#06111d 0%,#06121e 100%);
     }
     a{color:inherit}
-    button,input{font:inherit}
-    .wrap{width:min(var(--max),calc(100% - 36px));margin:auto}
+    .wrap{width:min(var(--max),calc(100% - 44px));margin:auto}
 
+    /* HEADER */
     .topbar{
-      position:sticky;top:0;z-index:50;
-      background:rgba(4,14,25,.92);
-      backdrop-filter:blur(14px);
+      height:70px;
       border-bottom:1px solid var(--line);
+      background:rgba(5,15,25,.96);
+      display:flex;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:30;
+      backdrop-filter:blur(12px);
     }
-    .nav{
-      min-height:72px;
-      display:flex;align-items:center;gap:26px;
-    }
+    .nav{display:flex;align-items:center;gap:30px;width:100%}
     .brand{
-      display:flex;align-items:center;gap:12px;
-      text-decoration:none;min-width:230px;
+      display:flex;align-items:center;gap:12px;text-decoration:none;
+      min-width:250px;
     }
-    .brand img{width:44px;height:44px;object-fit:contain}
-    .brand strong{
-      display:block;color:var(--gold2);
-      letter-spacing:.04em;font-size:17px;
-    }
-    .brand small{
-      display:block;color:#d9bb78;
-      font-size:8px;letter-spacing:.12em;
-      margin-top:2px;
-    }
-    .navlinks{
-      display:flex;gap:24px;align-items:center;margin-left:auto;
-    }
-    .navlinks a{
-      color:#e7edf3;text-decoration:none;font-size:13px;
-    }
-    .navlinks a:hover{color:var(--gold2)}
-    .start-btn{
-      margin-left:8px;
-      text-decoration:none;background:var(--gold2);color:#14202b;
-      font-weight:800;font-size:13px;border-radius:10px;padding:11px 17px;
+    .brand img{width:48px;height:48px;object-fit:contain}
+    .brand strong{display:block;color:var(--gold);font-size:17px;letter-spacing:.04em}
+    .brand small{display:block;color:#d3b66d;font-size:8px;letter-spacing:.12em;margin-top:2px}
+    .navlinks{display:flex;gap:34px;margin-left:auto;align-items:center}
+    .navlinks a{text-decoration:none;font-size:13px;color:#e2e8ee}
+    .navlinks a:hover{color:var(--gold)}
+    .nav-cta{
+      margin-left:14px;background:var(--gold);color:#14202b;
+      text-decoration:none;padding:11px 20px;border-radius:10px;
+      font-size:13px;font-weight:800;
     }
 
+    /* HERO */
     .hero{
-      position:relative;overflow:hidden;
-      border-bottom:1px solid rgba(224,187,103,.16);
+      position:relative;
+      min-height:315px;
+      overflow:hidden;
+      border-bottom:1px solid rgba(224,187,103,.14);
+      background:
+        linear-gradient(90deg,rgba(5,15,25,.98) 0%,rgba(5,15,25,.94) 47%,rgba(5,15,25,.55) 78%,rgba(5,15,25,.86) 100%),
+        radial-gradient(circle at 82% 30%,rgba(242,207,124,.18),transparent 30%),
+        linear-gradient(180deg,#0a1d2c,#07131f);
     }
     .hero:before{
-      content:"";position:absolute;inset:0;pointer-events:none;
+      content:"";
+      position:absolute;
+      inset:auto 0 0 auto;
+      width:55%;
+      height:78%;
+      opacity:.52;
       background:
-        linear-gradient(90deg,rgba(4,15,26,.98),rgba(4,15,26,.86) 45%,rgba(4,15,26,.62) 72%,rgba(4,15,26,.88)),
-        radial-gradient(circle at 73% 30%,rgba(224,187,103,.16),transparent 30%);
+        repeating-linear-gradient(90deg,
+          transparent 0 28px,
+          rgba(255,255,255,.03) 29px 31px,
+          transparent 32px 56px),
+        linear-gradient(180deg,transparent 0 25%,rgba(11,31,47,.8) 25%);
+      clip-path:polygon(
+        0 100%,0 62%,4% 62%,4% 35%,8% 35%,8% 70%,12% 70%,12% 22%,16% 22%,16% 76%,
+        20% 76%,20% 40%,24% 40%,24% 68%,28% 68%,28% 18%,32% 18%,32% 75%,36% 75%,36% 30%,
+        40% 30%,40% 65%,44% 65%,44% 12%,48% 12%,48% 76%,52% 76%,52% 34%,56% 34%,56% 67%,
+        60% 67%,60% 22%,64% 22%,64% 74%,68% 74%,68% 42%,72% 42%,72% 66%,76% 66%,76% 14%,
+        80% 14%,80% 76%,84% 76%,84% 28%,88% 28%,88% 70%,92% 70%,92% 38%,96% 38%,96% 100%
+      );
     }
     .hero:after{
-      content:"";position:absolute;right:-8%;top:-15%;width:58%;height:130%;
-      opacity:.32;transform:skewY(-8deg);
+      content:"";
+      position:absolute;
+      right:2%;
+      top:16%;
+      width:46%;
+      height:58%;
       background:
-        repeating-linear-gradient(120deg,transparent 0 56px,rgba(242,207,124,.34) 57px 59px,transparent 60px 108px);
+        linear-gradient(145deg,
+          transparent 0 9%,
+          rgba(242,207,124,.95) 9.4% 10%,
+          transparent 10.5% 22%,
+          rgba(242,207,124,.85) 22.4% 23%,
+          transparent 23.5% 39%,
+          rgba(242,207,124,.95) 39.4% 40%,
+          transparent 40.5% 59%,
+          rgba(242,207,124,.85) 59.4% 60%,
+          transparent 60.5% 79%,
+          rgba(242,207,124,.92) 79.4% 80%,
+          transparent 80.5%);
+      transform:skewY(-8deg);
+      opacity:.78;
+      filter:drop-shadow(0 0 8px rgba(242,207,124,.35));
+      pointer-events:none;
     }
-    .hero-grid{
-      position:relative;z-index:2;
-      min-height:360px;
-      display:grid;
-      grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
-      align-items:end;
-      gap:26px;
+    .hero-content{
+      position:relative;
+      z-index:3;
+      padding:38px 0 28px;
+      max-width:720px;
     }
-    .hero-copy{padding:56px 0 42px}
     .eyebrow{
-      color:var(--gold2);
-      font-size:12px;font-weight:800;letter-spacing:.18em;
-      margin-bottom:10px;
+      color:var(--gold);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      margin-bottom:8px;
     }
     .hero h1{
       font-family:"Playfair Display",serif;
-      font-size:56px;line-height:1.02;margin:0 0 16px;max-width:670px;
+      font-size:58px;
+      line-height:1.03;
+      margin:0 0 12px;
     }
-    .hero h1 span{color:var(--gold2)}
+    .hero h1 span{color:var(--gold)}
     .hero p{
-      margin:0 0 20px;max-width:670px;
-      color:#d8e0e8;line-height:1.7;font-size:15px;
+      max-width:700px;
+      margin:0 0 18px;
+      color:#d7dfe7;
+      line-height:1.65;
+      font-size:15px;
     }
-    .quick-trust{display:flex;flex-wrap:wrap;gap:14px 22px;color:#dce4ec;font-size:12px}
-    .quick-trust span{display:flex;align-items:center;gap:8px}
-    .quick-trust i{
-      width:22px;height:22px;border:1px solid var(--gold);
-      color:var(--gold2);display:grid;place-items:center;border-radius:50%;font-style:normal;
-    }
-
-    .hero-person{
-      align-self:end;justify-self:end;
-      width:min(100%,390px);position:relative;
-    }
-    .hero-person:before{
-      content:"";position:absolute;inset:auto 7% 5% 7%;height:54%;
-      background:radial-gradient(circle,rgba(224,187,103,.14),transparent 68%);
-      filter:blur(6px);
-    }
-    .hero-person img{
-      width:100%;display:block;position:relative;z-index:2;
-      filter:drop-shadow(0 28px 40px rgba(0,0,0,.42));
+    .trustline{display:flex;gap:18px 24px;flex-wrap:wrap}
+    .trustline span{font-size:12px;color:#d8e0e7;display:flex;align-items:center;gap:8px}
+    .trustline i{
+      display:grid;place-items:center;
+      width:22px;height:22px;border-radius:50%;
+      border:1px solid var(--gold);color:var(--gold);font-style:normal;
+      font-size:11px;
     }
 
-    .market-strip{
-      position:relative;z-index:4;margin-top:-1px;
-      padding:14px 0 0;
+    /* MARKET */
+    .market-wrap{
+      margin-top:0;
+      background:linear-gradient(180deg,#07131f,#081723);
+      border-bottom:1px solid var(--line);
     }
     .market-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
-    }
-    .market-card,.panel,.mini-card,.tool-card,.history-shell{
-      background:linear-gradient(145deg,rgba(14,33,51,.94),rgba(6,20,32,.96));
-      border:1px solid rgba(255,255,255,.11);
-      box-shadow:0 16px 34px rgba(0,0,0,.17);
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      padding:14px 0;
     }
     .market-card{
-      border-radius:12px;padding:16px 18px;min-height:106px;
+      min-height:98px;
+      padding:14px 16px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:10px;
+      background:linear-gradient(145deg,rgba(12,30,45,.96),rgba(7,20,32,.96));
     }
     .market-label{
-      color:#9aa8b5;text-transform:uppercase;font-size:10px;letter-spacing:.12em;font-weight:700;
+      color:#8e9dab;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:700;
+      margin-bottom:8px;
     }
-    .market-value{font-size:26px;font-weight:800;margin-top:8px}
-    .market-sub{margin-top:7px;font-size:11px;color:#9eabb8;line-height:1.5}
-    .up{color:var(--green)!important}.down{color:var(--red)!important}
-    .neutral{color:#d6dee7!important}
-    .market-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .pill{
-      display:inline-flex;align-items:center;gap:7px;
-      border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-    }
-    .dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--green)}
+    .market-main{font-size:25px;font-weight:800;line-height:1.2}
+    .market-sub{margin-top:7px;font-size:10px;color:#8795a3;line-height:1.5}
+    .up{color:var(--green)}
+    .down{color:var(--red)}
+    .amber{color:var(--amber)}
 
-    main{padding:14px 0 42px}
-    .main-grid{
-      display:grid;grid-template-columns:1.04fr .96fr;gap:14px;
+    /* MAIN */
+    main{padding:14px 0 22px}
+    .check-grid{
+      display:grid;
+      grid-template-columns:1.12fr .88fr;
+      gap:12px;
     }
-    .panel{border-radius:14px;padding:24px}
-    .panel-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+    .panel{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:12px;
+      background:linear-gradient(145deg,rgba(13,32,49,.96),rgba(7,20,32,.98));
+      padding:22px;
+      box-shadow:0 12px 28px rgba(0,0,0,.16);
+    }
+    .panel-title{
+      display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;
+    }
     .panel-icon{
-      width:48px;height:48px;border:1px solid rgba(224,187,103,.55);
-      border-radius:11px;display:grid;place-items:center;
-      color:var(--gold2);font-size:23px;flex:none;
-      background:rgba(224,187,103,.05);
+      width:46px;height:46px;border-radius:10px;
+      border:1px solid rgba(242,207,124,.45);
+      color:var(--gold);display:grid;place-items:center;
+      font-size:22px;flex:none;background:rgba(242,207,124,.05);
     }
     .panel h2{
+      margin:0;
       font-family:"Playfair Display",serif;
-      margin:0;font-size:28px;line-height:1.15;
+      font-size:27px;
     }
-    .panel-head p{margin:6px 0 0;color:#aeb9c7;font-size:12px}
-    .inputs{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+    .panel-title p{
+      margin:5px 0 0;
+      color:#98a7b5;
+      font-size:11px;
     }
-    label{display:block;font-size:11px;color:#d7dfe7;margin-bottom:7px}
+
+    .inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    label{display:block;font-size:11px;color:#d8e0e7;margin-bottom:7px}
     .input-wrap{position:relative}
-    .input-wrap input{
-      width:100%;height:48px;border-radius:9px;
-      border:1px solid rgba(255,255,255,.14);
-      background:#081725;color:#fff;padding:0 42px 0 14px;outline:none;
+    input{
+      width:100%;
+      height:48px;
+      padding:0 42px 0 14px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.13);
+      background:#081826;
+      color:#fff;
+      outline:none;
     }
-    .input-wrap input:focus{border-color:rgba(242,207,124,.7);box-shadow:0 0 0 3px rgba(242,207,124,.08)}
+    input:focus{
+      border-color:rgba(242,207,124,.7);
+      box-shadow:0 0 0 3px rgba(242,207,124,.07);
+    }
     .suffix{
       position:absolute;right:12px;top:50%;transform:translateY(-50%);
-      color:#9ca9b6;font-size:12px;
+      color:#9aa8b5;font-size:12px;
     }
-    .hint{font-size:10px;color:#7f8d9b;margin-top:6px;line-height:1.5}
+    .hint{font-size:9px;color:#788797;margin-top:5px}
     .check-btn{
-      width:100%;height:50px;border:0;border-radius:9px;
-      margin-top:20px;cursor:pointer;
-      background:linear-gradient(180deg,#f7d47f,#e4b95a);
-      color:#15202b;font-weight:800;font-size:14px;
-      box-shadow:0 8px 24px rgba(224,187,103,.16);
+      width:100%;
+      margin-top:18px;
+      height:50px;
+      border:0;
+      border-radius:9px;
+      background:linear-gradient(180deg,#f6d37d,#e5b958);
+      color:#14202b;
+      font-weight:800;
+      cursor:pointer;
+      font-size:14px;
     }
-    .note{font-size:10px;color:#8795a3;margin-top:10px}
+    .disclaimer{
+      margin-top:9px;
+      color:#7e8d9c;
+      font-size:9px;
+    }
 
-    .result-layout{
-      display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;min-height:220px;
+    .result-body{
+      display:grid;
+      grid-template-columns:150px 1fr;
+      gap:20px;
+      align-items:center;
+      min-height:210px;
     }
     .score-ring{
-      --score:72;
-      width:155px;height:155px;border-radius:50%;display:grid;place-items:center;position:relative;
-      background:conic-gradient(var(--gold3) calc(var(--score)*1%),#394653 0);
+      --score:0;
+      width:142px;height:142px;border-radius:50%;
+      background:conic-gradient(var(--gold) calc(var(--score)*1%),#394651 0);
+      display:grid;place-items:center;
+      position:relative;
       margin:auto;
     }
     .score-ring:before{
-      content:"";position:absolute;inset:11px;border-radius:50%;background:#091827;
-      box-shadow:inset 0 0 25px rgba(0,0,0,.28);
+      content:"";
+      position:absolute;inset:10px;border-radius:50%;
+      background:#091827;
     }
-    .score-inner{position:relative;text-align:center;z-index:2}
-    .score-num{font-size:52px;font-weight:800;color:var(--gold2);line-height:1}
-    .score-den{font-size:13px;color:#d0d8df;margin-top:5px}
+    .score-inner{position:relative;z-index:2;text-align:center}
+    .score-num{
+      color:var(--gold);
+      font-size:48px;
+      font-weight:800;
+      line-height:1;
+    }
+    .score-den{font-size:12px;color:#d3dbe2;margin-top:4px}
     .result-status{
-      display:inline-flex;align-items:center;gap:7px;
-      border:1px solid rgba(246,184,74,.35);
-      background:rgba(246,184,74,.11);
-      color:#ffd374;border-radius:8px;padding:8px 11px;font-size:12px;font-weight:800;
+      display:inline-flex;
+      padding:7px 10px;
+      border-radius:7px;
+      border:1px solid rgba(246,185,75,.32);
+      background:rgba(246,185,75,.10);
+      color:#ffd277;
+      font-weight:800;
+      font-size:11px;
     }
-    .result-copy{font-size:12px;color:#d5dde5;line-height:1.65;margin:10px 0}
-    .checks{display:grid;gap:7px;margin-top:12px}
-    .checkline{
-      padding:8px 10px;border:1px solid rgba(255,255,255,.07);border-radius:8px;
-      font-size:10px;color:#b9c4cf;background:rgba(255,255,255,.02)
+    .result-copy{
+      margin:9px 0 12px;
+      font-size:11px;
+      line-height:1.6;
+      color:#d0d8df;
     }
-
-    .section{margin-top:14px}
-    .section-title{
-      display:flex;align-items:center;gap:10px;margin:0 0 10px;
-      font-family:"Playfair Display",serif;font-size:23px;
-    }
-    .section-title i{font-style:normal;color:var(--gold2)}
-    .section-sub{color:#8896a4;font-size:11px;margin:-5px 0 14px 36px}
-    .action-grid,.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .mini-card{
-      border-radius:12px;padding:17px;display:flex;gap:13px;align-items:flex-start;min-height:104px;
-    }
-    .mini-icon{
-      width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;
-      border:1px solid var(--gold);color:var(--gold2);font-size:19px;
-    }
-    .mini-card b{display:block;font-size:13px;margin-bottom:5px}
-    .mini-card p{margin:0;color:#9ba8b5;font-size:10px;line-height:1.55}
-    .scenario-grid .bad .mini-icon{border:0;background:rgba(255,95,95,.18);color:var(--red)}
-    .scenario-grid .good .mini-icon{border:0;background:rgba(53,217,140,.16);color:var(--green)}
-    .scenario-grid .mid .mini-icon{border:0;background:rgba(174,185,199,.14);color:#d7e0e8}
-
-    .tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .tool-card{
-      border-radius:11px;padding:15px;text-decoration:none;display:flex;align-items:center;gap:11px;
-      min-height:74px;
-    }
-    .tool-card .ico{color:var(--gold2);font-size:21px}
-    .tool-card b{font-size:11px;display:block}
-    .tool-card span{font-size:9px;color:#8f9daa;display:block;margin-top:3px}
-    .tool-card:hover{border-color:rgba(224,187,103,.45)}
-
-    .history-shell{border-radius:12px;overflow:hidden}
-    .history-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
-    .history-top h3{margin:0;font-family:"Playfair Display",serif;font-size:20px}
-    .history-top button{background:none;border:0;color:var(--gold2);font-size:10px;cursor:pointer}
-    table{width:100%;border-collapse:collapse;font-size:10px}
-    th,td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.05);text-align:left}
-    th{color:#8f9daa;font-weight:600;background:rgba(255,255,255,.025)}
-    td{color:#d8e0e8}
-    .status-chip{
-      display:inline-block;padding:5px 9px;border-radius:999px;font-size:9px;font-weight:800;
-      background:rgba(246,184,74,.14);color:#ffd374;border:1px solid rgba(246,184,74,.2);
+    .result-list{display:grid;gap:6px}
+    .result-line{
+      border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.02);
+      border-radius:7px;
+      padding:7px 9px;
+      color:#aeb9c4;
+      font-size:9px;
     }
 
+    /* CTA STRIP */
+    .deep-strip{
+      margin-top:12px;
+      padding:18px 20px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:12px;
+      background:linear-gradient(145deg,rgba(13,32,49,.96),rgba(7,20,32,.98));
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:18px;
+      align-items:center;
+    }
+    .target{
+      width:52px;height:52px;border-radius:50%;
+      display:grid;place-items:center;
+      border:1px solid var(--gold);
+      color:var(--gold);
+      font-size:24px;
+    }
+    .deep-strip h3{
+      margin:0;
+      font-family:"Playfair Display",serif;
+      font-size:23px;
+    }
+    .deep-strip p{
+      margin:5px 0 0;
+      font-size:11px;
+      color:#9caab7;
+      line-height:1.5;
+    }
+    .tool-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:flex-end;
+    }
+    .tool-btn{
+      text-decoration:none;
+      border:1px solid rgba(242,207,124,.45);
+      color:#e8eef3;
+      padding:9px 13px;
+      border-radius:999px;
+      font-size:10px;
+      white-space:nowrap;
+    }
+    .tool-btn.primary{
+      background:var(--gold);
+      color:#14202b;
+      font-weight:800;
+      border-color:var(--gold);
+    }
+
+    /* FOOTER */
     footer{
-      border-top:1px solid var(--line);padding:25px 0 30px;background:#06111d;
+      margin-top:16px;
+      border-top:1px solid var(--line);
+      padding:20px 0 24px;
+      background:#06111d;
     }
-    .foot{display:flex;align-items:center;gap:28px}
+    .foot{
+      display:flex;
+      align-items:center;
+      gap:22px;
+    }
     .foot .brand{min-width:auto}
-    .foot-links{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
-    .foot-links a{font-size:11px;color:#aeb9c7;text-decoration:none}
-    .legal{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:#748391;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .foot-links{
+      display:flex;
+      gap:18px;
+      margin-left:auto;
+      flex-wrap:wrap;
+    }
+    .foot-links a{
+      font-size:10px;
+      text-decoration:none;
+      color:#a7b4c0;
+    }
+    .legal{
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+      color:#748391;
+      font-size:9px;
+    }
 
     @media(max-width:980px){
       .navlinks{display:none}
-      .hero-grid{grid-template-columns:1fr}
-      .hero-copy{text-align:center;padding-bottom:18px}
-      .hero h1{margin-left:auto;margin-right:auto;font-size:46px}
-      .hero p{margin-left:auto;margin-right:auto}
-      .quick-trust{justify-content:center}
-      .hero-person{justify-self:center;width:min(72vw,340px)}
+      .brand{min-width:auto}
+      .hero{min-height:auto}
+      .hero h1{font-size:48px}
       .market-grid{grid-template-columns:repeat(2,1fr)}
-      .main-grid{grid-template-columns:1fr}
-      .tool-grid{grid-template-columns:repeat(2,1fr)}
+      .check-grid{grid-template-columns:1fr}
+      .deep-strip{grid-template-columns:auto 1fr}
+      .tool-actions{grid-column:1/-1;justify-content:flex-start}
     }
 
     @media(max-width:680px){
       .wrap{width:min(100% - 24px,var(--max))}
-      .nav{min-height:64px}
-      .brand{min-width:auto}
-      .brand img{width:38px;height:38px}
+      .topbar{height:64px}
+      .brand img{width:40px;height:40px}
       .brand strong{font-size:15px}
-      .start-btn{padding:9px 12px}
+      .nav-cta{padding:9px 12px}
+      .hero-content{text-align:center;padding:34px 0 24px}
       .hero h1{font-size:39px}
-      .hero-copy{padding-top:38px}
-      .hero-person{width:min(88vw,320px)}
-      .market-grid{grid-template-columns:1fr 1fr;gap:9px}
-      .market-card{padding:13px;min-height:96px}
-      .market-value{font-size:20px}
-      .panel{padding:18px}
+      .hero p{font-size:13px}
+      .trustline{justify-content:center}
+      .hero:before,.hero:after{opacity:.22}
+      .market-grid{grid-template-columns:1fr 1fr}
+      .market-card{padding:12px;min-height:92px}
+      .market-main{font-size:20px}
+      .panel{padding:17px}
       .panel h2{font-size:24px}
       .inputs{grid-template-columns:1fr}
-      .result-layout{grid-template-columns:1fr;text-align:center}
+      .result-body{grid-template-columns:1fr;text-align:center}
       .result-copy{text-align:center}
-      .checks{text-align:left}
-      .action-grid,.scenario-grid{grid-template-columns:1fr}
-      .tool-grid{grid-template-columns:1fr}
-      .section-title{justify-content:center;text-align:center}
-      .section-sub{text-align:center;margin-left:0}
-      .history-shell{overflow-x:auto}
-      table{min-width:680px}
+      .result-list{text-align:left}
+      .deep-strip{grid-template-columns:1fr;text-align:center}
+      .target{margin:auto}
+      .tool-actions{justify-content:center}
       .foot{flex-direction:column;text-align:center}
       .foot-links{margin-left:0;justify-content:center}
       .legal{justify-content:center;text-align:center}
@@ -359,72 +469,65 @@
       <a href="index.html">Trang chủ</a>
     </nav>
 
-    <a class="start-btn" href="index.html">Trang chủ</a>
+    <a class="nav-cta" href="index.html">Trang chủ</a>
   </div>
 </header>
 
 <section class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-copy">
+  <div class="wrap">
+    <div class="hero-content">
       <div class="eyebrow">KIỂM TRA 30 GIÂY</div>
       <h1>Tài khoản hôm nay <span>có ổn không?</span></h1>
-      <p>Chỉ cần 3 thông tin. Hệ thống giúp bạn đánh giá nhanh tình trạng tài khoản và mức độ rủi ro trong bối cảnh thị trường hiện tại.</p>
-      <div class="quick-trust">
+      <p>
+        Chỉ cần 3 thông tin. Hệ thống giúp bạn đánh giá nhanh tình trạng tài khoản
+        và mức độ rủi ro trong bối cảnh thị trường hiện tại.
+      </p>
+      <div class="trustline">
         <span><i>✓</i>Mất khoảng 30 giây</span>
         <span><i>✓</i>Không cần nhập danh mục chi tiết</span>
         <span><i>✓</i>Không lưu dữ liệu cá nhân</span>
       </div>
     </div>
-
-    <div class="hero-person">
-      <img src="AVATAR2.webp" alt="Võ Hoàng" width="800" height="800" fetchpriority="high">
-    </div>
   </div>
 </section>
 
-<div class="market-strip">
+<section class="market-wrap">
   <div class="wrap market-grid">
     <div class="market-card">
+      <div class="market-label">Market Score</div>
+      <div class="market-main" id="marketScore">—</div>
+      <div class="market-sub" id="marketScoreNote">Đang đọc thị trường...</div>
+    </div>
+
+    <div class="market-card">
       <div class="market-label">VN-Index hôm nay</div>
-      <div class="market-row">
-        <div class="market-value" id="vniValue">—</div>
-        <div class="pill neutral" id="vniChange">Đang tải</div>
-      </div>
-      <div class="market-sub" id="vniNote">Đang đọc dữ liệu thị trường...</div>
+      <div class="market-main" id="vniValue">—</div>
+      <div class="market-sub" id="vniChange">Đang tải...</div>
     </div>
 
     <div class="market-card">
       <div class="market-label">Độ rộng thị trường</div>
-      <div class="market-value" id="breadthValue">—</div>
+      <div class="market-main" id="breadthValue">—</div>
       <div class="market-sub" id="breadthNote">Số mã tăng / giảm</div>
     </div>
 
     <div class="market-card">
       <div class="market-label">Dẫn dắt</div>
-      <div class="market-value" style="font-size:18px" id="leadersValue">—</div>
-      <div class="market-sub">Nhóm/mã hỗ trợ vận động thị trường</div>
-    </div>
-
-    <div class="market-card">
-      <div class="market-label">Trạng thái thị trường</div>
-      <div class="market-row" style="margin-top:10px">
-        <span class="dot" id="stateDot"></span>
-        <strong id="stateValue">Đang tải...</strong>
-      </div>
-      <div class="market-sub" id="stateNote">Đang xác định trạng thái.</div>
+      <div class="market-main" style="font-size:18px" id="leadersValue">—</div>
+      <div class="market-sub" id="leadersNote">Theo dõi nhóm hỗ trợ thị trường</div>
     </div>
   </div>
-</div>
+</section>
 
 <main>
   <div class="wrap">
-    <div class="main-grid">
+    <div class="check-grid">
       <section class="panel">
-        <div class="panel-head">
+        <div class="panel-title">
           <div class="panel-icon">▦</div>
           <div>
-            <h2>Nhập 3 con số của tài khoản</h2>
-            <p>Điền thông tin hiện tại để hệ thống phân tích nhanh cho bạn.</p>
+            <h2>Nhập 3 con số</h2>
+            <p>Điền thông tin tài khoản để hệ thống phân tích nhanh cho bạn.</p>
           </div>
         </div>
 
@@ -457,20 +560,20 @@
           </div>
         </div>
 
-        <button class="check-btn" id="checkBtn">KIỂM TRA TÀI KHOẢN →</button>
-        <div class="note">ⓘ Công cụ hỗ trợ rà soát, không phải khuyến nghị mua/bán.</div>
+        <button class="check-btn" id="checkBtn">KIỂM TRA NGAY →</button>
+        <div class="disclaimer">ⓘ Công cụ hỗ trợ rà soát, không phải khuyến nghị mua/bán.</div>
       </section>
 
       <section class="panel">
-        <div class="panel-head" style="margin-bottom:10px">
+        <div class="panel-title" style="margin-bottom:10px">
           <div class="panel-icon">▥</div>
-          <div style="flex:1">
-            <h2>Kết quả tài khoản</h2>
+          <div>
+            <h2>Kết quả</h2>
             <p id="updatedAt">Nhập 3 thông tin để kiểm tra.</p>
           </div>
         </div>
 
-        <div class="result-layout">
+        <div class="result-body">
           <div class="score-ring" id="scoreRing" style="--score:0">
             <div class="score-inner">
               <div class="score-num" id="scoreNum">—</div>
@@ -480,85 +583,33 @@
 
           <div>
             <div class="result-status" id="resultStatus">CHƯA KIỂM TRA</div>
-            <div class="result-copy" id="resultCopy">Nhập 3 con số bên trái để hệ thống đánh giá nhanh mức độ an toàn của tài khoản.</div>
-            <div class="checks">
-              <div class="checkline" id="check1">• Mức sử dụng margin: —</div>
-              <div class="checkline" id="check2">• Hiệu quả hiện tại: —</div>
-              <div class="checkline" id="check3">• Mức độ tập trung danh mục: —</div>
+            <div class="result-copy" id="resultCopy">
+              Nhập 3 con số bên trái để hệ thống đánh giá nhanh tình trạng tài khoản.
+            </div>
+            <div class="result-list">
+              <div class="result-line" id="check1">• Margin: —</div>
+              <div class="result-line" id="check2">• Hiệu quả hiện tại: —</div>
+              <div class="result-line" id="check3">• Mức độ tập trung danh mục: —</div>
             </div>
           </div>
         </div>
       </section>
     </div>
 
-    <section class="section">
-      <h2 class="section-title"><i>◎</i> Việc nên làm ngay</h2>
-      <div class="section-sub">Những hành động ưu tiên dựa trên trạng thái tài khoản hiện tại.</div>
-      <div class="action-grid">
-        <div class="mini-card">
-          <div class="mini-icon">Ⅱ</div>
-          <div><b id="action1Title">Chưa tăng thêm tỷ trọng</b><p id="action1Text">Ưu tiên quan sát, hạn chế mua mới trong giai đoạn này.</p></div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-icon">⌕</div>
-          <div><b>Kiểm tra 2 mã yếu nhất</b><p>Rà soát vị trí yếu hơn thị trường và chuẩn bị plan xử lý.</p></div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-icon">◇</div>
-          <div><b id="action3Title">Đặt ngưỡng rủi ro</b><p id="action3Text">Xác định trước mức giảm khiến bạn phải hạ tỷ trọng.</p></div>
-        </div>
+    <section class="deep-strip">
+      <div class="target">◎</div>
+      <div>
+        <h3>30 giây chỉ để biết mình nên nhìn vào đâu trước.</h3>
+        <p>
+          Muốn tách rõ hơn phần do thị trường, phần do chọn mã, ngành, tỷ trọng và hành vi,
+          dùng “Sau phiên của tôi”.
+        </p>
       </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title"><i>▥</i> Nếu thị trường thay đổi thì sao?</h2>
-      <div class="section-sub">Một số kịch bản phổ biến và tác động dự kiến đến tài khoản.</div>
-      <div class="scenario-grid">
-        <div class="mini-card bad">
-          <div class="mini-icon">↘</div>
-          <div><b>VN-Index giảm thêm 2%</b><p id="scenarioDown">Tài khoản có thể chịu áp lực cao hơn. Cần chú ý tỷ trọng và margin.</p></div>
-        </div>
-        <div class="mini-card mid">
-          <div class="mini-icon">↔</div>
-          <div><b>Giảm tỷ trọng / margin</b><p id="scenarioCut">Giảm sử dụng vốn giúp tài khoản ổn định hơn trong giai đoạn biến động.</p></div>
-        </div>
-        <div class="mini-card good">
-          <div class="mini-icon">↗</div>
-          <div><b>Thị trường cải thiện độ rộng</b><p>Tài khoản có thể phục hồi tốt hơn nếu các mã đang giữ đồng thuận.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title"><i>◉</i> Đi tiếp theo đúng nhu cầu</h2>
-      <div class="tool-grid">
-        <a class="tool-card" href="sau-phien-cua-toi.html"><span class="ico">▤</span><span><b>Sau phiên của tôi</b><span>Phân tích danh mục sau phiên</span></span></a>
-        <a class="tool-card" href="investor-calculator.html"><span class="ico">◔</span><span><b>Kiểm tra sức chịu margin</b><span>Đánh giá an toàn sử dụng vốn</span></span></a>
-        <a class="tool-card" href="investor-calculator.html"><span class="ico">◇</span><span><b>Rủi ro danh mục</b><span>Kiểm tra mức độ tập trung</span></span></a>
-        <a class="tool-card" href="thi-truong-hom-nay.html"><span class="ico">▥</span><span><b>Xem thị trường realtime</b><span>Cập nhật biến động mới nhất</span></span></a>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="history-shell">
-        <div class="history-top">
-          <h3>◷ Lịch sử kiểm tra gần đây</h3>
-          <button id="clearHistoryBtn">Xóa lịch sử</button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Thời gian</th>
-              <th>Hiệu quả</th>
-              <th>Margin</th>
-              <th>Số mã</th>
-              <th>Kết quả</th>
-            </tr>
-          </thead>
-          <tbody id="historyBody">
-            <tr><td colspan="5" style="color:#758391">Chưa có lần kiểm tra nào trên thiết bị này.</td></tr>
-          </tbody>
-        </table>
+      <div class="tool-actions">
+        <a class="tool-btn" href="sau-phien-cua-toi.html">▥ Mở sau phiên của tôi</a>
+        <a class="tool-btn" href="investor-calculator.html">◇ Kiểm tra sức chịu margin</a>
+        <a class="tool-btn" href="investor-calculator.html">◔ Rủi ro danh mục</a>
+        <a class="tool-btn primary" href="lien-he.html">◉ Trao đổi cùng vấn đề này</a>
       </div>
     </section>
   </div>
@@ -569,7 +620,10 @@
     <div class="foot">
       <a class="brand" href="index.html">
         <img src="LOGO.webp" alt="Võ Hoàng">
-        <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
+        <span>
+          <strong>VÕ HOÀNG</strong>
+          <small>ĐẦU TƯ CHUẨN HỆ THỐNG</small>
+        </span>
       </a>
       <div class="foot-links">
         <a href="thi-truong-hom-nay.html">Thị trường</a>
@@ -589,16 +643,15 @@
 <script>
 (() => {
   const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
-  const HISTORY_KEY = "vh_quick_account_history_v2";
-  let marketContext = { pct: 0, state: "TRUNG TÍNH" };
+  let marketPct = 0;
+  let marketState = "TRUNG TÍNH";
 
   const fmt2 = new Intl.NumberFormat("vi-VN",{minimumFractionDigits:2,maximumFractionDigits:2});
-  const fmt0 = new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0});
 
-  function num(v){
+  const num = v => {
     const n = Number(v);
     return Number.isFinite(n) ? n : null;
-  }
+  };
 
   function first(obj, keys){
     for(const k of keys){
@@ -613,185 +666,85 @@
       const r = await fetch(MARKET_URL,{cache:"no-store"});
       if(!r.ok) throw new Error("market");
       const data = await r.json();
-
       const indexes = Array.isArray(data?.indexes) ? data.indexes : [];
       const vni = indexes.find(x => String(x?.symbol||"").toUpperCase() === "VN-INDEX") || indexes[0] || {};
+
       const value = num(first(vni,["value","close","last","price","current"]));
       const pct = num(first(vni,["change_pct","change_percent","percent_change","pct_change"]));
-      const change = num(first(vni,["change","change_point","change_points","point_change","delta"]));
+      marketPct = pct || 0;
 
       document.getElementById("vniValue").textContent = value === null ? "—" : fmt2.format(value);
-
-      const chEl = document.getElementById("vniChange");
+      const ch = document.getElementById("vniChange");
       if(pct !== null){
-        chEl.textContent = `${pct > 0 ? "+" : ""}${fmt2.format(pct)}%`;
-        chEl.className = `pill ${pct > 0 ? "up" : pct < 0 ? "down" : "neutral"}`;
-      } else if(change !== null){
-        chEl.textContent = `${change > 0 ? "+" : ""}${fmt2.format(change)} điểm`;
-        chEl.className = `pill ${change > 0 ? "up" : change < 0 ? "down" : "neutral"}`;
-      } else {
-        chEl.textContent = "—";
-      }
-
-      marketContext.pct = pct || 0;
+        ch.textContent = `${pct>0?"+":""}${fmt2.format(pct)}%`;
+        ch.className = "market-sub " + (pct>0?"up":pct<0?"down":"");
+      }else ch.textContent = "—";
 
       const intel = data?.market_intelligence || {};
       const breadth = intel?.breadth || {};
       const adv = num(first(breadth,["adv","advance","up"]));
       const dec = num(first(breadth,["dec","decline","down"]));
-      const flat = num(first(breadth,["flat","unchanged"]));
 
       if(adv !== null || dec !== null){
         document.getElementById("breadthValue").innerHTML =
           `<span class="up">${adv ?? "—"} Tăng</span> <span style="color:#667786">|</span> <span class="down">${dec ?? "—"} Giảm</span>`;
-        document.getElementById("breadthNote").textContent =
-          flat !== null ? `${flat} mã tham chiếu` : "Độ rộng toàn thị trường";
       }
 
       const leaders = first(intel,["leaders.label","leaders.text","leading.label","leading.text","leaders"]);
       document.getElementById("leadersValue").textContent =
         typeof leaders === "string" ? leaders : "Theo dõi nhóm dẫn dắt";
 
-      const stateLabel = String(first(intel,["state.label","state.name","state"]) || "TRUNG TÍNH");
-      marketContext.state = stateLabel;
-      const stateEl = document.getElementById("stateValue");
-      const dotEl = document.getElementById("stateDot");
-      const stateUpper = stateLabel.toUpperCase();
+      const state = String(first(intel,["state.label","state.name","state"]) || "TRUNG TÍNH");
+      marketState = state;
 
-      stateEl.textContent = stateLabel;
-      if(stateUpper.includes("TÍCH") || stateUpper.includes("TỐT") || stateUpper.includes("LOW")){
-        stateEl.className = "up";
-        dotEl.style.background = "var(--green)";
-        document.getElementById("stateNote").textContent = "Bối cảnh hỗ trợ hơn cho việc nắm giữ.";
-      }else if(stateUpper.includes("RỦI") || stateUpper.includes("XẤU") || stateUpper.includes("HIGH")){
-        stateEl.className = "down";
-        dotEl.style.background = "var(--red)";
-        document.getElementById("stateNote").textContent = "Ưu tiên kiểm soát rủi ro và tỷ trọng.";
-      }else{
-        stateEl.className = "neutral";
-        dotEl.style.background = "var(--amber)";
-        document.getElementById("stateNote").textContent = "Cần quan sát thêm trước khi tăng rủi ro.";
+      let score = 70;
+      if(pct !== null){
+        score += Math.max(-15,Math.min(15,pct*10));
       }
-
-      document.getElementById("vniNote").textContent =
-        pct === null ? "Dữ liệu thị trường đã cập nhật." :
-        pct > .6 ? "Động lượng tích cực, nhưng vẫn cần nhìn độ rộng." :
-        pct < -.6 ? "Áp lực giảm đang tăng, ưu tiên quản trị rủi ro." :
-        "Biến động trong biên vừa phải.";
+      if(adv !== null && dec !== null && adv+dec>0){
+        score += ((adv-dec)/(adv+dec))*15;
+      }
+      score = Math.max(0,Math.min(100,Math.round(score)));
+      document.getElementById("marketScore").textContent = `${score}/100`;
+      document.getElementById("marketScoreNote").textContent =
+        score>=75 ? "Tâm lý thị trường tích cực" :
+        score>=55 ? "Thị trường trung tính" :
+        "Rủi ro thị trường đang cao";
     }catch(e){
-      document.getElementById("vniNote").textContent = "Chưa lấy được dữ liệu thị trường.";
-      document.getElementById("stateValue").textContent = "CHƯA CÓ DỮ LIỆU";
+      document.getElementById("marketScoreNote").textContent = "Chưa lấy được dữ liệu thị trường.";
+      document.getElementById("vniChange").textContent = "—";
     }
   }
 
-  function scoreAccount(pnl, margin, stocks){
+  function scoreAccount(pnl,margin,stocks){
     let score = 100;
 
-    if(pnl < 0) score -= Math.min(28, Math.abs(pnl) * 4);
+    if(pnl < 0) score -= Math.min(30,Math.abs(pnl)*4);
     if(pnl < -5) score -= 8;
 
-    if(margin > 20) score -= (margin - 20) * .35;
+    if(margin > 20) score -= (margin-20)*.35;
     if(margin > 50) score -= 10;
     if(margin > 70) score -= 12;
 
     if(stocks <= 0) score -= 8;
     if(stocks === 1) score -= 10;
-    if(stocks > 8) score -= Math.min(14,(stocks - 8)*2);
+    if(stocks > 8) score -= Math.min(14,(stocks-8)*2);
 
-    if(marketContext.pct < -1) score -= 8;
-    else if(marketContext.pct < -.4) score -= 4;
-    else if(marketContext.pct > .8) score += 3;
+    if(marketPct < -1) score -= 8;
+    else if(marketPct < -.4) score -= 4;
+    else if(marketPct > .8) score += 3;
 
-    const state = marketContext.state.toUpperCase();
+    const state = marketState.toUpperCase();
     if(state.includes("RỦI") || state.includes("XẤU") || state.includes("HIGH")) score -= 8;
     if(state.includes("TÍCH") || state.includes("TỐT") || state.includes("LOW")) score += 3;
 
     return Math.max(0,Math.min(100,Math.round(score)));
   }
 
-  function classification(score){
-    if(score >= 82) return {label:"ỔN ĐỊNH", color:"var(--green)", text:"Tài khoản đang ở trạng thái tương đối ổn. Tiếp tục giữ kỷ luật và theo dõi bối cảnh thị trường."};
-    if(score >= 65) return {label:"CẦN CHÚ Ý", color:"var(--amber)", text:"Tài khoản chưa ở trạng thái nguy hiểm, nhưng cần quản trị rủi ro chặt hơn trong giai đoạn hiện tại."};
-    return {label:"RỦI RO CAO", color:"var(--red)", text:"Rủi ro tài khoản đang cao. Ưu tiên giảm áp lực vốn, rà soát các vị trí yếu và tránh gia tăng rủi ro."};
-  }
-
-  function updateResult(pnl, margin, stocks){
-    const score = scoreAccount(pnl,margin,stocks);
-    const cls = classification(score);
-
-    const ring = document.getElementById("scoreRing");
-    ring.style.setProperty("--score",score);
-    document.getElementById("scoreNum").textContent = score;
-
-    const status = document.getElementById("resultStatus");
-    status.textContent = cls.label;
-    status.style.color = cls.color;
-    status.style.borderColor = `color-mix(in srgb, ${cls.color} 40%, transparent)`;
-
-    document.getElementById("resultCopy").textContent = cls.text;
-    document.getElementById("updatedAt").textContent = "Cập nhật: " + new Date().toLocaleString("vi-VN");
-
-    document.getElementById("check1").textContent =
-      margin <= 20 ? "✓ Margin đang ở mức thấp." :
-      margin <= 50 ? "• Margin ở mức vừa, cần theo dõi." :
-      "⚠ Margin đang cao, cần kiểm soát chặt.";
-
-    document.getElementById("check2").textContent =
-      pnl >= 0 ? "✓ Tài khoản đang có lãi." :
-      pnl > -3 ? "• Mức lỗ hiện tại còn trong vùng cần theo dõi." :
-      "⚠ Mức lỗ đang mở rộng, cần rà soát vị trí yếu.";
-
-    document.getElementById("check3").textContent =
-      stocks <= 1 ? "⚠ Danh mục đang tập trung cao." :
-      stocks <= 8 ? "✓ Số lượng mã đang ở mức vừa phải." :
-      "• Danh mục khá dàn trải, nên rà soát mức độ hiệu quả.";
-
-    if(score < 65){
-      document.getElementById("action1Title").textContent = "Ưu tiên hạ rủi ro";
-      document.getElementById("action1Text").textContent = "Không tăng tỷ trọng; rà soát margin và các mã yếu trước.";
-    }else{
-      document.getElementById("action1Title").textContent = "Chưa tăng thêm tỷ trọng";
-      document.getElementById("action1Text").textContent = "Quan sát phản ứng thị trường trước khi mở thêm vị thế.";
-    }
-
-    const extraLoss = Math.max(1, Math.round((100-score)/18));
-    document.getElementById("scenarioDown").textContent =
-      `Nếu thị trường giảm thêm 2%, mức rủi ro có thể tăng đáng kể. Ưu tiên giữ mức lỗ phát sinh thêm quanh ${extraLoss}% hoặc thấp hơn.`;
-
-    document.getElementById("scenarioCut").textContent =
-      margin > 20
-        ? `Nếu giảm margin từ ${fmt0.format(margin)}% xuống khoảng ${fmt0.format(Math.max(0,margin-20))}%, trạng thái an toàn sẽ cải thiện rõ.`
-        : "Margin hiện không cao; ưu tiên chất lượng danh mục hơn là giảm thêm vốn.";
-
-    saveHistory({pnl,margin,stocks,score,label:cls.label,time:Date.now()});
-    renderHistory();
-  }
-
-  function saveHistory(item){
-    try{
-      const old = JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]");
-      old.unshift(item);
-      localStorage.setItem(HISTORY_KEY,JSON.stringify(old.slice(0,12)));
-    }catch(_){}
-  }
-
-  function renderHistory(){
-    const body = document.getElementById("historyBody");
-    let rows = [];
-    try{ rows = JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]"); }catch(_){}
-    if(!rows.length){
-      body.innerHTML = `<tr><td colspan="5" style="color:#758391">Chưa có lần kiểm tra nào trên thiết bị này.</td></tr>`;
-      return;
-    }
-    body.innerHTML = rows.map(x => `
-      <tr>
-        <td>${new Date(x.time).toLocaleString("vi-VN")}</td>
-        <td class="${x.pnl >= 0 ? "up" : "down"}">${x.pnl > 0 ? "+" : ""}${fmt2.format(x.pnl)}%</td>
-        <td>${fmt0.format(x.margin)}%</td>
-        <td>${fmt0.format(x.stocks)}</td>
-        <td><span class="status-chip">${x.score} · ${x.label}</span></td>
-      </tr>
-    `).join("");
+  function classify(score){
+    if(score>=82) return {label:"ỔN ĐỊNH",color:"var(--green)",copy:"Tài khoản đang ở trạng thái tương đối ổn. Tiếp tục giữ kỷ luật và theo dõi bối cảnh thị trường."};
+    if(score>=65) return {label:"CẦN CHÚ Ý",color:"var(--amber)",copy:"Tài khoản chưa ở trạng thái nguy hiểm, nhưng cần quản trị rủi ro chặt hơn trong giai đoạn hiện tại."};
+    return {label:"RỦI RO CAO",color:"var(--red)",copy:"Rủi ro tài khoản đang cao. Ưu tiên giảm áp lực vốn và rà soát các vị trí yếu."};
   }
 
   document.getElementById("checkBtn").addEventListener("click",()=>{
@@ -799,23 +752,40 @@
     const margin = num(document.getElementById("marginInput").value);
     const stocks = num(document.getElementById("stocksInput").value);
 
-    if(pnl === null || margin === null || stocks === null){
+    if(pnl===null || margin===null || stocks===null){
       alert("Bạn nhập đủ 3 con số trước khi kiểm tra nhé.");
       return;
     }
-    if(margin < 0 || margin > 100 || stocks < 0){
-      alert("Vui lòng kiểm tra lại Margin và số mã đang giữ.");
-      return;
-    }
-    updateResult(pnl,margin,stocks);
+
+    const score = scoreAccount(pnl,margin,stocks);
+    const cls = classify(score);
+
+    document.getElementById("scoreRing").style.setProperty("--score",score);
+    document.getElementById("scoreNum").textContent = score;
+
+    const st = document.getElementById("resultStatus");
+    st.textContent = cls.label;
+    st.style.color = cls.color;
+
+    document.getElementById("resultCopy").textContent = cls.copy;
+    document.getElementById("updatedAt").textContent = "Cập nhật: " + new Date().toLocaleString("vi-VN");
+
+    document.getElementById("check1").textContent =
+      margin<=20 ? "✓ Margin đang ở mức thấp." :
+      margin<=50 ? "• Margin ở mức vừa, cần theo dõi." :
+      "⚠ Margin đang cao, cần kiểm soát chặt.";
+
+    document.getElementById("check2").textContent =
+      pnl>=0 ? "✓ Tài khoản đang có lãi." :
+      pnl>-3 ? "• Mức lỗ hiện tại còn trong vùng cần theo dõi." :
+      "⚠ Mức lỗ đang mở rộng, cần rà soát vị trí yếu.";
+
+    document.getElementById("check3").textContent =
+      stocks<=1 ? "⚠ Danh mục đang tập trung cao." :
+      stocks<=8 ? "✓ Số lượng mã đang ở mức vừa phải." :
+      "• Danh mục khá dàn trải, nên rà soát lại.";
   });
 
-  document.getElementById("clearHistoryBtn").addEventListener("click",()=>{
-    localStorage.removeItem(HISTORY_KEY);
-    renderHistory();
-  });
-
-  renderHistory();
   loadMarket();
 })();
 </script>
