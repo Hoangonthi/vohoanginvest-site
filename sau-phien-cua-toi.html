@@ -415,6 +415,99 @@
       .panel{padding:16px}.watch-row{padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
       .realtime{min-height:90px}
     }
+
+    .mobile-menu-btn{
+  display:none;
+}
+
+.mobile-menu{
+  display:none;
+}
+
+@media(max-width:680px){
+
+  .nav{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:10px;
+  }
+
+  .brand{
+    justify-self:start;
+  }
+
+  .mobile-menu-btn{
+    display:grid;
+    place-items:center;
+    justify-self:center;
+
+    width:40px;
+    height:40px;
+
+    border:0;
+    background:transparent;
+
+    color:var(--gold);
+    font-size:24px;
+    cursor:pointer;
+  }
+
+  .navlinks{
+    display:none;
+  }
+
+  .nav-cta{
+    justify-self:end;
+    margin-left:0;
+  }
+
+  .mobile-menu{
+    position:fixed;
+    top:64px;
+    left:12px;
+    right:12px;
+
+    z-index:59;
+
+    padding:10px;
+
+    border-radius:12px;
+
+    background:#081725;
+
+    border:
+      1px solid
+      rgba(242,207,124,.20);
+
+    box-shadow:
+      0 18px 40px
+      rgba(0,0,0,.35);
+  }
+
+  .mobile-menu.open{
+    display:grid;
+  }
+
+  .mobile-menu a{
+    padding:12px 14px;
+
+    text-decoration:none;
+
+    color:#e7edf3;
+
+    font-size:13px;
+
+    border-radius:8px;
+  }
+
+  .mobile-menu a.active{
+    color:var(--gold);
+
+    background:
+      rgba(242,207,124,.07);
+  }
+}
   </style>
 </head>
 
@@ -439,6 +532,17 @@
   </div>
 </header>
 
+  <nav class="mobile-menu" id="mobileMenu">
+  <a href="thi-truong-hom-nay.html">Thị trường</a>
+  <a class="active" href="sau-phien-cua-toi.html">Sau phiên</a>
+  <a href="watchlist.html">Watchlist</a>
+  <a href="index.html">Trang chủ</a>
+  <a href="#">Kiến thức</a>
+  <a href="investor-calculator.html">Công cụ</a>
+  <a href="index.html#ve-toi">Về tôi</a>
+  <a href="lien-he.html">Liên hệ</a>
+  </nav>
+  
 <section class="hero">
   <picture class="hero-art" aria-hidden="true">
     <source media="(max-width:680px)" srcset="hero-sau-phien-mobile.webp">
@@ -879,5 +983,51 @@
   loadMarket();
 })();
 </script>
+
+  <script>
+const mobileMenuBtn =
+  document.getElementById("mobileMenuBtn");
+
+const mobileMenu =
+  document.getElementById("mobileMenu");
+
+mobileMenuBtn.addEventListener(
+  "click",
+  () => {
+
+    const opened =
+      mobileMenu.classList.toggle("open");
+
+    mobileMenuBtn.setAttribute(
+      "aria-expanded",
+      opened
+    );
+
+    mobileMenuBtn.textContent =
+      opened ? "×" : "☰";
+  }
+);
+
+mobileMenu
+  .querySelectorAll("a")
+  .forEach(link => {
+
+    link.addEventListener(
+      "click",
+      () => {
+
+        mobileMenu.classList.remove("open");
+
+        mobileMenuBtn.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+
+        mobileMenuBtn.textContent = "☰";
+      }
+    );
+  });
+</script>
+  
 </body>
 </html>
