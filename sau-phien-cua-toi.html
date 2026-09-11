@@ -35,6 +35,7 @@
     html{scroll-behavior:smooth}
     body{
       margin:0;
+      overflow-x:hidden;
       color:var(--text);
       font-family:"Be Vietnam Pro",system-ui,sans-serif;
       background:
@@ -178,12 +179,23 @@
     }
 
     /* MARKET STRIP */
-    .market-area{position:relative;z-index:5;margin-top:-8px}
-      .market-grid{
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:10px;
-    width:100%;
+    .market-area{
+      position:relative;
+      z-index:5;
+      margin-top:-8px;
+    }
+
+    .market-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .market-area .wrap{
+      width:min(var(--max),calc(100% - 40px));
+      max-width:var(--max);
+      margin-left:auto;
+      margin-right:auto;
     }
     .market-card,.panel,.mini-panel{
       border:1px solid rgba(255,255,255,.11);
@@ -191,8 +203,23 @@
       box-shadow:0 14px 30px rgba(0,0,0,.15);
     }
     .market-card{
-      border-radius:10px;padding:14px 16px;min-height:100px;
-      display:flex;justify-content:space-between;gap:10px;align-items:center;
+      min-width:0;
+      width:100%;
+      max-width:100%;
+      overflow:hidden;
+
+      border-radius:10px;
+      padding:14px 16px;
+      min-height:100px;
+
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+
+    .market-card > div:first-child{
+      min-width:0;
     }
     .market-label{
       color:#9aa8b5;font-size:10px;text-transform:uppercase;
@@ -214,18 +241,6 @@
     .breadth-bars i:nth-child(4){height:29px;background:var(--green)}
     .breadth-bars i:nth-child(5){height:20px;background:var(--green)}
     .breadth-bars i:nth-child(6){height:14px;background:var(--green)}
-    .realtime{
-      border-radius:10px;padding:14px 10px;text-align:center;min-height:100px;
-      display:flex;flex-direction:column;justify-content:center;
-    }
-    .realtime .pill{
-      display:inline-flex;align-items:center;justify-content:center;gap:7px;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:8px;padding:7px 9px;font-size:10px;
-      background:rgba(255,255,255,.03)
-    }
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-    .time{margin-top:8px;font-size:9px;color:#82909d}
 
     /* MAIN */
     main{padding:12px 0 18px}
@@ -368,7 +383,9 @@
       .hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}
       .hero h1{margin-left:auto;margin-right:auto;font-size:46px}.hero p{margin:auto}
       .hero-quote{display:none}
-      .market-grid{grid-template-columns:repeat(2,1fr)}
+      .market-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
       .row-2{grid-template-columns:1fr}
       .form-grid{grid-template-columns:repeat(2,1fr)}
       .bottom-grid{grid-template-columns:1fr}
@@ -376,7 +393,12 @@
     }
 
     @media(max-width:680px){
-      .wrap{width:min(100% - 24px,var(--max))}
+      .wrap{
+        width:calc(100% - 24px);
+        max-width:var(--max);
+        margin-left:auto;
+        margin-right:auto;
+      }
       .topbar{height:64px}.brand{min-width:auto}.brand img{width:40px;height:40px}.brand strong{font-size:15px}
       .search{display:none}.nav-cta{padding:9px 12px}
       .hero{min-height:auto}.hero-copy{padding:34px 0 24px}.hero h1{font-size:38px}.hero p{font-size:13px}
@@ -413,7 +435,6 @@
       }
       .form-grid,.bottom-fields,.watch-grid,.watch-row,.next-actions{grid-template-columns:1fr}
       .panel{padding:16px}.watch-row{padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
-      .realtime{min-height:90px}
     }
 
     .mobile-menu-btn{
