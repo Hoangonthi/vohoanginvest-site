@@ -35,6 +35,23 @@
     rel="stylesheet"
   >
 
+
+  <link
+    rel="preload"
+    as="image"
+    href="AVATAR2-mobile.webp"
+    media="(max-width:680px)"
+    fetchpriority="high"
+  >
+
+  <link
+    rel="preload"
+    as="image"
+    href="AVATAR2.webp"
+    media="(min-width:681px)"
+    fetchpriority="high"
+  >
+
   <style>
 
     :root{
@@ -304,6 +321,28 @@
       align-items:flex-end;
       justify-content:flex-end;
       overflow:hidden;
+    }
+
+
+    .hero-visual picture{
+      display:block;
+      width:min(100%,430px);
+    }
+
+    .hero-visual picture img{
+      width:100%;
+      height:auto;
+    }
+
+    .portrait picture{
+      display:block;
+      width:100%;
+      height:100%;
+    }
+
+    .portrait picture img{
+      width:100%;
+      height:100%;
     }
 
     .hero-visual:before{
@@ -1449,7 +1488,7 @@
 
         <img
         class="brand-logo"
-        src="LOGO.png"
+        src="LOGO.webp"
         alt="VÕ HOÀNG"
         width="42"
         height="42"
@@ -1564,14 +1603,22 @@
 
         <div class="hero-visual">
 
-          <img
-          src="AVATAR2.png"
-          alt="Võ Hoàng"
-          width="800"
-          height="800"
-          loading="lazy"
-          decoding="async"
-          >
+          <picture>
+            <source
+              media="(max-width:680px)"
+              srcset="AVATAR2-mobile.webp"
+            >
+
+            <img
+              src="AVATAR2.webp"
+              alt="Võ Hoàng"
+              width="800"
+              height="800"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            >
+          </picture>
 
         </div>
 
@@ -1944,14 +1991,21 @@
 
         <div class="portrait">
 
-        <img
-         src="AVATAR2.png"
-         alt="Võ Hoàng"
-         width="800"
-         height="800"
-         loading="lazy"
-         decoding="async"
-        >
+          <picture>
+            <source
+              media="(max-width:680px)"
+              srcset="AVATAR2-mobile.webp"
+            >
+
+            <img
+              src="AVATAR2.webp"
+              alt="Võ Hoàng"
+              width="800"
+              height="800"
+              loading="lazy"
+              decoding="async"
+            >
+          </picture>
 
         </div>
 
@@ -2009,7 +2063,7 @@
 
           <img
           class="brand-logo"
-          src="LOGO.png"
+          src="LOGO.webp"
           alt="VÕ HOÀNG"
           >
 
@@ -2115,7 +2169,7 @@
   </footer>
 
   <script
-    src="assets/js/market-ticker.js?v=20260911-1"
+    src="assets/js/market-ticker.js?v=20260911-2"
     defer
   ></script>
 
