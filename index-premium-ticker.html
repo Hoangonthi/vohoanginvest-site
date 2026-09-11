@@ -194,55 +194,21 @@
 
     .hero{
       min-height:570px;
-      display:grid;
-      align-items:center;
       position:relative;
       overflow:hidden;
-
       background:
         linear-gradient(
           90deg,
-          rgba(
-            5,
-            15,
-            27,
-            .98
-          )
-          0%,
-          rgba(
-            5,
-            15,
-            27,
-            .86
-          )
-          42%,
-          rgba(
-            5,
-            15,
-            27,
-            .30
-          )
-          70%,
-          rgba(
-            5,
-            15,
-            27,
-            .76
-          )
-          100%
+          rgba(5,15,27,.98) 0%,
+          rgba(5,15,27,.90) 38%,
+          rgba(5,15,27,.72) 58%,
+          rgba(5,15,27,.88) 100%
         ),
-
         radial-gradient(
-          circle at 76% 24%,
-          rgba(
-            224,
-            187,
-            103,
-            .24
-          ),
-          transparent 22%
+          circle at 78% 24%,
+          rgba(224,187,103,.18),
+          transparent 26%
         ),
-
         linear-gradient(
           180deg,
           #1f3546 0%,
@@ -251,121 +217,123 @@
         );
     }
 
+    .hero-grid{
+      position:relative;
+      z-index:2;
+      min-height:570px;
+      display:grid;
+      grid-template-columns:minmax(0,620px) minmax(320px,1fr);
+      align-items:center;
+      gap:28px;
+    }
+
     .hero:before{
       content:"";
       position:absolute;
       inset:0;
-
-      opacity:.36;
-
+      opacity:.28;
       background:
         repeating-linear-gradient(
           90deg,
           transparent 0 8%,
-          rgba(
-            255,
-            255,
-            255,
-            .035
-          )
-          8.1%
-          8.6%,
-          transparent
-          8.7%
-          13%
+          rgba(255,255,255,.03) 8.1% 8.6%,
+          transparent 8.7% 13%
         );
-
       clip-path:
         polygon(
-          0 36%,
-          4% 35%,
-          8% 48%,
-          12% 30%,
-          16% 46%,
-          20% 25%,
-          24% 43%,
-          28% 18%,
-          33% 50%,
-          37% 33%,
-          42% 44%,
-          46% 28%,
-          50% 52%,
-          55% 42%,
-          60% 33%,
-          64% 58%,
-          69% 38%,
-          73% 49%,
-          78% 29%,
+          0 42%,
+          8% 40%,
+          14% 53%,
+          20% 34%,
+          27% 50%,
+          34% 29%,
+          42% 49%,
+          50% 31%,
+          58% 58%,
+          66% 40%,
+          74% 53%,
           82% 34%,
-          87% 17%,
-          92% 30%,
-          96% 8%,
-          100% 20%,
+          90% 18%,
+          100% 30%,
           100% 100%,
           0 100%
         );
-
-      background-color:
-        #73808b;
+      background-color:#73808b;
     }
 
     .hero:after{
       content:"";
       position:absolute;
-      left:48%;
-      right:3%;
-      top:22%;
-      height:230px;
-
+      left:54%;
+      right:4%;
+      top:18%;
+      height:250px;
       background:
         linear-gradient(
           145deg,
-
-          transparent
-          0 18%,
-
-          var(--gold)
-          18.5% 19%,
-
-          transparent
-          19.5% 31%,
-
-          var(--gold)
-          31.5% 32%,
-
-          transparent
-          32.5% 46%,
-
-          var(--gold)
-          46.5% 47%,
-
-          transparent
-          47.5% 64%,
-
-          var(--gold)
-          64.5% 65%,
-
-          transparent
-          65.5% 82%,
-
-          var(--gold)
-          82.5% 83%,
-
-          transparent 83.5%
+          transparent 0 16%,
+          rgba(224,187,103,.82) 16.5% 17.2%,
+          transparent 17.7% 31%,
+          rgba(224,187,103,.82) 31.5% 32.2%,
+          transparent 32.7% 47%,
+          rgba(224,187,103,.82) 47.5% 48.2%,
+          transparent 48.7% 65%,
+          rgba(224,187,103,.82) 65.5% 66.2%,
+          transparent 66.7% 82%,
+          rgba(224,187,103,.82) 82.5% 83.2%,
+          transparent 83.7%
         );
-
-      opacity:.82;
-
-      transform:
-        skewY(-10deg);
+      opacity:.66;
+      transform:skewY(-12deg);
+      pointer-events:none;
     }
 
     .hero-content{
       position:relative;
+      z-index:3;
+      padding:70px 0 50px;
+      max-width:620px;
+    }
+
+    .hero-visual{
+      position:relative;
+      z-index:3;
+      min-height:470px;
+      align-self:end;
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-end;
+      overflow:hidden;
+    }
+
+    .hero-visual:before{
+      content:"";
+      position:absolute;
+      width:360px;
+      height:360px;
+      right:12px;
+      bottom:52px;
+      border-radius:50%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(224,187,103,.18),
+          rgba(224,187,103,.05) 46%,
+          transparent 70%
+        );
+      filter:blur(2px);
+      pointer-events:none;
+    }
+
+    .hero-visual img{
+      position:relative;
       z-index:2;
-      padding:
-        70px 0 50px;
-      max-width:650px;
+      display:block;
+      width:min(100%,430px);
+      max-height:520px;
+      object-fit:contain;
+      object-position:center bottom;
+      filter:drop-shadow(0 24px 50px rgba(0,0,0,.36));
     }
 
     .eyebrow{
@@ -1182,6 +1150,29 @@
         font-size:48px;
       }
 
+      .hero-grid{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+
+      .hero-visual{
+        min-height:auto;
+        justify-content:center;
+        padding-bottom:30px;
+      }
+
+      .hero-visual img{
+        width:min(100%,360px);
+        max-height:none;
+      }
+
+      .hero:after{
+        left:50%;
+        top:24%;
+        height:180px;
+        opacity:.46;
+      }
+
       .tool-grid{
         grid-template-columns:
           repeat(
@@ -1232,7 +1223,23 @@
 
       .hero-content{
         padding:
-          54px 0 38px;
+          54px 0 18px;
+      }
+
+      .hero-visual{
+        padding-bottom:24px;
+      }
+
+      .hero-visual:before{
+        width:280px;
+        height:280px;
+        right:50%;
+        transform:translateX(50%);
+        bottom:20px;
+      }
+
+      .hero:after{
+        display:none;
       }
 
       .hero h1{
@@ -1396,7 +1403,7 @@
 
     <section class="hero">
 
-      <div class="container">
+      <div class="container hero-grid">
 
         <div class="hero-content">
 
@@ -1437,6 +1444,15 @@
             </a>
 
           </div>
+
+        </div>
+
+        <div class="hero-visual">
+
+          <img
+            src="AVATAR2.png"
+            alt="Võ Hoàng"
+          >
 
         </div>
 
