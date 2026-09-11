@@ -128,7 +128,7 @@
     renderNews(currentItems);
 
     $("btnReview").hidden = currentBrief.status !== "DRAFT";
-    $("btnReopen").hidden = currentBrief.status !== "REVIEWED";
+    $("btnReopen").hidden = !["REVIEWED", "PUBLISHED"].includes(currentBrief.status);
     $("btnPublish").hidden = currentBrief.status !== "REVIEWED";
     $("btnSave").disabled = !["DRAFT","REVIEWED"].includes(currentBrief.status);
     setMessage("");
