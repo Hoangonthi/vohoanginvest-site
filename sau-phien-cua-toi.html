@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="sau-phien-hero.webp" media="(min-width:681px)" fetchpriority="high">
-  <link rel="preload" as="image" href="sau-phien-hero-mobile.webp" media="(max-width:680px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sau-phien-desktop.webp" media="(min-width:681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sau-phien-mobile.webp" media="(max-width:680px)" fetchpriority="high">
 
   <style>
     :root{
@@ -380,7 +380,7 @@
       .topbar{height:64px}.brand{min-width:auto}.brand img{width:40px;height:40px}.brand strong{font-size:15px}
       .search{display:none}.nav-cta{padding:9px 12px}
       .hero{min-height:auto}.hero-copy{padding:34px 0 24px}.hero h1{font-size:38px}.hero p{font-size:13px}
-      .hero-art img{content:url("sau-phien-hero-mobile.webp");object-position:center}
+      .hero-art img{content:url("hero-sau-phien-mobile.webp");object-position:center}
       .market-area{margin-top:0}
 
             .market-grid{
@@ -417,97 +417,116 @@
     }
 
     .mobile-menu-btn{
-  display:none;
-}
+      display:none;
+    }
 
-.mobile-menu{
-  display:none;
-}
+    .mobile-menu{
+      display:none;
+    }
 
-@media(max-width:680px){
+    @media(max-width:680px){
 
-  .nav{
-    display:grid;
-    grid-template-columns:1fr auto 1fr;
-    align-items:center;
-    gap:10px;
-  }
+      .nav{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);
+        align-items:center;
+        gap:8px;
+        width:100%;
+      }
 
-  .brand{
-    justify-self:start;
-  }
+      .brand{
+        justify-self:start;
+        min-width:0;
+      }
 
-  .mobile-menu-btn{
-    display:grid;
-    place-items:center;
-    justify-self:center;
+      .brand span{
+        min-width:0;
+      }
 
-    width:40px;
-    height:40px;
+      .mobile-menu-btn{
+        display:grid;
+        place-items:center;
+        justify-self:center;
 
-    border:0;
-    background:transparent;
+        width:40px;
+        height:40px;
 
-    color:var(--gold);
-    font-size:24px;
-    cursor:pointer;
-  }
+        padding:0;
+        border:0;
+        border-radius:9px;
 
-  .navlinks{
-    display:none;
-  }
+        background:transparent;
+        color:var(--gold);
 
-  .nav-cta{
-    justify-self:end;
-    margin-left:0;
-  }
+        font-size:25px;
+        line-height:1;
 
-  .mobile-menu{
-    position:fixed;
-    top:64px;
-    left:12px;
-    right:12px;
+        cursor:pointer;
+      }
 
-    z-index:59;
+      .mobile-menu-btn:active{
+        background:rgba(242,207,124,.07);
+      }
 
-    padding:10px;
+      .navlinks{
+        display:none;
+      }
 
-    border-radius:12px;
+      .nav-cta{
+        justify-self:end;
+        margin-left:0;
+        white-space:nowrap;
+      }
 
-    background:#081725;
+      .mobile-menu{
+        position:fixed;
 
-    border:
-      1px solid
-      rgba(242,207,124,.20);
+        top:70px;
+        left:12px;
+        right:12px;
 
-    box-shadow:
-      0 18px 40px
-      rgba(0,0,0,.35);
-  }
+        z-index:70;
 
-  .mobile-menu.open{
-    display:grid;
-  }
+        padding:8px;
 
-  .mobile-menu a{
-    padding:12px 14px;
+        border-radius:12px;
 
-    text-decoration:none;
+        background:rgba(8,23,37,.98);
 
-    color:#e7edf3;
+        border:1px solid rgba(242,207,124,.20);
 
-    font-size:13px;
+        box-shadow:
+          0 18px 40px
+          rgba(0,0,0,.38);
 
-    border-radius:8px;
-  }
+        backdrop-filter:blur(14px);
+      }
 
-  .mobile-menu a.active{
-    color:var(--gold);
+      .mobile-menu.open{
+        display:grid;
+      }
 
-    background:
-      rgba(242,207,124,.07);
-  }
-}
+      .mobile-menu a{
+        display:flex;
+        align-items:center;
+
+        min-height:42px;
+        padding:10px 13px;
+
+        text-decoration:none;
+
+        color:#e7edf3;
+        font-size:13px;
+
+        border-radius:8px;
+      }
+
+      .mobile-menu a:hover,
+      .mobile-menu a.active{
+        color:var(--gold);
+        background:rgba(242,207,124,.07);
+      }
+    }
   </style>
 </head>
 
@@ -518,6 +537,18 @@
       <img src="LOGO.webp" alt="Võ Hoàng">
       <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
     </a>
+
+    <button
+      class="mobile-menu-btn"
+      id="mobileMenuBtn"
+      type="button"
+      aria-label="Mở menu"
+      aria-expanded="false"
+      aria-controls="mobileMenu"
+    >
+      ☰
+    </button>
+
     <nav class="navlinks">
       <a href="thi-truong-hom-nay.html">Thị trường</a>
       <a class="active" href="sau-phien-cua-toi.html">Sau phiên</a>
@@ -985,48 +1016,51 @@
 </script>
 
   <script>
-const mobileMenuBtn =
-  document.getElementById("mobileMenuBtn");
+(() => {
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
 
-const mobileMenu =
-  document.getElementById("mobileMenu");
+  if (!mobileMenuBtn || !mobileMenu) return;
 
-mobileMenuBtn.addEventListener(
-  "click",
-  () => {
+  const closeMobileMenu = () => {
+    mobileMenu.classList.remove("open");
+    mobileMenuBtn.setAttribute("aria-expanded", "false");
+    mobileMenuBtn.textContent = "☰";
+  };
 
-    const opened =
-      mobileMenu.classList.toggle("open");
+  mobileMenuBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    const opened = mobileMenu.classList.toggle("open");
 
     mobileMenuBtn.setAttribute(
       "aria-expanded",
-      opened
+      opened ? "true" : "false"
     );
 
-    mobileMenuBtn.textContent =
-      opened ? "×" : "☰";
-  }
-);
-
-mobileMenu
-  .querySelectorAll("a")
-  .forEach(link => {
-
-    link.addEventListener(
-      "click",
-      () => {
-
-        mobileMenu.classList.remove("open");
-
-        mobileMenuBtn.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
-        mobileMenuBtn.textContent = "☰";
-      }
-    );
+    mobileMenuBtn.textContent = opened ? "×" : "☰";
   });
+
+  mobileMenu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", closeMobileMenu);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (
+      mobileMenu.classList.contains("open") &&
+      !mobileMenu.contains(event.target) &&
+      !mobileMenuBtn.contains(event.target)
+    ) {
+      closeMobileMenu();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMobileMenu();
+    }
+  });
+})();
 </script>
   
 </body>
