@@ -117,12 +117,12 @@
         display:flex;
         align-items:center;
         width:max-content;
-        min-width:100%;
         white-space:nowrap;
         will-change:transform;
+        transform:translate3d(0,0,0);
         animation:
           vhTickerMove
-          42s linear infinite;
+          28s linear infinite;
       }
 
       #${ROOT_ID}:hover
@@ -135,6 +135,7 @@
         display:flex;
         align-items:center;
         flex:none;
+        min-width:max-content;
       }
 
       #${ROOT_ID}
@@ -210,12 +211,12 @@
       }
 
       @keyframes vhTickerMove{
-        from{
-          transform:translateX(0);
+        0%{
+          transform:translate3d(0,0,0);
         }
 
-        to{
-          transform:translateX(-50%);
+        100%{
+          transform:translate3d(-50%,0,0);
         }
       }
 
@@ -226,7 +227,7 @@
 
         #${ROOT_ID}
         .vh-ticker-track{
-          animation-duration:34s;
+          animation-duration:22s;
         }
 
         #${ROOT_ID}
