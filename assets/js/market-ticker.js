@@ -122,7 +122,7 @@
         transform:translate3d(0,0,0);
         animation:
           vhTickerMove
-          28s linear infinite;
+          22s linear infinite;
       }
 
       #${ROOT_ID}:hover
@@ -243,15 +243,6 @@
         }
       }
 
-      @media(
-        prefers-reduced-motion:reduce
-      ){
-        #${ROOT_ID}
-        .vh-ticker-track{
-          animation:none;
-          overflow-x:auto;
-        }
-      }
     `;
 
     document.head.appendChild(
