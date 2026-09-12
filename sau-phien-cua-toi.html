@@ -548,53 +548,921 @@
         background:rgba(242,207,124,.07);
       }
     }
+  
+/* =========================================================
+   HEADER + FOOTER CHUẨN TRANG CHỦ
+   Chỉ override phần trên/dưới, không đụng phần giữa trang
+========================================================= */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+
+  height:auto;
+  display:block;
+
+  backdrop-filter:blur(10px);
+  background:rgba(3,11,20,.88);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.topbar-inner{
+  width:min(calc(100% - 24px),1340px);
+  margin:0 auto;
+
+  min-height:78px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:16px;
+}
+
+.topbar .brand,
+.footer .brand{
+  min-width:0;
+
+  display:flex;
+  align-items:center;
+
+  gap:12px;
+
+  text-decoration:none;
+}
+
+.topbar .brand img,
+.footer .brand img{
+  width:46px;
+  height:46px;
+
+  object-fit:contain;
+
+  flex:0 0 auto;
+}
+
+.brand-text{
+  min-width:0;
+
+  line-height:normal;
+
+  overflow:visible;
+
+  padding:1px 0 2px;
+}
+
+.brand-text strong{
+  display:block;
+
+  font-size:17px;
+  line-height:1.35;
+
+  font-weight:800;
+
+  color:#f3cf74;
+
+  letter-spacing:.035em;
+
+  white-space:nowrap;
+}
+
+.brand-text span{
+  display:block;
+
+  margin-top:1px;
+
+  font-size:9.5px;
+  line-height:1.45;
+
+  color:#e8cf8f;
+
+  letter-spacing:.08em;
+
+  text-transform:uppercase;
+
+  white-space:nowrap;
+}
+
+.topbar .nav{
+  width:auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:26px;
+
+  flex:1 1 auto;
+
+  min-width:0;
+}
+
+.topbar .nav a{
+  position:relative;
+
+  padding:28px 0 24px;
+
+  color:rgba(255,255,255,.82);
+
+  font-size:14px;
+
+  white-space:nowrap;
+
+  text-decoration:none;
+
+  transition:.2s ease;
+}
+
+.topbar .nav a:hover{
+  color:#fff;
+}
+
+.topbar .nav a.active{
+  color:#fff;
+
+  font-weight:700;
+}
+
+.topbar .nav a.active::after{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:-1px;
+
+  margin:auto;
+
+  width:100%;
+  height:3px;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #e0bb63,
+      #f3cf74
+    );
+}
+
+.topbar-actions{
+  display:flex;
+  align-items:center;
+
+  gap:12px;
+
+  flex:0 0 auto;
+}
+
+.search-btn,
+.menu-btn{
+  width:42px;
+  height:42px;
+
+  padding:0;
+
+  border-radius:12px;
+
+  border:1px solid rgba(255,255,255,.10);
+
+  background:rgba(255,255,255,.02);
+
+  color:#fff;
+
+  display:grid;
+  place-items:center;
+
+  cursor:pointer;
+}
+
+.menu-btn{
+  display:none;
+}
+
+.login-btn{
+  height:42px;
+
+  padding:0 18px;
+
+  border-radius:12px;
+
+  border:1px solid rgba(224,187,99,.44);
+
+  background:
+    linear-gradient(
+      180deg,
+      #f0cf79,
+      #d8b254
+    );
+
+  color:#1f1604;
+
+  font-size:14px;
+  font-weight:800;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  white-space:nowrap;
+
+  text-decoration:none;
+
+  box-shadow:
+    0 10px 24px rgba(224,187,99,.16);
+}
+
+.mobile-drawer{
+  display:none;
+
+  border-top:
+    1px solid rgba(255,255,255,.06);
+
+  background:#071423;
+}
+
+.mobile-drawer.open{
+  display:block;
+}
+
+.mobile-drawer .wrap{
+  width:min(calc(100% - 32px),1240px);
+
+  margin:0 auto;
+
+  padding:14px 0 18px;
+
+  display:grid;
+
+  gap:12px;
+}
+
+.mobile-links{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:10px;
+}
+
+.mobile-links a{
+  padding:12px 14px;
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  border-radius:14px;
+
+  background:
+    rgba(255,255,255,.02);
+
+  color:#f6f8fc;
+
+  font-size:14px;
+  font-weight:600;
+
+  text-align:center;
+
+  text-decoration:none;
+}
+
+
+/* =========================================================
+   FOOTER CHUẨN TRANG CHỦ
+========================================================= */
+
+.footer{
+  margin-top:30px;
+
+  padding:0;
+
+  border-top:
+    1px solid rgba(255,255,255,.07);
+
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(224,187,99,.045),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3,12,22,.88),
+      rgba(2,8,15,.98)
+    );
+}
+
+.footer .wrap{
+  width:min(calc(100% - 32px),1240px);
+
+  margin:0 auto;
+}
+
+.footer .footer-main{
+  padding:34px 0 24px;
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(280px,1.25fr)
+    minmax(300px,1fr)
+    minmax(270px,1fr);
+
+  gap:28px 44px;
+
+  align-items:start;
+}
+
+.footer-brand-block{
+  min-width:0;
+}
+
+.footer-brand-link{
+  width:max-content;
+
+  max-width:100%;
+}
+
+.footer .footer-slogan{
+  margin:13px 0 0;
+
+  max-width:340px;
+
+  font-size:13px;
+  line-height:1.65;
+
+  color:rgba(231,237,246,.80);
+}
+
+.footer .footer-gold-line{
+  width:100%;
+  max-width:340px;
+
+  height:1px;
+
+  margin:11px 0 8px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(224,187,99,.88) 0%,
+      rgba(224,187,99,.34) 58%,
+      rgba(224,187,99,0) 100%
+    );
+}
+
+.footer .footer-risk{
+  margin:0;
+
+  max-width:340px;
+
+  font-size:10px;
+  line-height:1.55;
+
+  color:rgba(231,237,246,.44);
+}
+
+.footer .footer-col h4{
+  margin:2px 0 13px;
+
+  font-size:13px;
+  line-height:1.2;
+
+  font-weight:800;
+
+  letter-spacing:.08em;
+
+  text-transform:uppercase;
+
+  color:#f3cf74;
+}
+
+.footer .footer-links a{
+  color:rgba(255,255,255,.82);
+
+  text-decoration:none;
+
+  transition:color .2s ease;
+}
+
+.footer .footer-links a:hover{
+  color:#fff;
+}
+
+.footer .footer-nav-all .quick-links{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,max-content);
+
+  gap:9px 28px;
+
+  justify-content:start;
+}
+
+.footer .footer-nav-all .quick-links a{
+  width:auto;
+
+  padding:0;
+
+  border:0;
+
+  background:none;
+
+  font-size:13px;
+  line-height:1.45;
+}
+
+.footer .footer-socials{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:8px;
+}
+
+.footer .social{
+  min-width:0;
+
+  margin:0;
+
+  padding:9px 11px;
+
+  border-radius:12px;
+
+  border:
+    1px solid rgba(255,255,255,.10);
+
+  background:
+    rgba(255,255,255,.03);
+
+  color:#fff;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  gap:10px;
+
+  font-size:12px;
+  font-weight:700;
+
+  white-space:nowrap;
+
+  text-decoration:none;
+}
+
+.footer .social svg{
+  width:18px;
+  height:18px;
+
+  fill:currentColor;
+
+  flex:0 0 auto;
+}
+
+.footer .footer-bottom{
+  width:100%;
+
+  padding:13px 0 17px;
+
+  border-top:
+    1px solid rgba(224,187,99,.15);
+}
+
+.footer .footer-bottom-row{
+  width:100%;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  gap:10px 18px;
+
+  flex-wrap:wrap;
+
+  text-align:center;
+}
+
+.footer .footer-copyright{
+  flex:0 0 auto;
+
+  font-size:13px;
+  line-height:1.5;
+
+  color:rgba(231,237,246,.68);
+
+  white-space:nowrap;
+}
+
+.footer .footer-copyright strong{
+  color:rgba(255,255,255,.86);
+
+  font-weight:700;
+}
+
+.footer .footer-legal{
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  flex-wrap:wrap;
+
+  gap:6px 10px;
+
+  min-width:0;
+}
+
+.footer .footer-legal a{
+  color:rgba(231,237,246,.68);
+
+  font-size:13px;
+  line-height:1.45;
+
+  white-space:nowrap;
+
+  text-decoration:none;
+}
+
+.footer .footer-legal a:hover{
+  color:#f1cf78;
+}
+
+.footer .footer-legal span{
+  color:rgba(224,187,99,.66);
+
+  font-size:8px;
+}
+
+
+/* =========================================================
+   HEADER RESPONSIVE
+========================================================= */
+
+@media (max-width:860px){
+
+  .topbar{
+    height:auto;
+  }
+
+  .topbar-inner{
+    width:min(calc(100% - 20px),100%);
+
+    min-height:74px;
+  }
+
+  .topbar .nav,
+  .topbar-actions .search-btn{
+    display:none;
+  }
+
+  .menu-btn{
+    display:grid;
+  }
+
+  .topbar .brand img{
+    width:42px;
+    height:42px;
+  }
+
+  .topbar .brand-text strong{
+    font-size:14px;
+  }
+
+  .topbar .brand-text span{
+    font-size:10px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:680px){
+
+  .topbar{
+    height:auto;
+  }
+
+  .topbar .brand{
+    flex:1 1 auto;
+
+    min-width:0;
+  }
+
+  .topbar .brand-text{
+    overflow:hidden;
+  }
+
+  .topbar .brand-text strong,
+  .topbar .brand-text span{
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+  }
+
+  .topbar-inner{
+    gap:10px;
+  }
+
+  .topbar-actions{
+    gap:8px;
+  }
+
+  .login-btn{
+    height:40px;
+
+    padding:0 13px;
+
+    font-size:12px;
+  }
+
+  .mobile-drawer .wrap{
+    width:min(calc(100% - 20px),1240px);
+  }
+
+
+  .footer .wrap{
+    width:min(calc(100% - 20px),1240px);
+  }
+
+  .footer .brand img{
+    width:44px;
+    height:44px;
+  }
+
+  .footer .brand-text strong{
+    font-size:16px;
+    line-height:1.38;
+
+    letter-spacing:.035em;
+  }
+
+  .footer .brand-text span{
+    margin-top:1px;
+
+    font-size:9px;
+    line-height:1.45;
+
+    letter-spacing:.075em;
+  }
+
+  .footer .footer-main{
+    padding:26px 0 19px;
+
+    grid-template-columns:1fr;
+
+    gap:18px;
+
+    text-align:center;
+  }
+
+  .footer .footer-brand-link{
+    margin:0 auto;
+
+    justify-content:center;
+  }
+
+  .footer .footer-slogan{
+    max-width:320px;
+
+    margin-left:auto;
+    margin-right:auto;
+
+    text-align:center;
+  }
+
+  .footer .footer-gold-line{
+    width:170px;
+
+    margin:11px auto 8px;
+  }
+
+  .footer .footer-risk{
+    max-width:300px;
+
+    margin-left:auto;
+    margin-right:auto;
+
+    font-size:9px;
+    line-height:1.5;
+
+    text-align:center;
+  }
+
+  .footer .footer-col h4{
+    margin-bottom:9px;
+  }
+
+  .footer .footer-nav-all .quick-links{
+    width:100%;
+
+    display:grid;
+
+    grid-template-columns:
+      repeat(4,max-content);
+
+    justify-content:center;
+    align-items:center;
+
+    gap:8px 12px;
+
+    overflow:visible;
+
+    white-space:normal;
+  }
+
+  .footer .footer-nav-all .quick-links a{
+    width:auto;
+
+    margin:0;
+
+    font-size:11px;
+    line-height:1.35;
+
+    text-align:center;
+
+    white-space:nowrap;
+  }
+
+  .footer .footer-socials{
+    width:min(100%,360px);
+
+    margin:0 auto;
+
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+    gap:8px;
+  }
+
+  .footer .footer-bottom{
+    padding:12px 0 15px;
+  }
+
+  .footer .footer-bottom-row{
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    text-align:center;
+  }
+
+  .footer .footer-copyright{
+    width:100%;
+
+    font-size:10px;
+    line-height:1.45;
+
+    text-align:center;
+
+    white-space:normal;
+  }
+
+  .footer .footer-legal{
+    width:100%;
+
+    display:flex !important;
+
+    flex-direction:row !important;
+
+    flex-wrap:wrap !important;
+
+    align-items:center;
+    justify-content:center;
+
+    column-gap:7px;
+    row-gap:5px;
+  }
+
+  .footer .footer-legal a{
+    width:auto !important;
+
+    display:inline-block;
+
+    font-size:10px;
+    line-height:1.4;
+
+    white-space:nowrap;
+  }
+
+  .footer .footer-legal span{
+    display:inline-block;
+
+    font-size:7px;
+  }
+}
+
   </style>
 </head>
 
 <body>
 <header class="topbar">
-  <div class="wrap nav">
-    <a class="brand" href="index.html">
-      <img src="LOGO.webp" alt="Võ Hoàng">
-      <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
+  <div class="topbar-inner">
+
+    <a class="brand" href="./">
+      <img src="LOGO.webp" alt="Võ Hoàng logo">
+
+      <div class="brand-text">
+        <strong>VÕ HOÀNG</strong>
+        <span>Đầu tư chuẩn hệ thống</span>
+      </div>
     </a>
 
-    <button
-      class="mobile-menu-btn"
-      id="mobileMenuBtn"
-      type="button"
-      aria-label="Mở menu"
-      aria-expanded="false"
-      aria-controls="mobileMenu"
-    >
-      ☰
-    </button>
-
-    <nav class="navlinks">
+    <nav class="nav" aria-label="Điều hướng chính">
       <a href="thi-truong-hom-nay.html">Thị trường</a>
+      <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
       <a class="active" href="sau-phien-cua-toi.html">Sau phiên</a>
       <a href="watchlist.html">Watchlist</a>
-      <a href="index.html">Trang chủ</a>
-      <a href="#">Kiến thức</a>
+      <a href="./">Trang chủ</a>
+      <a href="kien-thuc.html">Kiến thức</a>
       <a href="investor-calculator.html">Công cụ</a>
-      <a href="index.html#ve-toi">Về tôi</a>
+      <a href="ve-toi.html">Về tôi</a>
     </nav>
-    <div class="search">⌕</div>
-    <a class="nav-cta" href="index.html">Đăng nhập</a>
+
+    <div class="topbar-actions">
+
+      <button
+        class="search-btn"
+        type="button"
+        aria-label="Tìm kiếm"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15Zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11Zm10.2 13.8l-3.2-3.2l-1.4 1.4l3.2 3.2a1 1 0 0 0 1.4-1.4Z"/>
+        </svg>
+      </button>
+
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        type="button"
+        aria-label="Mở menu"
+        aria-expanded="false"
+        aria-controls="mobileDrawer"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+        </svg>
+      </button>
+
+      <a
+        class="login-btn"
+        href="dang-nhap.html"
+      >
+        Đăng nhập
+      </a>
+
+    </div>
+  </div>
+
+  <div
+    class="mobile-drawer"
+    id="mobileDrawer"
+  >
+    <div class="wrap">
+
+      <div class="mobile-links">
+        <a href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="./">Trang chủ</a>
+        <a href="kien-thuc.html">Kiến thức</a>
+        <a href="investor-calculator.html">Công cụ</a>
+        <a href="ve-toi.html">Về tôi</a>
+      </div>
+
+    </div>
   </div>
 </header>
 
-  <nav class="mobile-menu" id="mobileMenu">
-  <a href="thi-truong-hom-nay.html">Thị trường</a>
-  <a class="active" href="sau-phien-cua-toi.html">Sau phiên</a>
-  <a href="watchlist.html">Watchlist</a>
-  <a href="index.html">Trang chủ</a>
-  <a href="#">Kiến thức</a>
-  <a href="investor-calculator.html">Công cụ</a>
-  <a href="index.html#ve-toi">Về tôi</a>
-  <a href="lien-he.html">Liên hệ</a>
-  </nav>
-  
 <section class="hero">
   <picture class="hero-art" aria-hidden="true">
     <source media="(max-width:680px)" srcset="hero-sau-phien-mobile.webp">
@@ -816,34 +1684,178 @@
   </div>
 </main>
 
-<footer>
+<footer class="footer">
   <div class="wrap">
-    <div class="foot">
-      <a class="brand" href="index.html">
-        <img src="LOGO.webp" alt="Võ Hoàng">
-        <span><strong>VÕ HOÀNG</strong><small>ĐẦU TƯ CHUẨN HỆ THỐNG</small></span>
-      </a>
-      <div class="foot-links">
-        <a href="thi-truong-hom-nay.html">Thị trường</a>
-        <a href="sau-phien-cua-toi.html">Sau phiên</a>
-        <a href="watchlist.html">Watchlist</a>
-        <a href="index.html">Trang chủ</a>
-        <a href="#">Kiến thức</a>
-        <a href="investor-calculator.html">Công cụ</a>
-        <a href="index.html#ve-toi">Về tôi</a>
-        <a href="lien-he.html">Liên hệ</a>
+
+    <div class="footer-main">
+
+      <div class="footer-brand-block">
+
+        <a
+          class="brand footer-brand-link"
+          href="./"
+        >
+          <img
+            src="LOGO.webp"
+            alt="Võ Hoàng logo"
+          >
+
+          <div class="brand-text">
+            <strong>VÕ HOÀNG</strong>
+            <span>Đầu tư chuẩn hệ thống</span>
+          </div>
+        </a>
+
+        <p class="footer-slogan">
+          Kiến thức tạo nền tảng.
+          Hệ thống tạo khác biệt.
+          Tài sản tạo tự do.
+        </p>
+
+        <div
+          class="footer-gold-line"
+          aria-hidden="true"
+        ></div>
+
+        <p class="footer-risk">
+          Đầu tư chứng khoán rủi ro thường trực.
+          Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+        </p>
+
       </div>
-      <div class="social">
-        <a href="https://www.youtube.com/@vohoanginvest" target="_blank" rel="noopener">▶</a>
-        <a href="https://www.facebook.com/vohoanginvest" target="_blank" rel="noopener">f</a>
-        <a href="https://vohoanginvest.com" target="_blank" rel="noopener">◎</a>
+
+
+      <div class="footer-col footer-nav-col footer-nav-all">
+
+        <h4>Đi nhanh</h4>
+
+        <div class="footer-links quick-links">
+
+          <a href="thi-truong-hom-nay.html">Thị trường</a>
+          <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+          <a href="sau-phien-cua-toi.html">Sau phiên</a>
+          <a href="watchlist.html">Watchlist</a>
+
+          <a href="./">Trang chủ</a>
+          <a href="kien-thuc.html">Kiến thức</a>
+          <a href="investor-calculator.html">Công cụ</a>
+          <a href="ve-toi.html">Về tôi</a>
+
+        </div>
       </div>
-      <a class="eco" href="https://onthiplus.com" target="_blank" rel="noopener">Ôn Thi Plus →</a>
+
+
+      <div class="footer-col footer-connect">
+
+        <h4>Kết nối với Võ Hoàng</h4>
+
+        <div class="footer-socials">
+
+          <a
+            class="social"
+            href="https://www.youtube.com/@vohoanginvest"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/>
+            </svg>
+
+            YouTube
+          </a>
+
+
+          <a
+            class="social"
+            href="https://www.facebook.com/vohoanginvest"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/>
+            </svg>
+
+            Facebook
+          </a>
+
+
+          <a
+            class="social"
+            href="./"
+            aria-label="Website"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/>
+            </svg>
+
+            Website
+          </a>
+
+
+          <a
+            class="social"
+            href="https://onthiplus.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Ôn Thi Plus"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/>
+            </svg>
+
+            Ôn Thi Plus
+          </a>
+
+        </div>
+      </div>
+
     </div>
 
-    <div class="legal">
-      <span>© 2026 VÕ HOÀNG. All rights reserved.</span>
-      <span>Đầu tư tốt hơn cho một cuộc sống tốt hơn.</span>
+
+    <div class="footer-bottom">
+
+      <div class="footer-bottom-row">
+
+        <div class="footer-copyright">
+          © 2026 <strong>VÕ HOÀNG</strong>.
+          All rights reserved.
+        </div>
+
+        <div class="footer-legal">
+
+          <a href="mien-tru-trach-nhiem.html">
+            Miễn trừ trách nhiệm
+          </a>
+
+          <span aria-hidden="true">•</span>
+
+          <a href="chinh-sach-bao-mat.html">
+            Chính sách bảo mật
+          </a>
+
+          <span aria-hidden="true">•</span>
+
+          <a href="dieu-khoan-su-dung.html">
+            Điều khoản sử dụng
+          </a>
+
+          <span aria-hidden="true">•</span>
+
+          <a href="du-lieu-bai-danh-gia.html">
+            Dữ liệu bài đánh giá
+          </a>
+
+          <span aria-hidden="true">•</span>
+
+          <a href="lien-he.html">
+            Liên hệ
+          </a>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </footer>
@@ -1037,50 +2049,39 @@
 </script>
 
   <script>
-(() => {
-  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-  const mobileMenu = document.getElementById("mobileMenu");
+(function(){
 
-  if (!mobileMenuBtn || !mobileMenu) return;
+  const menuBtn =
+    document.getElementById("menuBtn");
 
-  const closeMobileMenu = () => {
-    mobileMenu.classList.remove("open");
-    mobileMenuBtn.setAttribute("aria-expanded", "false");
-    mobileMenuBtn.textContent = "☰";
-  };
+  const mobileDrawer =
+    document.getElementById("mobileDrawer");
 
-  mobileMenuBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
 
-    const opened = mobileMenu.classList.toggle("open");
+  if(
+    menuBtn &&
+    mobileDrawer
+  ){
 
-    mobileMenuBtn.setAttribute(
-      "aria-expanded",
-      opened ? "true" : "false"
+    menuBtn.addEventListener(
+      "click",
+      function(){
+
+        const open =
+          mobileDrawer
+            .classList
+            .toggle("open");
+
+        menuBtn.setAttribute(
+          "aria-expanded",
+          String(open)
+        );
+
+      }
     );
 
-    mobileMenuBtn.textContent = opened ? "×" : "☰";
-  });
+  }
 
-  mobileMenu.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", closeMobileMenu);
-  });
-
-  document.addEventListener("click", (event) => {
-    if (
-      mobileMenu.classList.contains("open") &&
-      !mobileMenu.contains(event.target) &&
-      !mobileMenuBtn.contains(event.target)
-    ) {
-      closeMobileMenu();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeMobileMenu();
-    }
-  });
 })();
 </script>
   
