@@ -576,6 +576,471 @@
     .vh6-item h3{margin:0;font-size:16px;line-height:1.4}
     .vh6-item p{margin:7px 0 0;font-size:13px;line-height:1.6;color:var(--muted-2)}
 
+    /* =========================================================
+   VISUAL DEPTH - GIỮ NGUYÊN LAYOUT, CHỈ THÊM MÀU + WATERMARK
+========================================================= */
+
+
+/* =========================================================
+   1. ĐI NHANH - 4 CARD 4 SẮC THÁI
+========================================================= */
+
+.journey-card{
+  --accent:#e0bb63;
+  --accent-rgb:224,187,99;
+}
+
+/* Sáng nay cần nhìn gì */
+.journey-card:nth-child(1){
+  --accent:#e0bb63;
+  --accent-rgb:224,187,99;
+}
+
+/* Thị trường hôm nay */
+.journey-card:nth-child(2){
+  --accent:#4de2d8;
+  --accent-rgb:77,226,216;
+}
+
+/* Sau phiên của tôi */
+.journey-card:nth-child(3){
+  --accent:#a78bfa;
+  --accent-rgb:167,139,250;
+}
+
+/* Watchlist */
+.journey-card:nth-child(4){
+  --accent:#35e08b;
+  --accent-rgb:53,224,139;
+}
+
+
+/* Ánh sáng rất nhẹ ở góc card */
+.journey-card{
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(var(--accent-rgb),.09),
+      transparent 42%
+    ),
+    rgba(255,255,255,.018);
+
+  border-color:rgba(var(--accent-rgb),.16);
+}
+
+
+/* Một line nhỏ phía trên */
+.journey-card::before{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:0;
+  height:2px;
+  border-radius:999px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--accent),
+      transparent
+    );
+  opacity:.65;
+}
+
+
+/* Watermark icon góc phải */
+.journey-card::after{
+  position:absolute;
+  right:12px;
+  bottom:4px;
+
+  font-size:76px;
+  line-height:1;
+
+  color:var(--accent);
+  opacity:.045;
+
+  pointer-events:none;
+  font-weight:700;
+}
+
+
+/* Hình riêng từng card */
+.journey-card:nth-child(1)::after{
+  content:"◉";
+}
+
+.journey-card:nth-child(2)::after{
+  content:"↗";
+}
+
+.journey-card:nth-child(3)::after{
+  content:"✓";
+}
+
+.journey-card:nth-child(4)::after{
+  content:"★";
+}
+
+
+/* Icon chính đổi màu theo từng card */
+.journey-card .journey-icon{
+  color:var(--accent);
+
+  border-color:
+    rgba(var(--accent-rgb),.28);
+
+  background:
+    rgba(var(--accent-rgb),.08);
+}
+
+
+/* CTA cuối card */
+.journey-card .journey-arrow{
+  color:var(--accent);
+}
+
+
+/* Hover desktop */
+@media (hover:hover){
+
+  .journey-card:hover{
+    transform:translateY(-3px);
+
+    border-color:
+      rgba(var(--accent-rgb),.38);
+
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        rgba(var(--accent-rgb),.13),
+        transparent 45%
+      ),
+      rgba(255,255,255,.025);
+
+    box-shadow:
+      0 14px 30px rgba(0,0,0,.20);
+  }
+}
+
+
+
+/* =========================================================
+   2. TƯ DUY CỐT LÕI - KHÔNG LÀM NHIỀU MÀU
+========================================================= */
+
+.principle{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(224,187,99,.055),
+      transparent 45%
+    ),
+    rgba(255,255,255,.015);
+
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    background .22s ease;
+}
+
+
+/* Line vàng tinh tế */
+.principle::before{
+  content:"";
+
+  position:absolute;
+  top:0;
+  left:22%;
+  right:22%;
+
+  height:2px;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(224,187,99,.80),
+      transparent
+    );
+
+  opacity:.6;
+}
+
+
+/* Watermark lớn */
+.principle::after{
+  position:absolute;
+
+  right:12px;
+  bottom:2px;
+
+  font-size:72px;
+  line-height:1;
+
+  color:#e0bb63;
+
+  opacity:.035;
+
+  pointer-events:none;
+}
+
+
+/* Bối cảnh trước cổ phiếu */
+.principle:nth-child(1)::after{
+  content:"◎";
+}
+
+
+/* Rủi ro trước lợi nhuận */
+.principle:nth-child(2)::after{
+  content:"◇";
+}
+
+
+/* Điều kiện trước cảm xúc */
+.principle:nth-child(3)::after{
+  content:"✓";
+}
+
+
+@media (hover:hover){
+
+  .principle:hover{
+    transform:translateY(-2px);
+
+    border-color:
+      rgba(224,187,99,.22);
+
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        rgba(224,187,99,.08),
+        transparent 45%
+      ),
+      rgba(255,255,255,.02);
+  }
+}
+
+
+
+/* =========================================================
+   3. VH6 - MỖI LỚP MỘT MÀU NHẤN
+========================================================= */
+
+.vh6-item{
+  --accent:#e0bb63;
+  --accent-rgb:224,187,99;
+
+  position:relative;
+  overflow:hidden;
+
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+
+/* 01 - Chọn cổ phiếu */
+.vh6-item:nth-child(1){
+  --accent:#e0bb63;
+  --accent-rgb:224,187,99;
+}
+
+
+/* 02 - Thời điểm */
+.vh6-item:nth-child(2){
+  --accent:#4de2d8;
+  --accent-rgb:77,226,216;
+}
+
+
+/* 03 - Quản trị rủi ro */
+.vh6-item:nth-child(3){
+  --accent:#ff8a65;
+  --accent-rgb:255,138,101;
+}
+
+
+/* 04 - Phân bổ vốn */
+.vh6-item:nth-child(4){
+  --accent:#6aa7ff;
+  --accent-rgb:106,167,255;
+}
+
+
+/* 05 - Kỷ luật thực thi */
+.vh6-item:nth-child(5){
+  --accent:#a78bfa;
+  --accent-rgb:167,139,250;
+}
+
+
+/* 06 - Review hệ thống */
+.vh6-item:nth-child(6){
+  --accent:#35e08b;
+  --accent-rgb:53,224,139;
+}
+
+
+/* Line màu trên đầu card */
+.vh6-item::before{
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:16px;
+  right:16px;
+
+  height:2px;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--accent),
+      transparent
+    );
+
+  opacity:.75;
+}
+
+
+/* Glow rất nhẹ góc phải */
+.vh6-item{
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(var(--accent-rgb),.065),
+      transparent 44%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.025),
+      rgba(255,255,255,.012)
+    );
+}
+
+
+/* Tag 01 - 06 đổi màu */
+.vh6-item .tag{
+  color:var(--accent);
+
+  border-color:
+    rgba(var(--accent-rgb),.28);
+
+  background:
+    rgba(var(--accent-rgb),.075);
+}
+
+
+/* Watermark */
+.vh6-item::after{
+  position:absolute;
+
+  right:12px;
+  bottom:0;
+
+  font-size:66px;
+  line-height:1;
+
+  color:var(--accent);
+
+  opacity:.035;
+
+  pointer-events:none;
+}
+
+
+/* Icon đại diện từng lớp */
+.vh6-item:nth-child(1)::after{
+  content:"★";
+}
+
+.vh6-item:nth-child(2)::after{
+  content:"⌖";
+}
+
+.vh6-item:nth-child(3)::after{
+  content:"◇";
+}
+
+.vh6-item:nth-child(4)::after{
+  content:"◫";
+}
+
+.vh6-item:nth-child(5)::after{
+  content:"✓";
+}
+
+.vh6-item:nth-child(6)::after{
+  content:"↻";
+}
+
+
+/* Hover */
+@media (hover:hover){
+
+  .vh6-item:hover{
+    transform:translateY(-2px);
+
+    border-color:
+      rgba(var(--accent-rgb),.30);
+
+    box-shadow:
+      0 12px 26px rgba(0,0,0,.16);
+  }
+}
+
+
+
+/* =========================================================
+   4. MOBILE - GIỮ NHẸ, KHÔNG ĐỂ WATERMARK LẤN CHỮ
+========================================================= */
+
+@media (max-width:680px){
+
+  .journey-card::after{
+    font-size:58px;
+    right:8px;
+    bottom:4px;
+    opacity:.035;
+  }
+
+  .principle::after{
+    font-size:54px;
+    opacity:.028;
+  }
+
+  .vh6-item::after{
+    font-size:52px;
+    opacity:.028;
+  }
+
+}
+    .journey-card .journey-icon,
+.principle .no{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.vh6-item .tag{
+  display:flex;
+  width:max-content;
+  margin-left:auto;
+  margin-right:auto;
+}
+    
     /* Tool center */
     .tool-center-grid{
       display:grid;
