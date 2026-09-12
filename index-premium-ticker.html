@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 
-  <link rel="preload" as="image" href="home-hero-exact.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="AVATAR2-mobile.webp" fetchpriority="high">
 
   <style>
     :root{
@@ -139,7 +139,7 @@
     .nav a{
       position:relative;
       padding:28px 0 24px;
-      font-size:14px;
+      font-size:17px;
       color:rgba(255,255,255,.82);
       white-space:nowrap;
       transition:.2s ease;
@@ -191,7 +191,7 @@
       border:1px solid rgba(224,187,99,.44);
       background:linear-gradient(180deg,#f0cf79,#d8b254);
       color:#1f1604;
-      font-size:14px;
+      font-size:17px;
       font-weight:800;
       display:inline-flex;
       align-items:center;
@@ -226,7 +226,7 @@
       border-radius:14px;
       background:rgba(255,255,255,.02);
       color:#f6f8fc;
-      font-size:14px;
+      font-size:17px;
       font-weight:600;
       text-align:center;
     }
@@ -380,16 +380,80 @@
     .exact-hero-visual{
       position:relative;
       min-height:336px;
-      background:url("home-hero-exact.webp") right bottom / contain no-repeat;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 45% 34%,rgba(86,143,177,.16),transparent 32%),
+        linear-gradient(90deg,#061827 0%,#071a2a 54%,#061522 100%);
     }
 
     .exact-hero-visual::before{
       content:"";
       position:absolute;
-      inset:0 auto 0 -72px;
-      width:130px;
-      background:linear-gradient(90deg,#061827 0%,rgba(6,24,39,.86) 35%,rgba(6,24,39,0) 100%);
+      inset:0;
+      z-index:0;
       pointer-events:none;
+      background:
+        linear-gradient(90deg,#061827 0%,rgba(6,24,39,.76) 10%,rgba(6,24,39,.08) 34%,rgba(6,24,39,0) 62%),
+        repeating-linear-gradient(90deg,transparent 0 45px,rgba(61,145,113,.07) 46px 49px,transparent 50px 77px,rgba(175,75,73,.07) 78px 81px,transparent 82px 112px);
+      opacity:.88;
+    }
+
+    .hero-person{
+      position:absolute;
+      z-index:2;
+      left:7%;
+      bottom:-2px;
+      width:70%;
+      max-width:390px;
+      max-height:334px;
+      object-fit:contain;
+      object-position:center bottom;
+      filter:drop-shadow(0 22px 26px rgba(0,0,0,.42));
+      -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 8%,#000 93%,transparent 100%);
+      mask-image:linear-gradient(90deg,transparent 0%,#000 8%,#000 93%,transparent 100%);
+    }
+
+    .hero-philosophy{
+      position:absolute;
+      z-index:4;
+      right:0;
+      top:48px;
+      width:178px;
+      color:rgba(245,248,251,.78);
+    }
+
+    .hero-philosophy blockquote{
+      margin:0;
+      font-size:11px;
+      line-height:1.65;
+      font-style:italic;
+      font-weight:500;
+    }
+
+    .hero-philosophy .hero-signature{
+      display:block;
+      margin-top:10px;
+      color:#eff3f7;
+      font-family:"Dancing Script",cursive;
+      font-size:25px;
+      line-height:1;
+      transform:rotate(-7deg);
+      text-align:center;
+    }
+
+    .hero-values{
+      position:absolute;
+      z-index:4;
+      right:3px;
+      bottom:28px;
+      display:grid;
+      gap:6px;
+      text-align:right;
+      color:rgba(231,237,246,.54);
+      font-size:7px;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
 
@@ -406,8 +470,8 @@
 
     .exact-title{
       margin:0;
-      font-size:17px;
-      line-height:1.28;
+      font-size:20px;
+      line-height:1.24;
       font-weight:800;
       letter-spacing:-.018em;
     }
@@ -415,13 +479,13 @@
     .exact-sub{
       margin:5px 0 0;
       color:rgba(231,237,246,.61);
-      font-size:8px;
-      line-height:1.5;
+      font-size:11px;
+      line-height:1.45;
     }
 
     .exact-link{
       color:#f5cc69;
-      font-size:7px;
+      font-size:9px;
       font-weight:800;
       white-space:nowrap;
     }
@@ -440,14 +504,14 @@
     .quick-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:11px;
-      margin-top:12px;
+      gap:8px;
+      margin-top:10px;
     }
 
     .quick-card{
       --accent:#f2c65f;
-      min-height:145px;
-      padding:13px 13px 11px;
+      min-height:132px;
+      padding:11px 11px 10px;
       display:flex;
       flex-direction:column;
       border:1px solid rgba(255,255,255,.085);
@@ -484,22 +548,22 @@
 
     .quick-card h3{
       margin:12px 0 0;
-      font-size:11px;
+      font-size:13px;
       line-height:1.3;
     }
 
     .quick-card p{
       margin:5px 0 0;
       color:rgba(231,237,246,.64);
-      font-size:7.5px;
-      line-height:1.5;
+      font-size:10px;
+      line-height:1.48;
     }
 
     .quick-card b{
       margin-top:auto;
       padding-top:8px;
       color:#f1c45b;
-      font-size:7.5px;
+      font-size:9px;
       font-weight:800;
     }
 
@@ -509,8 +573,8 @@
     ====================== */
     .journey-section{
       position:relative;
-      margin-top:11px;
-      padding:15px 7px 12px;
+      margin-top:8px;
+      padding:12px 5px 10px;
       border-top:1px solid rgba(224,187,99,.09);
     }
 
@@ -520,7 +584,7 @@
       right:10px;
       color:#e8bc58;
       font-family:"Dancing Script",cursive;
-      font-size:14px;
+      font-size:17px;
       line-height:1.25;
       transform:rotate(-5deg);
       text-align:right;
@@ -529,13 +593,13 @@
     .journey-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:11px;
-      margin-top:12px;
+      gap:8px;
+      margin-top:10px;
     }
 
     .journey-card{
-      min-height:119px;
-      padding:12px 11px 10px;
+      min-height:106px;
+      padding:10px 9px 9px;
       display:grid;
       grid-template-columns:34px minmax(0,1fr);
       gap:8px;
@@ -550,7 +614,7 @@
       display:grid;
       place-items:center;
       border-radius:9px;
-      font-size:14px;
+      font-size:17px;
       font-weight:800;
     }
 
@@ -576,15 +640,15 @@
 
     .journey-card h3{
       margin:0;
-      font-size:8.5px;
+      font-size:11px;
       line-height:1.35;
     }
 
     .journey-card p{
       margin:4px 0 0;
       color:rgba(231,237,246,.62);
-      font-size:6.6px;
-      line-height:1.45;
+      font-size:8.5px;
+      line-height:1.42;
     }
 
     .journey-card a{
@@ -597,7 +661,7 @@
       border:1px solid rgba(255,255,255,.35);
       border-radius:999px;
       color:#fff;
-      font-size:6px;
+      font-size:7.8px;
       font-weight:700;
       white-space:nowrap;
     }
@@ -634,7 +698,7 @@
       gap:9px;
       border-right:1px solid rgba(255,255,255,.07);
       color:rgba(239,244,248,.77);
-      font-size:7.5px;
+      font-size:10px;
       text-align:center;
     }
 
@@ -658,13 +722,13 @@
     .system-row{
       display:grid;
       grid-template-columns:minmax(0,1.85fr) minmax(280px,1fr);
-      gap:10px;
-      margin-top:10px;
+      gap:8px;
+      margin-top:8px;
     }
 
     .system-card,
     .tools-card{
-      min-height:207px;
+      min-height:184px;
       padding:13px 14px 12px;
     }
 
@@ -687,8 +751,8 @@
     }
 
     .vh6-orb{
-      width:61px;
-      height:61px;
+      width:54px;
+      height:54px;
       margin:0 auto;
       display:grid;
       place-items:center;
@@ -699,7 +763,7 @@
         #0a1d2f;
       box-shadow:inset 0 0 18px rgba(224,187,99,.035);
       color:#f0be55;
-      font-size:23px;
+      font-size:20px;
     }
 
     .vh6-item:nth-child(2) .vh6-orb{color:#758eff}
@@ -711,7 +775,7 @@
     .vh6-item strong{
       display:block;
       margin-top:8px;
-      font-size:6.8px;
+      font-size:9px;
       line-height:1.3;
     }
 
@@ -719,8 +783,8 @@
       display:block;
       margin-top:3px;
       color:var(--muted2);
-      font-size:5.5px;
-      line-height:1.2;
+      font-size:7px;
+      line-height:1.25;
     }
 
     .tools-list{
@@ -730,7 +794,7 @@
     }
 
     .tool-line{
-      min-height:34px;
+      min-height:31px;
       display:grid;
       grid-template-columns:28px minmax(0,1fr);
       align-items:center;
@@ -765,7 +829,7 @@
 
     .tool-line strong{
       display:block;
-      font-size:7.4px;
+      font-size:9.5px;
       line-height:1.3;
     }
 
@@ -773,8 +837,8 @@
       display:block;
       margin-top:2px;
       color:var(--muted2);
-      font-size:5.6px;
-      line-height:1.3;
+      font-size:7.2px;
+      line-height:1.32;
     }
 
 
@@ -784,17 +848,17 @@
     .lower-row{
       display:grid;
       grid-template-columns:1.08fr .84fr 1.02fr;
-      gap:10px;
-      margin-top:10px;
+      gap:8px;
+      margin-top:8px;
     }
 
     .lower-card{
-      min-height:210px;
+      min-height:184px;
       padding:13px 14px 12px;
     }
 
     .lower-card .exact-title{
-      font-size:14px;
+      font-size:17px;
     }
 
     .about-grid{
@@ -813,7 +877,7 @@
 
     .about-img img{
       width:100%;
-      height:128px;
+      height:116px;
       object-fit:cover;
     }
 
@@ -828,8 +892,8 @@
       grid-template-columns:11px minmax(0,1fr);
       gap:5px;
       color:rgba(237,242,247,.71);
-      font-size:5.9px;
-      line-height:1.4;
+      font-size:8px;
+      line-height:1.42;
     }
 
     .about-point b{
@@ -847,7 +911,7 @@
       border:1px solid rgba(224,187,99,.55);
       border-radius:999px;
       color:#f1c661;
-      font-size:6px;
+      font-size:8px;
       font-weight:800;
     }
 
@@ -878,15 +942,15 @@
 
     .process-item strong{
       display:block;
-      font-size:7.4px;
-      line-height:1.25;
+      font-size:9px;
+      line-height:1.28;
     }
 
     .process-item span{
       display:block;
       margin-top:2px;
       color:var(--muted2);
-      font-size:5.5px;
+      font-size:7px;
       line-height:1.35;
     }
 
@@ -920,16 +984,16 @@
 
     .knowledge-item strong{
       display:block;
-      font-size:6.9px;
-      line-height:1.3;
+      font-size:9px;
+      line-height:1.32;
     }
 
     .knowledge-item span{
       display:block;
       margin-top:2px;
       color:var(--muted2);
-      font-size:5.3px;
-      line-height:1.25;
+      font-size:6.8px;
+      line-height:1.3;
     }
 
 
@@ -937,8 +1001,8 @@
        FINAL CTA
     ====================== */
     .final-cta{
-      margin-top:12px;
-      min-height:122px;
+      margin-top:8px;
+      min-height:108px;
       border-top:1px solid rgba(224,187,99,.14);
       border-bottom:1px solid rgba(224,187,99,.12);
       background:
@@ -946,7 +1010,7 @@
     }
 
     .final-cta-grid{
-      min-height:122px;
+      min-height:108px;
       display:grid;
       grid-template-columns:315px minmax(0,1fr) 230px;
       align-items:center;
@@ -954,7 +1018,7 @@
     }
 
     .final-cta-art{
-      height:122px;
+      height:108px;
       margin-left:calc((100vw - min(calc(100vw - 88px),var(--main)))/-2);
       background:url("home-cta-exact.webp") right center / auto 100% no-repeat;
     }
@@ -962,7 +1026,7 @@
     .final-cta-copy small{
       display:block;
       color:#efbd58;
-      font-size:6px;
+      font-size:8px;
       font-weight:800;
       letter-spacing:.18em;
       text-transform:uppercase;
@@ -979,7 +1043,7 @@
       margin:7px 0 0;
       max-width:410px;
       color:var(--muted2);
-      font-size:6.7px;
+      font-size:8.5px;
       line-height:1.45;
     }
 
@@ -996,7 +1060,7 @@
       display:block;
       margin-top:7px;
       color:var(--muted2);
-      font-size:5.6px;
+      font-size:7px;
     }
 
 
@@ -1012,7 +1076,7 @@
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.03);
       color:#fff;
-      font-size:14px;
+      font-size:17px;
       font-weight:700;
     }
 
@@ -1419,17 +1483,47 @@
       }
 
       .exact-stat strong{
-        font-size:14px;
+        font-size:17px;
       }
 
       .exact-stat span{
         margin-top:4px;
-        font-size:5.6px;
+        font-size:7px;
       }
 
       .exact-hero-visual{
-        min-height:215px;
-        background-size:auto 215px;
+        min-height:230px;
+      }
+
+      .hero-person{
+        left:3%;
+        bottom:0;
+        width:69%;
+        max-width:none;
+        max-height:228px;
+      }
+
+      .hero-philosophy{
+        right:2px;
+        top:28px;
+        width:132px;
+      }
+
+      .hero-philosophy blockquote{
+        font-size:10.5px;
+        line-height:1.55;
+      }
+
+      .hero-philosophy .hero-signature{
+        margin-top:6px;
+        font-size:19px;
+      }
+
+      .hero-values{
+        right:2px;
+        bottom:19px;
+        gap:4px;
+        font-size:5.6px;
       }
 
       .quick-section{
@@ -1437,7 +1531,7 @@
       }
 
       .exact-title{
-        font-size:14px;
+        font-size:17px;
       }
 
       .exact-sub{
@@ -1445,12 +1539,12 @@
       }
 
       .quick-grid{
-        gap:6px;
-        margin-top:9px;
+        gap:5px;
+        margin-top:7px;
       }
 
       .quick-card{
-        min-height:133px;
+        min-height:123px;
         padding:10px 8px 9px;
         align-items:center;
         text-align:center;
@@ -1463,15 +1557,15 @@
 
       .quick-card h3{
         margin-top:9px;
-        font-size:8.5px;
+        font-size:10.5px;
       }
 
       .quick-card p{
-        font-size:6px;
+        font-size:7.8px;
       }
 
       .quick-card b{
-        font-size:6px;
+        font-size:7.8px;
       }
 
       .journey-section{
@@ -1488,8 +1582,8 @@
       }
 
       .journey-card{
-        min-height:110px;
-        padding:9px 7px 8px;
+        min-height:102px;
+        padding:8px 6px 7px;
         grid-template-columns:28px minmax(0,1fr);
         gap:6px;
       }
@@ -1505,13 +1599,13 @@
       .journey-card a{
         min-height:23px;
         padding:0 7px;
-        font-size:5.2px;
+        font-size:6.8px;
       }
 
       .trust-item{
         min-height:37px;
         gap:5px;
-        font-size:5.8px;
+        font-size:7.2px;
       }
 
       .trust-icon{
@@ -1525,12 +1619,12 @@
       }
 
       .exact-link{
-        font-size:5.8px;
+        font-size:7.2px;
       }
 
       .vh6-grid{
         grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:10px 4px;
+        gap:8px 4px;
       }
 
       .vh6-orb{
@@ -1540,11 +1634,11 @@
       }
 
       .vh6-item strong{
-        font-size:6.2px;
+        font-size:7.8px;
       }
 
       .vh6-item span{
-        font-size:5px;
+        font-size:6.3px;
       }
 
       .tools-list{
@@ -1564,16 +1658,16 @@
       }
 
       .tool-line strong{
-        font-size:6.5px;
+        font-size:8px;
       }
 
       .tool-line span{
-        font-size:4.9px;
+        font-size:6.3px;
       }
 
       .lower-card{
         min-height:0;
-        padding:11px 10px;
+        padding:9px 8px;
       }
 
       .lower-card .exact-title{
@@ -1595,7 +1689,7 @@
       }
 
       .about-point{
-        font-size:5.3px;
+        font-size:6.8px;
       }
 
       .process-list{
@@ -1616,11 +1710,11 @@
       }
 
       .process-item strong{
-        font-size:6px;
+        font-size:7.4px;
       }
 
       .process-item span{
-        font-size:4.8px;
+        font-size:6.2px;
       }
 
       .knowledge-item{
@@ -1632,8 +1726,8 @@
         height:36px;
       }
 
-      .knowledge-item strong{font-size:6.4px}
-      .knowledge-item span{font-size:5px}
+      .knowledge-item strong{font-size:8px}
+      .knowledge-item span{font-size:6.3px}
 
       .final-cta{
         min-height:0;
@@ -1650,7 +1744,7 @@
       }
 
       .final-cta-copy small{
-        font-size:5px;
+        font-size:6.3px;
       }
 
       .final-cta-copy h2{
@@ -1658,7 +1752,7 @@
       }
 
       .final-cta-copy p{
-        font-size:5.5px;
+        font-size:7px;
       }
 
       .final-cta-action{
@@ -1990,7 +2084,33 @@
         <div
           class="exact-hero-visual"
           aria-label="Hình ảnh Võ Hoàng và triết lý đầu tư"
-        ></div>
+        >
+
+          <img
+            class="hero-person"
+            src="AVATAR2-mobile.webp"
+            alt="Võ Hoàng"
+            fetchpriority="high"
+            decoding="async"
+          >
+
+          <aside class="hero-philosophy">
+            <blockquote>
+              “Thành công trong đầu tư không đến từ dự đoán,
+              mà từ một hệ thống được kỷ luật.”
+            </blockquote>
+
+            <span class="hero-signature">Võ Hoàng</span>
+          </aside>
+
+          <div class="hero-values" aria-label="Các giá trị cốt lõi">
+            <span>Kỷ luật</span>
+            <span>Hệ thống</span>
+            <span>Bảo toàn vốn</span>
+            <span>Tăng trưởng bền vững</span>
+          </div>
+
+        </div>
 
       </div>
 
@@ -2359,7 +2479,7 @@
 
             <div class="about-img">
               <img
-                src="home-about-exact.webp"
+                src="AVATAR2-mobile.webp"
                 alt="Võ Hoàng"
                 loading="lazy"
                 decoding="async"
