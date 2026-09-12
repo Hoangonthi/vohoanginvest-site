@@ -1808,6 +1808,7 @@
         radial-gradient(circle at 100% 0%,rgba(255,255,255,.025),transparent 42%),
         linear-gradient(180deg,rgba(16,39,56,.94),rgba(9,28,43,.95));
       transition:.2s ease;
+      cursor:pointer;
     }
 
     .investor-stage-card:hover{
@@ -1946,8 +1947,8 @@
       }
 
       .investor-stage-card{
-        min-height:132px;
-        padding:10px 8px 9px;
+        min-height:0;
+        padding:9px 8px 8px;
         grid-template-columns:29px minmax(0,1fr);
         gap:7px;
         border-radius:11px;
@@ -1969,14 +1970,15 @@
       }
 
       .investor-stage-body p{
-        min-height:42px;
+        min-height:0;
+        margin-top:3px;
         font-size:9px;
-        line-height:1.42;
+        line-height:1.38;
       }
 
       .investor-stage-cta{
-        min-height:25px;
-        margin-top:6px;
+        min-height:24px;
+        margin-top:4px;
         padding:0 8px;
         font-size:7.5px;
       }
@@ -1992,7 +1994,7 @@
       }
 
       .investor-stage-card{
-        min-height:140px;
+        min-height:0;
       }
 
       .investor-stage-body h3{
@@ -2002,6 +2004,27 @@
       .investor-stage-body p{
         font-size:8.5px;
       }
+    }
+
+  
+    /* =========================================================
+       VH6 — CENTER TRÊN DESKTOP + MOBILE
+       Chỉ căn giữa nội dung 6 card, không đổi kích thước/bố cục.
+    ========================================================= */
+    .vh6-item{
+      text-align:center;
+    }
+
+    .vh6-item .tag{
+      display:flex;
+      width:max-content;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .vh6-item h3,
+    .vh6-item p{
+      text-align:center;
     }
 
   </style>
@@ -2188,7 +2211,7 @@
 
         <div class="investor-stage-grid">
 
-          <article class="investor-stage-card">
+          <a class="investor-stage-card" href="kien-thuc.html">
 
             <div class="investor-stage-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -2199,15 +2222,15 @@
             <div class="investor-stage-body">
               <h3>Mới tìm hiểu</h3>
               <p>Học kiến thức nền tảng, hiểu các khái niệm quan trọng.</p>
-              <a class="investor-stage-cta" href="kien-thuc.html">
+              <span class="investor-stage-cta">
                 Đến Kiến thức →
-              </a>
+              </span>
             </div>
 
-          </article>
+          </a>
 
 
-          <article class="investor-stage-card">
+          <a class="investor-stage-card" href="thi-truong-hom-nay.html">
 
             <div class="investor-stage-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -2219,15 +2242,15 @@
             <div class="investor-stage-body">
               <h3>Đang giao dịch</h3>
               <p>Cập nhật thị trường, công cụ hỗ trợ ra quyết định.</p>
-              <a class="investor-stage-cta" href="thi-truong-hom-nay.html">
+              <span class="investor-stage-cta">
                 Xem thị trường →
-              </a>
+              </span>
             </div>
 
-          </article>
+          </a>
 
 
-          <article class="investor-stage-card">
+          <a class="investor-stage-card" href="kiem-tra-nhanh-tai-khoan.html">
 
             <div class="investor-stage-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -2238,15 +2261,15 @@
             <div class="investor-stage-body">
               <h3>Đang thua lỗ</h3>
               <p>Kiểm tra nhanh tài khoản, xác định nguyên nhân.</p>
-              <a class="investor-stage-cta" href="kiem-tra-nhanh-tai-khoan.html">
+              <span class="investor-stage-cta">
                 Kiểm tra tài khoản →
-              </a>
+              </span>
             </div>
 
-          </article>
+          </a>
 
 
-          <article class="investor-stage-card">
+          <a class="investor-stage-card" href="#vh6">
 
             <div class="investor-stage-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -2259,12 +2282,12 @@
             <div class="investor-stage-body">
               <h3>Muốn xây hệ thống</h3>
               <p>Tìm hiểu phương pháp VH6 và đồng hành lâu dài.</p>
-              <a class="investor-stage-cta" href="#vh6">
+              <span class="investor-stage-cta">
                 Xem lộ trình →
-              </a>
+              </span>
             </div>
 
-          </article>
+          </a>
 
         </div>
 
