@@ -1745,8 +1745,13 @@
 
       function applyTone(el,tone){
         if(!el) return;
+        const nextClass = "tone-" + tone;
+
+        // Nếu đúng tone rồi thì không chạm class nữa.
+        if(el.classList.contains(nextClass)) return;
+
         el.classList.remove(...toneClasses);
-        el.classList.add("tone-" + tone);
+        el.classList.add(nextClass);
       }
 
       function numberFrom(text){
@@ -1830,18 +1835,34 @@
         syncMetricTones();
       }
 
-      const observer = new MutationObserver(syncAll);
-      observer.observe(document.body,{
+      // Quan sát CHỈ nội dung dữ liệu thay đổi.
+      // Không quan sát class/data-tone vì syncAll() tự đổi class;
+      // nếu quan sát class sẽ tạo vòng lặp MutationObserver vô hạn.
+      let syncQueued = false;
+
+      function queueSync(){
+        if(syncQueued) return;
+        syncQueued = true;
+        requestAnimationFrame(() => {
+          syncQueued = false;
+          syncAll();
+        });
+      }
+
+      const dataRoot = document.querySelector(".reader-main") || document.body;
+      const observer = new MutationObserver(queueSync);
+
+      observer.observe(dataRoot,{
         subtree:true,
         childList:true,
-        characterData:true,
-        attributes:true,
-        attributeFilter:["data-tone","class"]
+        characterData:true
       });
 
       window.addEventListener("DOMContentLoaded",syncAll);
-      setTimeout(syncAll,500);
-      setInterval(syncAll,3000);
+      setTimeout(syncAll,700);
+
+      // Dự phòng nhẹ: không cần chạy liên tục.
+      setInterval(syncAll,10000);
     })();
   </script>
 </body>
