@@ -3,53 +3,4312 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Máy tính đầu tư – Võ Hoàng</title>
-  <link rel="icon" href="LOGO.png">
+
+  <title>Máy tính đầu tư | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
+  <meta name="description" content="Bộ máy tính đầu tư giúp nhà đầu tư tính quy mô lệnh, rủi ro, margin, hòa vốn, cổ tức, quyền và các quyết định quan trọng trước khi hành động.">
+  <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/investor-calculator.html">
+  <link rel="icon" href="favicon.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Giữ stylesheet cũ để không phá logic/class hiện có -->
   <link rel="stylesheet" href="assets/css/investor-calculator.css">
+
+  <style>
+    :root{
+      --bg:#04111f;
+      --bg-2:#07192b;
+      --panel:#091c31;
+      --panel-2:#0b223a;
+
+      --line:rgba(224,187,99,.18);
+      --line-soft:rgba(255,255,255,.075);
+
+      --gold:#e0bb63;
+      --gold-2:#f3cf74;
+
+      --text:#f5f7fb;
+      --muted:rgba(231,237,246,.76);
+      --muted-2:rgba(231,237,246,.54);
+
+      --green:#35e08b;
+      --red:#ff6673;
+      --orange:#ff9f43;
+      --cyan:#4de2d8;
+
+      --shadow:0 18px 44px rgba(0,0,0,.24);
+      --radius:20px;
+      --max:1240px;
+
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    html,body{
+      margin:0;
+      padding:0;
+    }
+
+    body{
+      min-height:100vh;
+
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+      color:var(--text);
+
+      background:
+        radial-gradient(circle at 100% 0%,rgba(224,187,99,.08),transparent 25%),
+        radial-gradient(circle at 0% 46%,rgba(77,226,216,.03),transparent 28%),
+        linear-gradient(180deg,#04111d 0%,#06172a 46%,#04111f 100%);
+
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button{cursor:pointer}
+
+    .wrap{
+      width:min(calc(100% - 32px),var(--max));
+      margin:0 auto;
+    }
+
+
+    /* =========================================================
+       HEADER — THEO INDEX
+    ========================================================= */
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+
+      backdrop-filter:blur(10px);
+
+      background:rgba(3,11,20,.88);
+
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .topbar-inner{
+      width:min(calc(100% - 24px),1340px);
+
+      margin:0 auto;
+
+      min-height:78px;
+
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      gap:16px;
+    }
+
+    .brand{
+      min-width:0;
+
+      display:flex;
+      align-items:center;
+
+      gap:12px;
+    }
+
+    .brand img{
+      width:46px;
+      height:46px;
+
+      object-fit:contain;
+
+      flex:0 0 auto;
+    }
+
+    .brand-text{
+      min-width:0;
+
+      line-height:normal;
+
+      overflow:visible;
+
+      padding:1px 0 2px;
+    }
+
+    .brand-text strong{
+      display:block;
+
+      color:var(--gold-2);
+
+      font-size:17px;
+      line-height:1.35;
+
+      font-weight:800;
+
+      letter-spacing:.035em;
+
+      white-space:nowrap;
+    }
+
+    .brand-text span{
+      display:block;
+
+      margin-top:1px;
+
+      color:#e8cf8f;
+
+      font-size:9.5px;
+      line-height:1.45;
+
+      letter-spacing:.08em;
+
+      text-transform:uppercase;
+
+      white-space:nowrap;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      gap:26px;
+
+      flex:1 1 auto;
+
+      min-width:0;
+    }
+
+    .nav a{
+      position:relative;
+
+      padding:28px 0 24px;
+
+      color:rgba(255,255,255,.82);
+
+      font-size:14px;
+
+      white-space:nowrap;
+
+      transition:.2s ease;
+    }
+
+    .nav a:hover{color:#fff}
+
+    .nav a.active{
+      color:#fff;
+      font-weight:700;
+    }
+
+    .nav a.active::after{
+      content:"";
+
+      position:absolute;
+
+      left:0;
+      right:0;
+      bottom:-1px;
+
+      margin:auto;
+
+      width:100%;
+      height:3px;
+
+      border-radius:999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-2)
+        );
+    }
+
+    .topbar-actions{
+      display:flex;
+      align-items:center;
+
+      gap:12px;
+
+      flex:0 0 auto;
+    }
+
+    .search-btn,
+    .menu-btn{
+      width:42px;
+      height:42px;
+
+      padding:0;
+
+      border-radius:12px;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      background:
+        rgba(255,255,255,.02);
+
+      color:#fff;
+
+      display:grid;
+      place-items:center;
+    }
+
+    .menu-btn{display:none}
+
+    .login-btn{
+      height:42px;
+
+      padding:0 18px;
+
+      border-radius:12px;
+
+      border:
+        1px solid rgba(224,187,99,.44);
+
+      background:
+        linear-gradient(
+          180deg,
+          #f0cf79,
+          #d8b254
+        );
+
+      color:#1f1604;
+
+      font-size:14px;
+      font-weight:800;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      white-space:nowrap;
+
+      box-shadow:
+        0 10px 24px rgba(224,187,99,.16);
+    }
+
+    .mobile-drawer{
+      display:none;
+
+      border-top:
+        1px solid rgba(255,255,255,.06);
+
+      background:#071423;
+    }
+
+    .mobile-drawer.open{display:block}
+
+    .mobile-drawer .wrap{
+      padding:14px 0 18px;
+
+      display:grid;
+
+      gap:12px;
+    }
+
+    .mobile-links{
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+      gap:10px;
+    }
+
+    .mobile-links a{
+      padding:12px 14px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius:14px;
+
+      background:
+        rgba(255,255,255,.02);
+
+      color:#f6f8fc;
+
+      font-size:14px;
+      font-weight:600;
+
+      text-align:center;
+    }
+
+
+    /* =========================================================
+       PAGE SHELL
+    ========================================================= */
+
+    .calc-wrap{
+      width:min(calc(100% - 32px),var(--max));
+
+      margin:0 auto;
+
+      padding:24px 0 0;
+
+      max-width:none;
+    }
+
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .calc-hero{
+      position:relative;
+
+      overflow:hidden;
+
+      min-height:330px;
+
+      margin:0 0 14px;
+
+      padding:0;
+
+      display:grid;
+
+      grid-template-columns:
+        minmax(0,1.15fr)
+        minmax(330px,.85fr);
+
+      gap:0;
+
+      align-items:stretch;
+
+      border:
+        1px solid rgba(224,187,99,.18);
+
+      border-radius:24px;
+
+      background:
+        radial-gradient(
+          circle at 86% 18%,
+          rgba(224,187,99,.11),
+          transparent 27%
+        ),
+        linear-gradient(
+          110deg,
+          rgba(7,27,47,.99),
+          rgba(5,19,33,.97)
+        );
+
+      box-shadow:var(--shadow);
+    }
+
+    .calc-hero > div:first-child{
+      padding:40px 38px 34px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+
+      min-width:0;
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+
+      color:var(--gold-2);
+
+      font-size:11px;
+      line-height:1.3;
+
+      font-weight:800;
+
+      letter-spacing:.16em;
+
+      text-transform:uppercase;
+    }
+
+    .calc-hero h1{
+      margin:0;
+
+      max-width:780px;
+
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+
+      color:#fff;
+
+      font-size:47px;
+      line-height:1.07;
+
+      letter-spacing:-.035em;
+
+      font-weight:800;
+    }
+
+    .calc-hero h1::first-line{
+      color:#fff;
+    }
+
+    .calc-hero p{
+      margin:14px 0 0;
+
+      max-width:730px;
+
+      color:var(--muted);
+
+      font-size:13px;
+      line-height:1.68;
+    }
+
+    .calc-hero-proof{
+      display:flex;
+      flex-wrap:wrap;
+
+      gap:8px 12px;
+
+      margin-top:18px;
+    }
+
+    .calc-hero-proof span{
+      min-height:31px;
+
+      padding:0 10px;
+
+      display:inline-flex;
+      align-items:center;
+
+      border:
+        1px solid rgba(77,226,216,.25);
+
+      border-radius:999px;
+
+      background:
+        rgba(77,226,216,.025);
+
+      color:#eef9fb;
+
+      font-size:9.5px;
+      font-weight:600;
+    }
+
+
+    /* IDENTITY SIDE */
+
+    .calc-hero-side{
+      position:relative;
+
+      padding:25px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+
+      overflow:hidden;
+    }
+
+    .calc-hero-side::before{
+      content:"";
+
+      position:absolute;
+
+      inset:0;
+
+      background:
+        linear-gradient(
+          150deg,
+          transparent 0 14%,
+          rgba(224,187,99,.14) 14.5% 15%,
+          transparent 15.5% 34%,
+          rgba(224,187,99,.09) 34.5% 35%,
+          transparent 35.5% 58%,
+          rgba(224,187,99,.06) 58.5% 59%,
+          transparent 59.5%
+        );
+
+      pointer-events:none;
+    }
+
+    .identity-box{
+      position:relative;
+
+      z-index:2;
+
+      min-width:0;
+      width:100%;
+
+      padding:18px;
+
+      border:
+        1px solid rgba(224,187,99,.16);
+
+      border-radius:17px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.028),
+          rgba(255,255,255,.014)
+        );
+
+      box-shadow:none;
+    }
+
+    .identity-box::before{
+      content:"CHẾ ĐỘ SỬ DỤNG";
+
+      display:block;
+
+      margin-bottom:7px;
+
+      color:var(--gold-2);
+
+      font-size:9px;
+      font-weight:800;
+
+      letter-spacing:.12em;
+    }
+
+    .identity-status{
+      margin:0 0 11px;
+
+      color:#edf3f8;
+
+      font-size:12px;
+      line-height:1.45;
+
+      font-weight:700;
+    }
+
+    .identity-box button{
+      width:100%;
+
+      min-height:38px;
+
+      padding:0 12px;
+
+      border:
+        1px solid rgba(224,187,99,.36);
+
+      border-radius:10px;
+
+      background:
+        rgba(224,187,99,.05);
+
+      color:#f4d786;
+
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .identity-box button:hover{
+      background:
+        rgba(224,187,99,.09);
+    }
+
+    .calc-side-rules{
+      position:relative;
+
+      z-index:2;
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+      gap:6px;
+
+      margin-top:9px;
+    }
+
+    .calc-side-rules div{
+      min-height:66px;
+
+      padding:8px 6px;
+
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+
+      text-align:center;
+
+      border:
+        1px solid rgba(255,255,255,.06);
+
+      border-radius:10px;
+
+      background:
+        rgba(255,255,255,.014);
+    }
+
+    .calc-side-rules b{
+      color:var(--gold-2);
+
+      font-size:9px;
+    }
+
+    .calc-side-rules span{
+      display:block;
+
+      margin-top:3px;
+
+      color:var(--muted-2);
+
+      font-size:7.5px;
+      line-height:1.3;
+    }
+
+
+    /* =========================================================
+       TOOL DIRECTORY
+    ========================================================= */
+
+    .terminal{
+      position:relative;
+
+      overflow:hidden;
+
+      border:
+        1px solid rgba(224,187,99,.18);
+
+      border-radius:20px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(7,25,43,.98),
+          rgba(6,22,38,.97)
+        );
+
+      box-shadow:var(--shadow);
+    }
+
+    .terminal-tabs{
+      display:block!important;
+
+      width:100%!important;
+
+      padding:14px 16px 15px!important;
+
+      overflow:hidden!important;
+
+      border-bottom:
+        1px solid rgba(224,187,99,.12)!important;
+
+      border-radius:20px 20px 0 0!important;
+
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(224,187,99,.045),
+          transparent 33%
+        ),
+        #071725!important;
+    }
+
+    .terminal-tabs::before{
+      content:none!important;
+    }
+
+    .tool-directory-head{
+      display:flex!important;
+      align-items:center!important;
+      justify-content:space-between!important;
+
+      gap:12px!important;
+
+      margin:0 0 4px!important;
+
+      padding:0 0 10px!important;
+
+      border-bottom:
+        1px solid rgba(255,255,255,.055)!important;
+    }
+
+    .tool-directory-head > div:first-child{
+      display:flex!important;
+      align-items:baseline!important;
+
+      gap:9px!important;
+
+      min-width:0!important;
+    }
+
+    .tool-directory-head strong{
+      color:#fff!important;
+
+      font-family:"Be Vietnam Pro",system-ui,sans-serif!important;
+
+      font-size:15px!important;
+      font-weight:800!important;
+
+      white-space:nowrap!important;
+    }
+
+    .tool-directory-head span{
+      color:var(--muted-2)!important;
+
+      font-size:9px!important;
+
+      white-space:nowrap!important;
+
+      overflow:hidden!important;
+      text-overflow:ellipsis!important;
+    }
+
+    .tool-directory-actions{
+      display:none!important;
+    }
+
+    .tool-group{
+      position:relative!important;
+
+      min-width:0!important;
+
+      display:grid!important;
+
+      grid-template-columns:
+        158px minmax(0,1fr)!important;
+
+      align-items:center!important;
+
+      gap:10px!important;
+
+      padding:7px 0!important;
+
+      border-bottom:
+        1px solid rgba(255,255,255,.045)!important;
+    }
+
+    .tool-group:last-child{
+      border-bottom:0!important;
+    }
+
+    .tool-group-toggle{
+      width:100%!important;
+      height:auto!important;
+
+      padding:7px 7px!important;
+
+      display:flex!important;
+      align-items:center!important;
+      justify-content:flex-start!important;
+
+      gap:7px!important;
+
+      border:0!important;
+      border-radius:8px!important;
+
+      background:transparent!important;
+
+      color:#d7e1ea!important;
+
+      text-align:left!important;
+
+      cursor:default!important;
+
+      pointer-events:none!important;
+    }
+
+    .tool-group-toggle::before{
+      display:inline-flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+
+      flex:0 0 25px!important;
+
+      width:25px!important;
+      height:25px!important;
+
+      border:
+        1px solid rgba(224,187,99,.26)!important;
+
+      border-radius:7px!important;
+
+      background:
+        rgba(224,187,99,.06)!important;
+
+      color:var(--gold-2)!important;
+
+      font-size:8px!important;
+      font-weight:800!important;
+    }
+
+    .tool-group:nth-of-type(1) .tool-group-toggle::before{content:"A"}
+    .tool-group:nth-of-type(2) .tool-group-toggle::before{content:"B"}
+    .tool-group:nth-of-type(3) .tool-group-toggle::before{content:"C"}
+    .tool-group:nth-of-type(4) .tool-group-toggle::before{content:"D"}
+    .tool-group:nth-of-type(5) .tool-group-toggle::before{content:"E"}
+
+    .tool-group-toggle span{
+      color:#f1f5f8!important;
+
+      font-size:10px!important;
+      font-weight:700!important;
+
+      white-space:normal!important;
+    }
+
+    .tool-group-toggle small,
+    .tool-group-toggle i{
+      display:none!important;
+    }
+
+    .tool-group-panel{
+      position:static!important;
+
+      width:100%!important;
+      min-width:0!important;
+      max-width:none!important;
+
+      padding:0!important;
+
+      display:grid!important;
+
+      grid-template-columns:
+        repeat(4,minmax(110px,1fr))!important;
+
+      gap:7px!important;
+
+      border:0!important;
+      border-radius:0!important;
+
+      background:transparent!important;
+
+      box-shadow:none!important;
+
+      overflow:visible!important;
+    }
+
+    .terminal-tabs .tab{
+      width:100%!important;
+      min-width:0!important;
+      min-height:38px!important;
+
+      padding:7px 8px!important;
+
+      display:flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+
+      border:
+        1px solid rgba(255,255,255,.08)!important;
+
+      border-radius:8px!important;
+
+      background:
+        rgba(255,255,255,.018)!important;
+
+      color:rgba(245,247,251,.82)!important;
+
+      font-size:9.5px!important;
+      line-height:1.25!important;
+
+      font-weight:600!important;
+
+      white-space:normal!important;
+
+      text-align:center!important;
+
+      box-shadow:none!important;
+
+      transition:.16s ease!important;
+    }
+
+    .terminal-tabs .tab:hover{
+      border-color:
+        rgba(224,187,99,.25)!important;
+
+      background:
+        rgba(224,187,99,.045)!important;
+
+      color:#fff!important;
+    }
+
+    .terminal-tabs .tab.active{
+      border-color:
+        rgba(224,187,99,.55)!important;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(224,187,99,.16),
+          rgba(224,187,99,.075)
+        )!important;
+
+      color:#f8df9a!important;
+
+      box-shadow:
+        inset 0 -2px 0 var(--gold-2)!important;
+    }
+
+
+    /* =========================================================
+       ACTIVE CALCULATOR PANEL
+    ========================================================= */
+
+    .calc-panel{
+      display:none;
+
+      padding:18px;
+
+      border-top:
+        1px solid rgba(255,255,255,.025);
+    }
+
+    .calc-panel.active{
+      display:block;
+    }
+
+    .panel-head{
+      margin-bottom:10px;
+
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+
+      gap:16px;
+    }
+
+    .step{
+      display:block;
+
+      margin:0 0 5px;
+
+      color:var(--gold-2);
+
+      font-size:9px;
+      line-height:1.3;
+
+      font-weight:800;
+
+      letter-spacing:.10em;
+
+      text-transform:uppercase;
+    }
+
+    .panel-head h2{
+      margin:0;
+
+      color:#fff;
+
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+
+      font-size:24px;
+      line-height:1.25;
+
+      font-weight:800;
+
+      letter-spacing:-.02em;
+    }
+
+    .formula{
+      padding:7px 10px;
+
+      border:
+        1px solid rgba(224,187,99,.20);
+
+      border-radius:999px;
+
+      background:
+        rgba(224,187,99,.035);
+
+      color:#e9d18f;
+
+      font-size:8.5px;
+
+      white-space:nowrap;
+    }
+
+    .why{
+      margin:0 0 12px;
+
+      padding:10px 12px;
+
+      border:
+        1px solid rgba(255,255,255,.055);
+
+      border-radius:11px;
+
+      background:
+        rgba(255,255,255,.018);
+    }
+
+    .why strong{
+      display:block;
+
+      margin:0 0 3px;
+
+      color:#fff;
+
+      font-size:9.5px;
+    }
+
+    .why p{
+      margin:0;
+
+      color:var(--muted-2);
+
+      font-size:9px;
+      line-height:1.5;
+    }
+
+
+    /* WORKBENCH */
+
+    .workbench{
+      display:grid;
+
+      grid-template-columns:
+        minmax(0,1.02fr)
+        minmax(330px,.98fr);
+
+      gap:10px;
+    }
+
+    .input-panel,
+    .result-panel{
+      min-width:0;
+
+      padding:14px;
+
+      border:
+        1px solid rgba(255,255,255,.065);
+
+      border-radius:14px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.022),
+          rgba(255,255,255,.012)
+        );
+    }
+
+    .field-grid{
+      display:grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap:8px;
+    }
+
+    .field-grid label{
+      min-width:0;
+
+      color:rgba(231,237,246,.68);
+
+      font-size:8.5px;
+      line-height:1.35;
+
+      font-weight:600;
+    }
+
+    .field-grid input,
+    .risk-row input{
+      width:100%;
+
+      margin-top:5px;
+
+      padding:0 10px;
+
+      height:37px;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      border-radius:8px;
+
+      outline:none;
+
+      background:#061625;
+
+      color:#fff;
+
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+
+      font-size:9.5px;
+    }
+
+    .field-grid input:focus,
+    .risk-row input:focus{
+      border-color:
+        rgba(224,187,99,.52);
+
+      box-shadow:
+        0 0 0 3px rgba(224,187,99,.045);
+    }
+
+    .calculate{
+      width:100%;
+
+      min-height:38px;
+
+      margin-top:11px;
+
+      padding:0 12px;
+
+      border:0;
+
+      border-radius:9px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #f0cf79,
+          #d8b254
+        );
+
+      color:#211705;
+
+      font-size:9.5px;
+      font-weight:800;
+    }
+
+    .calculate:hover{
+      background:
+        linear-gradient(
+          180deg,
+          #f5d77f,
+          #e0bb63
+        );
+    }
+
+    .validation{
+      min-height:15px;
+
+      margin:5px 0 0;
+
+      color:#ff9aa3;
+
+      font-size:8px;
+    }
+
+
+    /* RESULT */
+
+    .result-panel{
+      display:flex;
+      flex-direction:column;
+
+      justify-content:flex-start;
+    }
+
+    .verdict{
+      width:max-content;
+      max-width:100%;
+
+      padding:5px 8px;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      border-radius:999px;
+
+      background:
+        rgba(255,255,255,.025);
+
+      color:rgba(231,237,246,.72);
+
+      font-size:8px;
+      line-height:1.3;
+
+      font-weight:800;
+    }
+
+    .verdict.good{
+      border-color:
+        rgba(53,224,139,.30);
+
+      background:
+        rgba(53,224,139,.07);
+
+      color:#7ff0b5;
+    }
+
+    .verdict.warn{
+      border-color:
+        rgba(255,159,67,.30);
+
+      background:
+        rgba(255,159,67,.07);
+
+      color:#ffc17d;
+    }
+
+    .verdict.bad{
+      border-color:
+        rgba(255,102,115,.30);
+
+      background:
+        rgba(255,102,115,.07);
+
+      color:#ff9da6;
+    }
+
+    .big-number{
+      margin:13px 0 11px;
+
+      text-align:center;
+    }
+
+    .big-number span{
+      display:block;
+
+      color:var(--muted-2);
+
+      font-size:8.5px;
+    }
+
+    .big-number strong{
+      display:inline-block;
+
+      margin-top:3px;
+
+      color:#fff;
+
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+
+      font-size:clamp(28px,4vw,42px);
+      line-height:1.1;
+
+      font-weight:800;
+
+      letter-spacing:-.035em;
+
+      overflow-wrap:anywhere;
+    }
+
+    .big-number small{
+      margin-left:5px;
+
+      color:var(--muted-2);
+
+      font-size:8px;
+    }
+
+    .metric-grid{
+      display:grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap:6px;
+    }
+
+    .metric-grid div{
+      min-width:0;
+
+      min-height:62px;
+
+      padding:8px;
+
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+
+      text-align:center;
+
+      border:
+        1px solid rgba(255,255,255,.055);
+
+      border-radius:9px;
+
+      background:
+        rgba(255,255,255,.014);
+    }
+
+    .metric-grid span{
+      display:block;
+
+      color:var(--muted-2);
+
+      font-size:7.5px;
+      line-height:1.3;
+    }
+
+    .metric-grid b{
+      display:block;
+
+      margin-top:4px;
+
+      color:#eef4f8;
+
+      font-size:10px;
+      line-height:1.25;
+
+      font-weight:700;
+
+      overflow-wrap:anywhere;
+    }
+
+    .nba{
+      margin-top:8px;
+
+      padding:9px 10px;
+
+      border-left:
+        2px solid var(--gold);
+
+      border-radius:0 9px 9px 0;
+
+      background:
+        rgba(224,187,99,.03);
+    }
+
+    .nba span{
+      color:var(--gold-2);
+
+      font-size:7.5px;
+      font-weight:800;
+
+      letter-spacing:.06em;
+    }
+
+    .nba p{
+      margin:4px 0 0;
+
+      color:rgba(231,237,246,.78);
+
+      font-size:8.5px;
+      line-height:1.48;
+    }
+
+
+    /* SCENARIO */
+
+    .scenario-strip{
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap:6px;
+
+      margin-top:8px;
+    }
+
+    .scenario-strip div{
+      padding:7px;
+
+      border:
+        1px solid rgba(255,255,255,.055);
+
+      border-radius:8px;
+
+      background:
+        rgba(255,255,255,.014);
+
+      text-align:center;
+    }
+
+    .scenario-strip span{
+      display:block;
+
+      color:var(--muted-2);
+
+      font-size:7px;
+    }
+
+    .scenario-strip b{
+      color:#fff;
+
+      font-size:8.5px;
+    }
+
+
+    /* PORTFOLIO RISK TABLE */
+
+    .risk-table{
+      margin-top:10px;
+
+      display:grid;
+
+      gap:5px;
+    }
+
+    .risk-head,
+    .risk-row{
+      display:grid;
+
+      grid-template-columns:
+        .8fr 1.25fr 1fr;
+
+      gap:6px;
+
+      align-items:center;
+    }
+
+    .risk-head{
+      padding:0 2px;
+
+      color:var(--muted-2);
+
+      font-size:7px;
+      font-weight:700;
+
+      text-align:center;
+    }
+
+    .risk-row input{
+      height:34px;
+
+      margin:0;
+
+      padding:0 7px;
+
+      text-align:center;
+
+      font-size:8px;
+    }
+
+
+    /* PRINCIPLE */
+
+    .principle{
+      margin:10px 0 0;
+
+      padding:11px 13px;
+
+      border:
+        1px solid rgba(224,187,99,.16);
+
+      border-radius:12px;
+
+      background:
+        rgba(224,187,99,.025);
+
+      color:rgba(231,237,246,.58);
+
+      font-size:8.5px;
+      line-height:1.5;
+
+      text-align:center;
+    }
+
+    .principle strong{
+      color:#f1d489;
+    }
+
+
+    /* =========================================================
+       FOOTER — THEO INDEX
+    ========================================================= */
+
+    .social{
+      display:inline-flex;
+      align-items:center;
+
+      gap:10px;
+
+      padding:10px 14px;
+
+      border-radius:999px;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      background:
+        rgba(255,255,255,.03);
+
+      color:#fff;
+
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .social svg{
+      width:18px;
+      height:18px;
+
+      fill:currentColor;
+
+      flex:0 0 auto;
+    }
+
+    .footer{
+      margin-top:30px;
+
+      border-top:
+        1px solid rgba(255,255,255,.07);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(224,187,99,.045),
+          transparent 28%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(3,12,22,.88),
+          rgba(2,8,15,.98)
+        );
+    }
+
+    .footer .footer-main{
+      padding:34px 0 24px;
+
+      display:grid;
+
+      grid-template-columns:
+        minmax(280px,1.25fr)
+        minmax(300px,1fr)
+        minmax(270px,1fr);
+
+      gap:28px 44px;
+
+      align-items:start;
+    }
+
+    .footer-brand-block{min-width:0}
+
+    .footer-brand-link{
+      width:max-content;
+
+      max-width:100%;
+    }
+
+    .footer .footer-slogan{
+      margin:13px 0 0;
+
+      max-width:340px;
+
+      color:rgba(231,237,246,.80);
+
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .footer .footer-gold-line{
+      width:100%;
+      max-width:340px;
+
+      height:1px;
+
+      margin:11px 0 8px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(224,187,99,.88) 0%,
+          rgba(224,187,99,.34) 58%,
+          rgba(224,187,99,0) 100%
+        );
+    }
+
+    .footer .footer-risk{
+      margin:0;
+
+      max-width:340px;
+
+      color:rgba(231,237,246,.44);
+
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    .footer .footer-col h4{
+      margin:2px 0 13px;
+
+      color:var(--gold-2);
+
+      font-size:13px;
+      line-height:1.2;
+
+      font-weight:800;
+
+      letter-spacing:.08em;
+
+      text-transform:uppercase;
+    }
+
+    .footer .footer-links a{
+      color:rgba(255,255,255,.82);
+
+      transition:color .2s ease;
+    }
+
+    .footer .footer-links a:hover{color:#fff}
+
+    .footer .footer-nav-all .quick-links{
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,max-content);
+
+      gap:9px 28px;
+
+      justify-content:start;
+    }
+
+    .footer .footer-nav-all .quick-links a{
+      width:auto;
+
+      padding:0;
+
+      border:0;
+
+      background:none;
+
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .footer .footer-socials{
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+      gap:8px;
+    }
+
+    .footer .footer-socials .social{
+      min-width:0;
+
+      justify-content:center;
+
+      padding:9px 11px;
+
+      border-radius:12px;
+
+      font-size:12px;
+
+      white-space:nowrap;
+    }
+
+    .footer .footer-bottom{
+      width:100%;
+
+      padding:13px 0 17px;
+
+      border-top:
+        1px solid rgba(224,187,99,.15);
+    }
+
+    .footer .footer-bottom-row{
+      width:100%;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      gap:10px 18px;
+
+      flex-wrap:wrap;
+
+      text-align:center;
+    }
+
+    .footer .footer-copyright{
+      flex:0 0 auto;
+
+      color:rgba(231,237,246,.68);
+
+      font-size:13px;
+      line-height:1.5;
+
+      white-space:nowrap;
+    }
+
+    .footer .footer-copyright strong{
+      color:rgba(255,255,255,.86);
+
+      font-weight:700;
+    }
+
+    .footer .footer-legal{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      flex-wrap:wrap;
+
+      gap:6px 10px;
+
+      min-width:0;
+    }
+
+    .footer .footer-legal a{
+      color:rgba(231,237,246,.68);
+
+      font-size:13px;
+      line-height:1.45;
+
+      white-space:nowrap;
+    }
+
+    .footer .footer-legal a:hover{
+      color:#f1cf78;
+    }
+
+    .footer .footer-legal span{
+      color:rgba(224,187,99,.66);
+
+      font-size:8px;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media(max-width:1080px){
+
+      .calc-hero{
+        grid-template-columns:
+          1fr minmax(300px,.68fr);
+      }
+
+      .calc-hero h1{
+        font-size:41px;
+      }
+
+      .tool-group{
+        grid-template-columns:
+          138px minmax(0,1fr)!important;
+      }
+
+      .tool-group-panel{
+        grid-template-columns:
+          repeat(2,minmax(110px,1fr))!important;
+      }
+
+      .footer .footer-main{
+        grid-template-columns:
+          1.1fr 1fr;
+      }
+
+      .footer .footer-connect{
+        grid-column:1/-1;
+      }
+
+      .footer .footer-socials{
+        grid-template-columns:
+          repeat(4,minmax(0,1fr));
+      }
+    }
+
+
+    @media(max-width:860px){
+
+      .topbar-inner{
+        width:min(calc(100% - 20px),100%);
+
+        min-height:74px;
+      }
+
+      .nav,
+      .topbar-actions .search-btn{
+        display:none;
+      }
+
+      .menu-btn{
+        display:grid;
+      }
+
+      .brand img{
+        width:42px;
+        height:42px;
+      }
+
+      .brand-text strong{
+        font-size:14px;
+      }
+
+      .brand-text span{
+        font-size:10px;
+      }
+
+      .calc-hero{
+        grid-template-columns:1fr;
+      }
+
+      .calc-hero > div:first-child{
+        padding:30px 24px 20px;
+
+        text-align:center;
+
+        align-items:center;
+      }
+
+      .calc-hero-side{
+        padding:10px 20px 24px;
+      }
+
+      .identity-box{
+        max-width:680px;
+
+        margin:0 auto;
+      }
+
+      .calc-side-rules{
+        max-width:680px;
+
+        margin:8px auto 0;
+      }
+
+      .workbench{
+        grid-template-columns:1fr;
+      }
+    }
+
+
+    @media(max-width:680px){
+
+      .wrap,
+      .calc-wrap{
+        width:min(calc(100% - 20px),var(--max));
+      }
+
+      .brand{
+        flex:1 1 auto;
+
+        min-width:0;
+      }
+
+      .brand-text{
+        overflow:hidden;
+      }
+
+      .brand-text strong,
+      .brand-text span{
+        white-space:nowrap;
+
+        overflow:hidden;
+
+        text-overflow:ellipsis;
+      }
+
+      .topbar-inner{
+        gap:10px;
+      }
+
+      .topbar-actions{
+        gap:8px;
+      }
+
+      .login-btn{
+        height:40px;
+
+        padding:0 13px;
+
+        font-size:12px;
+      }
+
+
+      /* HERO */
+      .calc-wrap{
+        padding-top:10px;
+      }
+
+      .calc-hero{
+        min-height:0;
+
+        margin-bottom:8px;
+
+        border-radius:18px;
+      }
+
+      .calc-hero > div:first-child{
+        padding:23px 13px 14px;
+      }
+
+      .eyebrow{
+        font-size:8.5px;
+      }
+
+      .calc-hero h1{
+        font-size:29px;
+        line-height:1.08;
+      }
+
+      .calc-hero p{
+        font-size:10.5px;
+        line-height:1.58;
+      }
+
+      .calc-hero-proof{
+        justify-content:center;
+
+        gap:5px;
+      }
+
+      .calc-hero-proof span{
+        min-height:27px;
+
+        padding:0 8px;
+
+        font-size:8px;
+      }
+
+      .calc-hero-side{
+        padding:7px 10px 13px;
+      }
+
+      .identity-box{
+        padding:11px;
+
+        text-align:center;
+      }
+
+      .identity-box::before{
+        font-size:7.5px;
+      }
+
+      .identity-status{
+        margin-bottom:7px;
+
+        font-size:9px;
+      }
+
+      .identity-box button{
+        min-height:34px;
+
+        font-size:8.5px;
+      }
+
+      .calc-side-rules{
+        gap:5px;
+
+        margin-top:6px;
+      }
+
+      .calc-side-rules div{
+        min-height:62px;
+
+        padding:6px 4px;
+      }
+
+      .calc-side-rules b{
+        font-size:8px;
+      }
+
+      .calc-side-rules span{
+        font-size:6.7px;
+      }
+
+
+      /* TOOL DIRECTORY */
+      .terminal{
+        border-radius:16px;
+      }
+
+      .terminal-tabs{
+        padding:9px 9px 10px!important;
+      }
+
+      .tool-directory-head{
+        display:block!important;
+
+        padding-bottom:7px!important;
+      }
+
+      .tool-directory-head > div:first-child{
+        justify-content:center!important;
+      }
+
+      .tool-directory-head strong{
+        font-size:12px!important;
+      }
+
+      .tool-directory-head span{
+        display:none!important;
+      }
+
+      .tool-group{
+        grid-template-columns:1fr!important;
+
+        gap:3px!important;
+
+        padding:5px 0!important;
+      }
+
+      .tool-group-toggle{
+        justify-content:center!important;
+
+        padding:2px!important;
+      }
+
+      .tool-group-toggle::before{
+        flex-basis:21px!important;
+
+        width:21px!important;
+        height:21px!important;
+
+        font-size:7px!important;
+      }
+
+      .tool-group-toggle span{
+        font-size:8.5px!important;
+      }
+
+      .tool-group-panel{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr))!important;
+
+        gap:5px!important;
+      }
+
+      .terminal-tabs .tab{
+        min-height:35px!important;
+
+        padding:6px 5px!important;
+
+        font-size:8px!important;
+      }
+
+
+      /* ACTIVE PANEL */
+      .calc-panel{
+        padding:11px;
+      }
+
+      .panel-head{
+        margin-bottom:7px;
+
+        align-items:center;
+
+        flex-direction:column;
+
+        gap:5px;
+
+        text-align:center;
+      }
+
+      .step{
+        font-size:7.5px;
+      }
+
+      .panel-head h2{
+        font-size:18px;
+      }
+
+      .formula{
+        padding:5px 8px;
+
+        font-size:7px;
+
+        white-space:normal;
+
+        text-align:center;
+      }
+
+      .why{
+        margin-bottom:8px;
+
+        padding:8px 9px;
+
+        text-align:center;
+      }
+
+      .why strong{
+        font-size:8px;
+      }
+
+      .why p{
+        font-size:7.5px;
+      }
+
+      .workbench{
+        gap:7px;
+      }
+
+      .input-panel,
+      .result-panel{
+        padding:10px;
+      }
+
+      /* Giữ 2 cột mobile để tiết kiệm diện tích */
+      .field-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:6px;
+      }
+
+      .field-grid label{
+        font-size:7px;
+      }
+
+      .field-grid input{
+        height:34px;
+
+        margin-top:4px;
+
+        padding:0 7px;
+
+        font-size:8px;
+      }
+
+      .calculate{
+        min-height:34px;
+
+        margin-top:8px;
+
+        font-size:8px;
+      }
+
+      .validation{
+        min-height:11px;
+
+        font-size:7px;
+      }
+
+      .result-panel{
+        text-align:center;
+      }
+
+      .verdict{
+        margin:0 auto;
+
+        font-size:7px;
+      }
+
+      .big-number{
+        margin:9px 0 8px;
+      }
+
+      .big-number span{
+        font-size:7.5px;
+      }
+
+      .big-number strong{
+        font-size:27px;
+      }
+
+      .big-number small{
+        font-size:7px;
+      }
+
+      .metric-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:5px;
+      }
+
+      .metric-grid div{
+        min-height:56px;
+
+        padding:6px 5px;
+      }
+
+      .metric-grid span{
+        font-size:6.7px;
+      }
+
+      .metric-grid b{
+        font-size:8.5px;
+      }
+
+      .nba{
+        margin-top:6px;
+
+        padding:7px 8px;
+
+        text-align:center;
+      }
+
+      .nba span{
+        font-size:6.7px;
+      }
+
+      .nba p{
+        font-size:7.5px;
+      }
+
+      .scenario-strip{
+        gap:5px;
+
+        margin-top:6px;
+      }
+
+      .scenario-strip div{
+        padding:6px 3px;
+      }
+
+      .risk-head,
+      .risk-row{
+        grid-template-columns:
+          .65fr 1.15fr .9fr;
+
+        gap:4px;
+      }
+
+      .risk-head{
+        font-size:6.3px;
+      }
+
+      .risk-row input{
+        height:31px;
+
+        padding:0 4px;
+
+        font-size:7px;
+      }
+
+      .principle{
+        margin-top:7px;
+
+        padding:8px 9px;
+
+        font-size:7.5px;
+      }
+
+
+      /* FOOTER */
+      .footer .footer-main{
+        padding:26px 0 19px;
+
+        grid-template-columns:1fr;
+
+        gap:18px;
+
+        text-align:center;
+      }
+
+      .footer .footer-brand-link{
+        margin:0 auto;
+
+        justify-content:center;
+      }
+
+      .footer .footer-slogan{
+        max-width:320px;
+
+        margin-left:auto;
+        margin-right:auto;
+
+        text-align:center;
+      }
+
+      .footer .footer-gold-line{
+        width:170px;
+
+        margin:11px auto 8px;
+      }
+
+      .footer .footer-risk{
+        max-width:300px;
+
+        margin-left:auto;
+        margin-right:auto;
+
+        font-size:9px;
+        line-height:1.5;
+
+        text-align:center;
+      }
+
+      .footer .footer-col h4{
+        margin-bottom:9px;
+      }
+
+      .footer .footer-nav-all .quick-links{
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:
+          repeat(4,max-content);
+
+        justify-content:center;
+        align-items:center;
+
+        gap:8px 12px;
+      }
+
+      .footer .footer-nav-all .quick-links a{
+        width:auto;
+
+        font-size:11px;
+        line-height:1.35;
+
+        text-align:center;
+
+        white-space:nowrap;
+      }
+
+      .footer .footer-socials{
+        width:min(100%,360px);
+
+        margin:0 auto;
+
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:8px;
+      }
+
+      .footer .footer-bottom{
+        padding:12px 0 15px;
+      }
+
+      .footer .footer-bottom-row{
+        display:flex;
+
+        flex-direction:column;
+
+        align-items:center;
+        justify-content:center;
+
+        gap:7px;
+
+        text-align:center;
+      }
+
+      .footer .footer-copyright{
+        width:100%;
+
+        font-size:10px;
+        line-height:1.45;
+
+        text-align:center;
+
+        white-space:normal;
+      }
+
+      .footer .footer-legal{
+        width:100%;
+
+        display:flex!important;
+
+        flex-direction:row!important;
+        flex-wrap:wrap!important;
+
+        align-items:center;
+        justify-content:center;
+
+        column-gap:7px;
+        row-gap:5px;
+      }
+
+      .footer .footer-legal a{
+        width:auto!important;
+
+        display:inline-block;
+
+        font-size:10px;
+        line-height:1.4;
+
+        white-space:nowrap;
+      }
+
+      .footer .footer-legal span{
+        display:inline-block;
+
+        font-size:7px;
+      }
+    }
+
+
+    @media(max-width:430px){
+
+      .calc-hero h1{
+        font-size:27px;
+      }
+
+      .tool-group-panel{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr))!important;
+      }
+
+      .field-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+      }
+
+      .footer .footer-nav-all .quick-links{
+        gap:7px 9px;
+      }
+
+      .footer .footer-nav-all .quick-links a{
+        font-size:10px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<header class="calc-topbar"><div class="calc-topbar-inner"><a class="brand" href="./">VÕ HOÀNG · MÁY TÍNH ĐẦU TƯ</a><nav><a href="cong-cu-tro-choi.html">Kho công cụ</a><a href="investor-os.html">Hồ sơ NĐT</a><a href="./">Trang chủ</a></nav></div></header>
-<main class="calc-wrap">
-<section class="calc-hero"><div><div class="eyebrow">MÁY TÍNH CẦM TAY CỦA NHÀ ĐẦU TƯ</div><h1>Không nhẩm. Không ước chừng. Tính trước khi quyết định.</h1><p>Mỗi công cụ giải quyết một phép tính thật trong một tình huống thật. Không cần đăng nhập để tính; đăng nhập chỉ để nhớ dữ liệu và lịch sử.</p></div><div class="identity-box"><div id="identityStatus" class="identity-status">Chế độ tính nhanh · Không lưu</div><button id="loginBtn" type="button">Dùng Hồ sơ Nhà đầu tư</button></div></section>
-<section class="terminal">
-<div class="terminal-tabs" role="tablist" aria-label="Các máy tính đầu tư">
-<button class="tab active" data-tab="position" type="button">Quy mô lệnh</button>
-<button class="tab" data-tab="rr" type="button">Lãi / Lỗ kỳ vọng</button>
-<button class="tab" data-tab="average" type="button">Bình quân giá</button>
-<button class="tab" data-tab="margin" type="button">Sức chịu margin</button>
-<button class="tab" data-tab="breakeven" type="button">Giá hòa vốn</button>
-<button class="tab" data-tab="margincost" type="button">Chi phí margin</button>
-<button class="tab" data-tab="deleverage" type="button">Hạ margin</button>
-<button class="tab" data-tab="recovercapital" type="button">Thu hồi vốn gốc</button>
-<button class="tab" data-tab="drawdown" type="button">Hồi phục sau lỗ</button>
-<button class="tab" data-tab="portfolio" type="button">Rủi ro danh mục</button>
-<button class="tab" data-tab="dividend" type="button">Cổ tức tiền mặt</button>
-<button class="tab" data-tab="exright" type="button">Giá sau chia / quyền</button>
-</div>
 
-<section class="calc-panel active" data-panel="position"><div class="panel-head"><div><span class="step">TRƯỚC MUA</span><h2>Tôi được phép mua bao nhiêu?</h2></div><div class="formula">Rủi ro trước · Quy mô sau</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Mua đúng mã nhưng sai quy mô vẫn có thể làm hỏng tài khoản. Công cụ buộc số tiền mua phải nằm trong giới hạn rủi ro còn lại.</p></div><div class="workbench"><form id="positionForm" class="input-panel"><div class="field-grid"><label>Vốn được phép đầu tư<input id="posCapital" type="number" min="0" step="any" value="500000000"></label><label>Rủi ro tối đa/lệnh (%)<input id="posRiskPct" type="number" min="0" max="20" step="0.1" value="1"></label><label>Ngân sách rủi ro danh mục (%)<input id="posPortfolioBudget" type="number" min="0" max="50" step="0.1" value="8"></label><label>Rủi ro đã dùng (%)<input id="posRiskUsed" type="number" min="0" max="50" step="0.1" value="3"></label><label>Giá dự kiến mua<input id="posEntry" type="number" min="0" step="any" value="75000"></label><label>Giá cắt lỗ / luận điểm sai<input id="posStop" type="number" min="0" step="any" value="71000"></label><label>Tỷ trọng tối đa/mã (%)<input id="posMaxPct" type="number" min="0" max="100" step="0.1" value="20"></label><label>Lô giao dịch<input id="posLot" type="number" min="1" step="1" value="100"></label></div><button class="calculate" type="submit">TÍNH QUY MÔ LỆNH</button><p class="validation" id="posValidation"></p></form><div class="result-panel"><div class="verdict" id="posVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Số lượng tối đa</span><strong id="posQty">—</strong><small>cổ phiếu</small></div><div class="metric-grid"><div><span>Giá trị lệnh</span><b id="posValue">—</b></div><div><span>Lỗ tối đa tại cắt lỗ</span><b id="posLoss">—</b></div><div><span>Tỷ trọng sau mua</span><b id="posWeight">—</b></div><div><span>Ngân sách rủi ro còn lại</span><b id="posRoom">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="posAction">Nhập dữ liệu lệnh để hệ thống tính giới hạn.</p></div></div></div></section>
+  <!-- =======================================================
+       HEADER
+  ======================================================== -->
+  <header class="topbar">
 
-<section class="calc-panel" data-panel="rr"><div class="panel-head"><div><span class="step">TRƯỚC MUA</span><h2>Lệnh này có đáng để nhận rủi ro?</h2></div><div class="formula">Lãi kỳ vọng ÷ Lỗ chấp nhận</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Một lệnh nhìn hấp dẫn có thể vẫn tệ nếu phần lãi kỳ vọng quá nhỏ so với phần lỗ chấp nhận.</p></div><div class="workbench"><form id="rrForm" class="input-panel"><div class="field-grid"><label>Giá mua<input id="rrEntry" type="number" min="0" step="any" value="75000"></label><label>Giá cắt lỗ<input id="rrStop" type="number" min="0" step="any" value="71000"></label><label>Giá mục tiêu<input id="rrTarget" type="number" min="0" step="any" value="85000"></label><label>Số lượng cổ phiếu<input id="rrQty" type="number" min="1" step="1" value="1000"></label></div><button class="calculate" type="submit">TÍNH LÃI / LỖ KỲ VỌNG</button><p class="validation" id="rrValidation"></p></form><div class="result-panel"><div class="verdict" id="rrVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Tỷ lệ lỗ : lãi kỳ vọng</span><strong id="rrRatio">—</strong></div><div class="metric-grid"><div><span>Lỗ nếu chạm cắt lỗ</span><b id="rrLoss">—</b></div><div><span>Lãi nếu đạt mục tiêu</span><b id="rrProfit">—</b></div><div><span>Tỷ lệ thắng tối thiểu hòa vốn</span><b id="rrBreakeven">—</b></div><div><span>Khoảng cắt lỗ</span><b id="rrStopPct">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="rrAction">Tính trước khi mở lệnh.</p></div></div></div></section>
+    <div class="topbar-inner">
 
-<section class="calc-panel" data-panel="average"><div class="panel-head"><div><span class="step">ĐANG GIỮ</span><h2>Mua thêm sẽ làm giá vốn và rủi ro đổi thế nào?</h2></div><div class="formula">Giá vốn giảm ≠ Rủi ro giảm</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Bình quân giá làm giá vốn đẹp hơn nhưng có thể làm số tiền có thể mất tăng mạnh.</p></div><div class="workbench"><form id="avgForm" class="input-panel"><div class="field-grid"><label>Số lượng đang có<input id="avgQty" type="number" min="0" step="1" value="2000"></label><label>Giá vốn hiện tại<input id="avgPrice" type="number" min="0" step="any" value="80000"></label><label>Giá mua thêm<input id="avgAddPrice" type="number" min="0" step="any" value="70000"></label><label>Số tiền định mua thêm<input id="avgAddAmount" type="number" min="0" step="any" value="70000000"></label><label>Giá cắt lỗ sau khi mua thêm<input id="avgStop" type="number" min="0" step="any" value="66000"></label><label>Vốn đầu tư toàn tài khoản<input id="avgCapital" type="number" min="0" step="any" value="500000000"></label></div><button class="calculate" type="submit">TÍNH SAU KHI MUA THÊM</button><p class="validation" id="avgValidation"></p></form><div class="result-panel"><div class="verdict" id="avgVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Giá vốn mới</span><strong id="avgNewPrice">—</strong></div><div class="metric-grid"><div><span>CP mua thêm</span><b id="avgAddQty">—</b></div><div><span>Tổng tỷ trọng</span><b id="avgWeight">—</b></div><div><span>Lỗ nếu chạm cắt lỗ</span><b id="avgRisk">—</b></div><div><span>Rủi ro / tài khoản</span><b id="avgRiskPct">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="avgAction">Giá vốn giảm không đồng nghĩa rủi ro giảm.</p></div></div></div></section>
+      <a class="brand" href="./">
 
-<section class="calc-panel" data-panel="margin"><div class="panel-head"><div><span class="step">TRƯỚC KHI DÙNG MARGIN</span><h2>Nếu thị trường giảm, vốn thật còn bao nhiêu?</h2></div><div class="formula">Thử cú giảm trước · Dùng margin sau</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Margin khuếch đại drawdown của vốn tự có. Nhìn mỗi tỷ lệ margin hiện tại là chưa đủ.</p></div><div class="workbench"><form id="marginForm" class="input-panel"><div class="field-grid"><label>Vốn tự có hiện tại<input id="mEquity" type="number" min="0" step="any" value="500000000"></label><label>Nợ margin hiện tại<input id="mDebt" type="number" min="0" step="any" value="150000000"></label><label>Mức giảm muốn kiểm tra (%)<input id="mShock" type="number" min="0" max="80" step="0.1" value="10"></label><label>Margin tối đa theo nguyên tắc cá nhân (%)<input id="mLimit" type="number" min="0" max="300" step="0.1" value="30"></label></div><button class="calculate" type="submit">KIỂM TRA SỨC CHỊU ĐỰNG</button><p class="validation" id="mValidation"></p></form><div class="result-panel"><div class="verdict" id="mVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Vốn còn lại sau cú giảm</span><strong id="mAfter">—</strong></div><div class="metric-grid"><div><span>Tổng giá trị vị thế</span><b id="mGross">—</b></div><div><span>Số tiền lỗ</span><b id="mLoss">—</b></div><div><span>Mức sụt giảm vốn thật</span><b id="mDrawdown">—</b></div><div><span>Nợ / vốn sau cú giảm</span><b id="mDebtRatio">—</b></div></div><div class="scenario-strip"><div><span>-5%</span><b id="mS5">—</b></div><div><span>-10%</span><b id="mS10">—</b></div><div><span>-15%</span><b id="mS15">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="mAction">Stress test trước khi tăng đòn bẩy.</p></div></div></div></section>
+        <img
+          src="LOGO.webp"
+          alt="Võ Hoàng logo"
+        >
 
-<section class="calc-panel" data-panel="breakeven"><div class="panel-head"><div><span class="step">TRƯỚC KHI ĐẶT GIÁ BÁN</span><h2>Bán ở giá nào mới thật sự hòa vốn?</h2></div><div class="formula">Giá mua + phí + thuế + lãi vay</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Giá quay lại đúng giá vốn chưa chắc đã hòa vốn vì còn phí mua, phí bán, thuế khi bán và có thể cả lãi margin.</p></div><div class="workbench"><form id="breakevenForm" class="input-panel"><div class="field-grid"><label>Giá mua bình quân (đồng/cp)<input id="bEntry" type="number" min="0" step="any" value="50000"></label><label>Số lượng cổ phiếu<input id="bQty" type="number" min="1" step="1" value="10000"></label><label>Phí mua (%)<input id="bBuyFee" type="number" min="0" max="10" step="0.001" value="0.15"></label><label>Phí bán (%)<input id="bSellFee" type="number" min="0" max="10" step="0.001" value="0.15"></label><label>Thuế khi bán (%)<input id="bSellTax" type="number" min="0" max="10" step="0.001" value="0.1"></label><label>Lãi margin đã phát sinh (đồng)<input id="bInterest" type="number" min="0" step="any" value="0"></label></div><button class="calculate" type="submit">TÍNH GIÁ HÒA VỐN THẬT</button><p class="validation" id="bValidation"></p></form><div class="result-panel"><div class="verdict" id="bVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Giá bán hòa vốn</span><strong id="bPrice">—</strong></div><div class="metric-grid"><div><span>Tổng vốn sau phí mua</span><b id="bCost">—</b></div><div><span>Tổng chi phí giao dịch + lãi</span><b id="bFees">—</b></div><div><span>Giá phải tăng từ giá mua</span><b id="bNeedPct">—</b></div><div><span>Doanh thu bán cần đạt</span><b id="bRevenue">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="bAction">Đừng dùng riêng giá vốn hiển thị để kết luận đã hòa vốn.</p></div></div></div></section>
+        <div class="brand-text">
+          <strong>VÕ HOÀNG</strong>
+          <span>Đầu tư chuẩn hệ thống</span>
+        </div>
 
-<section class="calc-panel" data-panel="margincost"><div class="panel-head"><div><span class="step">ĐANG DÙNG MARGIN</span><h2>Mỗi ngày khoản vay đang tốn bao nhiêu?</h2></div><div class="formula">Nợ × lãi suất × số ngày</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Chi phí margin nhỏ theo ngày nhưng lớn dần theo thời gian. Một vị thế đi ngang lâu có thể làm điểm hòa vốn tăng đáng kể.</p></div><div class="workbench"><form id="marginCostForm" class="input-panel"><div class="field-grid"><label>Dư nợ margin (đồng)<input id="mcDebt" type="number" min="0" step="any" value="200000000"></label><label>Lãi suất năm (%)<input id="mcRate" type="number" min="0" max="100" step="0.01" value="13.5"></label><label>Số ngày dự kiến vay<input id="mcDays" type="number" min="0" step="1" value="30"></label><label>Giá trị vị thế dùng khoản vay (đồng)<input id="mcPosition" type="number" min="0" step="any" value="400000000"></label></div><button class="calculate" type="submit">TÍNH CHI PHÍ MARGIN</button><p class="validation" id="mcValidation"></p></form><div class="result-panel"><div class="verdict" id="mcVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Tổng lãi dự kiến</span><strong id="mcCost">—</strong></div><div class="metric-grid"><div><span>Chi phí mỗi ngày</span><b id="mcDaily">—</b></div><div><span>Chi phí / vị thế</span><b id="mcPct">—</b></div><div><span>Chi phí 30 ngày</span><b id="mc30">—</b></div><div><span>Chi phí 90 ngày</span><b id="mc90">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="mcAction">So chi phí vốn với kỳ vọng lợi nhuận và thời gian nắm giữ.</p></div></div></div></section>
+      </a>
 
-<section class="calc-panel" data-panel="deleverage"><div class="panel-head"><div><span class="step">KHI MARGIN CAO</span><h2>Phải bán bao nhiêu để đưa margin về mức an toàn?</h2></div><div class="formula">Bán để trả nợ · Vốn tự có không đổi</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Bán quá ít thì tỷ lệ vay vẫn cao; bán quá nhiều lại làm mất vị thế không cần thiết. Tool tính đúng số tiền tối thiểu cần thu về để trả nợ.</p></div><div class="workbench"><form id="deleverageForm" class="input-panel"><div class="field-grid"><label>Tổng giá trị danh mục hiện tại<input id="dlAssets" type="number" min="0" step="any" value="650000000"></label><label>Dư nợ margin hiện tại<input id="dlDebt" type="number" min="0" step="any" value="200000000"></label><label>Mục tiêu nợ / vốn tự có (%)<input id="dlTarget" type="number" min="0" max="300" step="0.1" value="20"></label><label>Giá cổ phiếu dự kiến bán (đồng/cp)<input id="dlPrice" type="number" min="0" step="any" value="50000"></label><label>Lô giao dịch<input id="dlLot" type="number" min="1" step="1" value="100"></label></div><button class="calculate" type="submit">TÍNH SỐ LƯỢNG CẦN BÁN</button><p class="validation" id="dlValidation"></p></form><div class="result-panel"><div class="verdict" id="dlVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Giá trị cần bán tối thiểu</span><strong id="dlSellValue">—</strong></div><div class="metric-grid"><div><span>Vốn tự có hiện tại</span><b id="dlEquity">—</b></div><div><span>Nợ mục tiêu</span><b id="dlTargetDebt">—</b></div><div><span>Số CP cần bán</span><b id="dlQty">—</b></div><div><span>Nợ / vốn sau xử lý</span><b id="dlAfterRatio">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="dlAction">Nếu phải hạ margin, ưu tiên bán vị thế yếu nhất thay vì bán ngẫu nhiên.</p></div></div></div></section>
 
-<section class="calc-panel" data-panel="recovercapital"><div class="panel-head"><div><span class="step">KHI ĐÃ CÓ LÃI</span><h2>Bán bao nhiêu để thu hồi vốn gốc?</h2></div><div class="formula">Thu hồi vốn · Phần còn lại tiếp tục chạy</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Nhiều NĐT muốn thu hồi vốn nhưng thường bán theo cảm giác 1/3 hay 1/2. Tool tính đúng số cổ phiếu cần bán sau phí và thuế.</p></div><div class="workbench"><form id="recoverForm" class="input-panel"><div class="field-grid"><label>Số lượng đang nắm giữ<input id="rcQty" type="number" min="1" step="1" value="10000"></label><label>Giá vốn bình quân (đồng/cp)<input id="rcCost" type="number" min="0" step="any" value="30000"></label><label>Giá hiện tại / giá dự kiến bán<input id="rcPrice" type="number" min="0" step="any" value="50000"></label><label>Phí bán (%)<input id="rcFee" type="number" min="0" max="10" step="0.001" value="0.15"></label><label>Thuế khi bán (%)<input id="rcTax" type="number" min="0" max="10" step="0.001" value="0.1"></label><label>Lô giao dịch<input id="rcLot" type="number" min="1" step="1" value="100"></label></div><button class="calculate" type="submit">TÍNH SỐ CP CẦN BÁN</button><p class="validation" id="rcValidation"></p></form><div class="result-panel"><div class="verdict" id="rcVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Số CP cần bán</span><strong id="rcSellQty">—</strong></div><div class="metric-grid"><div><span>Vốn gốc cần thu hồi</span><b id="rcOriginal">—</b></div><div><span>Tiền ròng thu về</span><b id="rcNet">—</b></div><div><span>CP còn lại</span><b id="rcRemain">—</b></div><div><span>Giá trị còn lại theo giá hiện tại</span><b id="rcRemainValue">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="rcAction">Thu hồi vốn là quản trị vị thế, không phải lý do để bỏ qua luận điểm đầu tư.</p></div></div></div></section>
+      <nav
+        class="nav"
+        aria-label="Điều hướng chính"
+      >
 
-<section class="calc-panel" data-panel="drawdown"><div class="panel-head"><div><span class="step">SAU KHI THUA LỖ</span><h2>Phải tăng bao nhiêu để quay về điểm xuất phát?</h2></div><div class="formula">Lỗ càng sâu · Mức hồi cần càng lớn</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Lỗ 50% không cần tăng 50% để hòa vốn mà phải tăng 100%. Đây là lý do bảo vệ vốn quan trọng hơn cố gỡ.</p></div><div class="workbench"><form id="drawdownForm" class="input-panel"><div class="field-grid"><label>Vốn ban đầu<input id="ddStart" type="number" min="0" step="any" value="500000000"></label><label>Vốn hiện tại<input id="ddNow" type="number" min="0" step="any" value="400000000"></label></div><button class="calculate" type="submit">TÍNH MỨC HỒI PHỤC</button><p class="validation" id="ddValidation"></p></form><div class="result-panel"><div class="verdict" id="ddVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Mức tăng cần để hòa vốn</span><strong id="ddRecovery">—</strong></div><div class="metric-grid"><div><span>Mức sụt giảm đã xảy ra</span><b id="ddLossPct">—</b></div><div><span>Số tiền cần kiếm lại</span><b id="ddMoney">—</b></div><div><span>Nếu lỗ thêm 10%</span><b id="ddMore10">—</b></div><div><span>Mức hồi cần khi đó</span><b id="ddMoreRecovery">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="ddAction">Không tăng rủi ro chỉ vì muốn gỡ nhanh.</p></div></div></div></section>
+        <a href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="./">Trang chủ</a>
+        <a href="kien-thuc.html">Kiến thức</a>
 
-<section class="calc-panel" data-panel="portfolio"><div class="panel-head"><div><span class="step">TRƯỚC MUA / CUỐI NGÀY</span><h2>Danh mục đang có bao nhiêu rủi ro thật?</h2></div><div class="formula">Giá trị vị thế × khoảng tới cắt lỗ</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Danh mục có 5 mã chưa chắc đã đa dạng. Tool cộng số tiền có thể mất nếu từng mã chạm mức cắt lỗ để biết ngân sách rủi ro đã dùng bao nhiêu.</p></div><div class="workbench"><form id="portfolioForm" class="input-panel"><div class="field-grid"><label>Vốn tài khoản<input id="pfCapital" type="number" min="0" step="any" value="500000000"></label><label>Ngân sách rủi ro tối đa (%)<input id="pfBudget" type="number" min="0" max="50" step="0.1" value="8"></label></div><div class="risk-table"><div class="risk-head"><span>Mã</span><span>Giá trị vị thế</span><span>Lỗ tới cắt lỗ (%)</span></div><div class="risk-row"><input id="pfS1" value="FPT"><input id="pfV1" type="number" min="0" step="any" value="100000000"><input id="pfR1" type="number" min="0" max="100" step="0.1" value="6"></div><div class="risk-row"><input id="pfS2" value="MBB"><input id="pfV2" type="number" min="0" step="any" value="80000000"><input id="pfR2" type="number" min="0" max="100" step="0.1" value="5"></div><div class="risk-row"><input id="pfS3" value="HPG"><input id="pfV3" type="number" min="0" step="any" value="70000000"><input id="pfR3" type="number" min="0" max="100" step="0.1" value="7"></div><div class="risk-row"><input id="pfS4"><input id="pfV4" type="number" min="0" step="any"><input id="pfR4" type="number" min="0" max="100" step="0.1"></div><div class="risk-row"><input id="pfS5"><input id="pfV5" type="number" min="0" step="any"><input id="pfR5" type="number" min="0" max="100" step="0.1"></div></div><button class="calculate" type="submit">TÍNH RỦI RO DANH MỤC</button><p class="validation" id="pfValidation"></p></form><div class="result-panel"><div class="verdict" id="pfVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Tổng rủi ro tới cắt lỗ</span><strong id="pfRiskMoney">—</strong></div><div class="metric-grid"><div><span>Rủi ro / tài khoản</span><b id="pfRiskPct">—</b></div><div><span>Ngân sách còn lại</span><b id="pfRoom">—</b></div><div><span>Mã đóng góp rủi ro lớn nhất</span><b id="pfTop">—</b></div><div><span>Số vị thế đã nhập</span><b id="pfCount">—</b></div></div><div class="nba"><span>VIỆC NÊN LÀM TIẾP THEO</span><p id="pfAction">Đừng nhìn số mã; hãy nhìn số tiền có thể mất.</p></div></div></div></section>
+        <a
+          class="active"
+          href="investor-calculator.html"
+        >
+          Công cụ
+        </a>
 
-<section class="calc-panel" data-panel="dividend"><div class="panel-head"><div><span class="step">CỔ TỨC TIỀN MẶT</span><h2>Tôi thực nhận bao nhiêu tiền?</h2></div><div class="formula">Mệnh giá × tỷ lệ cổ tức</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>“Cổ tức 20%” thường tính trên mệnh giá 10.000 đồng, không phải trên giá thị trường.</p></div><div class="workbench"><form id="dividendForm" class="input-panel"><div class="field-grid"><label>Số cổ phiếu đang sở hữu<input id="dQty" type="number" min="1" step="1" value="10000"></label><label>Mệnh giá/cổ phiếu (đồng)<input id="dPar" type="number" min="0" step="any" value="10000"></label><label>Tỷ lệ cổ tức tiền mặt (%)<input id="dPct" type="number" min="0" step="0.1" value="20"></label><label>Thuế cổ tức (%)<input id="dTax" type="number" min="0" max="100" step="0.1" value="5"></label><label>Giá thị trường hiện tại (đồng/cp)<input id="dMarket" type="number" min="0" step="any" value="50000"></label></div><button class="calculate" type="submit">TÍNH CỔ TỨC THỰC NHẬN</button><p class="validation" id="dValidation"></p></form><div class="result-panel"><div class="verdict" id="dVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Tiền thực nhận sau thuế</span><strong id="dNet">—</strong></div><div class="metric-grid"><div><span>Cổ tức/cổ phiếu</span><b id="dPerShare">—</b></div><div><span>Tổng trước thuế</span><b id="dGross">—</b></div><div><span>Thuế ước tính</span><b id="dTaxMoney">—</b></div><div><span>Suất cổ tức theo giá thị trường</span><b id="dYield">—</b></div></div><div class="nba"><span>ĐIỂM CẦN NHỚ</span><p id="dAction">Tỷ lệ công bố trên mệnh giá khác với suất sinh lời trên giá thị trường.</p></div></div></div></section>
+        <a href="ve-toi.html">Về tôi</a>
 
-<section class="calc-panel" data-panel="exright"><div class="panel-head"><div><span class="step">NGÀY KHÔNG HƯỞNG QUYỀN</span><h2>Giá lý thuyết sau chia/quyền là bao nhiêu?</h2></div><div class="formula">Tiền mặt + cổ phiếu + quyền mua</div></div><div class="why"><strong>Vì sao cần tính?</strong><p>Giá điều chỉnh sau quyền phải tính đồng thời tiền cổ tức, cổ phiếu nhận thêm và quyền mua; không thể chỉ lấy giá cũ trừ một con số.</p></div><div class="workbench"><form id="exrightForm" class="input-panel"><div class="field-grid"><label>Giá trước ngày không hưởng quyền (đồng/cp)<input id="xPrice" type="number" min="0" step="any" value="50000"></label><label>Cổ tức tiền mặt/cổ phiếu (đồng)<input id="xCash" type="number" min="0" step="any" value="2000"></label><label>Cổ tức CP / CP thưởng (%)<input id="xStockPct" type="number" min="0" step="0.1" value="20"></label><label>Quyền mua thêm (%)<input id="xRightsPct" type="number" min="0" step="0.1" value="0"></label><label>Giá mua CP phát hành thêm (đồng/cp)<input id="xSubPrice" type="number" min="0" step="any" value="10000"></label><label>Số cổ phiếu đang có<input id="xQty" type="number" min="1" step="1" value="10000"></label></div><button class="calculate" type="submit">TÍNH GIÁ SAU CHIA / QUYỀN</button><p class="validation" id="xValidation"></p></form><div class="result-panel"><div class="verdict" id="xVerdict">CHỜ DỮ LIỆU</div><div class="big-number"><span>Giá lý thuyết sau quyền</span><strong id="xExPrice">—</strong></div><div class="metric-grid"><div><span>CP nhận thêm dự kiến</span><b id="xBonusQty">—</b></div><div><span>Quyền mua thêm</span><b id="xRightsQty">—</b></div><div><span>Tiền cổ tức</span><b id="xCashTotal">—</b></div><div><span>Mức điều chỉnh giá lý thuyết</span><b id="xDropPct">—</b></div></div><div class="nba"><span>ĐIỂM CẦN NHỚ</span><p id="xAction">Giá sau chia là phép điều chỉnh kỹ thuật; không nên nhìn riêng phần trăm giảm giá rồi kết luận lời/lỗ.</p></div></div></div></section>
-</section>
-<section class="principle"><strong>Nguyên tắc:</strong> công cụ hỗ trợ tính toán và kỷ luật ra quyết định; không phải khuyến nghị mua/bán và không cam kết lợi nhuận.</section>
-</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script type="module" src="investor-calculator.js"></script></body></html>
+      </nav>
+
+
+      <div class="topbar-actions">
+
+        <button
+          class="search-btn"
+          type="button"
+          aria-label="Tìm kiếm"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15Zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11Zm10.2 13.8l-3.2-3.2l-1.4 1.4l3.2 3.2a1 1 0 0 0 1.4-1.4Z"/>
+          </svg>
+        </button>
+
+
+        <button
+          class="menu-btn"
+          id="menuBtn"
+          type="button"
+          aria-label="Mở menu"
+          aria-expanded="false"
+          aria-controls="mobileDrawer"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+        </button>
+
+
+        <a
+          class="login-btn"
+          href="dang-nhap.html"
+        >
+          Đăng nhập
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="mobile-drawer"
+      id="mobileDrawer"
+    >
+
+      <div class="wrap">
+
+        <div class="mobile-links">
+          <a href="thi-truong-hom-nay.html">Thị trường</a>
+          <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+          <a href="sau-phien-cua-toi.html">Sau phiên</a>
+          <a href="watchlist.html">Watchlist</a>
+
+          <a href="./">Trang chủ</a>
+          <a href="kien-thuc.html">Kiến thức</a>
+          <a href="investor-calculator.html">Công cụ</a>
+          <a href="ve-toi.html">Về tôi</a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+  <main class="calc-wrap">
+
+    <!-- HERO -->
+    <section class="calc-hero">
+
+      <div>
+
+        <div class="eyebrow">
+          MÁY TÍNH CẦM TAY CỦA NHÀ ĐẦU TƯ
+        </div>
+
+        <h1>
+          Không nhẩm. Không ước chừng.<br>
+          Tính trước khi quyết định.
+        </h1>
+
+        <p>
+          Mỗi công cụ giải quyết một phép tính thật trong một tình huống thật.
+          Không cần đăng nhập để tính; đăng nhập chỉ để nhớ dữ liệu và lịch sử.
+        </p>
+
+        <div class="calc-hero-proof">
+          <span>12 máy tính chuyên biệt</span>
+          <span>Không cần đăng nhập để tính</span>
+          <span>Ưu tiên rủi ro trước lợi nhuận</span>
+        </div>
+
+      </div>
+
+
+      <aside class="calc-hero-side">
+
+        <div class="identity-box">
+
+          <div
+            id="identityStatus"
+            class="identity-status"
+          >
+            Chế độ tính nhanh · Không lưu
+          </div>
+
+          <button
+            id="loginBtn"
+            type="button"
+          >
+            Dùng Hồ sơ Nhà đầu tư
+          </button>
+
+        </div>
+
+
+        <div class="calc-side-rules">
+
+          <div>
+            <b>01</b>
+            <span>Tính trước khi mua</span>
+          </div>
+
+          <div>
+            <b>02</b>
+            <span>Biết giới hạn rủi ro</span>
+          </div>
+
+          <div>
+            <b>03</b>
+            <span>Có hành động tiếp theo</span>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </section>
+
+
+    <!-- TOOL TERMINAL -->
+    <section class="terminal">
+
+      <div
+        class="terminal-tabs"
+        role="tablist"
+        aria-label="Các máy tính đầu tư"
+      >
+        <button class="tab active" data-tab="position" type="button">Quy mô lệnh</button>
+        <button class="tab" data-tab="rr" type="button">Lãi / Lỗ kỳ vọng</button>
+        <button class="tab" data-tab="average" type="button">Bình quân giá</button>
+        <button class="tab" data-tab="margin" type="button">Sức chịu margin</button>
+        <button class="tab" data-tab="breakeven" type="button">Giá hòa vốn</button>
+        <button class="tab" data-tab="margincost" type="button">Chi phí margin</button>
+        <button class="tab" data-tab="deleverage" type="button">Hạ margin</button>
+        <button class="tab" data-tab="recovercapital" type="button">Thu hồi vốn gốc</button>
+        <button class="tab" data-tab="drawdown" type="button">Hồi phục sau lỗ</button>
+        <button class="tab" data-tab="portfolio" type="button">Rủi ro danh mục</button>
+        <button class="tab" data-tab="dividend" type="button">Cổ tức tiền mặt</button>
+        <button class="tab" data-tab="exright" type="button">Giá sau chia / quyền</button>
+      </div>
+
+
+      <!-- 01 POSITION SIZE -->
+      <section class="calc-panel active" data-panel="position">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC MUA</span>
+            <h2>Tôi được phép mua bao nhiêu?</h2>
+          </div>
+
+          <div class="formula">
+            Rủi ro trước · Quy mô sau
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Mua đúng mã nhưng sai quy mô vẫn có thể làm hỏng tài khoản.
+            Công cụ buộc số tiền mua phải nằm trong giới hạn rủi ro còn lại.
+          </p>
+        </div>
+
+
+        <div class="workbench">
+
+          <form
+            id="positionForm"
+            class="input-panel"
+          >
+
+            <div class="field-grid">
+
+              <label>
+                Vốn được phép đầu tư
+                <input id="posCapital" type="number" min="0" step="any" value="500000000">
+              </label>
+
+              <label>
+                Rủi ro tối đa/lệnh (%)
+                <input id="posRiskPct" type="number" min="0" max="20" step="0.1" value="1">
+              </label>
+
+              <label>
+                Ngân sách rủi ro danh mục (%)
+                <input id="posPortfolioBudget" type="number" min="0" max="50" step="0.1" value="8">
+              </label>
+
+              <label>
+                Rủi ro đã dùng (%)
+                <input id="posRiskUsed" type="number" min="0" max="50" step="0.1" value="3">
+              </label>
+
+              <label>
+                Giá dự kiến mua
+                <input id="posEntry" type="number" min="0" step="any" value="75000">
+              </label>
+
+              <label>
+                Giá cắt lỗ / luận điểm sai
+                <input id="posStop" type="number" min="0" step="any" value="71000">
+              </label>
+
+              <label>
+                Tỷ trọng tối đa/mã (%)
+                <input id="posMaxPct" type="number" min="0" max="100" step="0.1" value="20">
+              </label>
+
+              <label>
+                Lô giao dịch
+                <input id="posLot" type="number" min="1" step="1" value="100">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH QUY MÔ LỆNH
+            </button>
+
+            <p class="validation" id="posValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div
+              class="verdict"
+              id="posVerdict"
+            >
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Số lượng tối đa</span>
+              <strong id="posQty">—</strong>
+              <small>cổ phiếu</small>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Giá trị lệnh</span>
+                <b id="posValue">—</b>
+              </div>
+
+              <div>
+                <span>Lỗ tối đa tại cắt lỗ</span>
+                <b id="posLoss">—</b>
+              </div>
+
+              <div>
+                <span>Tỷ trọng sau mua</span>
+                <b id="posWeight">—</b>
+              </div>
+
+              <div>
+                <span>Ngân sách rủi ro còn lại</span>
+                <b id="posRoom">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="posAction">
+                Nhập dữ liệu lệnh để hệ thống tính giới hạn.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 02 RR -->
+      <section class="calc-panel" data-panel="rr">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC MUA</span>
+            <h2>Lệnh này có đáng để nhận rủi ro?</h2>
+          </div>
+
+          <div class="formula">
+            Lãi kỳ vọng ÷ Lỗ chấp nhận
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Một lệnh nhìn hấp dẫn có thể vẫn tệ nếu phần lãi kỳ vọng quá nhỏ so với phần lỗ chấp nhận.
+          </p>
+        </div>
+
+
+        <div class="workbench">
+
+          <form id="rrForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Giá mua
+                <input id="rrEntry" type="number" min="0" step="any" value="75000">
+              </label>
+
+              <label>
+                Giá cắt lỗ
+                <input id="rrStop" type="number" min="0" step="any" value="71000">
+              </label>
+
+              <label>
+                Giá mục tiêu
+                <input id="rrTarget" type="number" min="0" step="any" value="85000">
+              </label>
+
+              <label>
+                Số lượng cổ phiếu
+                <input id="rrQty" type="number" min="1" step="1" value="1000">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH LÃI / LỖ KỲ VỌNG
+            </button>
+
+            <p class="validation" id="rrValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="rrVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Tỷ lệ lỗ : lãi kỳ vọng</span>
+              <strong id="rrRatio">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Lỗ nếu chạm cắt lỗ</span>
+                <b id="rrLoss">—</b>
+              </div>
+
+              <div>
+                <span>Lãi nếu đạt mục tiêu</span>
+                <b id="rrProfit">—</b>
+              </div>
+
+              <div>
+                <span>Tỷ lệ thắng tối thiểu hòa vốn</span>
+                <b id="rrBreakeven">—</b>
+              </div>
+
+              <div>
+                <span>Khoảng cắt lỗ</span>
+                <b id="rrStopPct">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="rrAction">
+                Tính trước khi mở lệnh.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 03 AVERAGE -->
+      <section class="calc-panel" data-panel="average">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">ĐANG GIỮ</span>
+            <h2>Mua thêm sẽ làm giá vốn và rủi ro đổi thế nào?</h2>
+          </div>
+
+          <div class="formula">
+            Giá vốn giảm ≠ Rủi ro giảm
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Bình quân giá làm giá vốn đẹp hơn nhưng có thể làm số tiền có thể mất tăng mạnh.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="avgForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Số lượng đang có
+                <input id="avgQty" type="number" min="0" step="1" value="2000">
+              </label>
+
+              <label>
+                Giá vốn hiện tại
+                <input id="avgPrice" type="number" min="0" step="any" value="80000">
+              </label>
+
+              <label>
+                Giá mua thêm
+                <input id="avgAddPrice" type="number" min="0" step="any" value="70000">
+              </label>
+
+              <label>
+                Số tiền định mua thêm
+                <input id="avgAddAmount" type="number" min="0" step="any" value="70000000">
+              </label>
+
+              <label>
+                Giá cắt lỗ sau khi mua thêm
+                <input id="avgStop" type="number" min="0" step="any" value="66000">
+              </label>
+
+              <label>
+                Vốn đầu tư toàn tài khoản
+                <input id="avgCapital" type="number" min="0" step="any" value="500000000">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH SAU KHI MUA THÊM
+            </button>
+
+            <p class="validation" id="avgValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="avgVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Giá vốn mới</span>
+              <strong id="avgNewPrice">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>CP mua thêm</span>
+                <b id="avgAddQty">—</b>
+              </div>
+
+              <div>
+                <span>Tổng tỷ trọng</span>
+                <b id="avgWeight">—</b>
+              </div>
+
+              <div>
+                <span>Lỗ nếu chạm cắt lỗ</span>
+                <b id="avgRisk">—</b>
+              </div>
+
+              <div>
+                <span>Rủi ro / tài khoản</span>
+                <b id="avgRiskPct">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="avgAction">
+                Giá vốn giảm không đồng nghĩa rủi ro giảm.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 04 MARGIN -->
+      <section class="calc-panel" data-panel="margin">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC KHI DÙNG MARGIN</span>
+            <h2>Nếu thị trường giảm, vốn thật còn bao nhiêu?</h2>
+          </div>
+
+          <div class="formula">
+            Thử cú giảm trước · Dùng margin sau
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Margin khuếch đại drawdown của vốn tự có. Nhìn mỗi tỷ lệ margin hiện tại là chưa đủ.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="marginForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Vốn tự có hiện tại
+                <input id="mEquity" type="number" min="0" step="any" value="500000000">
+              </label>
+
+              <label>
+                Nợ margin hiện tại
+                <input id="mDebt" type="number" min="0" step="any" value="150000000">
+              </label>
+
+              <label>
+                Mức giảm muốn kiểm tra (%)
+                <input id="mShock" type="number" min="0" max="80" step="0.1" value="10">
+              </label>
+
+              <label>
+                Margin tối đa theo nguyên tắc cá nhân (%)
+                <input id="mLimit" type="number" min="0" max="300" step="0.1" value="30">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              KIỂM TRA SỨC CHỊU ĐỰNG
+            </button>
+
+            <p class="validation" id="mValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="mVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Vốn còn lại sau cú giảm</span>
+              <strong id="mAfter">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Tổng giá trị vị thế</span>
+                <b id="mGross">—</b>
+              </div>
+
+              <div>
+                <span>Số tiền lỗ</span>
+                <b id="mLoss">—</b>
+              </div>
+
+              <div>
+                <span>Mức sụt giảm vốn thật</span>
+                <b id="mDrawdown">—</b>
+              </div>
+
+              <div>
+                <span>Nợ / vốn sau cú giảm</span>
+                <b id="mDebtRatio">—</b>
+              </div>
+
+            </div>
+
+            <div class="scenario-strip">
+
+              <div>
+                <span>-5%</span>
+                <b id="mS5">—</b>
+              </div>
+
+              <div>
+                <span>-10%</span>
+                <b id="mS10">—</b>
+              </div>
+
+              <div>
+                <span>-15%</span>
+                <b id="mS15">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="mAction">
+                Stress test trước khi tăng đòn bẩy.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 05 BREAKEVEN -->
+      <section class="calc-panel" data-panel="breakeven">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC KHI ĐẶT GIÁ BÁN</span>
+            <h2>Bán ở giá nào mới thật sự hòa vốn?</h2>
+          </div>
+
+          <div class="formula">
+            Giá mua + phí + thuế + lãi vay
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Giá quay lại đúng giá vốn chưa chắc đã hòa vốn vì còn phí mua, phí bán, thuế khi bán và có thể cả lãi margin.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="breakevenForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Giá mua bình quân (đồng/cp)
+                <input id="bEntry" type="number" min="0" step="any" value="50000">
+              </label>
+
+              <label>
+                Số lượng cổ phiếu
+                <input id="bQty" type="number" min="1" step="1" value="10000">
+              </label>
+
+              <label>
+                Phí mua (%)
+                <input id="bBuyFee" type="number" min="0" max="10" step="0.001" value="0.15">
+              </label>
+
+              <label>
+                Phí bán (%)
+                <input id="bSellFee" type="number" min="0" max="10" step="0.001" value="0.15">
+              </label>
+
+              <label>
+                Thuế khi bán (%)
+                <input id="bSellTax" type="number" min="0" max="10" step="0.001" value="0.1">
+              </label>
+
+              <label>
+                Lãi margin đã phát sinh (đồng)
+                <input id="bInterest" type="number" min="0" step="any" value="0">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH GIÁ HÒA VỐN THẬT
+            </button>
+
+            <p class="validation" id="bValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="bVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Giá bán hòa vốn</span>
+              <strong id="bPrice">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Tổng vốn sau phí mua</span>
+                <b id="bCost">—</b>
+              </div>
+
+              <div>
+                <span>Tổng chi phí giao dịch + lãi</span>
+                <b id="bFees">—</b>
+              </div>
+
+              <div>
+                <span>Giá phải tăng từ giá mua</span>
+                <b id="bNeedPct">—</b>
+              </div>
+
+              <div>
+                <span>Doanh thu bán cần đạt</span>
+                <b id="bRevenue">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="bAction">
+                Đừng dùng riêng giá vốn hiển thị để kết luận đã hòa vốn.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 06 MARGIN COST -->
+      <section class="calc-panel" data-panel="margincost">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">ĐANG DÙNG MARGIN</span>
+            <h2>Mỗi ngày khoản vay đang tốn bao nhiêu?</h2>
+          </div>
+
+          <div class="formula">
+            Nợ × lãi suất × số ngày
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Chi phí margin nhỏ theo ngày nhưng lớn dần theo thời gian. Một vị thế đi ngang lâu có thể làm điểm hòa vốn tăng đáng kể.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="marginCostForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Dư nợ margin (đồng)
+                <input id="mcDebt" type="number" min="0" step="any" value="200000000">
+              </label>
+
+              <label>
+                Lãi suất năm (%)
+                <input id="mcRate" type="number" min="0" max="100" step="0.01" value="13.5">
+              </label>
+
+              <label>
+                Số ngày dự kiến vay
+                <input id="mcDays" type="number" min="0" step="1" value="30">
+              </label>
+
+              <label>
+                Giá trị vị thế dùng khoản vay (đồng)
+                <input id="mcPosition" type="number" min="0" step="any" value="400000000">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH CHI PHÍ MARGIN
+            </button>
+
+            <p class="validation" id="mcValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="mcVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Tổng lãi dự kiến</span>
+              <strong id="mcCost">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Chi phí mỗi ngày</span>
+                <b id="mcDaily">—</b>
+              </div>
+
+              <div>
+                <span>Chi phí / vị thế</span>
+                <b id="mcPct">—</b>
+              </div>
+
+              <div>
+                <span>Chi phí 30 ngày</span>
+                <b id="mc30">—</b>
+              </div>
+
+              <div>
+                <span>Chi phí 90 ngày</span>
+                <b id="mc90">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="mcAction">
+                So chi phí vốn với kỳ vọng lợi nhuận và thời gian nắm giữ.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 07 DELEVERAGE -->
+      <section class="calc-panel" data-panel="deleverage">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">KHI MARGIN CAO</span>
+            <h2>Phải bán bao nhiêu để đưa margin về mức an toàn?</h2>
+          </div>
+
+          <div class="formula">
+            Bán để trả nợ · Vốn tự có không đổi
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Bán quá ít thì tỷ lệ vay vẫn cao; bán quá nhiều lại làm mất vị thế không cần thiết.
+            Tool tính đúng số tiền tối thiểu cần thu về để trả nợ.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="deleverageForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Tổng giá trị danh mục hiện tại
+                <input id="dlAssets" type="number" min="0" step="any" value="650000000">
+              </label>
+
+              <label>
+                Dư nợ margin hiện tại
+                <input id="dlDebt" type="number" min="0" step="any" value="200000000">
+              </label>
+
+              <label>
+                Mục tiêu nợ / vốn tự có (%)
+                <input id="dlTarget" type="number" min="0" max="300" step="0.1" value="20">
+              </label>
+
+              <label>
+                Giá cổ phiếu dự kiến bán (đồng/cp)
+                <input id="dlPrice" type="number" min="0" step="any" value="50000">
+              </label>
+
+              <label>
+                Lô giao dịch
+                <input id="dlLot" type="number" min="1" step="1" value="100">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH SỐ LƯỢNG CẦN BÁN
+            </button>
+
+            <p class="validation" id="dlValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="dlVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Giá trị cần bán tối thiểu</span>
+              <strong id="dlSellValue">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Vốn tự có hiện tại</span>
+                <b id="dlEquity">—</b>
+              </div>
+
+              <div>
+                <span>Nợ mục tiêu</span>
+                <b id="dlTargetDebt">—</b>
+              </div>
+
+              <div>
+                <span>Số CP cần bán</span>
+                <b id="dlQty">—</b>
+              </div>
+
+              <div>
+                <span>Nợ / vốn sau xử lý</span>
+                <b id="dlAfterRatio">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="dlAction">
+                Nếu phải hạ margin, ưu tiên bán vị thế yếu nhất thay vì bán ngẫu nhiên.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 08 RECOVER CAPITAL -->
+      <section class="calc-panel" data-panel="recovercapital">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">KHI ĐÃ CÓ LÃI</span>
+            <h2>Bán bao nhiêu để thu hồi vốn gốc?</h2>
+          </div>
+
+          <div class="formula">
+            Thu hồi vốn · Phần còn lại tiếp tục chạy
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Nhiều NĐT muốn thu hồi vốn nhưng thường bán theo cảm giác 1/3 hay 1/2.
+            Tool tính đúng số cổ phiếu cần bán sau phí và thuế.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="recoverForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Số lượng đang nắm giữ
+                <input id="rcQty" type="number" min="1" step="1" value="10000">
+              </label>
+
+              <label>
+                Giá vốn bình quân (đồng/cp)
+                <input id="rcCost" type="number" min="0" step="any" value="30000">
+              </label>
+
+              <label>
+                Giá hiện tại / giá dự kiến bán
+                <input id="rcPrice" type="number" min="0" step="any" value="50000">
+              </label>
+
+              <label>
+                Phí bán (%)
+                <input id="rcFee" type="number" min="0" max="10" step="0.001" value="0.15">
+              </label>
+
+              <label>
+                Thuế khi bán (%)
+                <input id="rcTax" type="number" min="0" max="10" step="0.001" value="0.1">
+              </label>
+
+              <label>
+                Lô giao dịch
+                <input id="rcLot" type="number" min="1" step="1" value="100">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH SỐ CP CẦN BÁN
+            </button>
+
+            <p class="validation" id="rcValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="rcVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Số CP cần bán</span>
+              <strong id="rcSellQty">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Vốn gốc cần thu hồi</span>
+                <b id="rcOriginal">—</b>
+              </div>
+
+              <div>
+                <span>Tiền ròng thu về</span>
+                <b id="rcNet">—</b>
+              </div>
+
+              <div>
+                <span>CP còn lại</span>
+                <b id="rcRemain">—</b>
+              </div>
+
+              <div>
+                <span>Giá trị còn lại theo giá hiện tại</span>
+                <b id="rcRemainValue">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="rcAction">
+                Thu hồi vốn là quản trị vị thế, không phải lý do để bỏ qua luận điểm đầu tư.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 09 DRAWDOWN -->
+      <section class="calc-panel" data-panel="drawdown">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">SAU KHI THUA LỖ</span>
+            <h2>Phải tăng bao nhiêu để quay về điểm xuất phát?</h2>
+          </div>
+
+          <div class="formula">
+            Lỗ càng sâu · Mức hồi cần càng lớn
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Lỗ 50% không cần tăng 50% để hòa vốn mà phải tăng 100%.
+            Đây là lý do bảo vệ vốn quan trọng hơn cố gỡ.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="drawdownForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Vốn ban đầu
+                <input id="ddStart" type="number" min="0" step="any" value="500000000">
+              </label>
+
+              <label>
+                Vốn hiện tại
+                <input id="ddNow" type="number" min="0" step="any" value="400000000">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH MỨC HỒI PHỤC
+            </button>
+
+            <p class="validation" id="ddValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="ddVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Mức tăng cần để hòa vốn</span>
+              <strong id="ddRecovery">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Mức sụt giảm đã xảy ra</span>
+                <b id="ddLossPct">—</b>
+              </div>
+
+              <div>
+                <span>Số tiền cần kiếm lại</span>
+                <b id="ddMoney">—</b>
+              </div>
+
+              <div>
+                <span>Nếu lỗ thêm 10%</span>
+                <b id="ddMore10">—</b>
+              </div>
+
+              <div>
+                <span>Mức hồi cần khi đó</span>
+                <b id="ddMoreRecovery">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="ddAction">
+                Không tăng rủi ro chỉ vì muốn gỡ nhanh.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 10 PORTFOLIO RISK -->
+      <section class="calc-panel" data-panel="portfolio">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC MUA / CUỐI NGÀY</span>
+            <h2>Danh mục đang có bao nhiêu rủi ro thật?</h2>
+          </div>
+
+          <div class="formula">
+            Giá trị vị thế × khoảng tới cắt lỗ
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Danh mục có 5 mã chưa chắc đã đa dạng.
+            Tool cộng số tiền có thể mất nếu từng mã chạm mức cắt lỗ để biết ngân sách rủi ro đã dùng bao nhiêu.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="portfolioForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Vốn tài khoản
+                <input id="pfCapital" type="number" min="0" step="any" value="500000000">
+              </label>
+
+              <label>
+                Ngân sách rủi ro tối đa (%)
+                <input id="pfBudget" type="number" min="0" max="50" step="0.1" value="8">
+              </label>
+
+            </div>
+
+
+            <div class="risk-table">
+
+              <div class="risk-head">
+                <span>Mã</span>
+                <span>Giá trị vị thế</span>
+                <span>Lỗ tới cắt lỗ (%)</span>
+              </div>
+
+              <div class="risk-row">
+                <input id="pfS1" value="FPT">
+                <input id="pfV1" type="number" min="0" step="any" value="100000000">
+                <input id="pfR1" type="number" min="0" max="100" step="0.1" value="6">
+              </div>
+
+              <div class="risk-row">
+                <input id="pfS2" value="MBB">
+                <input id="pfV2" type="number" min="0" step="any" value="80000000">
+                <input id="pfR2" type="number" min="0" max="100" step="0.1" value="5">
+              </div>
+
+              <div class="risk-row">
+                <input id="pfS3" value="HPG">
+                <input id="pfV3" type="number" min="0" step="any" value="70000000">
+                <input id="pfR3" type="number" min="0" max="100" step="0.1" value="7">
+              </div>
+
+              <div class="risk-row">
+                <input id="pfS4">
+                <input id="pfV4" type="number" min="0" step="any">
+                <input id="pfR4" type="number" min="0" max="100" step="0.1">
+              </div>
+
+              <div class="risk-row">
+                <input id="pfS5">
+                <input id="pfV5" type="number" min="0" step="any">
+                <input id="pfR5" type="number" min="0" max="100" step="0.1">
+              </div>
+
+            </div>
+
+
+            <button class="calculate" type="submit">
+              TÍNH RỦI RO DANH MỤC
+            </button>
+
+            <p class="validation" id="pfValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="pfVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Tổng rủi ro tới cắt lỗ</span>
+              <strong id="pfRiskMoney">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Rủi ro / tài khoản</span>
+                <b id="pfRiskPct">—</b>
+              </div>
+
+              <div>
+                <span>Ngân sách còn lại</span>
+                <b id="pfRoom">—</b>
+              </div>
+
+              <div>
+                <span>Mã đóng góp rủi ro lớn nhất</span>
+                <b id="pfTop">—</b>
+              </div>
+
+              <div>
+                <span>Số vị thế đã nhập</span>
+                <b id="pfCount">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>VIỆC NÊN LÀM TIẾP THEO</span>
+              <p id="pfAction">
+                Đừng nhìn số mã; hãy nhìn số tiền có thể mất.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 11 DIVIDEND -->
+      <section class="calc-panel" data-panel="dividend">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">CỔ TỨC TIỀN MẶT</span>
+            <h2>Tôi thực nhận bao nhiêu tiền?</h2>
+          </div>
+
+          <div class="formula">
+            Mệnh giá × tỷ lệ cổ tức
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            “Cổ tức 20%” thường tính trên mệnh giá 10.000 đồng, không phải trên giá thị trường.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="dividendForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Số cổ phiếu đang sở hữu
+                <input id="dQty" type="number" min="1" step="1" value="10000">
+              </label>
+
+              <label>
+                Mệnh giá/cổ phiếu (đồng)
+                <input id="dPar" type="number" min="0" step="any" value="10000">
+              </label>
+
+              <label>
+                Tỷ lệ cổ tức tiền mặt (%)
+                <input id="dPct" type="number" min="0" step="0.1" value="20">
+              </label>
+
+              <label>
+                Thuế cổ tức (%)
+                <input id="dTax" type="number" min="0" max="100" step="0.1" value="5">
+              </label>
+
+              <label>
+                Giá thị trường hiện tại (đồng/cp)
+                <input id="dMarket" type="number" min="0" step="any" value="50000">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH CỔ TỨC THỰC NHẬN
+            </button>
+
+            <p class="validation" id="dValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="dVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Tiền thực nhận sau thuế</span>
+              <strong id="dNet">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>Cổ tức/cổ phiếu</span>
+                <b id="dPerShare">—</b>
+              </div>
+
+              <div>
+                <span>Tổng trước thuế</span>
+                <b id="dGross">—</b>
+              </div>
+
+              <div>
+                <span>Thuế ước tính</span>
+                <b id="dTaxMoney">—</b>
+              </div>
+
+              <div>
+                <span>Suất cổ tức theo giá thị trường</span>
+                <b id="dYield">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>ĐIỂM CẦN NHỚ</span>
+              <p id="dAction">
+                Tỷ lệ công bố trên mệnh giá khác với suất sinh lời trên giá thị trường.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 12 EX-RIGHT -->
+      <section class="calc-panel" data-panel="exright">
+
+        <div class="panel-head">
+          <div>
+            <span class="step">NGÀY KHÔNG HƯỞNG QUYỀN</span>
+            <h2>Giá lý thuyết sau chia/quyền là bao nhiêu?</h2>
+          </div>
+
+          <div class="formula">
+            Tiền mặt + cổ phiếu + quyền mua
+          </div>
+        </div>
+
+        <div class="why">
+          <strong>Vì sao cần tính?</strong>
+          <p>
+            Giá điều chỉnh sau quyền phải tính đồng thời tiền cổ tức, cổ phiếu nhận thêm và quyền mua;
+            không thể chỉ lấy giá cũ trừ một con số.
+          </p>
+        </div>
+
+        <div class="workbench">
+
+          <form id="exrightForm" class="input-panel">
+
+            <div class="field-grid">
+
+              <label>
+                Giá trước ngày không hưởng quyền (đồng/cp)
+                <input id="xPrice" type="number" min="0" step="any" value="50000">
+              </label>
+
+              <label>
+                Cổ tức tiền mặt/cổ phiếu (đồng)
+                <input id="xCash" type="number" min="0" step="any" value="2000">
+              </label>
+
+              <label>
+                Cổ tức CP / CP thưởng (%)
+                <input id="xStockPct" type="number" min="0" step="0.1" value="20">
+              </label>
+
+              <label>
+                Quyền mua thêm (%)
+                <input id="xRightsPct" type="number" min="0" step="0.1" value="0">
+              </label>
+
+              <label>
+                Giá mua CP phát hành thêm (đồng/cp)
+                <input id="xSubPrice" type="number" min="0" step="any" value="10000">
+              </label>
+
+              <label>
+                Số cổ phiếu đang có
+                <input id="xQty" type="number" min="1" step="1" value="10000">
+              </label>
+
+            </div>
+
+            <button class="calculate" type="submit">
+              TÍNH GIÁ SAU CHIA / QUYỀN
+            </button>
+
+            <p class="validation" id="xValidation"></p>
+
+          </form>
+
+
+          <div class="result-panel">
+
+            <div class="verdict" id="xVerdict">
+              CHỜ DỮ LIỆU
+            </div>
+
+            <div class="big-number">
+              <span>Giá lý thuyết sau quyền</span>
+              <strong id="xExPrice">—</strong>
+            </div>
+
+            <div class="metric-grid">
+
+              <div>
+                <span>CP nhận thêm dự kiến</span>
+                <b id="xBonusQty">—</b>
+              </div>
+
+              <div>
+                <span>Quyền mua thêm</span>
+                <b id="xRightsQty">—</b>
+              </div>
+
+              <div>
+                <span>Tiền cổ tức</span>
+                <b id="xCashTotal">—</b>
+              </div>
+
+              <div>
+                <span>Mức điều chỉnh giá lý thuyết</span>
+                <b id="xDropPct">—</b>
+              </div>
+
+            </div>
+
+            <div class="nba">
+              <span>ĐIỂM CẦN NHỚ</span>
+              <p id="xAction">
+                Giá sau chia là phép điều chỉnh kỹ thuật; không nên nhìn riêng phần trăm giảm giá rồi kết luận lời/lỗ.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <section class="principle">
+      <strong>Nguyên tắc:</strong>
+      công cụ hỗ trợ tính toán và kỷ luật ra quyết định;
+      không phải khuyến nghị mua/bán và không cam kết lợi nhuận.
+    </section>
+
+  </main>
+
+
+  <!-- =======================================================
+       FOOTER
+  ======================================================== -->
+  <footer class="footer">
+
+    <div class="wrap">
+
+      <div class="footer-main">
+
+
+        <div class="footer-brand-block">
+
+          <a
+            class="brand footer-brand-link"
+            href="./"
+          >
+
+            <img
+              src="LOGO.webp"
+              alt="Võ Hoàng logo"
+            >
+
+            <div class="brand-text">
+              <strong>VÕ HOÀNG</strong>
+              <span>Đầu tư chuẩn hệ thống</span>
+            </div>
+
+          </a>
+
+
+          <p class="footer-slogan">
+            Kiến thức tạo nền tảng.
+            Hệ thống tạo khác biệt.
+            Tài sản tạo tự do.
+          </p>
+
+
+          <div
+            class="footer-gold-line"
+            aria-hidden="true"
+          ></div>
+
+
+          <p class="footer-risk">
+            Đầu tư chứng khoán rủi ro thường trực.
+            Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+          </p>
+
+        </div>
+
+
+        <div class="footer-col footer-nav-col footer-nav-all">
+
+          <h4>Đi nhanh</h4>
+
+          <div class="footer-links quick-links">
+
+            <a href="thi-truong-hom-nay.html">Thị trường</a>
+            <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+            <a href="sau-phien-cua-toi.html">Sau phiên</a>
+            <a href="watchlist.html">Watchlist</a>
+
+            <a href="./">Trang chủ</a>
+            <a href="kien-thuc.html">Kiến thức</a>
+            <a href="investor-calculator.html">Công cụ</a>
+            <a href="ve-toi.html">Về tôi</a>
+
+          </div>
+
+        </div>
+
+
+        <div class="footer-col footer-connect">
+
+          <h4>Kết nối với Võ Hoàng</h4>
+
+          <div class="footer-socials">
+
+            <a
+              class="social"
+              href="https://www.youtube.com/@vohoanginvest"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/>
+              </svg>
+
+              YouTube
+            </a>
+
+
+            <a
+              class="social"
+              href="https://www.facebook.com/vohoanginvest"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/>
+              </svg>
+
+              Facebook
+            </a>
+
+
+            <a
+              class="social"
+              href="./"
+              aria-label="Website"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/>
+              </svg>
+
+              Website
+            </a>
+
+
+            <a
+              class="social"
+              href="https://onthiplus.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ôn Thi Plus"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/>
+              </svg>
+
+              Ôn Thi Plus
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer-bottom">
+
+        <div class="footer-bottom-row">
+
+          <div class="footer-copyright">
+            © 2026 <strong>VÕ HOÀNG</strong>.
+            All rights reserved.
+          </div>
+
+
+          <div class="footer-legal">
+
+            <a href="mien-tru-trach-nhiem.html">
+              Miễn trừ trách nhiệm
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="chinh-sach-bao-mat.html">
+              Chính sách bảo mật
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="dieu-khoan-su-dung.html">
+              Điều khoản sử dụng
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="du-lieu-bai-danh-gia.html">
+              Dữ liệu bài đánh giá
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="lien-he.html">
+              Liên hệ
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- Logic máy tính giữ nguyên -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="investor-calculator.js"></script>
+
+
+  <!-- Menu mobile -->
+  <script>
+    (function(){
+
+      const menuBtn =
+        document.getElementById("menuBtn");
+
+      const mobileDrawer =
+        document.getElementById("mobileDrawer");
+
+
+      if(
+        menuBtn &&
+        mobileDrawer
+      ){
+
+        menuBtn.addEventListener(
+          "click",
+          function(){
+
+            const open =
+              mobileDrawer
+                .classList
+                .toggle("open");
+
+            menuBtn.setAttribute(
+              "aria-expanded",
+              String(open)
+            );
+
+          }
+        );
+
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
