@@ -1,0 +1,3461 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Kiến thức đầu tư | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
+  <meta name="description" content="Kiến thức đầu tư theo hệ thống: bối cảnh thị trường, chọn cổ phiếu, thời điểm, quản trị rủi ro, phân bổ vốn, kỷ luật và review sau giao dịch.">
+  <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/kien-thuc.html">
+  <link rel="icon" href="favicon.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#04111f;
+      --bg-2:#07192b;
+      --panel:#091c31;
+      --panel-2:#0b223a;
+
+      --line:rgba(212,176,92,.20);
+      --line-soft:rgba(255,255,255,.08);
+
+      --gold:#e0bb63;
+      --gold-2:#f3cf74;
+
+      --text:#f5f7fb;
+      --muted:rgba(231,237,246,.76);
+      --muted-2:rgba(231,237,246,.56);
+
+      --green:#35e08b;
+      --red:#ff6673;
+      --orange:#ff9f43;
+      --cyan:#4de2d8;
+
+      --shadow:0 18px 44px rgba(0,0,0,.26);
+      --radius:20px;
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    html,body{margin:0;padding:0}
+
+    body{
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+
+      background:
+        radial-gradient(circle at top right,rgba(224,187,99,.085),transparent 25%),
+        radial-gradient(circle at 0 48%,rgba(77,226,216,.03),transparent 28%),
+        linear-gradient(180deg,#04111d 0%,#06172a 44%,#04111f 100%);
+
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;cursor:pointer}
+    img{max-width:100%;display:block}
+
+    .wrap{
+      width:min(calc(100% - 32px),var(--max));
+      margin:0 auto;
+    }
+
+
+    /* =========================================================
+       HEADER — THEO INDEX
+    ========================================================= */
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+
+      backdrop-filter:blur(10px);
+
+      background:rgba(3,11,20,.88);
+
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .topbar-inner{
+      width:min(calc(100% - 24px),1340px);
+      margin:0 auto;
+
+      min-height:78px;
+
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      gap:16px;
+    }
+
+    .brand{
+      min-width:0;
+
+      display:flex;
+      align-items:center;
+
+      gap:12px;
+    }
+
+    .brand img{
+      width:46px;
+      height:46px;
+
+      object-fit:contain;
+
+      flex:0 0 auto;
+    }
+
+    .brand-text{
+      min-width:0;
+
+      line-height:normal;
+
+      overflow:visible;
+
+      padding:1px 0 2px;
+    }
+
+    .brand-text strong{
+      display:block;
+
+      font-size:17px;
+      line-height:1.35;
+
+      font-weight:800;
+
+      color:var(--gold-2);
+
+      letter-spacing:.035em;
+
+      white-space:nowrap;
+    }
+
+    .brand-text span{
+      display:block;
+
+      margin-top:1px;
+
+      font-size:9.5px;
+      line-height:1.45;
+
+      color:#e8cf8f;
+
+      letter-spacing:.08em;
+
+      text-transform:uppercase;
+
+      white-space:nowrap;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      gap:26px;
+
+      flex:1 1 auto;
+
+      min-width:0;
+    }
+
+    .nav a{
+      position:relative;
+
+      padding:28px 0 24px;
+
+      font-size:14px;
+
+      color:rgba(255,255,255,.82);
+
+      white-space:nowrap;
+
+      transition:.2s ease;
+    }
+
+    .nav a:hover{color:#fff}
+
+    .nav a.active{
+      color:#fff;
+      font-weight:700;
+    }
+
+    .nav a.active::after{
+      content:"";
+
+      position:absolute;
+
+      left:0;
+      right:0;
+      bottom:-1px;
+
+      margin:auto;
+
+      width:100%;
+      height:3px;
+
+      border-radius:999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-2)
+        );
+    }
+
+    .topbar-actions{
+      display:flex;
+      align-items:center;
+
+      gap:12px;
+
+      flex:0 0 auto;
+    }
+
+    .search-btn,
+    .menu-btn{
+      width:42px;
+      height:42px;
+
+      padding:0;
+
+      border-radius:12px;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      background:
+        rgba(255,255,255,.02);
+
+      color:#fff;
+
+      display:grid;
+      place-items:center;
+    }
+
+    .menu-btn{display:none}
+
+    .login-btn{
+      height:42px;
+
+      padding:0 18px;
+
+      border-radius:12px;
+
+      border:
+        1px solid rgba(224,187,99,.44);
+
+      background:
+        linear-gradient(
+          180deg,
+          #f0cf79,
+          #d8b254
+        );
+
+      color:#1f1604;
+
+      font-size:14px;
+      font-weight:800;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      white-space:nowrap;
+
+      box-shadow:
+        0 10px 24px rgba(224,187,99,.16);
+    }
+
+    .mobile-drawer{
+      display:none;
+
+      border-top:
+        1px solid rgba(255,255,255,.06);
+
+      background:#071423;
+    }
+
+    .mobile-drawer.open{display:block}
+
+    .mobile-drawer .wrap{
+      padding:14px 0 18px;
+
+      display:grid;
+
+      gap:12px;
+    }
+
+    .mobile-links{
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+      gap:10px;
+    }
+
+    .mobile-links a{
+      padding:12px 14px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius:14px;
+
+      background:
+        rgba(255,255,255,.02);
+
+      color:#f6f8fc;
+
+      font-size:14px;
+      font-weight:600;
+
+      text-align:center;
+    }
+
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+
+    .knowledge-main{
+      padding:28px 0 0;
+    }
+
+    .knowledge-shell{
+      display:grid;
+
+      gap:18px;
+    }
+
+    .panel{
+      border:
+        1px solid var(--line);
+
+      border-radius:var(--radius);
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8,26,45,.97),
+          rgba(7,22,38,.95)
+        );
+
+      box-shadow:var(--shadow);
+    }
+
+
+    /* HERO */
+
+    .knowledge-hero{
+      overflow:hidden;
+
+      display:grid;
+
+      grid-template-columns:
+        minmax(0,1.12fr)
+        minmax(360px,.88fr);
+
+      min-height:460px;
+    }
+
+    .knowledge-hero-copy{
+      padding:50px 44px 44px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+
+      min-width:0;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+
+      gap:8px;
+
+      margin:0 0 13px;
+
+      color:var(--gold-2);
+
+      font-size:12px;
+      font-weight:800;
+
+      letter-spacing:.16em;
+
+      text-transform:uppercase;
+    }
+
+    .knowledge-hero h1{
+      margin:0;
+
+      max-width:720px;
+
+      font-size:52px;
+      line-height:1.05;
+
+      letter-spacing:-.035em;
+
+      font-weight:800;
+    }
+
+    .knowledge-hero h1 span{
+      color:var(--gold-2);
+    }
+
+    .knowledge-hero-copy > p{
+      margin:18px 0 0;
+
+      max-width:700px;
+
+      color:var(--muted);
+
+      font-size:16px;
+      line-height:1.72;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+
+      gap:10px;
+
+      margin-top:24px;
+    }
+
+    .btn-primary,
+    .btn-secondary{
+      min-height:46px;
+
+      padding:0 18px;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      border-radius:12px;
+
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .btn-primary{
+      background:
+        linear-gradient(
+          180deg,
+          #f0cf79,
+          #d8b254
+        );
+
+      color:#211705;
+
+      box-shadow:
+        0 10px 22px rgba(224,187,99,.16);
+    }
+
+    .btn-secondary{
+      border:
+        1px solid rgba(224,187,99,.34);
+
+      background:
+        rgba(255,255,255,.02);
+
+      color:#fff;
+    }
+
+    .hero-proof{
+      display:flex;
+      flex-wrap:wrap;
+
+      gap:9px 14px;
+
+      margin:22px 0 0;
+      padding:0;
+
+      list-style:none;
+    }
+
+    .hero-proof li{
+      display:inline-flex;
+      align-items:center;
+
+      gap:7px;
+
+      color:#edf3f9;
+
+      font-size:12px;
+    }
+
+    .hero-proof li::before{
+      content:"";
+
+      width:18px;
+      height:18px;
+
+      border-radius:50%;
+
+      border:
+        1px solid rgba(224,187,99,.48);
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(224,187,99,.95) 0 2px,
+          transparent 3px
+        );
+
+      flex:0 0 auto;
+    }
+
+
+    /* MAP SIDE */
+
+    .knowledge-map{
+      position:relative;
+
+      padding:34px 28px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+
+      overflow:hidden;
+
+      background:
+        radial-gradient(
+          circle at 80% 18%,
+          rgba(224,187,99,.12),
+          transparent 27%
+        ),
+        linear-gradient(
+          155deg,
+          rgba(10,32,52,.82),
+          rgba(5,18,31,.95)
+        );
+    }
+
+    .knowledge-map::before{
+      content:"";
+
+      position:absolute;
+
+      inset:0;
+
+      background:
+        linear-gradient(
+          150deg,
+          transparent 0 14%,
+          rgba(224,187,99,.13) 14.5% 15%,
+          transparent 15.5% 33%,
+          rgba(224,187,99,.09) 33.5% 34%,
+          transparent 34.5% 55%,
+          rgba(224,187,99,.06) 55.5% 56%,
+          transparent 56.5%
+        );
+
+      pointer-events:none;
+    }
+
+    .knowledge-map-inner{
+      position:relative;
+
+      z-index:2;
+    }
+
+    .knowledge-map small{
+      display:block;
+
+      color:var(--gold-2);
+
+      font-size:10px;
+      font-weight:800;
+
+      letter-spacing:.14em;
+
+      text-transform:uppercase;
+    }
+
+    .knowledge-map h2{
+      margin:7px 0 0;
+
+      font-size:23px;
+      line-height:1.3;
+    }
+
+    .knowledge-steps{
+      display:grid;
+
+      gap:7px;
+
+      margin-top:18px;
+    }
+
+    .knowledge-step{
+      display:grid;
+
+      grid-template-columns:
+        38px
+        minmax(0,1fr)
+        auto;
+
+      align-items:center;
+
+      gap:10px;
+
+      min-height:47px;
+
+      padding:7px 8px;
+
+      border:
+        1px solid rgba(255,255,255,.065);
+
+      border-radius:11px;
+
+      background:
+        rgba(255,255,255,.017);
+    }
+
+    .knowledge-step .no{
+      width:34px;
+      height:34px;
+
+      display:grid;
+      place-items:center;
+
+      border-radius:10px;
+
+      border:
+        1px solid rgba(224,187,99,.28);
+
+      background:
+        rgba(224,187,99,.065);
+
+      color:var(--gold-2);
+
+      font-size:9px;
+      font-weight:800;
+    }
+
+    .knowledge-step strong{
+      display:block;
+
+      font-size:10.5px;
+    }
+
+    .knowledge-step span{
+      display:block;
+
+      margin-top:2px;
+
+      color:var(--muted-2);
+
+      font-size:8.5px;
+    }
+
+    .knowledge-step a{
+      color:var(--gold-2);
+
+      font-size:11px;
+      font-weight:800;
+    }
+
+
+    /* GENERAL SECTION */
+
+    .section{
+      padding:24px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+
+      gap:18px;
+
+      margin-bottom:18px;
+    }
+
+    .section-kicker{
+      margin-bottom:5px;
+
+      color:var(--gold-2);
+
+      font-size:11px;
+      font-weight:800;
+
+      letter-spacing:.14em;
+
+      text-transform:uppercase;
+    }
+
+    .section-head h2{
+      margin:0;
+
+      font-size:29px;
+      line-height:1.22;
+
+      letter-spacing:-.025em;
+    }
+
+    .section-head p{
+      margin:8px 0 0;
+
+      max-width:740px;
+
+      color:var(--muted-2);
+
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .section-link{
+      color:#f2d487;
+
+      font-size:12px;
+      font-weight:700;
+
+      white-space:nowrap;
+    }
+
+
+    /* QUICK ROUTES */
+
+    .quick-grid{
+      display:grid;
+
+      grid-template-columns:
+        repeat(4,minmax(0,1fr));
+
+      gap:10px;
+    }
+
+    .quick-card{
+      min-height:178px;
+
+      padding:16px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+
+      border:
+        1px solid rgba(224,187,99,.13);
+
+      border-radius:15px;
+
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(224,187,99,.05),
+          transparent 44%
+        ),
+        rgba(255,255,255,.015);
+
+      transition:.2s ease;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-2px);
+
+      border-color:
+        rgba(224,187,99,.26);
+    }
+
+    .quick-icon{
+      width:38px;
+      height:38px;
+
+      display:grid;
+      place-items:center;
+
+      border-radius:11px;
+
+      border:
+        1px solid rgba(224,187,99,.26);
+
+      background:
+        rgba(224,187,99,.06);
+
+      color:var(--gold-2);
+
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .quick-card h3{
+      margin:15px 0 0;
+
+      font-size:15px;
+      line-height:1.35;
+    }
+
+    .quick-card p{
+      margin:6px 0 0;
+
+      color:var(--muted-2);
+
+      font-size:11px;
+      line-height:1.58;
+    }
+
+    .quick-card b{
+      margin-top:13px;
+
+      color:#f2d487;
+
+      font-size:10px;
+    }
+
+
+    /* SIX PILLARS */
+
+    .pillar-grid{
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+      gap:10px;
+    }
+
+    .pillar{
+      position:relative;
+
+      min-height:205px;
+
+      padding:17px;
+
+      overflow:hidden;
+
+      border:
+        1px solid rgba(224,187,99,.14);
+
+      border-radius:15px;
+
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(224,187,99,.055),
+          transparent 43%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.024),
+          rgba(255,255,255,.012)
+        );
+    }
+
+    .pillar::before{
+      content:"";
+
+      position:absolute;
+
+      top:0;
+      left:16px;
+      right:16px;
+
+      height:2px;
+
+      border-radius:999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(224,187,99,.80),
+          transparent
+        );
+    }
+
+    .pillar-no{
+      width:max-content;
+
+      padding:4px 8px;
+
+      border:
+        1px solid rgba(224,187,99,.28);
+
+      border-radius:8px;
+
+      background:
+        rgba(224,187,99,.07);
+
+      color:#f6d784;
+
+      font-size:9px;
+      font-weight:800;
+    }
+
+    .pillar h3{
+      margin:13px 0 0;
+
+      font-size:16px;
+      line-height:1.35;
+    }
+
+    .pillar p{
+      margin:7px 0 0;
+
+      color:var(--muted-2);
+
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .pillar ul{
+      margin:10px 0 0;
+      padding:0;
+
+      list-style:none;
+
+      display:grid;
+
+      gap:5px;
+    }
+
+    .pillar li{
+      position:relative;
+
+      padding-left:13px;
+
+      color:rgba(231,237,246,.72);
+
+      font-size:9.5px;
+      line-height:1.45;
+    }
+
+    .pillar li::before{
+      content:"";
+
+      position:absolute;
+
+      left:0;
+      top:.55em;
+
+      width:5px;
+      height:5px;
+
+      border-radius:50%;
+
+      background:var(--gold-2);
+    }
+
+
+    /* FEATURED LESSONS */
+
+    .lesson-grid{
+      display:grid;
+
+      grid-template-columns:
+        1.2fr .8fr;
+
+      gap:12px;
+    }
+
+    .lesson-main{
+      min-height:360px;
+
+      padding:22px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+
+      border:
+        1px solid rgba(224,187,99,.17);
+
+      border-radius:17px;
+
+      background:
+        radial-gradient(
+          circle at 90% 16%,
+          rgba(224,187,99,.08),
+          transparent 28%
+        ),
+        rgba(255,255,255,.015);
+    }
+
+    .lesson-main h3{
+      margin:0;
+
+      max-width:660px;
+
+      font-size:27px;
+      line-height:1.28;
+    }
+
+    .lesson-main > div > p{
+      margin:10px 0 0;
+
+      max-width:720px;
+
+      color:var(--muted);
+
+      font-size:12.5px;
+      line-height:1.72;
+    }
+
+    .lesson-rule{
+      margin-top:18px;
+
+      padding:14px 15px;
+
+      border-left:
+        2px solid var(--gold);
+
+      border-radius:0 12px 12px 0;
+
+      background:
+        rgba(224,187,99,.035);
+
+      color:#f7f2e8;
+
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .lesson-actions{
+      display:flex;
+      flex-wrap:wrap;
+
+      gap:8px;
+
+      margin-top:18px;
+    }
+
+    .lesson-actions a{
+      min-height:34px;
+
+      padding:0 11px;
+
+      display:inline-flex;
+      align-items:center;
+
+      border:
+        1px solid rgba(224,187,99,.28);
+
+      border-radius:9px;
+
+      color:#f2d487;
+
+      font-size:9.5px;
+      font-weight:700;
+    }
+
+    .lesson-side{
+      display:grid;
+
+      gap:10px;
+    }
+
+    .lesson-small{
+      min-height:175px;
+
+      padding:17px;
+
+      border:
+        1px solid rgba(224,187,99,.14);
+
+      border-radius:15px;
+
+      background:
+        rgba(255,255,255,.015);
+    }
+
+    .lesson-small h3{
+      margin:0;
+
+      font-size:17px;
+      line-height:1.38;
+    }
+
+    .lesson-small p{
+      margin:8px 0 0;
+
+      color:var(--muted-2);
+
+      font-size:10.5px;
+      line-height:1.6;
+    }
+
+    .lesson-small a{
+      display:inline-block;
+
+      margin-top:13px;
+
+      color:#f2d487;
+
+      font-size:9.5px;
+      font-weight:700;
+    }
+
+
+    /* DETAILS LIBRARY */
+
+    .library-grid{
+      display:grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap:10px;
+    }
+
+    .knowledge-detail{
+      overflow:hidden;
+
+      border:
+        1px solid rgba(255,255,255,.075);
+
+      border-radius:13px;
+
+      background:
+        rgba(255,255,255,.014);
+    }
+
+    .knowledge-detail summary{
+      position:relative;
+
+      min-height:56px;
+
+      padding:12px 44px 12px 14px;
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+
+      list-style:none;
+
+      cursor:pointer;
+    }
+
+    .knowledge-detail summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .knowledge-detail summary::after{
+      content:"+";
+
+      position:absolute;
+
+      right:14px;
+      top:50%;
+
+      transform:translateY(-50%);
+
+      color:var(--gold-2);
+
+      font-size:20px;
+      font-weight:400;
+    }
+
+    .knowledge-detail[open] summary::after{
+      content:"–";
+    }
+
+    .knowledge-detail summary b{
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .knowledge-detail summary span{
+      margin-top:3px;
+
+      color:var(--muted-2);
+
+      font-size:9px;
+      line-height:1.4;
+    }
+
+    .detail-body{
+      padding:0 14px 14px;
+
+      color:var(--muted);
+
+      font-size:10.5px;
+      line-height:1.65;
+    }
+
+    .detail-body strong{
+      color:#fff;
+    }
+
+    .detail-body ul{
+      margin:8px 0 0;
+      padding-left:17px;
+    }
+
+    .detail-body li + li{
+      margin-top:5px;
+    }
+
+
+    /* FLOW */
+
+    .flow-grid{
+      display:grid;
+
+      grid-template-columns:
+        repeat(4,minmax(0,1fr));
+
+      gap:9px;
+    }
+
+    .flow-card{
+      position:relative;
+
+      min-height:150px;
+
+      padding:15px;
+
+      border:
+        1px solid rgba(224,187,99,.13);
+
+      border-radius:14px;
+
+      background:
+        rgba(255,255,255,.014);
+    }
+
+    .flow-card:not(:last-child)::after{
+      content:"→";
+
+      position:absolute;
+
+      right:-9px;
+      top:50%;
+
+      z-index:3;
+
+      width:18px;
+      height:18px;
+
+      display:grid;
+      place-items:center;
+
+      transform:translateY(-50%);
+
+      border-radius:50%;
+
+      background:#0a1f34;
+
+      color:var(--gold-2);
+
+      font-size:10px;
+    }
+
+    .flow-card b{
+      color:var(--gold-2);
+
+      font-size:9px;
+      letter-spacing:.08em;
+    }
+
+    .flow-card h3{
+      margin:8px 0 0;
+
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    .flow-card p{
+      margin:6px 0 0;
+
+      color:var(--muted-2);
+
+      font-size:9.5px;
+      line-height:1.55;
+    }
+
+    .flow-card a{
+      display:inline-block;
+
+      margin-top:10px;
+
+      color:#f2d487;
+
+      font-size:9px;
+      font-weight:700;
+    }
+
+
+    /* CTA */
+
+    .final-cta{
+      padding:30px 24px;
+
+      text-align:center;
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(224,187,99,.09),
+          transparent 42%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(9,29,49,.97),
+          rgba(6,20,35,.96)
+        );
+    }
+
+    .final-cta h2{
+      margin:0;
+
+      font-size:29px;
+      line-height:1.25;
+    }
+
+    .final-cta p{
+      margin:10px auto 0;
+
+      max-width:700px;
+
+      color:var(--muted-2);
+
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .final-cta .hero-actions{
+      justify-content:center;
+
+      margin-top:20px;
+    }
+
+
+    /* =========================================================
+       FOOTER — THEO INDEX
+    ========================================================= */
+
+    .social{
+      display:inline-flex;
+      align-items:center;
+
+      gap:10px;
+
+      padding:10px 14px;
+
+      border-radius:999px;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      background:
+        rgba(255,255,255,.03);
+
+      color:#fff;
+
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .social svg{
+      width:18px;
+      height:18px;
+
+      fill:currentColor;
+
+      flex:0 0 auto;
+    }
+
+    .footer{
+      margin-top:30px;
+
+      border-top:
+        1px solid rgba(255,255,255,.07);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(224,187,99,.045),
+          transparent 28%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(3,12,22,.88),
+          rgba(2,8,15,.98)
+        );
+    }
+
+    .footer .footer-main{
+      padding:34px 0 24px;
+
+      display:grid;
+
+      grid-template-columns:
+        minmax(280px,1.25fr)
+        minmax(300px,1fr)
+        minmax(270px,1fr);
+
+      gap:28px 44px;
+
+      align-items:start;
+    }
+
+    .footer-brand-block{min-width:0}
+
+    .footer-brand-link{
+      width:max-content;
+
+      max-width:100%;
+    }
+
+    .footer .footer-slogan{
+      margin:13px 0 0;
+
+      max-width:340px;
+
+      font-size:13px;
+      line-height:1.65;
+
+      color:rgba(231,237,246,.80);
+    }
+
+    .footer .footer-gold-line{
+      width:100%;
+      max-width:340px;
+
+      height:1px;
+
+      margin:11px 0 8px;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(224,187,99,.88) 0%,
+          rgba(224,187,99,.34) 58%,
+          rgba(224,187,99,0) 100%
+        );
+    }
+
+    .footer .footer-risk{
+      margin:0;
+
+      max-width:340px;
+
+      font-size:10px;
+      line-height:1.55;
+
+      color:rgba(231,237,246,.44);
+    }
+
+    .footer .footer-col h4{
+      margin:2px 0 13px;
+
+      color:var(--gold-2);
+
+      font-size:13px;
+      line-height:1.2;
+
+      font-weight:800;
+
+      letter-spacing:.08em;
+
+      text-transform:uppercase;
+    }
+
+    .footer .footer-links a{
+      color:rgba(255,255,255,.82);
+
+      transition:color .2s ease;
+    }
+
+    .footer .footer-links a:hover{color:#fff}
+
+    .footer .footer-nav-all .quick-links{
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,max-content);
+
+      gap:9px 28px;
+
+      justify-content:start;
+    }
+
+    .footer .footer-nav-all .quick-links a{
+      width:auto;
+
+      padding:0;
+
+      border:0;
+
+      background:none;
+
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .footer .footer-socials{
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+      gap:8px;
+    }
+
+    .footer .footer-socials .social{
+      min-width:0;
+
+      justify-content:center;
+
+      padding:9px 11px;
+
+      border-radius:12px;
+
+      font-size:12px;
+
+      white-space:nowrap;
+    }
+
+    .footer .footer-bottom{
+      width:100%;
+
+      padding:13px 0 17px;
+
+      border-top:
+        1px solid rgba(224,187,99,.15);
+    }
+
+    .footer .footer-bottom-row{
+      width:100%;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      gap:10px 18px;
+
+      flex-wrap:wrap;
+
+      text-align:center;
+    }
+
+    .footer .footer-copyright{
+      flex:0 0 auto;
+
+      color:rgba(231,237,246,.68);
+
+      font-size:13px;
+      line-height:1.5;
+
+      white-space:nowrap;
+    }
+
+    .footer .footer-copyright strong{
+      color:rgba(255,255,255,.86);
+
+      font-weight:700;
+    }
+
+    .footer .footer-legal{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+
+      flex-wrap:wrap;
+
+      gap:6px 10px;
+
+      min-width:0;
+    }
+
+    .footer .footer-legal a{
+      color:rgba(231,237,246,.68);
+
+      font-size:13px;
+      line-height:1.45;
+
+      white-space:nowrap;
+    }
+
+    .footer .footer-legal a:hover{
+      color:#f1cf78;
+    }
+
+    .footer .footer-legal span{
+      color:rgba(224,187,99,.66);
+
+      font-size:8px;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media(max-width:1080px){
+
+      .knowledge-hero{
+        grid-template-columns:
+          1fr minmax(320px,.72fr);
+      }
+
+      .knowledge-hero h1{
+        font-size:44px;
+      }
+
+      .quick-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+      }
+
+      .pillar-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+      }
+
+      .flow-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+      }
+
+      .flow-card:nth-child(2)::after{
+        display:none;
+      }
+
+      .footer .footer-main{
+        grid-template-columns:
+          1.1fr 1fr;
+      }
+
+      .footer .footer-connect{
+        grid-column:1/-1;
+      }
+
+      .footer .footer-socials{
+        grid-template-columns:
+          repeat(4,minmax(0,1fr));
+      }
+    }
+
+
+    @media(max-width:860px){
+
+      .topbar-inner{
+        width:min(calc(100% - 20px),100%);
+
+        min-height:74px;
+      }
+
+      .nav,
+      .topbar-actions .search-btn{
+        display:none;
+      }
+
+      .menu-btn{display:grid}
+
+      .brand img{
+        width:42px;
+        height:42px;
+      }
+
+      .brand-text strong{
+        font-size:14px;
+      }
+
+      .brand-text span{
+        font-size:10px;
+      }
+
+      .knowledge-hero{
+        grid-template-columns:1fr;
+      }
+
+      .knowledge-hero-copy{
+        padding:38px 28px 28px;
+
+        text-align:center;
+
+        align-items:center;
+      }
+
+      .knowledge-map{
+        padding:18px 24px 28px;
+      }
+
+      .knowledge-map-inner{
+        max-width:720px;
+
+        margin:0 auto;
+      }
+
+      .knowledge-map small,
+      .knowledge-map h2{
+        text-align:center;
+      }
+
+      .knowledge-steps{
+        grid-template-columns:
+          repeat(3,minmax(0,1fr));
+      }
+
+      .knowledge-step{
+        grid-template-columns:1fr;
+
+        text-align:center;
+
+        justify-items:center;
+      }
+
+      .knowledge-step a{
+        display:none;
+      }
+
+      .lesson-grid{
+        grid-template-columns:1fr;
+      }
+
+      .lesson-side{
+        grid-template-columns:
+          1fr 1fr;
+      }
+    }
+
+
+    @media(max-width:680px){
+
+      .wrap{
+        width:min(calc(100% - 20px),var(--max));
+      }
+
+      .brand{
+        flex:1 1 auto;
+
+        min-width:0;
+      }
+
+      .brand-text{
+        overflow:hidden;
+      }
+
+      .brand-text strong,
+      .brand-text span{
+        white-space:nowrap;
+
+        overflow:hidden;
+
+        text-overflow:ellipsis;
+      }
+
+      .topbar-inner{
+        gap:10px;
+      }
+
+      .topbar-actions{
+        gap:8px;
+      }
+
+      .login-btn{
+        height:40px;
+
+        padding:0 13px;
+
+        font-size:12px;
+      }
+
+
+      .knowledge-main{
+        padding-top:12px;
+      }
+
+      .knowledge-shell{
+        gap:10px;
+      }
+
+      .panel{
+        border-radius:18px;
+      }
+
+      .knowledge-hero-copy{
+        padding:28px 15px 20px;
+      }
+
+      .eyebrow{
+        font-size:9.5px;
+      }
+
+      .knowledge-hero h1{
+        font-size:31px;
+        line-height:1.08;
+      }
+
+      .knowledge-hero-copy > p{
+        font-size:12px;
+        line-height:1.65;
+      }
+
+      .hero-actions{
+        width:100%;
+      }
+
+      .btn-primary,
+      .btn-secondary{
+        flex:1 1 100%;
+
+        min-height:42px;
+
+        font-size:11px;
+      }
+
+      .hero-proof{
+        justify-content:center;
+
+        gap:8px 10px;
+      }
+
+      .hero-proof li{
+        font-size:9px;
+      }
+
+
+      .knowledge-map{
+        padding:14px 10px 16px;
+      }
+
+      .knowledge-map h2{
+        font-size:17px;
+      }
+
+      .knowledge-steps{
+        grid-template-columns:
+          repeat(3,minmax(0,1fr));
+
+        gap:5px;
+      }
+
+      .knowledge-step{
+        min-height:92px;
+
+        padding:7px 5px;
+      }
+
+      .knowledge-step .no{
+        width:30px;
+        height:30px;
+
+        font-size:8px;
+      }
+
+      .knowledge-step strong{
+        font-size:8.5px;
+      }
+
+      .knowledge-step span{
+        font-size:7px;
+        line-height:1.3;
+      }
+
+
+      .section{
+        padding:15px 12px;
+      }
+
+      .section-head{
+        margin-bottom:13px;
+
+        align-items:center;
+
+        text-align:center;
+
+        flex-direction:column;
+      }
+
+      .section-kicker{
+        font-size:9px;
+      }
+
+      .section-head h2{
+        font-size:22px;
+      }
+
+      .section-head p{
+        font-size:10.5px;
+      }
+
+      .section-link{
+        font-size:9.5px;
+      }
+
+
+      .quick-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:7px;
+      }
+
+      .quick-card{
+        min-height:165px;
+
+        padding:12px 10px;
+
+        text-align:center;
+
+        align-items:center;
+      }
+
+      .quick-icon{
+        width:34px;
+        height:34px;
+      }
+
+      .quick-card h3{
+        margin-top:11px;
+
+        font-size:12px;
+      }
+
+      .quick-card p{
+        font-size:9px;
+        line-height:1.5;
+      }
+
+      .quick-card b{
+        font-size:8.5px;
+      }
+
+
+      .pillar-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:7px;
+      }
+
+      .pillar{
+        min-height:220px;
+
+        padding:13px 10px;
+
+        text-align:center;
+      }
+
+      .pillar-no{
+        margin:0 auto;
+      }
+
+      .pillar h3{
+        font-size:12.5px;
+      }
+
+      .pillar p{
+        font-size:9px;
+        line-height:1.5;
+      }
+
+      .pillar ul{
+        text-align:left;
+      }
+
+      .pillar li{
+        font-size:8px;
+      }
+
+
+      .lesson-main{
+        min-height:0;
+
+        padding:15px;
+
+        text-align:center;
+      }
+
+      .lesson-main h3{
+        font-size:21px;
+      }
+
+      .lesson-main > div > p{
+        font-size:10px;
+      }
+
+      .lesson-rule{
+        font-size:10px;
+
+        text-align:left;
+      }
+
+      .lesson-actions{
+        justify-content:center;
+      }
+
+      .lesson-side{
+        grid-template-columns:
+          1fr 1fr;
+
+        gap:7px;
+      }
+
+      .lesson-small{
+        min-height:180px;
+
+        padding:12px 10px;
+
+        text-align:center;
+      }
+
+      .lesson-small h3{
+        font-size:13px;
+      }
+
+      .lesson-small p{
+        font-size:8.8px;
+      }
+
+
+      .library-grid{
+        grid-template-columns:1fr;
+
+        gap:7px;
+      }
+
+      .knowledge-detail summary{
+        min-height:52px;
+      }
+
+      .knowledge-detail summary b{
+        font-size:10px;
+      }
+
+      .knowledge-detail summary span{
+        font-size:8px;
+      }
+
+      .detail-body{
+        font-size:9px;
+      }
+
+
+      .flow-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:7px;
+      }
+
+      .flow-card{
+        min-height:145px;
+
+        padding:11px 9px;
+
+        text-align:center;
+      }
+
+      .flow-card::after{
+        display:none!important;
+      }
+
+      .flow-card h3{
+        font-size:11.5px;
+      }
+
+      .flow-card p{
+        font-size:8.5px;
+      }
+
+
+      .final-cta{
+        padding:23px 13px;
+      }
+
+      .final-cta h2{
+        font-size:22px;
+      }
+
+      .final-cta p{
+        font-size:10.5px;
+      }
+
+
+      /* FOOTER */
+      .footer .footer-main{
+        padding:26px 0 19px;
+
+        grid-template-columns:1fr;
+
+        gap:18px;
+
+        text-align:center;
+      }
+
+      .footer .footer-brand-link{
+        margin:0 auto;
+
+        justify-content:center;
+      }
+
+      .footer .footer-slogan{
+        max-width:320px;
+
+        margin-left:auto;
+        margin-right:auto;
+
+        text-align:center;
+      }
+
+      .footer .footer-gold-line{
+        width:170px;
+
+        margin:11px auto 8px;
+      }
+
+      .footer .footer-risk{
+        max-width:300px;
+
+        margin-left:auto;
+        margin-right:auto;
+
+        font-size:9px;
+        line-height:1.5;
+
+        text-align:center;
+      }
+
+      .footer .footer-col h4{
+        margin-bottom:9px;
+      }
+
+      .footer .footer-nav-all .quick-links{
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:
+          repeat(4,max-content);
+
+        justify-content:center;
+        align-items:center;
+
+        gap:8px 12px;
+      }
+
+      .footer .footer-nav-all .quick-links a{
+        width:auto;
+
+        font-size:11px;
+        line-height:1.35;
+
+        text-align:center;
+
+        white-space:nowrap;
+      }
+
+      .footer .footer-socials{
+        width:min(100%,360px);
+
+        margin:0 auto;
+
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+
+        gap:8px;
+      }
+
+      .footer .footer-bottom{
+        padding:12px 0 15px;
+      }
+
+      .footer .footer-bottom-row{
+        display:flex;
+
+        flex-direction:column;
+
+        align-items:center;
+        justify-content:center;
+
+        gap:7px;
+
+        text-align:center;
+      }
+
+      .footer .footer-copyright{
+        width:100%;
+
+        font-size:10px;
+        line-height:1.45;
+
+        text-align:center;
+
+        white-space:normal;
+      }
+
+      .footer .footer-legal{
+        width:100%;
+
+        display:flex!important;
+
+        flex-direction:row!important;
+        flex-wrap:wrap!important;
+
+        align-items:center;
+        justify-content:center;
+
+        column-gap:7px;
+        row-gap:5px;
+      }
+
+      .footer .footer-legal a{
+        width:auto!important;
+
+        display:inline-block;
+
+        font-size:10px;
+        line-height:1.4;
+
+        white-space:nowrap;
+      }
+
+      .footer .footer-legal span{
+        display:inline-block;
+
+        font-size:7px;
+      }
+    }
+
+
+    @media(max-width:430px){
+
+      .knowledge-hero h1{
+        font-size:29px;
+      }
+
+      .knowledge-step strong{
+        font-size:8px;
+      }
+
+      .quick-card{
+        min-height:158px;
+      }
+
+      .pillar{
+        min-height:215px;
+      }
+
+      .footer .footer-nav-all .quick-links{
+        gap:7px 9px;
+      }
+
+      .footer .footer-nav-all .quick-links a{
+        font-size:10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =======================================================
+       HEADER
+  ======================================================== -->
+  <header class="topbar">
+
+    <div class="topbar-inner">
+
+      <a class="brand" href="./">
+
+        <img
+          src="LOGO.webp"
+          alt="Võ Hoàng logo"
+        >
+
+        <div class="brand-text">
+          <strong>VÕ HOÀNG</strong>
+          <span>Đầu tư chuẩn hệ thống</span>
+        </div>
+
+      </a>
+
+
+      <nav
+        class="nav"
+        aria-label="Điều hướng chính"
+      >
+
+        <a href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="./">Trang chủ</a>
+
+        <a
+          class="active"
+          href="kien-thuc.html"
+        >
+          Kiến thức
+        </a>
+
+        <a href="investor-calculator.html">Công cụ</a>
+        <a href="ve-toi.html">Về tôi</a>
+
+      </nav>
+
+
+      <div class="topbar-actions">
+
+        <button
+          class="search-btn"
+          type="button"
+          aria-label="Tìm kiếm"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15Zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11Zm10.2 13.8l-3.2-3.2l-1.4 1.4l3.2 3.2a1 1 0 0 0 1.4-1.4Z"/>
+          </svg>
+        </button>
+
+
+        <button
+          class="menu-btn"
+          id="menuBtn"
+          type="button"
+          aria-label="Mở menu"
+          aria-expanded="false"
+          aria-controls="mobileDrawer"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+        </button>
+
+
+        <a
+          class="login-btn"
+          href="dang-nhap.html"
+        >
+          Đăng nhập
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="mobile-drawer"
+      id="mobileDrawer"
+    >
+
+      <div class="wrap">
+
+        <div class="mobile-links">
+          <a href="thi-truong-hom-nay.html">Thị trường</a>
+          <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+          <a href="sau-phien-cua-toi.html">Sau phiên</a>
+          <a href="watchlist.html">Watchlist</a>
+
+          <a href="./">Trang chủ</a>
+          <a href="kien-thuc.html">Kiến thức</a>
+          <a href="investor-calculator.html">Công cụ</a>
+          <a href="ve-toi.html">Về tôi</a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+  <main class="knowledge-main">
+
+    <div class="wrap knowledge-shell">
+
+
+      <!-- HERO -->
+      <section class="panel knowledge-hero">
+
+        <div class="knowledge-hero-copy">
+
+          <p class="eyebrow">
+            KIẾN THỨC ĐẦU TƯ CÓ HỆ THỐNG
+          </p>
+
+          <h1>
+            Không cần biết thật nhiều.
+            <span>Cần biết điều gì giúp mình quyết định ít sai hơn.</span>
+          </h1>
+
+          <p>
+            Kiến thức chỉ có giá trị khi nó đi vào quy trình:
+            hiểu bối cảnh, chọn đúng cơ hội, tính trước rủi ro, dùng vốn hợp lý
+            và review lại sau mỗi quyết định.
+          </p>
+
+
+          <div class="hero-actions">
+
+            <a
+              class="btn-primary"
+              href="#lo-trinh"
+            >
+              Bắt đầu theo lộ trình →
+            </a>
+
+            <a
+              class="btn-secondary"
+              href="kiem-tra-nhanh-tai-khoan.html"
+            >
+              Kiểm tra tài khoản của tôi →
+            </a>
+
+          </div>
+
+
+          <ul class="hero-proof">
+            <li>Không phím hàng</li>
+            <li>Ưu tiên quản trị vốn</li>
+            <li>Học xong có việc để làm</li>
+          </ul>
+
+        </div>
+
+
+        <aside
+          class="knowledge-map"
+          id="lo-trinh"
+        >
+
+          <div class="knowledge-map-inner">
+
+            <small>
+              BẢN ĐỒ KIẾN THỨC
+            </small>
+
+            <h2>
+              6 lớp để một quyết định đầu tư trở nên có hệ thống.
+            </h2>
+
+
+            <div class="knowledge-steps">
+
+              <div class="knowledge-step">
+                <div class="no">01</div>
+
+                <div>
+                  <strong>Bối cảnh thị trường</strong>
+                  <span>Thị trường đang thuận hay nghịch?</span>
+                </div>
+
+                <a href="#boi-canh">→</a>
+              </div>
+
+
+              <div class="knowledge-step">
+                <div class="no">02</div>
+
+                <div>
+                  <strong>Chọn cổ phiếu</strong>
+                  <span>Mã nào thật sự đáng theo dõi?</span>
+                </div>
+
+                <a href="#chon-co-phieu">→</a>
+              </div>
+
+
+              <div class="knowledge-step">
+                <div class="no">03</div>
+
+                <div>
+                  <strong>Thời điểm</strong>
+                  <span>Khi nào điều kiện đủ để hành động?</span>
+                </div>
+
+                <a href="#thoi-diem">→</a>
+              </div>
+
+
+              <div class="knowledge-step">
+                <div class="no">04</div>
+
+                <div>
+                  <strong>Quản trị rủi ro</strong>
+                  <span>Nếu sai, mất bao nhiêu là chấp nhận được?</span>
+                </div>
+
+                <a href="#rui-ro">→</a>
+              </div>
+
+
+              <div class="knowledge-step">
+                <div class="no">05</div>
+
+                <div>
+                  <strong>Phân bổ vốn</strong>
+                  <span>Một cơ hội được dùng bao nhiêu vốn?</span>
+                </div>
+
+                <a href="#phan-bo">→</a>
+              </div>
+
+
+              <div class="knowledge-step">
+                <div class="no">06</div>
+
+                <div>
+                  <strong>Kỷ luật & Review</strong>
+                  <span>Sau phiên, mình học được gì?</span>
+                </div>
+
+                <a href="#ky-luat">→</a>
+              </div>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+
+      <!-- QUICK ROUTES -->
+      <section class="panel section">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="section-kicker">
+              HỌC THEO VIỆC CẦN LÀM
+            </div>
+
+            <h2>
+              Hôm nay bạn đang cần giải quyết câu hỏi nào?
+            </h2>
+
+            <p>
+              Đừng đọc kiến thức theo kiểu gom thật nhiều. Chọn đúng vấn đề đang có trong tài khoản rồi học phần liên quan.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="quick-grid">
+
+          <a
+            class="quick-card"
+            href="sang-nay-can-nhin-gi.html"
+          >
+
+            <div>
+
+              <div class="quick-icon">☀</div>
+
+              <h3>Trước phiên</h3>
+
+              <p>
+                Xác định bối cảnh, vùng cần theo dõi và điều kiện có thể làm thay đổi quan điểm.
+              </p>
+
+            </div>
+
+            <b>Sáng nay cần nhìn gì? →</b>
+
+          </a>
+
+
+          <a
+            class="quick-card"
+            href="thi-truong-hom-nay.html"
+          >
+
+            <div>
+
+              <div class="quick-icon">↗</div>
+
+              <h3>Trong phiên</h3>
+
+              <p>
+                Đọc trạng thái, dòng tiền, độ rộng và nhóm ngành thay vì chỉ nhìn VN-Index.
+              </p>
+
+            </div>
+
+            <b>Mở thị trường hôm nay →</b>
+
+          </a>
+
+
+          <a
+            class="quick-card"
+            href="watchlist.html"
+          >
+
+            <div>
+
+              <div class="quick-icon">★</div>
+
+              <h3>Trước khi mua</h3>
+
+              <p>
+                Lưu lý do, điều kiện kích hoạt và điều kiện sai trước khi một mã trở thành vị thế thật.
+              </p>
+
+            </div>
+
+            <b>Mở Watchlist →</b>
+
+          </a>
+
+
+          <a
+            class="quick-card"
+            href="sau-phien-cua-toi.html"
+          >
+
+            <div>
+
+              <div class="quick-icon">✓</div>
+
+              <h3>Sau phiên</h3>
+
+              <p>
+                Tách kết quả khỏi cảm xúc để biết mình làm đúng hệ thống hay chỉ gặp may/rủi.
+              </p>
+
+            </div>
+
+            <b>Review phiên →</b>
+
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- SIX PILLARS -->
+      <section class="panel section">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="section-kicker">
+              6 TRỤ CỘT CẦN NẮM
+            </div>
+
+            <h2>
+              Kiến thức phải đi cùng một quy trình ra quyết định.
+            </h2>
+
+            <p>
+              Không một chỉ báo, một tin tức hay một mã cổ phiếu có thể thay thế toàn bộ hệ thống.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="pillar-grid">
+
+          <article
+            class="pillar"
+            id="boi-canh"
+          >
+
+            <div class="pillar-no">
+              01 · BỐI CẢNH
+            </div>
+
+            <h3>
+              Thị trường thuận hay nghịch?
+            </h3>
+
+            <p>
+              Cùng một cổ phiếu tốt nhưng xác suất thành công khác nhau rất nhiều khi đặt trong hai bối cảnh thị trường khác nhau.
+            </p>
+
+            <ul>
+              <li>Trạng thái chung và độ rộng</li>
+              <li>Dòng tiền đang mở rộng hay co lại</li>
+              <li>Nhóm nào dẫn dắt thật sự</li>
+            </ul>
+
+          </article>
+
+
+          <article
+            class="pillar"
+            id="chon-co-phieu"
+          >
+
+            <div class="pillar-no">
+              02 · CHỌN CỔ PHIẾU
+            </div>
+
+            <h3>
+              Đừng chọn mã chỉ vì “nghe hay”.
+            </h3>
+
+            <p>
+              Một mã đáng theo dõi cần có lý do đủ rõ để sau này bạn biết vì sao mình mua và khi nào lý do đó không còn đúng.
+            </p>
+
+            <ul>
+              <li>Nhóm ngành và sức mạnh tương đối</li>
+              <li>Chất lượng vận động giá</li>
+              <li>Lý do đủ cụ thể để kiểm chứng</li>
+            </ul>
+
+          </article>
+
+
+          <article
+            class="pillar"
+            id="thoi-diem"
+          >
+
+            <div class="pillar-no">
+              03 · THỜI ĐIỂM
+            </div>
+
+            <h3>
+              Cổ phiếu tốt chưa chắc là điểm mua tốt.
+            </h3>
+
+            <p>
+              Thời điểm giúp bạn phân biệt “đáng quan tâm” với “đủ điều kiện hành động”.
+            </p>
+
+            <ul>
+              <li>Điều kiện xác nhận</li>
+              <li>Vùng vào có lợi thế</li>
+              <li>Không mua chỉ vì sợ lỡ cơ hội</li>
+            </ul>
+
+          </article>
+
+
+          <article
+            class="pillar"
+            id="rui-ro"
+          >
+
+            <div class="pillar-no">
+              04 · QUẢN TRỊ RỦI RO
+            </div>
+
+            <h3>
+              Tính phần mất trước khi nghĩ đến phần lời.
+            </h3>
+
+            <p>
+              Nếu không biết một quyết định sai sẽ làm tài khoản giảm bao nhiêu, bạn chưa thực sự biết mình đang đặt cược điều gì.
+            </p>
+
+            <ul>
+              <li>Điểm sai phải xác định trước</li>
+              <li>Rủi ro mỗi lệnh phải có giới hạn</li>
+              <li>Không để một lệnh làm hỏng cả tài khoản</li>
+            </ul>
+
+          </article>
+
+
+          <article
+            class="pillar"
+            id="phan-bo"
+          >
+
+            <div class="pillar-no">
+              05 · PHÂN BỔ VỐN
+            </div>
+
+            <h3>
+              Không phải cơ hội nào cũng dùng cùng một tỷ trọng.
+            </h3>
+
+            <p>
+              Tỷ trọng phải phản ánh chất lượng cơ hội, mức chắc chắn, tổng rủi ro danh mục và sức chịu đựng của tài khoản.
+            </p>
+
+            <ul>
+              <li>Tỷ trọng không dựa trên cảm xúc</li>
+              <li>Margin không thay thế kế hoạch vốn</li>
+              <li>Luôn nhìn tổng rủi ro danh mục</li>
+            </ul>
+
+          </article>
+
+
+          <article
+            class="pillar"
+            id="ky-luat"
+          >
+
+            <div class="pillar-no">
+              06 · KỶ LUẬT & REVIEW
+            </div>
+
+            <h3>
+              Một giao dịch chỉ kết thúc khi bạn học xong từ nó.
+            </h3>
+
+            <p>
+              Review giúp tách phần kết quả do kỹ năng, do thị trường và do may mắn để hệ thống ngày càng tốt hơn.
+            </p>
+
+            <ul>
+              <li>Không đánh giá chỉ bằng lời/lỗ</li>
+              <li>Ghi lại lỗi hành vi</li>
+              <li>Tìm mẫu hình lặp lại qua nhiều phiên</li>
+            </ul>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- FEATURED LESSONS -->
+      <section class="panel section">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="section-kicker">
+              BÀI NÊN ĐỌC TRƯỚC
+            </div>
+
+            <h2>
+              Ba tư duy có thể giúp tránh nhiều lỗi đắt tiền.
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="lesson-grid">
+
+          <article class="lesson-main">
+
+            <div>
+
+              <div class="section-kicker">
+                01 · RỦI RO TRƯỚC LỢI NHUẬN
+              </div>
+
+              <h3>
+                Một lệnh “đúng mã” vẫn có thể là một quyết định tệ nếu sai cách dùng vốn.
+              </h3>
+
+              <p>
+                Nhà đầu tư thường dành nhiều thời gian để hỏi “mã nào tăng?” nhưng lại ít hỏi
+                “nếu tôi sai thì tài khoản mất bao nhiêu?”. Hai người cùng mua một cổ phiếu,
+                cùng một giá, nhưng người dùng 10% vốn và người dùng 70% vốn đang chơi hai trò chơi hoàn toàn khác nhau.
+              </p>
+
+              <div class="lesson-rule">
+                <strong>Quy tắc thực hành:</strong>
+                trước mỗi lệnh phải có ít nhất ba con số — giá vào dự kiến, điểm sai và số tiền tối đa chấp nhận mất.
+              </div>
+
+            </div>
+
+
+            <div class="lesson-actions">
+
+              <a href="investor-calculator.html">
+                Mở bộ công cụ →
+              </a>
+
+              <a href="kiem-tra-nhanh-tai-khoan.html">
+                Kiểm tra nhanh tài khoản →
+              </a>
+
+            </div>
+
+          </article>
+
+
+          <div class="lesson-side">
+
+            <article class="lesson-small">
+
+              <div class="section-kicker">
+                02 · KHÔNG FOMO
+              </div>
+
+              <h3>
+                Giá chạy không phải là một điều kiện mua.
+              </h3>
+
+              <p>
+                Khi một mã tăng nhanh, áp lực “không mua sẽ lỡ” thường khiến kế hoạch bị thay thế bằng cảm xúc.
+                Watchlist có lý do giúp bạn giữ lại điều kiện đã đặt ra từ trước.
+              </p>
+
+              <a href="watchlist.html">
+                Mở Watchlist →
+              </a>
+
+            </article>
+
+
+            <article class="lesson-small">
+
+              <div class="section-kicker">
+                03 · SỨC MẠNH TƯƠNG ĐỐI
+              </div>
+
+              <h3>
+                Một mã xanh chưa chắc là một mã mạnh.
+              </h3>
+
+              <p>
+                Nếu cổ phiếu tăng +0,5% nhưng ngành tăng +1,5%, mã đó đang yếu hơn mặt bằng.
+                Đừng chỉ nhìn màu xanh/đỏ; hãy nhìn nó đang đứng ở đâu so với benchmark.
+              </p>
+
+              <a href="watchlist.html">
+                So với ngành trong Watchlist →
+              </a>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- KNOWLEDGE LIBRARY -->
+      <section class="panel section">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="section-kicker">
+              THƯ VIỆN KIẾN THỨC NHANH
+            </div>
+
+            <h2>
+              Mỗi câu hỏi là một lỗi cần tránh hoặc một quyết định cần làm rõ.
+            </h2>
+
+            <p>
+              Bấm mở phần bạn đang cần. Nội dung được giữ ngắn để có thể áp dụng ngay vào tài khoản.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="library-grid">
+
+          <details class="knowledge-detail">
+
+            <summary>
+              <b>Market Score nên dùng như thế nào?</b>
+              <span>Không dùng như tín hiệu mua/bán.</span>
+            </summary>
+
+            <div class="detail-body">
+              Market Score nên được xem như <strong>thước đo bối cảnh</strong>.
+              Điểm thấp nghĩa là cần giảm mức chủ động và tăng yêu cầu xác nhận;
+              điểm cao không có nghĩa mọi cổ phiếu đều có thể mua.
+            </div>
+
+          </details>
+
+
+          <details class="knowledge-detail">
+
+            <summary>
+              <b>Khi nào nên đứng ngoài?</b>
+              <span>Không giao dịch cũng là một quyết định.</span>
+            </summary>
+
+            <div class="detail-body">
+              Có thể cân nhắc đứng ngoài hoặc giảm nhịp giao dịch khi:
+              <ul>
+                <li>thị trường chưa rõ trạng thái;</li>
+                <li>không có mã đạt điều kiện của kế hoạch;</li>
+                <li>bản thân đang bị cảm xúc sau chuỗi thắng/thua chi phối.</li>
+              </ul>
+            </div>
+
+          </details>
+
+
+          <details class="knowledge-detail">
+
+            <summary>
+              <b>Margin nên nhìn như thế nào?</b>
+              <span>Đòn bẩy làm nhanh cả lời lẫn sai lầm.</span>
+            </summary>
+
+            <div class="detail-body">
+              Margin không nên dùng để “cứu” một quyết định sai.
+              Trước khi dùng đòn bẩy, cần nhìn đồng thời:
+              mức lỗ tối đa, tổng tỷ trọng danh mục và khả năng xử lý nếu thị trường gap giảm.
+            </div>
+
+          </details>
+
+
+          <details class="knowledge-detail">
+
+            <summary>
+              <b>Cắt lỗ bao nhiêu là hợp lý?</b>
+              <span>Không có một con số chung cho mọi mã.</span>
+            </summary>
+
+            <div class="detail-body">
+              Điểm cắt lỗ nên đến từ <strong>điểm làm giả định sai</strong>,
+              sau đó dùng position size để đảm bảo số tiền mất nằm trong giới hạn.
+              Không nên chọn ngược: mua thật lớn rồi mới tìm một mức cắt lỗ “chịu được”.
+            </div>
+
+          </details>
+
+
+          <details class="knowledge-detail">
+
+            <summary>
+              <b>Tại sao phải review sau phiên?</b>
+              <span>Kết quả một phiên chưa nói hết chất lượng quyết định.</span>
+            </summary>
+
+            <div class="detail-body">
+              Một lệnh lời vẫn có thể là lệnh sai quy trình; một lệnh lỗ vẫn có thể là quyết định đúng.
+              Review giúp tách <strong>kết quả</strong> khỏi <strong>chất lượng hành động</strong>.
+            </div>
+
+          </details>
+
+
+          <details class="knowledge-detail">
+
+            <summary>
+              <b>Watchlist nên có bao nhiêu mã?</b>
+              <span>Ít nhưng có lý do tốt hơn nhiều nhưng vô nghĩa.</span>
+            </summary>
+
+            <div class="detail-body">
+              Không cần đặt mục tiêu một con số cố định.
+              Chỉ giữ những mã mà bạn có thể nói rõ:
+              vì sao quan tâm, điều kiện hành động và điều kiện loại bỏ.
+            </div>
+
+          </details>
+
+        </div>
+
+      </section>
+
+
+      <!-- KNOWLEDGE -> ACTION -->
+      <section class="panel section">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="section-kicker">
+              HỌC XONG PHẢI CÓ HÀNH ĐỘNG
+            </div>
+
+            <h2>
+              Biến kiến thức thành một quy trình sử dụng hằng ngày.
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="flow-grid">
+
+          <article class="flow-card">
+
+            <b>BƯỚC 01</b>
+
+            <h3>
+              Đọc bối cảnh
+            </h3>
+
+            <p>
+              Xem thị trường đang thuận, phân hóa hay rủi ro.
+            </p>
+
+            <a href="thi-truong-hom-nay.html">
+              Mở thị trường →
+            </a>
+
+          </article>
+
+
+          <article class="flow-card">
+
+            <b>BƯỚC 02</b>
+
+            <h3>
+              Lọc cơ hội
+            </h3>
+
+            <p>
+              Chỉ giữ các mã có lý do và điều kiện rõ ràng.
+            </p>
+
+            <a href="watchlist.html">
+              Mở Watchlist →
+            </a>
+
+          </article>
+
+
+          <article class="flow-card">
+
+            <b>BƯỚC 03</b>
+
+            <h3>
+              Kiểm tra vốn & rủi ro
+            </h3>
+
+            <p>
+              Biết trước mình có thể mất bao nhiêu nếu giả định sai.
+            </p>
+
+            <a href="investor-calculator.html">
+              Mở công cụ →
+            </a>
+
+          </article>
+
+
+          <article class="flow-card">
+
+            <b>BƯỚC 04</b>
+
+            <h3>
+              Review cuối ngày
+            </h3>
+
+            <p>
+              Nhìn lại quyết định và lỗi hành vi để hệ thống tốt dần.
+            </p>
+
+            <a href="sau-phien-cua-toi.html">
+              Review phiên →
+            </a>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- CTA -->
+      <section class="panel final-cta">
+
+        <div class="section-kicker">
+          BẮT ĐẦU TỪ TÀI KHOẢN CỦA BẠN
+        </div>
+
+        <h2>
+          Biết nhiều chưa chắc đầu tư tốt hơn. Biết mình đang hở ở đâu mới quan trọng.
+        </h2>
+
+        <p>
+          Làm bài kiểm tra nhanh để xác định phần cần ưu tiên:
+          chọn cổ phiếu, rủi ro, phân bổ vốn, kỷ luật hay hệ thống review.
+        </p>
+
+
+        <div class="hero-actions">
+
+          <a
+            class="btn-primary"
+            href="kiem-tra-nhanh-tai-khoan.html"
+          >
+            Kiểm tra nhanh tài khoản →
+          </a>
+
+          <a
+            class="btn-secondary"
+            href="investor-calculator.html"
+          >
+            Mở bộ công cụ →
+          </a>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- =======================================================
+       FOOTER
+  ======================================================== -->
+  <footer class="footer">
+
+    <div class="wrap">
+
+      <div class="footer-main">
+
+
+        <div class="footer-brand-block">
+
+          <a
+            class="brand footer-brand-link"
+            href="./"
+          >
+
+            <img
+              src="LOGO.webp"
+              alt="Võ Hoàng logo"
+            >
+
+            <div class="brand-text">
+              <strong>VÕ HOÀNG</strong>
+              <span>Đầu tư chuẩn hệ thống</span>
+            </div>
+
+          </a>
+
+
+          <p class="footer-slogan">
+            Kiến thức tạo nền tảng.
+            Hệ thống tạo khác biệt.
+            Tài sản tạo tự do.
+          </p>
+
+
+          <div
+            class="footer-gold-line"
+            aria-hidden="true"
+          ></div>
+
+
+          <p class="footer-risk">
+            Đầu tư chứng khoán rủi ro thường trực.
+            Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+          </p>
+
+        </div>
+
+
+        <div class="footer-col footer-nav-col footer-nav-all">
+
+          <h4>Đi nhanh</h4>
+
+          <div class="footer-links quick-links">
+
+            <a href="thi-truong-hom-nay.html">Thị trường</a>
+            <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+            <a href="sau-phien-cua-toi.html">Sau phiên</a>
+            <a href="watchlist.html">Watchlist</a>
+
+            <a href="./">Trang chủ</a>
+            <a href="kien-thuc.html">Kiến thức</a>
+            <a href="investor-calculator.html">Công cụ</a>
+            <a href="ve-toi.html">Về tôi</a>
+
+          </div>
+
+        </div>
+
+
+        <div class="footer-col footer-connect">
+
+          <h4>Kết nối với Võ Hoàng</h4>
+
+          <div class="footer-socials">
+
+            <a
+              class="social"
+              href="https://www.youtube.com/@vohoanginvest"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/>
+              </svg>
+
+              YouTube
+            </a>
+
+
+            <a
+              class="social"
+              href="https://www.facebook.com/vohoanginvest"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/>
+              </svg>
+
+              Facebook
+            </a>
+
+
+            <a
+              class="social"
+              href="./"
+              aria-label="Website"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/>
+              </svg>
+
+              Website
+            </a>
+
+
+            <a
+              class="social"
+              href="https://onthiplus.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ôn Thi Plus"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/>
+              </svg>
+
+              Ôn Thi Plus
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer-bottom">
+
+        <div class="footer-bottom-row">
+
+          <div class="footer-copyright">
+            © 2026 <strong>VÕ HOÀNG</strong>.
+            All rights reserved.
+          </div>
+
+
+          <div class="footer-legal">
+
+            <a href="mien-tru-trach-nhiem.html">
+              Miễn trừ trách nhiệm
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="chinh-sach-bao-mat.html">
+              Chính sách bảo mật
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="dieu-khoan-su-dung.html">
+              Điều khoản sử dụng
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="du-lieu-bai-danh-gia.html">
+              Dữ liệu bài đánh giá
+            </a>
+
+            <span aria-hidden="true">•</span>
+
+            <a href="lien-he.html">
+              Liên hệ
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+    (function(){
+
+      const menuBtn =
+        document.getElementById("menuBtn");
+
+      const mobileDrawer =
+        document.getElementById("mobileDrawer");
+
+
+      if(
+        menuBtn &&
+        mobileDrawer
+      ){
+
+        menuBtn.addEventListener(
+          "click",
+          function(){
+
+            const open =
+              mobileDrawer
+                .classList
+                .toggle("open");
+
+            menuBtn.setAttribute(
+              "aria-expanded",
+              String(open)
+            );
+
+          }
+        );
+
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
