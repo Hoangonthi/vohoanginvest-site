@@ -1367,7 +1367,25 @@
     font-size:7px;
   }
 }
+#breadthValue{
+  font-size:20px;
+}
+    @media(max-width:680px){
+  #breadthValue{
+    font-size:17px;
+  }
+}
 
+  #quickNote::placeholder{
+  font-size:11px;
+}
+
+    @media(max-width:680px){
+  #quickNote::placeholder{
+    font-size:9.5px;
+  }
+}
+    
   </style>
 </head>
 
@@ -1508,8 +1526,7 @@
       <div>
         <div class="market-label">Độ rộng thị trường</div>
         <div class="market-main" id="breadthValue">—</div>
-        <div class="market-sub" id="breadthNote">Số mã tăng / giảm</div>
-      </div>
+       </div>
       <div class="breadth-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
 
