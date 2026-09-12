@@ -4,38 +4,39 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Thị trường hôm nay realtime | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
-  <meta name="description" content="Đọc thị trường chứng khoán Việt Nam realtime: trạng thái, độ rộng, dòng tiền, nhóm ngành dẫn dắt, cảnh báo rủi ro và hành động tiếp theo.">
+  <meta name="description" content="Đọc thị trường chứng khoán Việt Nam realtime: Market Score, độ rộng, dòng tiền, nhóm ngành dẫn dắt, cảnh báo rủi ro và hành động tiếp theo.">
   <meta name="theme-color" content="#04111f">
   <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html">
   <link rel="icon" href="favicon.png" type="image/png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="hero-thi-truong-hom-nay.webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/css/market-lead.css" data-market-lead-css>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Nạp trước để CSS compact của trang này ghi đè đúng form -->
+  <link rel="stylesheet" href="./assets/css/market-lead.css" data-market-lead-css>
 
   <style>
     :root{
       --bg:#04111f;
-      --bg2:#061827;
-      --panel:#081b2e;
-      --panel2:#0b2238;
-      --line:rgba(224,187,99,.20);
+      --bg-2:#07192b;
+      --panel:#091c31;
+      --panel-2:#0b223a;
+      --line:rgba(212,176,92,.20);
       --line-soft:rgba(255,255,255,.08);
       --gold:#e0bb63;
-      --gold2:#f3cf74;
       --gold-2:#f3cf74;
       --text:#f5f7fb;
-      --muted:rgba(231,237,246,.74);
-      --muted2:rgba(231,237,246,.54);
+      --muted:rgba(231,237,246,.76);
+      --muted-2:rgba(231,237,246,.56);
       --green:#35e08b;
-      --red:#ff5f70;
+      --red:#ff6673;
       --orange:#ff9f43;
       --cyan:#4de2d8;
-      --blue:#67a9ff;
+      --blue:#65a8ff;
+      --shadow:0 18px 44px rgba(0,0,0,.24);
+      --radius:20px;
       --max:1240px;
-      --radius:18px;
-      --shadow:0 18px 44px rgba(0,0,0,.25);
     }
 
     *{box-sizing:border-box}
@@ -45,20 +46,18 @@
       font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 92% 4%,rgba(224,187,99,.08),transparent 23%),
-        radial-gradient(circle at 8% 45%,rgba(32,124,178,.08),transparent 26%),
-        linear-gradient(180deg,#03101d 0%,#061726 48%,#04111f 100%);
+        radial-gradient(circle at top right,rgba(224,187,99,.08),transparent 25%),
+        linear-gradient(180deg,#04111d 0%,#06172a 44%,#04111f 100%);
       overflow-x:hidden;
     }
-
     a{color:inherit;text-decoration:none}
-    img{display:block;max-width:100%}
+    img{max-width:100%;display:block}
     button,input,select{font:inherit}
-
+    button{cursor:pointer}
     .wrap{width:min(calc(100% - 32px),var(--max));margin:0 auto}
 
     /* =========================================================
-       HEADER — Y CHANG TRANG CHỦ (INDEX)
+       HEADER — LẤY CẤU TRÚC / PHONG CÁCH TỪ INDEX
     ========================================================= */
     .topbar{
       position:sticky;
@@ -68,7 +67,6 @@
       background:rgba(3,11,20,.88);
       border-bottom:1px solid rgba(255,255,255,.06);
     }
-
     .topbar-inner{
       width:min(calc(100% - 24px),1340px);
       margin:0 auto;
@@ -78,28 +76,24 @@
       justify-content:space-between;
       gap:16px;
     }
-
     .brand{
       min-width:0;
       display:flex;
       align-items:center;
       gap:12px;
     }
-
     .brand img{
       width:46px;
       height:46px;
       object-fit:contain;
       flex:0 0 auto;
     }
-
     .brand-text{
       min-width:0;
       line-height:normal;
       overflow:visible;
       padding:1px 0 2px;
     }
-
     .brand-text strong{
       display:block;
       font-size:17px;
@@ -109,7 +103,6 @@
       letter-spacing:.035em;
       white-space:nowrap;
     }
-
     .brand-text span{
       display:block;
       margin-top:1px;
@@ -120,7 +113,6 @@
       text-transform:uppercase;
       white-space:nowrap;
     }
-
     .nav{
       display:flex;
       align-items:center;
@@ -129,7 +121,6 @@
       flex:1 1 auto;
       min-width:0;
     }
-
     .nav a{
       font-size:14px;
       color:rgba(255,255,255,.82);
@@ -138,7 +129,6 @@
       white-space:nowrap;
       transition:.2s ease;
     }
-
     .nav a:hover{color:#fff}
     .nav a.active{color:#fff;font-weight:700}
     .nav a.active::after{
@@ -151,28 +141,22 @@
       border-radius:999px;
       background:linear-gradient(90deg,var(--gold),var(--gold-2));
     }
-
     .topbar-actions{
       display:flex;
       align-items:center;
       gap:12px;
       flex:0 0 auto;
     }
-
     .search-btn,.menu-btn{
-      width:42px;
-      height:42px;
+      width:42px;height:42px;
       border-radius:12px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.02);
       color:#fff;
       display:grid;
       place-items:center;
-      cursor:pointer;
     }
-
     .menu-btn{display:none}
-
     .login-btn{
       height:42px;
       padding:0 18px;
@@ -188,7 +172,6 @@
       white-space:nowrap;
       box-shadow:0 10px 24px rgba(224,187,99,.16);
     }
-
     .mobile-drawer{
       display:none;
       border-top:1px solid rgba(255,255,255,.06);
@@ -219,235 +202,717 @@
     /* =========================================================
        MAIN
     ========================================================= */
-    .market-main{padding:26px 0 0}
-    .dashboard{display:grid;gap:14px}
+    .reader-main{padding:18px 0 0}
+    .reader-shell{display:grid;gap:12px}
 
-    .hero-market{
-      position:relative;overflow:hidden;min-height:318px;
-      border:1px solid var(--line);border-radius:24px;
-      background:#071829;box-shadow:var(--shadow);
-    }
-    .hero-market::before{
-      content:"";position:absolute;inset:0;z-index:1;
+    .panel{
+      min-width:0;
+      border:1px solid rgba(212,176,92,.18);
+      border-radius:18px;
       background:
-        linear-gradient(90deg,rgba(4,17,31,.99) 0%,rgba(4,17,31,.96) 43%,rgba(4,17,31,.48) 67%,rgba(4,17,31,.18) 100%);
+        radial-gradient(circle at 100% 0%,rgba(224,187,99,.035),transparent 36%),
+        linear-gradient(180deg,rgba(8,27,46,.97),rgba(6,22,38,.95));
+      box-shadow:0 12px 30px rgba(0,0,0,.16);
+      overflow:hidden;
+    }
+
+    .reader-label{
+      display:block;
+      margin-bottom:5px;
+      color:var(--gold-2);
+      font-size:11px;
+      line-height:1.3;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    /* HERO — BÁM HÌNH CHUẨN */
+    .reader-hero{
+      position:relative;
+      min-height:300px;
+      display:grid;
+      grid-template-columns:minmax(0,1.08fr) minmax(410px,.92fr);
+      align-items:stretch;
+      border-bottom:1px solid rgba(224,187,99,.13);
+      overflow:hidden;
+    }
+    .reader-hero-copy{
+      position:relative;
+      z-index:3;
+      padding:24px 8px 22px 0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .reader-eyebrow{
+      margin:0 0 8px;
+      color:var(--gold-2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .reader-hero h1{
+      margin:0;
+      max-width:720px;
+      font-size:48px;
+      line-height:1.04;
+      letter-spacing:-.035em;
+      font-weight:800;
+    }
+    .reader-hero h1 span{color:var(--gold-2)}
+    .reader-hero-copy > p{
+      max-width:700px;
+      margin:13px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+    }
+    .reader-proof{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:16px;
+    }
+    .reader-proof b{
+      padding:8px 13px;
+      border:1px solid rgba(77,226,216,.34);
+      border-radius:999px;
+      background:rgba(77,226,216,.035);
+      color:#effbff;
+      font-size:11px;
+      font-weight:600;
+    }
+
+    .reader-hero-art{
+      position:relative;
+      min-height:300px;
+      overflow:hidden;
+    }
+    .reader-hero-art::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      background:
+        linear-gradient(90deg,#06172a 0%,rgba(6,23,42,.68) 12%,rgba(6,23,42,.10) 44%,rgba(6,23,42,.05) 100%),
+        linear-gradient(180deg,rgba(0,0,0,.02),rgba(3,13,23,.22));
       pointer-events:none;
     }
-    .hero-market-art{
-      position:absolute;inset:0 0 0 auto;width:58%;height:100%;object-fit:cover;object-position:center;
-      opacity:.90;filter:saturate(.92) contrast(1.04);
+    .reader-hero-art img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
     }
-    .hero-market-copy{position:relative;z-index:2;width:min(700px,65%);padding:34px 34px 30px}
-    .eyebrow{
-      margin:0 0 10px;color:var(--gold2);font-size:12px;font-weight:800;
-      letter-spacing:.16em;text-transform:uppercase;
+    .hero-quote{
+      position:absolute;
+      z-index:2;
+      right:18px;
+      top:48px;
+      width:min(255px,48%);
+      padding:14px 15px 12px;
+      border-left:2px solid rgba(224,187,99,.72);
+      background:linear-gradient(90deg,rgba(4,15,26,.72),rgba(4,15,26,.20));
+      border-radius:0 12px 12px 0;
     }
-    .hero-market h1{margin:0;font-size:52px;line-height:1.02;letter-spacing:-.035em;font-weight:800}
-    .hero-market h1 span{color:var(--gold2)}
-    .hero-market-copy>p{margin:15px 0 0;max-width:650px;color:var(--muted);font-size:15px;line-height:1.68}
-    .proofs{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
-    .proofs span{
-      border:1px solid rgba(77,226,216,.40);background:rgba(77,226,216,.035);
-      border-radius:999px;padding:8px 13px;color:#eefcff;font-size:12px;font-weight:600;
+    .hero-quote blockquote{
+      margin:0;
+      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
+      font-size:19px;
+      line-height:1.42;
+      font-weight:700;
+      color:#f9f3df;
     }
-    .hero-live{
-      position:absolute;z-index:3;right:20px;bottom:18px;
+    .hero-quote span{
+      display:block;
+      margin-top:8px;
+      text-align:right;
+      color:var(--gold-2);
+      font-size:11px;
+      font-weight:800;
     }
     .reader-live{
-      min-height:38px;padding:0 13px;border-radius:11px;border:1px solid rgba(77,226,216,.35);
-      background:rgba(4,15,27,.82);display:flex;align-items:center;gap:8px;color:#eaf7f7;font-size:12px;
-      backdrop-filter:blur(9px);
+      position:absolute;
+      right:16px;
+      bottom:14px;
+      z-index:3;
+      min-height:34px;
+      padding:0 12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:11px;
+      border:1px solid rgba(77,226,216,.25);
+      background:rgba(3,15,26,.78);
+      color:#eaf4fb;
+      font-size:11px;
+      backdrop-filter:blur(7px);
     }
-    .reader-live i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px currentColor}
-    .reader-live.is-positive{color:var(--green);border-color:rgba(53,224,139,.35)}
+    .reader-live i{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--cyan);
+      box-shadow:0 0 12px currentColor;
+    }
     .reader-live.is-positive i{background:var(--green)}
-    .reader-live.is-warning{color:var(--orange);border-color:rgba(255,159,67,.40)}
     .reader-live.is-warning i{background:var(--orange)}
-    .reader-live.is-danger{color:var(--red);border-color:rgba(255,95,112,.40)}
     .reader-live.is-danger i{background:var(--red)}
 
-    .top-grid{display:grid;grid-template-columns:.92fr 1.28fr .78fr;gap:14px}
-    .panel{
-      min-width:0;border:1px solid var(--line-soft);border-radius:var(--radius);
-      background:linear-gradient(180deg,rgba(10,29,48,.96),rgba(6,22,38,.96));
-      box-shadow:0 14px 32px rgba(0,0,0,.18);
+    /* Trạng thái + hành động + công cụ */
+    .reader-state-shell{
+      display:grid;
+      grid-template-columns:.92fr 1.35fr .82fr;
+      gap:12px;
     }
-    .status-card,.action-card,.quick-card{padding:19px 20px;position:relative;overflow:hidden}
-    .status-card::after,.action-card::after{
-      content:"";position:absolute;width:110px;height:110px;border-radius:50%;right:-28px;bottom:-44px;
-      background:radial-gradient(circle,rgba(224,187,99,.14),transparent 64%);pointer-events:none;
+    .reader-score-card,.reader-action-card,.reader-tools-card{padding:16px}
+    .reader-score-card{position:relative}
+    .reader-score-row{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:14px;
     }
-    .mini-title{display:flex;align-items:center;gap:8px;color:var(--gold2);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .mini-title::before{content:"";width:8px;height:8px;border-radius:50%;border:2px solid currentColor;box-shadow:inset 0 0 0 2px rgba(255,255,255,.05)}
-    .reader-score-row{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:11px}
-    .reader-score-row>strong{font-size:28px;line-height:1.05;color:#fff}
-    .reader-score-row>b{font-size:37px;line-height:1;color:#fff}
-    .reader-score-row small{font-size:13px;color:var(--muted2);margin-left:3px}
-    .reader-score-track{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:16px}
-    .reader-score-track i{display:block;width:0;height:100%;border-radius:inherit;background:var(--gold);transition:width .35s ease,background .25s ease}
-    #readerTrend{margin:10px 0 0;color:var(--muted2);font-size:12px;line-height:1.55}
+    .reader-score-row > strong{
+      font-size:27px;
+      line-height:1;
+      font-weight:800;
+      color:var(--gold-2);
+    }
+    .reader-score-row > b{
+      font-size:34px;
+      line-height:1;
+      color:#fff;
+    }
+    .reader-score-row small{
+      margin-left:3px;
+      font-size:13px;
+      color:var(--muted-2);
+    }
+    .reader-score-track{
+      height:7px;
+      margin-top:15px;
+      border-radius:999px;
+      background:rgba(255,255,255,.075);
+      overflow:hidden;
+    }
+    .reader-score-track i{
+      display:block;
+      width:0;
+      height:100%;
+      border-radius:inherit;
+      background:var(--gold-2);
+      transition:width .35s ease,background .25s ease;
+    }
+    .reader-score-card > p{
+      margin:10px 0 0;
+      font-size:11px;
+      color:var(--muted-2);
+      line-height:1.5;
+    }
 
-    .status-card[data-tone="positive"]{border-color:rgba(53,224,139,.38);background:linear-gradient(180deg,rgba(53,224,139,.075),rgba(6,22,38,.96))}
-    .status-card[data-tone="positive"] .reader-score-row>strong,.status-card[data-tone="positive"] .reader-score-row>b{color:var(--green)}
-    .status-card[data-tone="positive"] .reader-score-track i{background:var(--green)}
-    .status-card[data-tone="warning"]{border-color:rgba(255,159,67,.38);background:linear-gradient(180deg,rgba(255,159,67,.075),rgba(6,22,38,.96))}
-    .status-card[data-tone="warning"] .reader-score-row>strong,.status-card[data-tone="warning"] .reader-score-row>b{color:var(--orange)}
-    .status-card[data-tone="warning"] .reader-score-track i{background:var(--orange)}
-    .status-card[data-tone="danger"]{border-color:rgba(255,95,112,.40);background:linear-gradient(180deg,rgba(255,95,112,.08),rgba(6,22,38,.96))}
-    .status-card[data-tone="danger"] .reader-score-row>strong,.status-card[data-tone="danger"] .reader-score-row>b{color:var(--red)}
-    .status-card[data-tone="danger"] .reader-score-track i{background:var(--red)}
-    .status-card[data-tone="neutral"]{border-color:rgba(224,187,99,.32)}
-
-    .action-card h2{margin:10px 0 7px;font-size:24px;line-height:1.2}
-    .action-card[data-tone="positive"] h2{color:var(--green)}
-    .action-card[data-tone="warning"] h2{color:var(--orange)}
-    .action-card[data-tone="danger"] h2{color:var(--red)}
-    .action-card[data-tone="neutral"] h2{color:#fff}
-    .action-card>p{margin:0;color:var(--muted);font-size:13px;line-height:1.62}
-    .reader-action-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+    .reader-action-card{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .reader-action-card h2{
+      margin:0;
+      font-size:23px;
+      line-height:1.18;
+      letter-spacing:-.025em;
+    }
+    .reader-action-card > p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+    .reader-action-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
     .reader-action-links a{
-      min-height:36px;padding:0 13px;border-radius:10px;border:1px solid rgba(224,187,99,.55);
-      display:inline-flex;align-items:center;justify-content:center;color:#f6d98a;font-size:12px;font-weight:700;
-      background:rgba(224,187,99,.04);
+      min-height:34px;
+      padding:0 12px;
+      border:1px solid rgba(224,187,99,.38);
+      border-radius:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:#f5d989;
+      font-size:11px;
+      font-weight:700;
     }
-    .action-card[data-tone="positive"]{border-color:rgba(53,224,139,.28);background:linear-gradient(180deg,rgba(53,224,139,.055),rgba(6,22,38,.96))}
-    .action-card[data-tone="warning"]{border-color:rgba(255,159,67,.30);background:linear-gradient(180deg,rgba(255,159,67,.055),rgba(6,22,38,.96))}
-    .action-card[data-tone="danger"]{border-color:rgba(255,95,112,.30);background:linear-gradient(180deg,rgba(255,95,112,.055),rgba(6,22,38,.96))}
 
-    .quick-card{padding-bottom:15px}
-    .quick-links{display:grid;gap:8px;margin-top:12px}
-    .quick-links a{
-      min-height:42px;padding:0 12px;border-radius:11px;border:1px solid rgba(255,255,255,.07);
-      background:rgba(255,255,255,.018);display:flex;align-items:center;justify-content:space-between;
-      font-size:12px;color:#f5f7fb;transition:.2s ease;
+    .reader-tools{
+      display:grid;
+      gap:7px;
+      margin-top:7px;
     }
-    .quick-links a:hover{transform:translateX(2px);border-color:rgba(224,187,99,.26);color:#f3cf74}
-    .quick-links a span:last-child{color:var(--gold2);font-size:18px}
+    .reader-tools a{
+      min-height:36px;
+      padding:0 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:10px;
+      background:rgba(255,255,255,.018);
+      font-size:11px;
+      color:#f4f7fb;
+    }
+    .reader-tools a span:last-child{color:var(--gold-2);font-weight:800}
 
-    .day-highlight{
-      display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:13px 16px;
-      border:1px solid rgba(224,187,99,.35);border-radius:14px;
-      background:linear-gradient(90deg,rgba(224,187,99,.09),rgba(9,28,47,.94) 22%,rgba(9,28,47,.94));
-    }
-    .day-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:var(--gold2);background:rgba(224,187,99,.10);font-size:18px}
-    .day-copy span{display:block;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .day-copy strong{display:block;margin-top:3px;font-size:13px;line-height:1.5;color:#f6f8fc}
-    .day-copy p{margin:4px 0 0;font-size:11px;line-height:1.5;color:var(--muted2)}
-    .day-highlight a{font-size:11px;color:#f3cf74;font-weight:700;white-space:nowrap}
+    /* tone card */
+    .reader-score-card[data-tone="positive"],
+    .reader-action-card.tone-positive{border-color:rgba(53,224,139,.28);background:linear-gradient(180deg,rgba(53,224,139,.055),rgba(6,22,38,.96))}
+    .reader-score-card[data-tone="positive"] .reader-score-row > strong{color:var(--green)}
+    .reader-score-card[data-tone="positive"] .reader-score-track i{background:var(--green)}
 
-    .reader-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-    .metric-card{
-      --tone:var(--cyan);position:relative;min-height:112px;padding:15px 16px 14px;
-      border:1px solid rgba(77,226,216,.28);border-radius:14px;
-      background:linear-gradient(180deg,rgba(77,226,216,.04),rgba(7,23,40,.98));overflow:hidden;
-      transition:border-color .25s ease,background .25s ease;
-    }
-    .metric-card::after{
-      content:"";position:absolute;right:-16px;bottom:-24px;width:86px;height:86px;border-radius:50%;
-      background:radial-gradient(circle,var(--tone),transparent 64%);opacity:.08;pointer-events:none;
-    }
-    .metric-card>span{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;color:rgba(255,255,255,.65);text-transform:uppercase}
-    .metric-card>strong{display:block;margin-top:8px;font-size:23px;line-height:1.1;color:var(--tone)}
-    .metric-card>small{display:block;margin-top:7px;font-size:11px;line-height:1.45;color:var(--tone);font-weight:700}
-    .metric-card.tone-positive{--tone:var(--green);border-color:rgba(53,224,139,.34);background:linear-gradient(180deg,rgba(53,224,139,.055),rgba(7,23,40,.98))}
-    .metric-card.tone-danger{--tone:var(--red);border-color:rgba(255,95,112,.34);background:linear-gradient(180deg,rgba(255,95,112,.055),rgba(7,23,40,.98))}
-    .metric-card.tone-warning{--tone:var(--orange);border-color:rgba(255,159,67,.34);background:linear-gradient(180deg,rgba(255,159,67,.055),rgba(7,23,40,.98))}
-    .metric-card.tone-neutral{--tone:var(--gold);border-color:rgba(224,187,99,.26)}
+    .reader-score-card[data-tone="warning"],
+    .reader-action-card.tone-warning{border-color:rgba(255,159,67,.30);background:linear-gradient(180deg,rgba(255,159,67,.052),rgba(6,22,38,.96))}
+    .reader-score-card[data-tone="warning"] .reader-score-row > strong{color:var(--orange)}
+    .reader-score-card[data-tone="warning"] .reader-score-track i{background:var(--orange)}
 
+    .reader-score-card[data-tone="danger"],
+    .reader-action-card.tone-danger{border-color:rgba(255,102,115,.30);background:linear-gradient(180deg,rgba(255,102,115,.06),rgba(6,22,38,.96))}
+    .reader-score-card[data-tone="danger"] .reader-score-row > strong{color:var(--red)}
+    .reader-score-card[data-tone="danger"] .reader-score-track i{background:var(--red)}
+
+    .reader-score-card[data-tone="neutral"],
+    .reader-action-card.tone-neutral{border-color:rgba(224,187,99,.23)}
+    .reader-score-card[data-tone="neutral"] .reader-score-row > strong{color:var(--gold-2)}
+
+    /* Điểm nhấn trong ngày */
     .reader-sharebar{
-      padding:13px 16px;border:1px solid rgba(224,187,99,.22);border-radius:14px;
-      background:rgba(9,28,47,.76);display:grid;grid-template-columns:1fr auto;gap:10px 18px;align-items:center;
+      min-height:54px;
+      padding:10px 14px;
+      border:1px solid rgba(224,187,99,.24);
+      border-radius:15px;
+      background:
+        radial-gradient(circle at 0 50%,rgba(224,187,99,.09),transparent 28%),
+        rgba(7,25,43,.88);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:center;
+      gap:12px;
     }
-    .reader-sharebar span{display:block;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .reader-sharebar strong{display:block;margin-top:3px;font-size:13px;line-height:1.5}
-    .reader-sharebar p{grid-column:1/-1;margin:0;color:var(--muted);font-size:12px;line-height:1.55}
-    .reader-share-actions{display:flex;gap:8px}
+    .reader-sharebar > div:first-child{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      align-items:center;
+      gap:10px;
+    }
+    .reader-sharebar > div:first-child > span{
+      color:var(--gold-2);
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .reader-sharebar strong{
+      font-size:12px;
+      line-height:1.45;
+    }
+    .reader-sharebar > p{
+      grid-column:1 / -1;
+      margin:-3px 0 0;
+      color:var(--muted-2);
+      font-size:10.5px;
+      line-height:1.45;
+    }
+    .reader-share-actions{
+      display:flex;
+      gap:6px;
+    }
     .reader-share-actions button{
-      border:1px solid rgba(224,187,99,.35);border-radius:9px;background:rgba(224,187,99,.06);
-      color:#f2d98f;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer;
+      height:30px;
+      padding:0 10px;
+      border-radius:9px;
+      border:1px solid rgba(224,187,99,.25);
+      background:rgba(224,187,99,.035);
+      color:#f6d989;
+      font-size:10px;
+      font-weight:700;
     }
-    #readerShareMessage{margin:0!important;color:var(--green)!important}
+    #readerShareMessage{
+      display:none;
+    }
 
-    .reader-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
-    .reader-panel{padding:18px;border:1px solid var(--line-soft);border-radius:var(--radius);background:linear-gradient(180deg,rgba(9,28,47,.96),rgba(6,22,38,.96));min-width:0}
-    .reader-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
-    .reader-label{display:block;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
-    .reader-panel h2{margin:4px 0 0;font-size:19px;line-height:1.2}
-    .reader-panel-head>small{color:var(--muted2);font-size:10px;white-space:nowrap}
+    /* Metrics */
+    .reader-metrics{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:9px;
+    }
+    .metric-card{
+      --tone:var(--gold-2);
+      --tone-rgb:224,187,99;
+      min-height:104px;
+      padding:13px 14px;
+      border:1px solid rgba(var(--tone-rgb),.22);
+      border-radius:14px;
+      background:
+        radial-gradient(circle at 100% 100%,rgba(var(--tone-rgb),.08),transparent 42%),
+        rgba(8,27,46,.94);
+      overflow:hidden;
+    }
+    .metric-card > span{
+      display:block;
+      font-size:10px;
+      font-weight:700;
+      color:rgba(231,237,246,.72);
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+    .metric-card > strong{
+      display:block;
+      margin-top:7px;
+      font-size:21px;
+      line-height:1.12;
+      color:var(--tone);
+      word-break:break-word;
+    }
+    .metric-card > small{
+      display:block;
+      margin-top:6px;
+      color:var(--muted-2);
+      font-size:10px;
+      line-height:1.4;
+    }
+    .tone-positive{--tone:var(--green);--tone-rgb:53,224,139}
+    .tone-danger{--tone:var(--red);--tone-rgb:255,102,115}
+    .tone-warning{--tone:var(--orange);--tone-rgb:255,159,67}
+    .tone-neutral{--tone:var(--gold-2);--tone-rgb:224,187,99}
+    .tone-muted{--tone:#b8c4d0;--tone-rgb:184,196,208}
 
+    /* Main grid */
+    .reader-grid{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:12px;
+      align-items:stretch;
+    }
+    .reader-panel{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .reader-panel-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:12px;
+    }
+    .reader-panel-head h2{
+      margin:0;
+      font-size:20px;
+      line-height:1.2;
+      letter-spacing:-.02em;
+    }
+    .reader-panel-head > small{
+      color:var(--muted-2);
+      font-size:10px;
+      white-space:nowrap;
+    }
+
+    /* Sector */
     .sector-table{display:grid;gap:5px}
     .sector-row{
-      display:grid;grid-template-columns:minmax(145px,1.1fr) minmax(90px,1fr) 74px;align-items:center;gap:12px;
-      min-height:37px;padding:5px 8px;border-radius:9px;background:rgba(255,255,255,.018);
+      display:grid;
+      grid-template-columns:minmax(170px,1.2fr) minmax(120px,1fr) 66px;
+      align-items:center;
+      gap:9px;
+      min-height:32px;
+      padding:5px 7px;
+      border-radius:9px;
+      background:rgba(255,255,255,.018);
     }
-    .sector-name{min-width:0}.sector-name b{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .sector-name small{display:block;margin-top:2px;color:var(--muted2);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .sector-bar{height:5px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
-    .sector-bar i{display:block;height:100%;border-radius:999px;background:var(--gold)}
-    .sector-row>strong{text-align:right;font-size:11px;color:var(--gold)}
-    .sector-row.up .sector-bar i{background:var(--green)}.sector-row.up>strong{color:var(--green)}
-    .sector-row.down .sector-bar i{background:var(--red)}.sector-row.down>strong{color:var(--red)}
-    .sector-row.flat .sector-bar i{background:var(--gold)}.sector-row.flat>strong{color:var(--gold)}
+    .sector-name{min-width:0}
+    .sector-name b{
+      display:block;
+      font-size:11px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sector-name small{
+      display:block;
+      margin-top:1px;
+      color:var(--muted-2);
+      font-size:8.5px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sector-bar{
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.07);
+      overflow:hidden;
+    }
+    .sector-bar i{
+      display:block;height:100%;border-radius:inherit;background:#9aa6b1;
+    }
+    .sector-row > strong{text-align:right;font-size:10px}
+    .sector-row.up .sector-bar i{background:var(--green)}
+    .sector-row.up > strong{color:var(--green)}
+    .sector-row.down .sector-bar i{background:var(--red)}
+    .sector-row.down > strong{color:var(--red)}
+    .sector-row.flat .sector-bar i{background:var(--gold-2)}
+    .sector-row.flat > strong{color:var(--gold-2)}
 
-    .reader-alerts{display:grid;gap:8px}
+    /* Alerts */
+    .reader-alerts{
+      display:grid;
+      gap:8px;
+      height:100%;
+      align-content:start;
+    }
     .reader-alert{
-      position:relative;padding:12px 13px 12px 15px;border-radius:11px;border:1px solid rgba(255,255,255,.07);
-      background:rgba(255,255,255,.018);overflow:hidden;
+      min-height:66px;
+      padding:11px 12px 10px 15px;
+      border-radius:12px;
+      border-left:3px solid rgba(224,187,99,.72);
+      background:rgba(255,255,255,.022);
     }
-    .reader-alert::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
-    .reader-alert b{display:block;font-size:12px}.reader-alert p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
-    .reader-alert.is-positive{border-color:rgba(53,224,139,.22);background:rgba(53,224,139,.035)}.reader-alert.is-positive::before{background:var(--green)}
-    .reader-alert.is-warning{border-color:rgba(255,159,67,.24);background:rgba(255,159,67,.035)}.reader-alert.is-warning::before{background:var(--orange)}
-    .reader-alert.is-danger{border-color:rgba(255,95,112,.26);background:rgba(255,95,112,.04)}.reader-alert.is-danger::before{background:var(--red)}
-
-    .reader-grid-secondary{grid-template-columns:1.05fr .95fr}
-    .baseline-box{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    .baseline-box>div{
-      min-height:78px;padding:12px 10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;
-      background:rgba(255,255,255,.018);text-align:center;
+    .reader-alert b{
+      display:block;
+      font-size:11.5px;
+      line-height:1.4;
     }
-    .baseline-box span{display:block;color:var(--muted2);font-size:9px}.baseline-box strong{display:block;margin-top:6px;font-size:14px;color:#fff}
-    .baseline-box>div.tone-positive{border-color:rgba(53,224,139,.25);background:rgba(53,224,139,.035)}.baseline-box>div.tone-positive strong{color:var(--green)}
-    .baseline-box>div.tone-danger{border-color:rgba(255,95,112,.25);background:rgba(255,95,112,.035)}.baseline-box>div.tone-danger strong{color:var(--red)}
-    .baseline-box>div.tone-warning{border-color:rgba(255,159,67,.25);background:rgba(255,159,67,.035)}.baseline-box>div.tone-warning strong{color:var(--orange)}
-    .reader-note{margin:10px 0 0;color:var(--muted2);font-size:10px;line-height:1.55}
+    .reader-alert p{
+      margin:4px 0 0;
+      color:var(--muted-2);
+      font-size:10px;
+      line-height:1.48;
+    }
+    .reader-alert.is-positive{border-left-color:var(--green);background:rgba(53,224,139,.035)}
+    .reader-alert.is-warning{border-left-color:var(--orange);background:rgba(255,159,67,.035)}
+    .reader-alert.is-danger{border-left-color:var(--red);background:rgba(255,102,115,.04)}
+    .reader-alert.is-neutral{border-left-color:var(--gold-2)}
 
-    .reader-rules{display:grid;gap:6px}
+    /* Baseline + score rules cân nội dung */
+    .reader-grid-secondary{
+      grid-template-columns:1fr 1fr;
+    }
+    .reader-grid-secondary .reader-panel{
+      min-height:246px;
+    }
+    .baseline-box{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+    }
+    .baseline-box > div{
+      --tone:var(--gold-2);
+      --tone-rgb:224,187,99;
+      min-height:88px;
+      padding:12px 8px 10px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border:1px solid rgba(var(--tone-rgb),.18);
+      border-radius:11px;
+      background:
+        linear-gradient(180deg,rgba(var(--tone-rgb),.045),rgba(255,255,255,.018));
+    }
+    .baseline-box span{
+      color:var(--muted-2);
+      font-size:9px;
+      line-height:1.35;
+    }
+    .baseline-box strong{
+      margin-top:5px;
+      color:var(--tone);
+      font-size:15px;
+      line-height:1.25;
+    }
+    .baseline-box .tone-positive{--tone:var(--green);--tone-rgb:53,224,139}
+    .baseline-box .tone-danger{--tone:var(--red);--tone-rgb:255,102,115}
+    .baseline-box .tone-warning{--tone:var(--orange);--tone-rgb:255,159,67}
+    .baseline-box .tone-neutral{--tone:var(--gold-2);--tone-rgb:224,187,99}
+    .reader-note{
+      margin:10px 0 0;
+      color:var(--muted-2);
+      font-size:9.5px;
+      line-height:1.48;
+    }
+    .reader-rules{
+      display:grid;
+      gap:6px;
+      flex:1 1 auto;
+    }
     .reader-rules p{
-      margin:0;display:grid;grid-template-columns:68px 1fr;gap:8px;align-items:center;
-      padding:8px 10px;border-radius:9px;background:rgba(255,255,255,.018);font-size:10px;color:var(--muted);
+      min-height:32px;
+      margin:0;
+      padding:7px 10px;
+      display:grid;
+      grid-template-columns:64px minmax(0,1fr);
+      align-items:center;
+      gap:10px;
+      border-left:3px solid var(--gold-2);
+      border-radius:9px;
+      background:rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.38;
     }
-    .reader-rules b{color:#fff}
-    .reader-rules p:nth-child(1){border-left:3px solid var(--green)}
-    .reader-rules p:nth-child(2){border-left:3px solid #7ce7a8}
-    .reader-rules p:nth-child(3){border-left:3px solid var(--gold)}
-    .reader-rules p:nth-child(4){border-left:3px solid var(--orange)}
-    .reader-rules p:nth-child(5){border-left:3px solid var(--red)}
+    .reader-rules p b{color:#fff}
+    .reader-rules p:nth-child(1),
+    .reader-rules p:nth-child(2){border-left-color:var(--green);background:rgba(53,224,139,.025)}
+    .reader-rules p:nth-child(3){border-left-color:var(--gold-2);background:rgba(224,187,99,.025)}
+    .reader-rules p:nth-child(4){border-left-color:var(--orange);background:rgba(255,159,67,.025)}
+    .reader-rules p:nth-child(5){border-left-color:var(--red);background:rgba(255,102,115,.03)}
 
+    /* Lead form — thu hẹp khoảng hở, đúng Hình 2 */
     .reader-lead{
-      display:grid;grid-template-columns:.82fr 1.18fr;gap:18px;padding:18px;
-      border:1px solid rgba(224,187,99,.30);border-radius:16px;
-      background:linear-gradient(90deg,rgba(224,187,99,.07),rgba(8,26,45,.96) 30%,rgba(8,26,45,.96));
-      align-items:start;
+      padding:16px 18px !important;
+      display:grid;
+      grid-template-columns:minmax(300px,.9fr) minmax(0,1.5fr);
+      gap:20px;
+      align-items:center;
+      min-height:0 !important;
     }
-    .reader-lead-copy h2{margin:5px 0 7px;font-size:20px}.reader-lead-copy p{margin:0;color:var(--muted);font-size:11px;line-height:1.58}
+    .reader-lead-copy h2{
+      margin:0;
+      font-size:21px;
+      line-height:1.28;
+    }
+    .reader-lead-copy p{
+      margin:7px 0 0;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.55;
+    }
     .reader-lead-form{min-width:0}
 
-    .reader-convert{
-      display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:17px 18px;
-      border:1px solid rgba(224,187,99,.24);border-radius:15px;background:rgba(5,20,35,.88);
+    /* override form từ market-lead.css */
+    .reader-lead .market-lead-form{
+      margin:0 !important;
+      padding:0 !important;
+      min-height:0 !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
     }
-    .reader-convert h2{margin:5px 0 4px;font-size:17px}.reader-convert p{margin:0;color:var(--muted2);font-size:10px;line-height:1.5}
-    .reader-convert-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px;max-width:430px}
-    .reader-convert-actions a{padding:8px 10px;border-radius:8px;border:1px solid rgba(224,187,99,.32);color:#f2d98f;font-size:10px;font-weight:700}
+    .reader-lead .market-lead-grid{
+      display:grid !important;
+      grid-template-columns:1fr 1fr 1fr 1fr !important;
+      gap:8px !important;
+    }
+    .reader-lead .market-lead-grid label{margin:0 !important}
+    .reader-lead .market-lead-grid label > span{
+      margin-bottom:4px !important;
+      font-size:9.5px !important;
+    }
+    .reader-lead .market-lead-grid input,
+    .reader-lead .market-lead-grid select{
+      height:38px !important;
+      min-height:38px !important;
+      border-radius:9px !important;
+      font-size:10px !important;
+      padding:0 10px !important;
+    }
+    .reader-lead .market-lead-consent{
+      margin:7px 0 0 !important;
+      display:flex !important;
+      align-items:flex-start !important;
+      gap:7px !important;
+      font-size:9px !important;
+      line-height:1.4 !important;
+    }
+    .reader-lead .market-lead-consent input{
+      width:14px !important;
+      height:14px !important;
+      min-height:14px !important;
+      margin:1px 0 0 !important;
+      flex:0 0 auto !important;
+    }
+    .reader-lead .market-lead-submit-row{
+      margin-top:7px !important;
+      display:flex !important;
+      align-items:center !important;
+      gap:10px !important;
+    }
+    .reader-lead .market-lead-submit-row button{
+      min-height:36px !important;
+      height:36px !important;
+      padding:0 14px !important;
+      border-radius:9px !important;
+      font-size:9.5px !important;
+      white-space:nowrap !important;
+    }
+    .reader-lead .market-lead-submit-row small{
+      font-size:8.5px !important;
+      line-height:1.4 !important;
+    }
+    .reader-lead .market-lead-message{
+      margin:5px 0 0 !important;
+      font-size:9px !important;
+    }
 
-    .reader-footer-note{
-      display:flex;align-items:center;justify-content:space-between;gap:18px;padding:2px 2px 12px;color:var(--muted2);font-size:9px;line-height:1.55;
+    /* CTA cuối để đưa người dùng sang tài khoản */
+    .reader-convert{
+      padding:14px 16px;
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) auto;
+      gap:16px;
+      align-items:center;
     }
-    .reader-footer-note p{margin:0;max-width:950px}.reader-footer-note a{color:#f3cf74;white-space:nowrap;font-weight:700}
+    .reader-convert h2{
+      margin:0;
+      font-size:17px;
+      line-height:1.28;
+    }
+    .reader-convert p{
+      margin:6px 0 0;
+      color:var(--muted-2);
+      font-size:10px;
+      line-height:1.5;
+    }
+    .reader-convert-actions{
+      display:grid;
+      grid-template-columns:repeat(2,max-content);
+      gap:7px;
+      justify-content:end;
+    }
+    .reader-convert-actions a{
+      min-height:32px;
+      padding:0 10px;
+      border:1px solid rgba(224,187,99,.25);
+      border-radius:9px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:9.5px;
+      font-weight:700;
+      color:#f4d786;
+    }
+
+    /* Lưu ý chuyên môn cuối phần thân */
+    .reader-disclaimer{
+      margin:0;
+      padding:2px 2px 0;
+      color:rgba(231,237,246,.46);
+      font-size:8.8px;
+      line-height:1.5;
+      text-align:center;
+    }
 
     /* =========================================================
-       FOOTER — Y CHANG TRANG CHỦ (INDEX)
+       FOOTER — LẤY TỪ INDEX, ĐI NHANH LÀ TEXT LINK GỌN
     ========================================================= */
     .social{
       display:inline-flex;
@@ -464,13 +929,12 @@
     .social svg{width:18px;height:18px;fill:currentColor;flex:0 0 auto}
 
     .footer{
-      margin-top:30px;
+      margin-top:24px;
       border-top:1px solid rgba(255,255,255,.07);
       background:
         radial-gradient(circle at 10% 0%,rgba(224,187,99,.045),transparent 28%),
         linear-gradient(180deg,rgba(3,12,22,.88),rgba(2,8,15,.98));
     }
-
     .footer .footer-main{
       padding:34px 0 24px;
       display:grid;
@@ -480,7 +944,6 @@
     }
     .footer-brand-block{min-width:0}
     .footer-brand-link{width:max-content;max-width:100%}
-
     .footer .footer-slogan{
       margin:13px 0 0;
       max-width:340px;
@@ -496,59 +959,104 @@
       margin:0;max-width:340px;font-size:10px;line-height:1.55;color:rgba(231,237,246,.44);
     }
     .footer .footer-col h4{
-      margin:2px 0 13px;font-size:13px;line-height:1.2;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-2);
+      margin:2px 0 13px;
+      font-size:13px;
+      line-height:1.2;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold-2);
     }
-    .footer .footer-links{display:grid;gap:8px}
     .footer .footer-links a{
-      width:max-content;max-width:100%;font-size:13px;line-height:1.45;color:rgba(255,255,255,.82);transition:color .2s ease,transform .2s ease;
+      color:rgba(255,255,255,.82);
+      transition:color .2s ease;
     }
-    .footer .footer-links a:hover{color:#fff;transform:translateX(2px)}
+    .footer .footer-links a:hover{color:#fff}
     .footer .footer-nav-all .quick-links{
       display:grid;
       grid-template-columns:repeat(2,max-content);
       gap:9px 28px;
       justify-content:start;
     }
-    .footer .footer-socials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-    .footer .footer-socials .social{min-width:0;justify-content:center;padding:9px 11px;border-radius:12px;font-size:12px;white-space:nowrap}
-
+    .footer .footer-nav-all .quick-links a{
+      width:auto;
+      padding:0;
+      border:0;
+      border-radius:0;
+      background:none;
+      box-shadow:none;
+      font-size:13px;
+      line-height:1.45;
+    }
+    .footer .footer-socials{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+    .footer .footer-socials .social{
+      min-width:0;
+      justify-content:center;
+      padding:9px 11px;
+      border-radius:12px;
+      font-size:12px;
+      white-space:nowrap;
+    }
     .footer .footer-bottom{
-      width:100%;padding:13px 0 17px;border-top:1px solid rgba(224,187,99,.15);display:block;
+      width:100%;
+      padding:13px 0 17px;
+      border-top:1px solid rgba(224,187,99,.15);
     }
     .footer .footer-bottom-row{
-      width:100%;display:flex;align-items:center;justify-content:center;gap:10px 18px;flex-wrap:wrap;text-align:center;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px 18px;
+      flex-wrap:wrap;
+      text-align:center;
     }
     .footer .footer-copyright{
-      flex:0 0 auto;font-size:13px;line-height:1.5;color:rgba(231,237,246,.68);white-space:nowrap;
+      flex:0 0 auto;
+      font-size:13px;
+      line-height:1.5;
+      color:rgba(231,237,246,.68);
+      white-space:nowrap;
     }
     .footer .footer-copyright strong{color:rgba(255,255,255,.86);font-weight:700}
     .footer .footer-legal{
-      display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 10px;min-width:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:6px 10px;
+      min-width:0;
     }
     .footer .footer-legal a{
-      font-size:13px;line-height:1.45;color:rgba(231,237,246,.68);white-space:nowrap;transition:color .2s ease;
+      font-size:13px;
+      line-height:1.45;
+      color:rgba(231,237,246,.68);
+      white-space:nowrap;
     }
     .footer .footer-legal a:hover{color:#f1cf78}
     .footer .footer-legal span{font-size:8px;color:rgba(224,187,99,.66)}
 
     /* =========================================================
-       RESPONSIVE — GIỮ HEADER/FOOTER Y CHANG INDEX,
-       PHẦN GIỮA TỐI ƯU RIÊNG CHO TABLET + MOBILE
+       RESPONSIVE
     ========================================================= */
-    @media (max-width:1180px){
-      .hero-market-copy{width:68%}
-      .hero-market h1{font-size:46px}
-      .reader-lead{grid-template-columns:1fr}
-    }
-
-    @media (max-width:980px){
-      .footer .footer-main{grid-template-columns:1.2fr .8fr .8fr}
-      .footer .footer-connect{grid-column:1 / -1}
+    @media (max-width:1080px){
+      .reader-hero{grid-template-columns:1fr minmax(360px,.8fr)}
+      .reader-hero h1{font-size:42px}
+      .reader-state-shell{grid-template-columns:.9fr 1.1fr}
+      .reader-tools-card{grid-column:1/-1}
+      .reader-tools{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .reader-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .metric-card:nth-child(4),.metric-card:nth-child(5){grid-column:auto}
+      .footer .footer-main{grid-template-columns:1.1fr 1fr}
+      .footer .footer-connect{grid-column:1/-1}
       .footer .footer-socials{grid-template-columns:repeat(4,minmax(0,1fr))}
     }
 
     @media (max-width:860px){
-      /* Header y chang index */
       .topbar-inner{width:min(calc(100% - 20px),100%);min-height:74px}
       .nav,.topbar-actions .search-btn{display:none}
       .menu-btn{display:grid}
@@ -556,142 +1064,214 @@
       .brand-text strong{font-size:14px}
       .brand-text span{font-size:10px}
 
-      /* Phần giữa */
-      .market-main{padding-top:16px}
-      .hero-market{min-height:372px}
-      .hero-market-copy{width:100%;padding:24px 22px 150px}
-      .hero-market h1{font-size:40px}
-      .hero-market-copy>p{font-size:13px;max-width:590px}
-      .hero-market-art{width:100%;height:53%;top:auto;bottom:0;object-position:center 38%;opacity:.58}
-      .hero-market::before{background:linear-gradient(180deg,rgba(4,17,31,.99) 0%,rgba(4,17,31,.96) 50%,rgba(4,17,31,.70) 70%,rgba(4,17,31,.22) 100%)}
+      .reader-main{padding-top:10px}
+      .reader-hero{
+        grid-template-columns:1fr;
+        min-height:0;
+      }
+      .reader-hero-copy{
+        padding:18px 0 12px;
+        text-align:center;
+        align-items:center;
+      }
+      .reader-hero h1{font-size:36px}
+      .reader-hero-copy > p{font-size:13px}
+      .reader-proof{justify-content:center}
+      .reader-hero-art{min-height:260px}
+      .reader-hero-art::before{
+        background:linear-gradient(180deg,#06172a 0%,rgba(6,23,42,.55) 14%,rgba(6,23,42,.05) 52%,rgba(6,23,42,.10) 100%);
+      }
+      .hero-quote{top:18px;right:12px;width:min(230px,58%)}
+      .reader-live{right:12px;bottom:10px}
 
-      /* Vẫn giữ cột: trạng thái + hành động; công cụ nhanh nằm ngang bên dưới */
-      .top-grid{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:10px}
-      .quick-card{grid-column:1 / -1}
-      .quick-card .quick-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-      .quick-card .quick-links a{min-height:40px}
-
-      .reader-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-      #metricLeader,#metricPace{grid-column:auto}
-      .reader-grid,.reader-grid-secondary{grid-template-columns:1fr}
+      .reader-grid{grid-template-columns:1fr}
+      .reader-grid-secondary{grid-template-columns:1fr 1fr}
+      .reader-lead{grid-template-columns:1fr}
+      .reader-lead-copy{text-align:center}
       .reader-convert{grid-template-columns:1fr}
-      .reader-convert-actions{justify-content:flex-start;max-width:none}
+      .reader-convert-actions{justify-content:start}
     }
 
     @media (max-width:680px){
       .wrap{width:min(calc(100% - 20px),var(--max))}
-
-      /* Header y chang index */
       .brand{flex:1 1 auto;min-width:0}
       .brand-text{overflow:hidden}
       .brand-text strong,.brand-text span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .topbar-inner{gap:10px}
       .topbar-actions{gap:8px}
       .login-btn{height:40px;padding:0 13px;font-size:12px}
-      .brand img{width:44px;height:44px}
-      .brand-text strong{font-size:16px;line-height:1.38;letter-spacing:.035em}
-      .brand-text span{font-size:9px;line-height:1.45;letter-spacing:.075em;margin-top:1px}
-      .mobile-links{grid-template-columns:1fr 1fr}
 
-      /* HERO: ngắn hơn, vẫn thấy hình */
-      .hero-market{border-radius:18px;min-height:348px}
-      .hero-market-copy{padding:20px 15px 128px}
-      .hero-market h1{font-size:31px;line-height:1.05}
-      .hero-market-copy>p{font-size:11.5px;line-height:1.58;max-width:100%}
-      .proofs{gap:6px;margin-top:13px}
-      .proofs span{font-size:9.5px;padding:6px 8px}
-      .hero-market-art{height:45%;object-position:center 39%;opacity:.62}
-      .hero-live{right:10px;bottom:10px}
-      .reader-live{font-size:9.5px;min-height:32px;padding:0 9px}
+      .reader-shell{gap:8px}
+      .reader-hero-copy{padding-top:14px}
+      .reader-eyebrow{font-size:10px}
+      .reader-hero h1{font-size:29px;line-height:1.08}
+      .reader-hero-copy > p{font-size:11.5px;line-height:1.55}
+      .reader-proof{gap:6px}
+      .reader-proof b{padding:6px 9px;font-size:9px}
+      .reader-hero-art{min-height:220px}
+      .hero-quote{
+        top:10px;
+        right:8px;
+        width:52%;
+        padding:10px 10px 8px;
+      }
+      .hero-quote blockquote{font-size:15px}
+      .hero-quote span{font-size:9px}
+      .reader-live{
+        min-height:30px;
+        padding:0 9px;
+        font-size:9px;
+      }
 
-      /* 2 cột trên điện thoại thay vì xếp dọc */
-      .top-grid{grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:8px}
-      .status-card,.action-card{padding:13px 11px;min-height:180px}
-      .quick-card{grid-column:1 / -1;padding:13px 11px}
-      .mini-title{font-size:8.5px;letter-spacing:.055em}
-      .reader-score-row{gap:6px;margin-top:9px;align-items:center}
-      .reader-score-row>strong{font-size:19px;max-width:95px}
-      .reader-score-row>b{font-size:28px}
-      .reader-score-row small{font-size:10px}
-      .reader-score-track{margin-top:12px;height:6px}
-      #readerTrend{font-size:9px;line-height:1.4;margin-top:8px}
-      .action-card h2{font-size:16px;line-height:1.2;margin:8px 0 5px}
-      .action-card>p{font-size:9px;line-height:1.48}
-      .reader-action-links{gap:5px;margin-top:9px}
-      .reader-action-links a{min-height:30px;padding:0 8px;font-size:8.5px;border-radius:8px}
+      /* Mobile vẫn chia cột để tiết kiệm diện tích */
+      .reader-state-shell{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+      .reader-score-card,.reader-action-card,.reader-tools-card{padding:11px}
+      .reader-score-row > strong{font-size:18px}
+      .reader-score-row > b{font-size:25px}
+      .reader-action-card h2{font-size:15px}
+      .reader-action-card > p{font-size:9.5px;line-height:1.45}
+      .reader-action-links a{min-height:29px;padding:0 8px;font-size:9px}
+      .reader-tools-card{grid-column:1/-1}
+      .reader-tools{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:6px;
+      }
+      .reader-tools a{
+        min-height:38px;
+        padding:5px 6px;
+        text-align:center;
+        justify-content:center;
+        font-size:9px;
+        line-height:1.3;
+      }
+      .reader-tools a span:last-child{display:none}
 
-      /* 3 công cụ nằm cùng hàng, tiết kiệm chiều cao */
-      .quick-card .quick-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}
-      .quick-card .quick-links a{min-height:46px;padding:7px 6px;display:grid;grid-template-columns:1fr auto;gap:3px;font-size:9px;line-height:1.28}
-      .quick-links a span:first-child{white-space:normal}
-      .quick-links a span:last-child{font-size:14px}
+      .reader-sharebar{
+        padding:9px 10px;
+        grid-template-columns:1fr auto;
+      }
+      .reader-sharebar > div:first-child{
+        grid-template-columns:1fr;
+        gap:3px;
+      }
+      .reader-sharebar > div:first-child > span{font-size:8px}
+      .reader-sharebar strong{font-size:10px}
+      .reader-sharebar > p{font-size:9px}
+      .reader-share-actions button{height:27px;padding:0 7px;font-size:8px}
 
-      /* Điểm nhấn */
-      .day-highlight{grid-template-columns:30px 1fr auto;gap:8px;padding:11px 10px}
-      .day-icon{width:30px;height:30px;border-radius:9px;font-size:15px}
-      .day-copy span{font-size:8.5px}
-      .day-copy strong{font-size:10px;line-height:1.4}
-      .day-copy p{font-size:9px;line-height:1.4}
-      .day-highlight>a{font-size:9px;max-width:76px;white-space:normal;text-align:right}
+      .reader-metrics{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:7px;
+      }
+      .metric-card{
+        min-height:88px;
+        padding:10px;
+      }
+      .metric-card:nth-child(5){grid-column:1/-1}
+      .metric-card > span{font-size:8.5px}
+      .metric-card > strong{font-size:17px}
+      .metric-card > small{font-size:8.5px}
 
-      /* 5 chỉ số: 2 cột; ô thứ 5 chiếm cả hàng */
-      .reader-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-      .metric-card{min-height:98px;padding:11px 10px;border-radius:12px}
-      .metric-card>span{font-size:8.5px}
-      .metric-card>strong{font-size:18px;margin-top:6px}
-      .metric-card>small{font-size:9px;margin-top:5px;line-height:1.35}
-      #metricPace{grid-column:1 / -1;min-height:78px;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;column-gap:12px}
-      #metricPace>span{grid-column:1;grid-row:1}
-      #metricPace>strong{grid-column:2;grid-row:1 / span 2;margin:0;font-size:22px}
-      #metricPace>small{grid-column:1;grid-row:2;margin-top:3px}
-
-      /* Chia sẻ */
-      .reader-sharebar{grid-template-columns:1fr auto;gap:8px 10px;padding:11px 10px}
-      .reader-sharebar span{font-size:8.5px}
-      .reader-sharebar strong{font-size:10px;line-height:1.4}
-      .reader-share-actions{gap:5px}
-      .reader-share-actions button{padding:7px 8px;font-size:8.5px}
-      .reader-sharebar p{font-size:9px}
-
-      /* Khối chuyên môn */
-      .reader-panel{padding:13px;border-radius:14px}
-      .reader-panel h2{font-size:16px}
-      .reader-panel-head>small{font-size:8px}
-      .sector-row{grid-template-columns:minmax(108px,1.08fr) minmax(62px,.82fr) 58px;gap:6px;padding:5px 4px;min-height:34px}
+      .reader-panel{padding:12px}
+      .reader-panel-head{margin-bottom:9px}
+      .reader-panel-head h2{font-size:17px}
+      .reader-panel-head > small{font-size:8px}
+      .sector-row{
+        grid-template-columns:minmax(120px,1.25fr) minmax(80px,.9fr) 54px;
+        gap:6px;
+        min-height:29px;
+        padding:4px 5px;
+      }
       .sector-name b{font-size:9.5px}
       .sector-name small{font-size:7.5px}
-      .sector-row>strong{font-size:9px}
-      .sector-bar{height:4px}
+      .sector-row > strong{font-size:8.5px}
 
-      /* Cảnh báo cũng chia 2 cột trên mobile */
-      .reader-alerts{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-      .reader-alert{padding:10px 8px 10px 11px;min-height:88px}
-      .reader-alert b{font-size:9.5px;line-height:1.35}
-      .reader-alert p{font-size:8.5px;line-height:1.42}
+      .reader-alerts{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px;
+      }
+      .reader-alert{
+        min-height:86px;
+        padding:9px 8px 8px 10px;
+      }
+      .reader-alert b{font-size:9.5px}
+      .reader-alert p{font-size:8.5px;line-height:1.4}
 
-      .baseline-box{grid-template-columns:1fr 1fr;gap:7px}
-      .baseline-box>div{min-height:68px;padding:9px 7px}
+      .reader-grid-secondary{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+      .reader-grid-secondary .reader-panel{min-height:0}
+      .baseline-box{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px;
+      }
+      .baseline-box > div{min-height:70px;padding:8px 6px}
       .baseline-box span{font-size:8px}
       .baseline-box strong{font-size:12px}
-      .reader-note{font-size:8.5px}
+      .reader-rules{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:5px;
+      }
+      .reader-rules p{
+        min-height:54px;
+        padding:7px 8px;
+        grid-template-columns:1fr;
+        gap:3px;
+        align-content:center;
+        font-size:8.5px;
+      }
+      .reader-rules p:nth-child(5){grid-column:1/-1}
 
-      /* 5 mức điểm: 2 cột; mức cuối full width */
-      .reader-rules{grid-template-columns:1fr 1fr;gap:6px}
-      .reader-rules p{display:block;padding:8px 8px;font-size:8.5px;line-height:1.45;min-height:66px}
-      .reader-rules p b{display:block;margin-bottom:3px;font-size:9px}
-      .reader-rules p:last-child{grid-column:1 / -1;min-height:auto}
-
-      .reader-lead{padding:13px;gap:12px}
+      .reader-lead{
+        padding:12px 10px !important;
+        gap:10px;
+      }
       .reader-lead-copy h2{font-size:17px}
       .reader-lead-copy p{font-size:9.5px}
-      .reader-convert{padding:13px}
-      .reader-convert h2{font-size:15px}
-      .reader-convert p{font-size:9px}
-      .reader-convert-actions{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:6px}
-      .reader-convert-actions a{text-align:center;font-size:8.5px;padding:7px 6px}
-      .reader-footer-note{flex-direction:column;align-items:flex-start;gap:5px;font-size:8px}
+      .reader-lead .market-lead-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:6px !important;
+      }
+      .reader-lead .market-lead-grid label > span{font-size:8px !important}
+      .reader-lead .market-lead-grid input,
+      .reader-lead .market-lead-grid select{
+        height:35px !important;
+        min-height:35px !important;
+        font-size:9px !important;
+      }
+      .reader-lead .market-lead-consent{font-size:8px !important}
+      .reader-lead .market-lead-submit-row{
+        display:grid !important;
+        grid-template-columns:auto minmax(0,1fr);
+        gap:7px !important;
+      }
+      .reader-lead .market-lead-submit-row button{
+        height:34px !important;
+        min-height:34px !important;
+        font-size:8.5px !important;
+      }
+      .reader-lead .market-lead-submit-row small{font-size:7.5px !important}
 
-      /* Footer y chang index */
+      .reader-convert{padding:11px}
+      .reader-convert h2{font-size:14px}
+      .reader-convert p{font-size:9px}
+      .reader-convert-actions{
+        width:100%;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px;
+      }
+      .reader-convert-actions a{
+        min-height:30px;
+        padding:0 6px;
+        font-size:8.5px;
+        text-align:center;
+      }
+
+      /* Footer index — Đi nhanh là text, không ô */
       .footer .footer-main{
         padding:26px 0 19px;
         grid-template-columns:1fr;
@@ -704,51 +1284,83 @@
       .footer .footer-risk{max-width:300px;margin-left:auto;margin-right:auto;font-size:9px;line-height:1.5;text-align:center}
       .footer .footer-col h4{margin-bottom:9px}
       .footer .footer-nav-all .quick-links{
-        width:100%;display:grid;grid-template-columns:repeat(4,max-content);justify-content:center;align-items:center;gap:8px 12px;overflow:visible;white-space:normal;
+        width:100%;
+        display:grid;
+        grid-template-columns:repeat(4,max-content);
+        justify-content:center;
+        align-items:center;
+        gap:8px 12px;
       }
-      .footer .footer-nav-all .quick-links a{width:auto;margin:0;font-size:11px;line-height:1.35;text-align:center;white-space:nowrap}
-      .footer .footer-connect{grid-column:auto}
-      .footer .footer-socials{width:min(100%,360px);margin:0 auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .footer .footer-nav-all .quick-links a{
+        width:auto;
+        padding:0;
+        border:0;
+        background:none;
+        border-radius:0;
+        font-size:11px;
+        line-height:1.35;
+        text-align:center;
+        white-space:nowrap;
+      }
+      .footer .footer-socials{
+        width:min(100%,360px);
+        margin:0 auto;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
       .footer .footer-bottom{padding:12px 0 15px}
-      .footer .footer-bottom-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center}
-      .footer .footer-copyright{width:100%;font-size:10px;line-height:1.45;text-align:center;white-space:normal}
-      .footer .footer-legal{width:100%;display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center;justify-content:center;column-gap:7px;row-gap:5px}
-      .footer .footer-legal a{width:auto!important;display:inline-block;font-size:10px;line-height:1.4;white-space:nowrap}
+      .footer .footer-bottom-row{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:7px;
+        text-align:center;
+      }
+      .footer .footer-copyright{
+        width:100%;
+        font-size:10px;
+        line-height:1.45;
+        text-align:center;
+        white-space:normal;
+      }
+      .footer .footer-legal{
+        width:100%;
+        display:flex!important;
+        flex-direction:row!important;
+        flex-wrap:wrap!important;
+        align-items:center;
+        justify-content:center;
+        column-gap:7px;
+        row-gap:5px;
+      }
+      .footer .footer-legal a{
+        width:auto!important;
+        display:inline-block;
+        font-size:10px;
+        line-height:1.4;
+        white-space:nowrap;
+      }
       .footer .footer-legal span{display:inline-block;font-size:7px}
     }
 
     @media (max-width:430px){
-      /* Vẫn giữ cột, chỉ thu nhỏ tiếp */
-      .hero-market h1{font-size:28px}
-      .top-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
-      .status-card,.action-card{padding:11px 9px;min-height:174px}
-      .reader-score-row>strong{font-size:17px}
-      .reader-score-row>b{font-size:25px}
-      .action-card h2{font-size:14px}
-      .action-card>p{font-size:8.3px}
-      .quick-card .quick-links a{font-size:8.4px;padding:6px 5px}
-      .reader-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .metric-card{padding:10px 9px}
-      .reader-alerts{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .footer .footer-nav-all .quick-links{grid-template-columns:repeat(4,max-content);gap:8px 8px}
+      .reader-hero h1{font-size:27px}
+      .hero-quote{width:58%}
+      .reader-action-card h2{font-size:14px}
+      .reader-tools a{font-size:8.5px}
+      .reader-alerts{grid-template-columns:1fr 1fr}
+      .footer .footer-nav-all .quick-links{
+        grid-template-columns:repeat(4,max-content);
+        gap:7px 9px;
+      }
       .footer .footer-nav-all .quick-links a{font-size:10px}
-      .footer .footer-copyright{font-size:10px}
-      .footer .footer-legal a{font-size:10px}
-    }
-
-    @media (max-width:360px){
-      .top-grid{gap:6px}
-      .status-card,.action-card{padding:10px 8px}
-      .reader-score-row>strong{font-size:16px}
-      .reader-score-row>b{font-size:23px}
-      .action-card h2{font-size:13px}
-      .reader-alerts{grid-template-columns:1fr}
-      .footer .footer-nav-all .quick-links{grid-template-columns:repeat(2,max-content);gap:8px 20px}
     }
   </style>
 </head>
 <body>
 
+  <!-- HEADER Y CHANG CẤU TRÚC INDEX, CHỈ ACTIVE = THỊ TRƯỜNG -->
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="./">
@@ -803,23 +1415,43 @@
     </div>
   </header>
 
-  <main class="market-main">
-    <div class="wrap dashboard">
+  <main class="reader-main">
+    <div class="wrap reader-shell">
 
-      <section class="hero-market">
-        <img class="hero-market-art" src="hero-thi-truong-hom-nay.webp" alt="Bối cảnh thị trường hôm nay" width="1200" height="650" fetchpriority="high" decoding="async">
-        <div class="hero-market-copy">
-          <p class="eyebrow">Bức tranh thị trường realtime</p>
+      <!-- HERO -->
+      <section class="reader-hero">
+        <div class="reader-hero-copy">
+          <p class="reader-eyebrow">BỨC TRANH THỊ TRƯỜNG REALTIME</p>
           <h1>Không chỉ nhìn chỉ số.<br><span>Đọc xem thị trường đang nói gì.</span></h1>
-          <p>Hệ thống tổng hợp điểm số, độ rộng, dòng tiền và sức mạnh nhóm ngành để giúp bạn nhìn rõ bối cảnh thị trường và biết lúc này nên hành động thế nào.</p>
-          <div class="proofs"><span>Realtime</span><span>Có hệ thống</span><span>Không phím hàng</span></div>
+          <p>
+            Hệ thống tổng hợp dữ liệu để bạn nhìn rõ bức tranh thị trường, dòng tiền,
+            độ rộng, nhóm ngành và các tín hiệu quan trọng trong ngày.
+            Không phải để dự đoán, mà để ra quyết định tốt hơn.
+          </p>
+          <div class="reader-proof">
+            <b>Real-time</b>
+            <b>Có hệ thống</b>
+            <b>Dành cho NĐT cá nhân</b>
+          </div>
         </div>
-        <div class="hero-live"><div class="reader-live" id="readerLive"><i></i><span>Đang kết nối dữ liệu…</span></div></div>
+
+        <div class="reader-hero-art">
+          <img src="hero-thi-truong-hom-nay.webp" alt="Bức tranh thị trường hôm nay">
+          <aside class="hero-quote">
+            <blockquote>“Thị trường luôn đúng. Điều quan trọng là bạn đang nhìn đúng thứ quan trọng.”</blockquote>
+            <span>— VÕ HOÀNG</span>
+          </aside>
+
+          <div class="reader-live" id="readerLive">
+            <i></i><span>Đang kết nối dữ liệu…</span>
+          </div>
+        </div>
       </section>
 
-      <section class="top-grid">
-        <article class="panel status-card" id="readerScoreCard" data-tone="neutral">
-          <span class="mini-title">Trạng thái thị trường</span>
+      <!-- 3 CARD ĐẦU -->
+      <section class="reader-state-shell">
+        <article class="panel reader-score-card" id="readerScoreCard" data-tone="neutral">
+          <span class="reader-label">TRẠNG THÁI THỊ TRƯỜNG</span>
           <div class="reader-score-row">
             <strong id="readerState">—</strong>
             <b><span id="readerScore">—</span><small>/100</small></b>
@@ -828,16 +1460,16 @@
           <p id="readerTrend">Đang tải dữ liệu…</p>
         </article>
 
-        <article class="panel action-card" id="readerActionCard" data-tone="neutral">
-          <span class="mini-title">Hành động hệ thống</span>
+        <article class="panel reader-action-card tone-neutral" id="readerActionCard">
+          <span class="reader-label">HÀNH ĐỘNG HỆ THỐNG</span>
           <h2 id="readerAction">Đang đọc thị trường…</h2>
           <p id="readerActionDetail">Hệ thống sẽ đưa ra việc nên làm tiếp theo từ trạng thái hiện tại.</p>
           <div class="reader-action-links" id="readerActions"></div>
         </article>
 
-        <article class="panel quick-card">
-          <span class="mini-title">Công cụ nhanh</span>
-          <div class="quick-links">
+        <article class="panel reader-tools-card">
+          <span class="reader-label">CÔNG CỤ NHANH</span>
+          <div class="reader-tools">
             <a href="sang-nay-can-nhin-gi.html"><span>Sáng nay cần nhìn gì?</span><span>→</span></a>
             <a href="sau-phien-cua-toi.html"><span>Sau phiên của tôi</span><span>→</span></a>
             <a href="watchlist.html"><span>Watchlist của tôi</span><span>→</span></a>
@@ -845,56 +1477,123 @@
         </article>
       </section>
 
-      <section class="day-highlight" data-vh-viewpoint>
-        <div class="day-icon">✦</div>
-        <div class="day-copy">
-          <span>Điểm nhấn trong ngày</span>
-          <strong id="vhViewHeadline">Hệ thống đang đọc các biến số quan trọng của phiên.</strong>
-          <p id="vhViewText">Độ rộng, dòng tiền, nhóm dẫn dắt và mức rủi ro sẽ quyết định hành động tiếp theo.</p>
+      <!-- ĐIỂM NHẤN - market-reader.js sẽ tự đổ nội dung -->
+      <section class="reader-sharebar" data-vh-viewpoint>
+        <div>
+          <span>ĐIỂM NHẤN TRONG NGÀY</span>
+          <strong id="vhViewHeadline">Đang đọc bối cảnh thị trường…</strong>
         </div>
-        <a href="#marketAlerts">Xem đầy đủ nhận định →</a>
-      </section>
 
-      <section class="reader-metrics" aria-label="Chỉ số thị trường chính">
-        <article class="metric-card tone-neutral" id="metricVn"><span>VN-Index</span><strong id="vnIndex">—</strong><small id="vnIndexSub">—</small></article>
-        <article class="metric-card tone-neutral" id="metricBreadth"><span>Độ rộng</span><strong id="breadthState">—</strong><small id="breadthSub">—</small></article>
-        <article class="metric-card tone-neutral" id="metricFlow"><span>Dòng tiền</span><strong id="flowValue">—</strong><small id="flowSub">—</small></article>
-        <article class="metric-card tone-neutral" id="metricLeader"><span>Nhóm dẫn dắt</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article>
-        <article class="metric-card tone-neutral" id="metricPace"><span>Nhịp 15 phút</span><strong id="paceTop">—</strong><small id="paceTopSub">So với nhịp chuẩn cùng thời điểm</small></article>
-      </section>
+        <div class="reader-share-actions">
+          <button id="copyReaderBrief" type="button">Sao chép</button>
+          <button id="shareReaderBrief" type="button">Chia sẻ</button>
+        </div>
 
-      <section class="reader-sharebar" aria-label="Chia sẻ nhận định thị trường">
-        <div><span>Chia sẻ nhanh</span><strong>Biến dữ liệu thành một đoạn nhận định có thể gửi cho ACE.</strong></div>
-        <div class="reader-share-actions"><button id="copyReaderBrief" type="button">Sao chép nhận định</button><button id="shareReaderBrief" type="button">Chia sẻ</button></div>
+        <p id="vhViewText"></p>
         <p id="readerShareMessage" aria-live="polite"></p>
       </section>
 
+      <!-- METRICS -->
+      <section class="reader-metrics" aria-label="Chỉ số thị trường chính">
+        <article class="metric-card tone-muted" id="vnMetric">
+          <span>VN-INDEX</span>
+          <strong id="vnIndex">—</strong>
+          <small id="vnIndexSub">—</small>
+        </article>
+
+        <article class="metric-card tone-muted" id="breadthMetric">
+          <span>ĐỘ RỘNG</span>
+          <strong id="breadthState">—</strong>
+          <small id="breadthSub">—</small>
+        </article>
+
+        <article class="metric-card tone-muted" id="flowMetric">
+          <span>THANH KHOẢN</span>
+          <strong id="flowValue">—</strong>
+          <small id="flowSub">—</small>
+        </article>
+
+        <article class="metric-card tone-muted" id="leaderMetric">
+          <span>NHÓM DẪN DẮT</span>
+          <strong id="leaderName">—</strong>
+          <small id="leaderSub">—</small>
+        </article>
+
+        <article class="metric-card tone-neutral" id="baselineMetric">
+          <span>CHUẨN DỮ LIỆU</span>
+          <strong id="baselineStatusTop">Đang tích lũy</strong>
+          <small>So sánh theo cùng thời điểm</small>
+        </article>
+      </section>
+
+      <!-- NHÓM NGÀNH + CẢNH BÁO -->
       <section class="reader-grid">
-        <article class="reader-panel">
-          <div class="reader-panel-head"><div><span class="reader-label">Dòng tiền ở đâu?</span><h2>Xếp hạng nhóm ngành</h2></div><small>Thay đổi trong phiên</small></div>
+        <article class="panel reader-panel">
+          <div class="reader-panel-head">
+            <div>
+              <span class="reader-label">DÒNG TIỀN Ở ĐÂU?</span>
+              <h2>Xếp hạng nhóm ngành</h2>
+            </div>
+            <small>Thay đổi trong phiên</small>
+          </div>
           <div class="sector-table" id="sectorTable"></div>
         </article>
 
-        <article class="reader-panel" id="marketAlerts">
-          <div class="reader-panel-head"><div><span class="reader-label">Cảnh báo & lưu ý</span><h2>Điều đang cần chú ý</h2></div><small>Tự sinh từ dữ liệu</small></div>
+        <article class="panel reader-panel">
+          <div class="reader-panel-head">
+            <div>
+              <span class="reader-label">CẢNH BÁO & LƯU Ý</span>
+              <h2>Điều đáng chú ý</h2>
+            </div>
+            <small>Tự sinh từ dữ liệu</small>
+          </div>
           <div class="reader-alerts" id="readerAlerts"></div>
         </article>
       </section>
 
+      <!-- BASELINE + SCORE RULES -->
       <section class="reader-grid reader-grid-secondary">
-        <article class="reader-panel">
-          <div class="reader-panel-head"><div><span class="reader-label">Thanh khoản & mặt bằng định giá</span><h2>Chuẩn cùng thời điểm</h2></div><small id="baselineStatus">Đang tích lũy</small></div>
-          <div class="baseline-box">
-            <div id="baseCurrent"><span>GT hiện tại</span><strong id="currentGt">—</strong></div>
-            <div id="baseSame"><span>So với TB cùng giờ</span><strong id="sameTimeRatio">—</strong></div>
-            <div id="basePace"><span>Nhịp 15 phút</span><strong id="paceRatio">—</strong></div>
-            <div id="baseDays"><span>Dữ liệu chuẩn</span><strong id="baselineDays">—</strong></div>
+        <article class="panel reader-panel">
+          <div class="reader-panel-head">
+            <div>
+              <span class="reader-label">THANH KHOẢN & MẶT BẰNG ĐỊNH GIÁ</span>
+              <h2>Chuẩn cùng thời điểm</h2>
+            </div>
+            <small id="baselineStatus">Đang tích lũy</small>
           </div>
-          <p class="reader-note">Chuẩn cùng thời điểm cần tối thiểu 5 phiên để bắt đầu so sánh và sẽ tốt dần khi tích lũy đến 20 phiên.</p>
+
+          <div class="baseline-box">
+            <div id="currentGtBox" class="tone-neutral">
+              <span>GT hiện tại</span>
+              <strong id="currentGt">—</strong>
+            </div>
+            <div id="sameTimeBox" class="tone-muted">
+              <span>So với TB cùng giờ</span>
+              <strong id="sameTimeRatio">—</strong>
+            </div>
+            <div id="paceBox" class="tone-muted">
+              <span>Nhịp 15 phút</span>
+              <strong id="paceRatio">—</strong>
+            </div>
+            <div id="baselineDaysBox" class="tone-neutral">
+              <span>Dữ liệu chuẩn</span>
+              <strong id="baselineDays">—</strong>
+            </div>
+          </div>
+
+          <p class="reader-note">
+            Chuẩn cùng thời điểm cần tối thiểu 5 phiên để bắt đầu so sánh và sẽ tốt dần khi tích lũy đến 20 phiên.
+          </p>
         </article>
 
-        <article class="reader-panel">
-          <div class="reader-panel-head"><div><span class="reader-label">Cách đọc điểm thị trường</span><h2>Hiểu nhanh ý nghĩa các mức điểm</h2></div></div>
+        <article class="panel reader-panel">
+          <div class="reader-panel-head">
+            <div>
+              <span class="reader-label">CÁCH ĐỌC ĐIỂM THỊ TRƯỜNG</span>
+              <h2>Hiểu nhanh ý nghĩa các mức điểm</h2>
+            </div>
+          </div>
+
           <div class="reader-rules">
             <p><b>72–100</b><span>Tích cực — có thể duy trì kế hoạch nhưng vẫn phải tính rủi ro từng lệnh.</span></p>
             <p><b>58–71</b><span>Nghiêng tích cực — tham gia chọn lọc, tránh mua đuổi.</span></p>
@@ -905,32 +1604,50 @@
         </article>
       </section>
 
-      <section class="reader-lead">
-        <div class="reader-lead-copy"><span class="reader-label">Nhận bản đồ thị trường</span><h2>Không cần mở bảng giá cả ngày để biết điều gì đáng chú ý.</h2><p>Đăng ký để Võ Hoàng có thể gửi nội dung thị trường khi có điểm đáng lưu ý: trạng thái, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.</p></div>
+      <!-- FORM LEAD GỌN -->
+      <section class="panel reader-lead">
+        <div class="reader-lead-copy">
+          <span class="reader-label">NHẬN BẢN ĐỒ THỊ TRƯỜNG</span>
+          <h2>Không cần mở bảng giá cả ngày để biết điều gì đáng chú ý.</h2>
+          <p>
+            Đăng ký để Võ Hoàng có thể gửi nội dung thị trường khi có điểm đáng lưu ý:
+            trạng thái, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.
+          </p>
+        </div>
+
         <div class="reader-lead-form" data-market-lead-root data-lead-source="MARKET_READER_BRIEF"></div>
       </section>
 
-      <section class="reader-convert">
-        <div><span class="reader-label">Thị trường là bối cảnh · tài khoản mới là bài toán</span><h2>Phiên kết thúc rồi: tài khoản của anh/chị đang khỏe hơn hay yếu hơn thị trường?</h2><p>Đối chiếu lời/lỗ, margin, cổ phiếu đang giữ và lỗi hành vi để biết phần nào do thị trường, phần nào do danh mục.</p></div>
+      <!-- CTA chuyển đổi -->
+      <section class="panel reader-convert">
+        <div>
+          <span class="reader-label">THỊ TRƯỜNG LÀ BỐI CẢNH · TÀI KHOẢN MỚI LÀ BÀI TOÁN</span>
+          <h2>Phiên kết thúc rồi: tài khoản của anh/chị đang khỏe hơn hay yếu hơn thị trường?</h2>
+          <p>Đối chiếu lời/lỗ, margin, cổ phiếu đang giữ và lỗi hành vi để biết phần nào do thị trường, phần nào do chính danh mục.</p>
+        </div>
+
         <div class="reader-convert-actions">
-          <a href="sau-phien-cua-toi.html?utm_source=market_reader&utm_medium=after_session">Mở Sau phiên của tôi</a>
-          <a href="watchlist.html?utm_source=market_reader">Watchlist có lý do</a>
-          <a href="nhat-ky-he-thong.html?utm_source=market_reader">Lịch sử Market Score</a>
-          <a href="./?start=contact&utm_source=market_reader&utm_medium=cta">Trao đổi cùng Võ Hoàng</a>
+          <a href="sau-phien-cua-toi.html?utm_source=market_reader&utm_medium=after_session">Sau phiên của tôi</a>
+          <a href="watchlist.html?utm_source=market_reader">Watchlist</a>
+          <a href="kiem-tra-nhanh-tai-khoan.html?utm_source=market_reader">Kiểm tra tài khoản</a>
+          <a href="./?start=contact&utm_source=market_reader&utm_medium=cta">Trao đổi với Võ Hoàng</a>
         </div>
       </section>
 
-      <div class="reader-footer-note">
-        <p><strong>Điểm trạng thái không phải tín hiệu mua/bán.</strong> Đây là thước đo tổng hợp để hỗ trợ kỷ luật ra quyết định. Mỗi lệnh vẫn phải đi qua kế hoạch vốn, điểm cắt lỗ và quy mô vị thế.</p>
-        <a href="sau-phien-cua-toi.html">Đối chiếu với tài khoản tôi →</a>
-      </div>
+      <p class="reader-disclaimer">
+        <strong>Điểm trạng thái không phải tín hiệu mua/bán.</strong>
+        Đây là thước đo tổng hợp để hỗ trợ kỷ luật ra quyết định. Mỗi lệnh vẫn phải đi qua kế hoạch vốn,
+        điểm cắt lỗ và quy mô vị thế.
+      </p>
 
     </div>
   </main>
 
+  <!-- FOOTER Y CHANG CẤU TRÚC INDEX -->
   <footer class="footer">
     <div class="wrap">
       <div class="footer-main">
+
         <div class="footer-brand-block">
           <a class="brand footer-brand-link" href="./">
             <img src="LOGO.webp" alt="Võ Hoàng logo">
@@ -966,14 +1683,17 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/></svg>
               YouTube
             </a>
+
             <a class="social" href="#" aria-label="Facebook">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/></svg>
               Facebook
             </a>
+
             <a class="social" href="./" aria-label="Website">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/></svg>
               Website
             </a>
+
             <a class="social" href="https://onthiplus.com" target="_blank" rel="noopener noreferrer" aria-label="Ôn Thi Plus">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/></svg>
               Ôn Thi Plus
@@ -1001,9 +1721,6 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/market-reader.js"></script>
-
   <script>
     (function(){
       const menuBtn = document.getElementById("menuBtn");
@@ -1015,74 +1732,116 @@
           menuBtn.setAttribute("aria-expanded",String(open));
         });
       }
+    })();
+  </script>
 
-      const TONES=["tone-positive","tone-danger","tone-warning","tone-neutral"];
-      function setTone(el,tone){
-        if(!el)return;
-        el.classList.remove(...TONES);
-        el.classList.add("tone-"+tone);
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="assets/js/market-reader.js"></script>
+
+  <!-- Chỉ bổ sung giao diện đổi màu; KHÔNG sửa logic backend -->
+  <script>
+    (function(){
+      const toneClasses = ["tone-positive","tone-danger","tone-warning","tone-neutral","tone-muted"];
+
+      function applyTone(el,tone){
+        if(!el) return;
+        el.classList.remove(...toneClasses);
+        el.classList.add("tone-" + tone);
       }
+
       function numberFrom(text){
-        const raw=String(text||"").trim();
-        const normalized=raw.replace(/\s/g,"").replace(/%/g,"").replace(/\./g,"").replace(",",".");
-        const m=normalized.match(/[+-]?\d+(?:\.\d+)?/);
-        return m?Number(m[0]):NaN;
-      }
-      function signTone(text){
-        const n=numberFrom(text);
-        if(!Number.isFinite(n))return "neutral";
-        return n>0?"positive":n<0?"danger":"neutral";
-      }
-      function breadthTone(text){
-        const m=String(text||"").match(/(\d+)\s*tăng.*?(\d+)\s*TC.*?(\d+)\s*giảm/i);
-        if(!m)return "neutral";
-        const adv=Number(m[1]),dec=Number(m[3]);
-        const r=adv/Math.max(dec,1);
-        if(r>=1.25)return "positive";
-        if(r<=.60)return "danger";
-        if(r<.90)return "warning";
-        return "neutral";
-      }
-      function flowTone(text){
-        const t=String(text||"").toLowerCase();
-        if(/mạnh|cải thiện|tích cực|cao hơn|gia tăng|sôi động/.test(t))return "positive";
-        if(/yếu|suy giảm|thấp|co hẹp|rút|ảm đạm/.test(t))return "danger";
-        if(/chậm|thận trọng|trung bình|phân hóa/.test(t))return "warning";
-        return "neutral";
-      }
-      function ratioTone(text){
-        const n=numberFrom(text);
-        if(!Number.isFinite(n))return "neutral";
-        if(n>=105)return "positive";
-        if(n<85)return "danger";
-        if(n<95)return "warning";
-        return "neutral";
-      }
-      function syncColors(){
-        const state=document.getElementById("readerScoreCard");
-        const action=document.getElementById("readerActionCard");
-        if(state&&action)action.dataset.tone=state.dataset.tone||"neutral";
-
-        setTone(document.getElementById("metricVn"),signTone(document.getElementById("vnIndexSub")?.textContent));
-        setTone(document.getElementById("metricBreadth"),breadthTone(document.getElementById("breadthSub")?.textContent));
-        setTone(document.getElementById("metricFlow"),flowTone(document.getElementById("flowSub")?.textContent));
-        setTone(document.getElementById("metricLeader"),signTone(document.getElementById("leaderSub")?.textContent));
-        setTone(document.getElementById("baseSame"),ratioTone(document.getElementById("sameTimeRatio")?.textContent));
-        setTone(document.getElementById("basePace"),ratioTone(document.getElementById("paceRatio")?.textContent));
-
-        const paceText=document.getElementById("paceRatio")?.textContent||"—";
-        const paceTop=document.getElementById("paceTop");
-        if(paceTop)paceTop.textContent=paceText;
-        setTone(document.getElementById("metricPace"),ratioTone(paceText));
+        const s = String(text || "").replace(/\s/g,"").replace(/,/g,".");
+        const m = s.match(/[+-]?\d+(?:\.\d+)?/);
+        return m ? Number(m[0]) : NaN;
       }
 
-      const watchIds=["readerScoreCard","vnIndexSub","breadthSub","flowSub","leaderSub","sameTimeRatio","paceRatio"];
-      const observer=new MutationObserver(syncColors);
-      watchIds.forEach(id=>{
-        const el=document.getElementById(id);
-        if(el)observer.observe(el,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["data-tone"]});
+      function percentFrom(text){
+        const m = String(text || "").match(/([+-]?\d+(?:[.,]\d+)?)\s*%/);
+        return m ? Number(m[1].replace(",",".")) : NaN;
+      }
+
+      function syncStateTone(){
+        const scoreCard = document.getElementById("readerScoreCard");
+        const action = document.getElementById("readerActionCard");
+        if(!scoreCard || !action) return;
+
+        const tone = ["positive","warning","danger","neutral"].includes(scoreCard.dataset.tone)
+          ? scoreCard.dataset.tone
+          : "neutral";
+
+        applyTone(action,tone);
+      }
+
+      function syncMetricTones(){
+        const vn = percentFrom(document.getElementById("vnIndexSub")?.textContent);
+        applyTone(document.getElementById("vnMetric"),
+          Number.isFinite(vn) ? (vn > .05 ? "positive" : vn < -.05 ? "danger" : "neutral") : "muted"
+        );
+
+        const breadth = document.getElementById("breadthSub")?.textContent || "";
+        const bm = breadth.match(/(\d+)\s*tăng.*?(\d+)\s*TC.*?(\d+)\s*giảm/i);
+        if(bm){
+          const adv = Number(bm[1]), dec = Number(bm[3]);
+          const r = adv / Math.max(dec,1);
+          applyTone(document.getElementById("breadthMetric"),
+            r >= 1.20 ? "positive" : r <= .65 ? "danger" : r < .90 ? "warning" : "neutral"
+          );
+        }else{
+          applyTone(document.getElementById("breadthMetric"),"muted");
+        }
+
+        const flowText = (
+          (document.getElementById("flowSub")?.textContent || "") + " " +
+          (document.getElementById("sameTimeRatio")?.textContent || "")
+        ).toLowerCase();
+
+        let flowTone = "neutral";
+        if(/yếu|thấp|suy giảm|co lại|chậm/.test(flowText)) flowTone = "danger";
+        else if(/mạnh|cao|cải thiện|tích cực/.test(flowText)) flowTone = "positive";
+        else if(/phân hóa|thận trọng|chưa đủ/.test(flowText)) flowTone = "warning";
+        applyTone(document.getElementById("flowMetric"),flowTone);
+
+        const leaderPct = percentFrom(document.getElementById("leaderSub")?.textContent);
+        applyTone(document.getElementById("leaderMetric"),
+          Number.isFinite(leaderPct) ? (leaderPct > .15 ? "positive" : leaderPct < -.15 ? "danger" : "neutral") : "muted"
+        );
+
+        const baselineStatus = document.getElementById("baselineStatus")?.textContent || "";
+        const ready = /đã có chuẩn/i.test(baselineStatus);
+        applyTone(document.getElementById("baselineMetric"), ready ? "positive" : "warning");
+        const top = document.getElementById("baselineStatusTop");
+        if(top) top.textContent = baselineStatus || "Đang tích lũy";
+
+        const same = numberFrom(document.getElementById("sameTimeRatio")?.textContent);
+        applyTone(document.getElementById("sameTimeBox"),
+          Number.isFinite(same) ? (same >= 110 ? "positive" : same <= 80 ? "danger" : same < 95 ? "warning" : "neutral") : "muted"
+        );
+
+        const pace = numberFrom(document.getElementById("paceRatio")?.textContent);
+        applyTone(document.getElementById("paceBox"),
+          Number.isFinite(pace) ? (pace >= 110 ? "positive" : pace <= 80 ? "danger" : pace < 95 ? "warning" : "neutral") : "muted"
+        );
+
+        applyTone(document.getElementById("baselineDaysBox"), ready ? "positive" : "warning");
+      }
+
+      function syncAll(){
+        syncStateTone();
+        syncMetricTones();
+      }
+
+      const observer = new MutationObserver(syncAll);
+      observer.observe(document.body,{
+        subtree:true,
+        childList:true,
+        characterData:true,
+        attributes:true,
+        attributeFilter:["data-tone","class"]
       });
-      syncColors();
+
+      window.addEventListener("DOMContentLoaded",syncAll);
+      setTimeout(syncAll,500);
+      setInterval(syncAll,3000);
     })();
   </script>
 </body>
