@@ -1,5 +1,1410 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sáng nay cần nhìn gì? | Võ Hoàng</title><meta name="description" content="Bản đồ đầu ngày: trạng thái thị trường, điều cần theo dõi, điều kiện làm thay đổi quan điểm và việc nên tránh."><link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/sang-nay-can-nhin-gi.html"><link rel="icon" href="LOGO.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/investor-hub.css"></head><body><header class="ih-topbar"><div class="ih-topbar-inner"><a class="ih-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a><nav class="ih-nav"><a href="thi-truong-hom-nay.html">Realtime</a><a href="sau-phien-cua-toi.html">Sau phiên</a><a href="nhat-ky-he-thong.html">Nhật ký</a><a href="./">Trang chủ</a></nav></div></header><main class="ih-wrap"><section class="ih-hero"><div><span class="ih-eyebrow">BẢN ĐỒ ĐẦU NGÀY</span><h1>Sáng nay cần nhìn gì?</h1><p>Không đoán VN-Index. Chỉ xác định những điều cần quan sát, dấu hiệu làm thay đổi quan điểm và việc không nên làm trước khi thị trường xác nhận.</p></div><div class="ih-live" id="marketLive">Đang tổng hợp dữ liệu…</div></section><section class="ih-metrics"><article class="ih-metric"><span>TRẠNG THÁI GẦN NHẤT</span><strong id="marketState">—</strong><small id="marketScore">—</small></article><article class="ih-metric"><span>VN-INDEX</span><strong id="vnChange">—</strong><small id="vnValue">—</small></article><article class="ih-metric"><span>ĐỘ RỘNG</span><strong id="breadthLabel">—</strong><small id="breadthSub">—</small></article><article class="ih-metric"><span>DẪN DẮT</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article></section><section class="ih-grid"><article class="ih-card"><span class="ih-label">3 ĐIỀU CẦN NHÌN</span><h2>Chỉ tập trung vào tín hiệu có thể làm thay đổi quyết định</h2><div class="ih-insight-list" id="watchBox"><div class="ih-empty">Đang tạo checklist…</div></div></article><article class="ih-card"><span class="ih-label">ĐIỀU KIỆN THAY ĐỔI QUAN ĐIỂM</span><h2>Không giữ quan điểm bằng cảm tính</h2><div class="ih-insight-list" id="changeBox"><div class="ih-empty">Đang đọc lịch sử gần nhất…</div></div></article></section><section class="ih-grid"><article class="ih-card"><span class="ih-label">CÁCH VÕ HOÀNG NHÌN</span><h2 id="viewHeadline">—</h2><p id="viewText">Hệ thống đang tổng hợp dữ liệu.</p></article><article class="ih-card"><span class="ih-label">KHÔNG NÊN LÀM SÁNG NAY</span><div class="ih-insight-list" id="avoidBox"><div class="ih-empty">Đang xác định…</div></div></article></section><section class="ih-card"><span class="ih-label">ĐI TIẾP THEO ĐÚNG NHU CẦU</span><div class="ih-actions"><a class="ih-button" href="kiem-tra-nhanh-tai-khoan.html">Tài khoản tôi có ổn không?</a><a class="ih-button" href="watchlist.html">Xem Watchlist</a><a class="ih-button" href="investor-calculator.html">Tính trước khi bấm lệnh</a><a class="ih-button primary" href="thi-truong-hom-nay.html">Mở realtime</a></div></section><footer class="ih-footer"><span>Đây là checklist kỷ luật đầu ngày, không phải dự báo hay khuyến nghị mua/bán.</span><a href="nhat-ky-he-thong.html">Kiểm chứng bằng Nhật ký hệ thống →</a></footer></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script type="module" src="assets/js/morning-brief.js"></script>
-<script src="assets/js/market-live-blocks.js" defer></script>
-<script src="assets/js/broker-brief-public.js" defer></script>
-<script src="assets/js/lead-capture.js" defer></script>
-</body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sáng nay cần nhìn gì? | Võ Hoàng</title>
+  <meta name="description" content="Bản đồ đầu ngày: bối cảnh thị trường, điểm đáng chú ý, điều kiện thay đổi quan điểm, phái sinh và cổ phiếu đáng chú ý.">
+  <link rel="icon" type="image/png" href="/vohoanginvest-site/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="preload" as="image" href="hero-sau-phien-desktop.webp" media="(min-width:681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sau-phien-mobile.webp" media="(max-width:680px)" fetchpriority="high">
+
+  <style>
+    :root{
+      --bg:#06111d;
+      --bg2:#071824;
+      --card:#0b1d2c;
+      --card2:#0e2233;
+      --line:rgba(255,255,255,.10);
+      --gold:#f2cf7c;
+      --gold2:#d6a53b;
+      --gold3:#ffc84e;
+      --text:#f9f6ef;
+      --muted:#9eacb9;
+      --green:#2bd88e;
+      --red:#ff5d62;
+      --cyan:#55cfff;
+      --amber:#f5bc4f;
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      overflow-x:hidden;
+      color:var(--text);
+      font-family:"Be Vietnam Pro",system-ui,sans-serif;
+      background:
+        radial-gradient(circle at 5% 34%,rgba(224,187,103,.08),transparent 26%),
+        radial-gradient(circle at 95% 60%,rgba(224,187,103,.06),transparent 25%),
+        linear-gradient(180deg,#06111d,#06131f);
+    }
+
+    a{color:inherit}
+    button,input,select,textarea{font:inherit}
+    .wrap{
+      width:min(var(--max),calc(100% - 40px));
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    /* HEADER */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:60;
+      height:70px;
+      display:flex;
+      align-items:center;
+      background:rgba(5,15,25,.96);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:26px;
+      width:100%;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:11px;
+      min-width:220px;
+      text-decoration:none;
+    }
+
+    .brand img{
+      width:46px;
+      height:46px;
+      object-fit:contain;
+    }
+
+    .brand strong{
+      display:block;
+      color:var(--gold);
+      font-size:17px;
+      line-height:1;
+      letter-spacing:.04em;
+    }
+
+    .brand small{
+      display:block;
+      color:#d0b469;
+      font-size:8px;
+      letter-spacing:.12em;
+      margin-top:4px;
+    }
+
+    .navlinks{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      margin-left:auto;
+    }
+
+    .navlinks a{
+      color:#e4ebf1;
+      font-size:12px;
+      text-decoration:none;
+    }
+
+    .navlinks a:hover{color:var(--gold)}
+
+    .navlinks a.active{
+      color:var(--gold);
+      border-bottom:2px solid var(--gold);
+      padding-bottom:8px;
+    }
+
+    .search{
+      margin-left:8px;
+      color:#e4ebf1;
+      font-size:18px;
+    }
+
+    .nav-cta{
+      margin-left:8px;
+      padding:11px 22px;
+      border-radius:9px;
+      background:linear-gradient(180deg,#f7d47d,#e4b657);
+      color:#17202a;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .mobile-menu-btn,
+    .mobile-menu{
+      display:none;
+    }
+
+    /* HERO */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      min-height:340px;
+      border-bottom:1px solid rgba(224,187,103,.14);
+      background:#07131f;
+    }
+
+    .hero-art{
+      position:absolute;
+      z-index:1;
+      top:0;
+      bottom:0;
+      right:max(20px,calc((100vw - var(--max))/2));
+      width:min(48%,600px);
+      overflow:hidden;
+      border-radius:0 0 12px 12px;
+      pointer-events:none;
+    }
+
+    .hero-art img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+      opacity:.90;
+    }
+
+    .hero-art:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg,#06111d 0%,rgba(6,17,29,.90) 12%,rgba(6,17,29,.50) 34%,rgba(6,17,29,.14) 74%,rgba(6,17,29,.24) 100%);
+    }
+
+    .hero-grid{
+      position:relative;
+      z-index:3;
+      min-height:340px;
+      display:grid;
+      grid-template-columns:minmax(0,1.3fr) minmax(240px,.5fr);
+      gap:22px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      max-width:700px;
+      padding:38px 0 30px;
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      margin-bottom:8px;
+    }
+
+    .hero h1{
+      margin:0 0 12px;
+      font-family:"Playfair Display",serif;
+      font-size:58px;
+      line-height:1.02;
+      max-width:710px;
+    }
+
+    .hero h1 span{color:var(--gold)}
+
+    .hero p{
+      margin:0 0 18px;
+      max-width:700px;
+      color:#d7e0e7;
+      font-size:15px;
+      line-height:1.7;
+    }
+
+    .trustline{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px 22px;
+      color:#dfe6ec;
+      font-size:11px;
+    }
+
+    .trustline span{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .trustline i{
+      width:22px;
+      height:22px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--gold);
+      border-radius:50%;
+      color:var(--gold);
+      font-style:normal;
+      font-size:10px;
+    }
+
+    .hero-quote{
+      justify-self:end;
+      width:min(100%,270px);
+      padding:18px;
+      border-radius:12px;
+      background:rgba(5,15,25,.55);
+      border:1px solid rgba(242,207,124,.15);
+      backdrop-filter:blur(6px);
+      box-shadow:0 16px 36px rgba(0,0,0,.22);
+    }
+
+    .hero-quote blockquote{
+      margin:0 0 12px;
+      font-family:"Playfair Display",serif;
+      font-size:19px;
+      line-height:1.5;
+    }
+
+    .signature{
+      display:inline-block;
+      margin-left:28px;
+      color:#fff;
+      font-family:"Playfair Display",serif;
+      font-size:25px;
+      font-style:italic;
+      transform:rotate(-6deg);
+    }
+
+    .quote-tags{
+      margin-top:14px;
+      padding-left:10px;
+      border-left:2px solid var(--gold2);
+      color:#d8b149;
+      font-size:9px;
+      line-height:1.8;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+
+    /* MARKET */
+    .market-area{
+      position:relative;
+      z-index:5;
+      margin-top:-8px;
+    }
+
+    .market-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .market-card,
+    .panel{
+      min-width:0;
+      max-width:100%;
+      border:1px solid rgba(255,255,255,.11);
+      background:linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
+      box-shadow:0 14px 30px rgba(0,0,0,.15);
+    }
+
+    .market-card{
+      min-height:104px;
+      padding:14px 16px;
+      overflow:hidden;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .market-card > div:first-child{min-width:0}
+
+    .market-label{
+      color:#9aa8b5;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      font-weight:700;
+    }
+
+    .market-main{
+      margin-top:7px;
+      font-size:24px;
+      font-weight:800;
+      line-height:1.14;
+    }
+
+    .market-sub{
+      margin-top:6px;
+      color:#8695a2;
+      font-size:9px;
+      line-height:1.45;
+    }
+
+    .up{color:var(--green)}
+    .down{color:var(--red)}
+
+    .score-bars{
+      width:64px;
+      height:46px;
+      display:flex;
+      align-items:flex-end;
+      gap:4px;
+      flex:none;
+    }
+
+    .score-bars i{
+      display:block;
+      width:7px;
+      border-radius:2px 2px 0 0;
+      background:linear-gradient(180deg,#f6d47c,#9b6817);
+    }
+
+    .score-bars i:nth-child(1){height:12px}
+    .score-bars i:nth-child(2){height:18px}
+    .score-bars i:nth-child(3){height:26px}
+    .score-bars i:nth-child(4){height:34px}
+    .score-bars i:nth-child(5){height:44px}
+
+    .spark{
+      width:84px;
+      height:42px;
+      flex:none;
+    }
+
+    .spark polyline{
+      fill:none;
+      stroke:var(--green);
+      stroke-width:2.2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .breadth-bars{
+      width:76px;
+      height:46px;
+      display:flex;
+      align-items:flex-end;
+      gap:4px;
+      flex:none;
+    }
+
+    .breadth-bars i{
+      display:block;
+      width:7px;
+      border-radius:2px 2px 0 0;
+    }
+
+    .breadth-bars i:nth-child(1){height:16px;background:var(--red)}
+    .breadth-bars i:nth-child(2){height:31px;background:var(--red)}
+    .breadth-bars i:nth-child(3){height:44px;background:var(--red)}
+    .breadth-bars i:nth-child(4){height:29px;background:var(--green)}
+    .breadth-bars i:nth-child(5){height:20px;background:var(--green)}
+    .breadth-bars i:nth-child(6){height:14px;background:var(--green)}
+
+    /* MAIN */
+    main{padding:12px 0 18px}
+
+    .panel{
+      border-radius:12px;
+      padding:18px 20px;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:14px;
+    }
+
+    .section-icon{
+      width:44px;
+      height:44px;
+      flex:none;
+      border-radius:9px;
+      display:grid;
+      place-items:center;
+      color:#16202a;
+      background:linear-gradient(180deg,#f7d57d,#e5b85a);
+      font-size:21px;
+      font-weight:800;
+    }
+
+    .section-kicker{
+      color:var(--gold);
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-bottom:4px;
+    }
+
+    .section-title{
+      margin:0;
+      font-family:"Playfair Display",serif;
+      font-size:24px;
+      line-height:1.2;
+    }
+
+    .section-desc{
+      margin:4px 0 0;
+      color:#8f9da9;
+      font-size:10px;
+      line-height:1.5;
+    }
+
+    /* HIGHLIGHTS */
+    .attention{
+      margin-top:0;
+      border-color:rgba(242,207,124,.34);
+    }
+
+    .attention-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .attention-item{
+      min-width:0;
+      padding:14px;
+      border-radius:9px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.018);
+    }
+
+    .item-num{
+      width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:8px;
+      background:rgba(242,207,124,.08);
+      border:1px solid rgba(242,207,124,.22);
+      color:var(--gold);
+      font-size:11px;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    .attention-item h3,
+    .decision-item h3{
+      margin:0 0 5px;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .attention-item p,
+    .decision-item p{
+      margin:0;
+      color:#9aa8b5;
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    /* 2 column rows */
+    .two-col{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .decision-list{
+      display:grid;
+      gap:8px;
+    }
+
+    .decision-item{
+      min-width:0;
+      display:grid;
+      grid-template-columns:38px 1fr;
+      gap:10px;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .decision-item:last-child{border-bottom:0}
+
+    .decision-item .item-num{
+      margin:0;
+      width:32px;
+      height:32px;
+    }
+
+    .view-copy{
+      color:#cdd6de;
+      font-size:11px;
+      line-height:1.75;
+    }
+
+    .avoid-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .avoid-card{
+      min-width:0;
+      padding:11px;
+      border-radius:9px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.018);
+    }
+
+    .avoid-card b{
+      display:block;
+      color:var(--gold);
+      font-size:10px;
+      margin-bottom:5px;
+    }
+
+    .avoid-card span{
+      color:#a5b1bc;
+      font-size:9px;
+      line-height:1.5;
+    }
+
+    /* LIVE */
+    .live-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .live-table{
+      display:grid;
+      gap:0;
+      margin-top:8px;
+    }
+
+    .live-row{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:8px 0;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      font-size:10px;
+    }
+
+    .live-row:last-child{border-bottom:0}
+    .live-row span:first-child{color:#99a8b4}
+    .live-row strong{text-align:right}
+
+    .hot-symbols{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .hot-chip{
+      min-width:54px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(242,207,124,.35);
+      color:#fff;
+      text-align:center;
+      font-size:11px;
+      font-weight:800;
+      background:rgba(242,207,124,.04);
+    }
+
+    .hot-note{
+      margin-top:12px;
+      color:#9aa8b5;
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    /* CTA */
+    .lead-wrap{
+      margin-top:12px;
+      padding:18px 20px;
+      border:1px solid rgba(242,207,124,.34);
+      border-radius:12px;
+      background:
+        linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
+    }
+
+    #vh-lead-capture{
+      max-width:none!important;
+      margin:0!important;
+    }
+
+    /* FOOTER */
+    footer{
+      margin-top:14px;
+      padding:18px 0 22px;
+      background:#06111d;
+      border-top:1px solid var(--line);
+    }
+
+    .foot{
+      display:flex;
+      align-items:center;
+      gap:20px;
+    }
+
+    .foot .brand{min-width:auto}
+
+    .foot-links{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-left:auto;
+    }
+
+    .foot-links a{
+      color:#a7b4bf;
+      font-size:10px;
+      text-decoration:none;
+    }
+
+    .social{
+      display:flex;
+      gap:9px;
+      margin-left:10px;
+    }
+
+    .social a{
+      width:26px;
+      height:26px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.15);
+      color:#e6edf3;
+      text-decoration:none;
+      font-size:10px;
+    }
+
+    .eco{
+      margin-left:10px;
+      padding:9px 13px;
+      border-radius:9px;
+      background:var(--gold);
+      color:#17202a;
+      text-decoration:none;
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .legal-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px 18px;
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+
+    .legal-links a{
+      color:#8e9ca9;
+      font-size:9px;
+      text-decoration:none;
+    }
+
+    .copyright{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+      margin-top:12px;
+      color:#748391;
+      font-size:9px;
+      line-height:1.6;
+    }
+
+    @media(max-width:980px){
+      .navlinks{display:none}
+      .search{margin-left:auto}
+      .hero-grid{grid-template-columns:1fr}
+      .hero-copy{text-align:center}
+      .hero h1{margin-left:auto;margin-right:auto;font-size:46px}
+      .hero p{margin-left:auto;margin-right:auto}
+      .trustline{justify-content:center}
+      .hero-quote{display:none}
+      .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .two-col,.live-grid{grid-template-columns:1fr}
+      .attention-grid{grid-template-columns:1fr}
+      .foot{flex-direction:column;text-align:center}
+      .foot-links{margin-left:0;justify-content:center}
+      .social{margin-left:0}
+      .eco{margin-left:0}
+      .legal-links{justify-content:center}
+      .copyright{justify-content:center;text-align:center}
+    }
+
+    @media(max-width:680px){
+      .wrap{
+        width:calc(100% - 24px);
+        max-width:var(--max);
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      .topbar{height:64px}
+
+      .nav{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);
+        align-items:center;
+        gap:8px;
+        width:100%;
+      }
+
+      .brand{
+        justify-self:start;
+        min-width:0;
+      }
+
+      .brand img{width:40px;height:40px}
+      .brand strong{font-size:15px}
+      .brand small{font-size:7px}
+
+      .navlinks,.search{display:none}
+
+      .mobile-menu-btn{
+        display:grid;
+        place-items:center;
+        justify-self:center;
+        width:40px;
+        height:40px;
+        padding:0;
+        border:0;
+        border-radius:9px;
+        background:transparent;
+        color:var(--gold);
+        font-size:25px;
+        line-height:1;
+        cursor:pointer;
+      }
+
+      .nav-cta{
+        justify-self:end;
+        margin-left:0;
+        padding:9px 12px;
+        white-space:nowrap;
+      }
+
+      .mobile-menu{
+        position:fixed;
+        top:64px;
+        left:12px;
+        right:12px;
+        z-index:70;
+        padding:8px;
+        border-radius:12px;
+        background:rgba(8,23,37,.98);
+        border:1px solid rgba(242,207,124,.20);
+        box-shadow:0 18px 40px rgba(0,0,0,.38);
+        backdrop-filter:blur(14px);
+      }
+
+      .mobile-menu.open{display:grid}
+
+      .mobile-menu a{
+        display:flex;
+        align-items:center;
+        min-height:42px;
+        padding:10px 13px;
+        border-radius:8px;
+        color:#e7edf3;
+        text-decoration:none;
+        font-size:13px;
+      }
+
+      .mobile-menu a.active{
+        color:var(--gold);
+        background:rgba(242,207,124,.07);
+      }
+
+      .hero{min-height:auto}
+
+      .hero-art{
+        right:12px;
+        left:12px;
+        width:auto;
+        opacity:.34;
+      }
+
+      .hero-art img{
+        content:url("hero-sau-phien-mobile.webp");
+        object-position:center;
+      }
+
+      .hero-art:after{
+        background:rgba(6,17,29,.58);
+      }
+
+      .hero-copy{
+        padding:34px 0 24px;
+        text-align:center;
+      }
+
+      .hero h1{font-size:38px}
+      .hero p{font-size:13px}
+      .trustline{justify-content:center}
+      .market-area{margin-top:0}
+
+      .market-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+
+      .market-card{
+        min-width:0;
+        width:100%;
+        max-width:100%;
+        padding:11px;
+        gap:6px;
+      }
+
+      .market-main{
+        font-size:19px;
+        overflow-wrap:anywhere;
+      }
+
+      .score-bars{width:48px;flex:0 0 48px}
+      .spark{width:54px;flex:0 0 54px}
+      .breadth-bars{width:52px;flex:0 0 52px}
+
+      .panel{padding:16px}
+      .section-title{font-size:22px}
+      .attention-grid,.avoid-grid{grid-template-columns:1fr}
+      .live-row{align-items:flex-start}
+      .foot-links,.legal-links{justify-content:center}
+      .legal-links{flex-direction:column;align-items:center}
+      .copyright{flex-direction:column;align-items:center}
+    }
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="LOGO.webp" alt="Võ Hoàng">
+      <span>
+        <strong>VÕ HOÀNG</strong>
+        <small>ĐẦU TƯ CHUẨN HỆ THỐNG</small>
+      </span>
+    </a>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="mobileMenu">☰</button>
+
+    <nav class="navlinks">
+      <a href="thi-truong-hom-nay.html">Thị trường</a>
+      <a class="active" href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+      <a href="sau-phien-cua-toi.html">Sau phiên</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="index.html">Trang chủ</a>
+      <a href="#">Kiến thức</a>
+      <a href="investor-calculator.html">Công cụ</a>
+      <a href="index.html#ve-toi">Về tôi</a>
+    </nav>
+
+    <div class="search">⌕</div>
+    <a class="nav-cta" href="index.html">Đăng nhập</a>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="thi-truong-hom-nay.html">Thị trường</a>
+  <a class="active" href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+  <a href="sau-phien-cua-toi.html">Sau phiên</a>
+  <a href="watchlist.html">Watchlist</a>
+  <a href="index.html">Trang chủ</a>
+  <a href="#">Kiến thức</a>
+  <a href="investor-calculator.html">Công cụ</a>
+  <a href="index.html#ve-toi">Về tôi</a>
+  <a href="lien-he.html">Liên hệ</a>
+</nav>
+
+<section class="hero">
+  <picture class="hero-art" aria-hidden="true">
+    <source media="(max-width:680px)" srcset="hero-sau-phien-mobile.webp">
+    <img src="hero-sau-phien-desktop.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async">
+  </picture>
+
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">BẢN ĐỒ ĐẦU TƯ</div>
+      <h1>Sáng nay <span>cần nhìn gì?</span></h1>
+      <p>Cập nhật nhanh bức tranh thị trường, nhận diện những yếu tố quan trọng có thể làm thay đổi quyết định đầu tư trong hôm nay.</p>
+
+      <div class="trustline">
+        <span><i>◎</i>Nhìn đúng bối cảnh</span>
+        <span><i>◇</i>Tập trung điều quan trọng</span>
+        <span><i>↗</i>Có hành động cụ thể</span>
+      </div>
+    </div>
+
+    <aside class="hero-quote">
+      <blockquote>“Buổi sáng không cần đoán đúng thị trường. Chỉ cần biết điều gì đủ quan trọng để làm thay đổi quyết định.”</blockquote>
+      <span class="signature">Võ Hoàng</span>
+      <div class="quote-tags">Kiến thức<br>Kỷ luật<br>Hệ thống<br>Tài sản tự do</div>
+    </aside>
+  </div>
+</section>
+
+<section class="market-area">
+  <div class="wrap market-grid">
+    <article class="market-card">
+      <div>
+        <div class="market-label">Market Score</div>
+        <div class="market-main" id="marketScore">—</div>
+        <div class="market-sub" id="marketScoreNote">Đang đọc thị trường...</div>
+      </div>
+      <div class="score-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    </article>
+
+    <article class="market-card">
+      <div>
+        <div class="market-label">VN-Index</div>
+        <div class="market-main" id="vniValue">—</div>
+        <div class="market-sub" id="vniChange">Đang tải...</div>
+      </div>
+      <svg class="spark" viewBox="0 0 120 44" aria-hidden="true">
+        <polyline points="2,36 10,31 18,34 27,24 35,28 44,19 52,23 61,15 70,19 79,10 88,14 98,8 108,11 118,3"></polyline>
+      </svg>
+    </article>
+
+    <article class="market-card">
+      <div>
+        <div class="market-label">Độ rộng thị trường</div>
+        <div class="market-main" id="breadthValue">—</div>
+        <div class="market-sub">Số mã tăng / giảm</div>
+      </div>
+      <div class="breadth-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </article>
+
+    <article class="market-card">
+      <div>
+        <div class="market-label">Nhóm dẫn dắt</div>
+        <div class="market-main" id="leadersValue" style="font-size:20px">Theo dõi</div>
+        <div class="market-sub">Dòng tiền tập trung, hút thanh khoản</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+
+    <section class="panel attention">
+      <div class="section-head">
+        <div class="section-icon">◎</div>
+        <div>
+          <div class="section-kicker">Tại điểm đáng chú ý</div>
+          <h2 class="section-title">Những biến số có thể làm thay đổi quyết định hôm nay</h2>
+          <p class="section-desc">Ưu tiên điều có tác động thực sự đến bối cảnh, dòng tiền và hành động.</p>
+        </div>
+      </div>
+
+      <div class="attention-grid" id="attentionGrid">
+        <article class="attention-item"><div class="item-num">01</div><h3>Đang cập nhật điểm đáng chú ý</h3><p>Hệ thống đang đọc bản tin buổi sáng.</p></article>
+        <article class="attention-item"><div class="item-num">02</div><h3>Đang cập nhật bối cảnh</h3><p>Chỉ hiển thị các yếu tố có khả năng ảnh hưởng quyết định.</p></article>
+        <article class="attention-item"><div class="item-num">03</div><h3>Đang cập nhật dòng tiền</h3><p>Ưu tiên diễn biến có ý nghĩa với thị trường và danh mục.</p></article>
+      </div>
+    </section>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">◉</div>
+          <div>
+            <div class="section-kicker">3 điều cần nhìn</div>
+            <h2 class="section-title">Chỉ tập trung vào tín hiệu có thể làm thay đổi quyết định</h2>
+          </div>
+        </div>
+
+        <div class="decision-list" id="focusList">
+          <div class="decision-item"><div class="item-num">01</div><div><h3>VN-Index ở vùng quan trọng</h3><p>Quan sát phản ứng giá và thanh khoản thay vì chỉ nhìn điểm số.</p></div></div>
+          <div class="decision-item"><div class="item-num">02</div><div><h3>Dòng tiền vào nhóm dẫn dắt</h3><p>Nhìn xem nhóm mạnh có tiếp tục giữ sức mạnh tương đối hay không.</p></div></div>
+          <div class="decision-item"><div class="item-num">03</div><div><h3>Thông tin doanh nghiệp đáng chú ý</h3><p>Chỉ giữ những thông tin có khả năng ảnh hưởng đến kỳ vọng và dòng tiền.</p></div></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">↔</div>
+          <div>
+            <div class="section-kicker">Điều kiện thay đổi quan điểm</div>
+            <h2 class="section-title">Không cố quan điểm bằng cảm tính</h2>
+          </div>
+        </div>
+
+        <div class="decision-list" id="changeList">
+          <div class="decision-item"><div class="item-num">01</div><div><h3>VN-Index mất vùng hỗ trợ quan trọng</h3><p>Độ bền cấu trúc suy yếu và không có lực cầu hấp thụ.</p></div></div>
+          <div class="decision-item"><div class="item-num">02</div><div><h3>Dòng tiền suy yếu rõ rệt</h3><p>Độ rộng thu hẹp, nhóm dẫn dắt hạ nhiệt và thanh khoản yếu.</p></div></div>
+          <div class="decision-item"><div class="item-num">03</div><div><h3>Xuất hiện thông tin bất lợi lớn</h3><p>Ưu tiên điều chỉnh kịch bản thay vì bảo vệ dự đoán cũ.</p></div></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="two-col">
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">▥</div>
+          <div>
+            <div class="section-kicker">Cách Võ Hoàng nhìn</div>
+            <h2 class="section-title">Bối cảnh trước, hành động sau</h2>
+          </div>
+        </div>
+        <div class="view-copy" id="viewCopy">
+          Không cần cố đoán toàn bộ phiên. Trước tiên xác định trạng thái thị trường, sức mạnh của nhóm dẫn dắt và điều kiện nào khiến kịch bản hiện tại không còn đúng. Khi dữ liệu thay đổi, hành động thay đổi.
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div>
+            <div class="section-kicker">Không nên làm sáng nay</div>
+            <h2 class="section-title">Tránh biến một buổi sáng thành quyết định cảm tính</h2>
+          </div>
+        </div>
+
+        <div class="avoid-grid">
+          <div class="avoid-card"><b>01 · Mua đuổi</b><span>Không chạy theo giá chỉ vì sợ bỏ lỡ cơ hội.</span></div>
+          <div class="avoid-card"><b>02 · Quá lớn tỷ trọng</b><span>Chưa rõ bối cảnh thì không cần đặt cược quá lớn.</span></div>
+          <div class="avoid-card"><b>03 · Bỏ quản trị rủi ro</b><span>Luôn biết điều kiện nào khiến mình phải giảm vị thế.</span></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="live-grid">
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">↗</div>
+          <div>
+            <div class="section-kicker">Xu hướng phái sinh</div>
+            <h2 class="section-title">Dữ liệu hệ thống theo thời gian thực</h2>
+          </div>
+        </div>
+
+        <div class="live-table">
+          <div class="live-row"><span>Xu hướng</span><strong id="psTrend">—</strong></div>
+          <div class="live-row"><span>Giá hệ thống báo</span><strong id="psSystem">—</strong></div>
+          <div class="live-row"><span>Giá hiện tại</span><strong id="psCurrent">—</strong></div>
+          <div class="live-row"><span>Mục tiêu xu hướng</span><strong id="psTargets">—</strong></div>
+          <div class="live-row"><span>Đảo chiều xu hướng</span><strong id="psReversal">—</strong></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div class="section-icon">★</div>
+          <div>
+            <div class="section-kicker">Cổ phiếu đáng chú ý hôm nay</div>
+            <h2 class="section-title">Những mã đang có tín hiệu dòng tiền</h2>
+          </div>
+        </div>
+
+        <div class="hot-symbols" id="hotSymbols">
+          <span class="hot-chip">—</span>
+        </div>
+        <div class="hot-note">ACE cần thêm thông tin chi tiết từng mã, inbox Ad để trao đổi thêm.</div>
+      </section>
+    </div>
+
+    <section class="lead-wrap">
+      <div id="vh-lead-capture"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="brand" href="index.html">
+        <img src="LOGO.webp" alt="Võ Hoàng">
+        <span>
+          <strong>VÕ HOÀNG</strong>
+          <small>ĐẦU TƯ CHUẨN HỆ THỐNG</small>
+        </span>
+      </a>
+
+      <div class="foot-links">
+        <a href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="index.html">Trang chủ</a>
+        <a href="#">Kiến thức</a>
+        <a href="investor-calculator.html">Công cụ</a>
+        <a href="index.html#ve-toi">Về tôi</a>
+        <a href="lien-he.html">Liên hệ</a>
+      </div>
+
+      <div class="social">
+        <a href="https://www.youtube.com/@vohoanginvest" target="_blank" rel="noopener">▶</a>
+        <a href="https://www.facebook.com/vohoanginvest" target="_blank" rel="noopener">f</a>
+        <a href="index.html">◎</a>
+      </div>
+
+      <a class="eco" href="https://onthiplus.com" target="_blank" rel="noopener">Ôn Thi Plus →</a>
+    </div>
+
+    <div class="legal-links">
+      <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
+      <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+      <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+      <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
+      <a href="lien-he.html">Liên hệ</a>
+    </div>
+
+    <div class="copyright">
+      <span>© 2026 VÕ HOÀNG. All rights reserved.</span>
+      <span>Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+  const PS_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
+  const HOT_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
+  const BRIEF_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public";
+
+  const nf2 = new Intl.NumberFormat("vi-VN",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  const num = v => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const fmt = v => {
+    const n = num(v);
+    return n === null ? "—" : nf2.format(n);
+  };
+
+  const first = (obj, keys) => {
+    for(const key of keys){
+      const value = key.split(".").reduce((a,p)=>a?.[p],obj);
+      if(value !== undefined && value !== null && value !== "") return value;
+    }
+    return null;
+  };
+
+  async function loadMarket(){
+    try{
+      const r = await fetch(MARKET_URL,{cache:"no-store"});
+      if(!r.ok) throw new Error("market");
+      const d = await r.json();
+
+      const indexes = Array.isArray(d?.indexes) ? d.indexes : [];
+      const vni = indexes.find(x => String(x?.symbol||"").toUpperCase()==="VN-INDEX") || indexes[0] || {};
+
+      const value = num(first(vni,["value","close","last","price","current"]));
+      const pct = num(first(vni,["change_pct","change_percent","percent_change","pct_change"]));
+
+      document.getElementById("vniValue").textContent = value===null ? "—" : nf2.format(value);
+
+      const vniChange = document.getElementById("vniChange");
+      if(pct !== null){
+        vniChange.textContent = `${pct>0?"+":""}${nf2.format(pct)}%`;
+        vniChange.className = "market-sub " + (pct>0?"up":pct<0?"down":"");
+      }
+
+      const intel = d?.market_intelligence || {};
+      const breadth = intel?.breadth || {};
+
+      const adv = num(first(breadth,["adv","advance","up"]));
+      const dec = num(first(breadth,["dec","decline","down"]));
+
+      if(adv !== null || dec !== null){
+        document.getElementById("breadthValue").innerHTML =
+          `<span class="up">${adv??"—"} Tăng</span> <span style="color:#627381">|</span> <span class="down">${dec??"—"} Giảm</span>`;
+      }
+
+      const leaders = first(intel,["leaders.label","leaders.text","leading.label","leading.text","leaders"]);
+      if(typeof leaders === "string" && leaders.trim()){
+        document.getElementById("leadersValue").textContent = leaders;
+      }
+
+      let score = 70;
+      if(pct !== null) score += Math.max(-15,Math.min(15,pct*10));
+      if(adv !== null && dec !== null && adv+dec>0){
+        score += ((adv-dec)/(adv+dec))*15;
+      }
+      score = Math.max(0,Math.min(100,Math.round(score)));
+
+      document.getElementById("marketScore").textContent = `${score}/100`;
+      document.getElementById("marketScoreNote").textContent =
+        score>=75 ? "Tâm lý thị trường tích cực" :
+        score>=55 ? "Thị trường trung tính" :
+        "Rủi ro thị trường đang cao";
+
+    }catch(_){
+      document.getElementById("marketScoreNote").textContent = "Chưa lấy được dữ liệu thị trường.";
+    }
+  }
+
+  async function loadDerivatives(){
+    try{
+      const r = await fetch(PS_URL,{cache:"no-store"});
+      if(!r.ok) throw new Error("ps");
+      const d = await r.json();
+
+      if(!d || d.fresh !== true || !d.trend) return;
+
+      const trend = String(d.trend);
+      const trendEl = document.getElementById("psTrend");
+      trendEl.textContent = trend;
+      trendEl.style.color = trend.toLowerCase()==="tăng" ? "var(--green)" :
+                            trend.toLowerCase()==="giảm" ? "var(--red)" : "var(--gold)";
+
+      document.getElementById("psSystem").textContent = fmt(d.system_price);
+      document.getElementById("psCurrent").textContent = fmt(d.last_price);
+      document.getElementById("psTargets").textContent =
+        `T1 ${fmt(d.targets?.t1)} · T2 ${fmt(d.targets?.t2)} · T3 ${fmt(d.targets?.t3)}`;
+      document.getElementById("psReversal").textContent = fmt(d.reversal_price);
+    }catch(_){}
+  }
+
+  async function loadHotStocks(){
+    try{
+      const r = await fetch(HOT_URL,{cache:"no-store"});
+      if(!r.ok) throw new Error("hot");
+      const d = await r.json();
+
+      const symbols = Array.isArray(d?.symbols)
+        ? d.symbols.filter(Boolean)
+        : Array.isArray(d?.stocks)
+          ? d.stocks.map(x=>x?.symbol).filter(Boolean)
+          : [];
+
+      if(!d || d.fresh !== true || symbols.length===0) return;
+
+      document.getElementById("hotSymbols").innerHTML =
+        symbols.slice(0,10).map(s=>`<span class="hot-chip">${String(s).toUpperCase()}</span>`).join("");
+    }catch(_){}
+  }
+
+  function collectStrings(value, bucket=[]){
+    if(bucket.length>80) return bucket;
+    if(typeof value==="string"){
+      const s = value.trim();
+      if(s.length>=18 && s.length<=260) bucket.push(s);
+      return bucket;
+    }
+    if(Array.isArray(value)){
+      value.forEach(v=>collectStrings(v,bucket));
+      return bucket;
+    }
+    if(value && typeof value==="object"){
+      Object.values(value).forEach(v=>collectStrings(v,bucket));
+    }
+    return bucket;
+  }
+
+  function uniqueText(arr){
+    const seen = new Set();
+    return arr.filter(s=>{
+      const k = s.toLowerCase().replace(/\s+/g," ").trim();
+      if(seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
+
+  async function loadBrief(){
+    try{
+      const r = await fetch(BRIEF_URL,{cache:"no-store"});
+      if(!r.ok) throw new Error("brief");
+      const d = await r.json();
+
+      const strings = uniqueText(collectStrings(d,[]));
+      if(!strings.length) return;
+
+      const candidates = strings.filter(s =>
+        !/https?:\/\//i.test(s) &&
+        !/^\d{4}-\d{2}-\d{2}/.test(s)
+      );
+
+      const top = candidates.slice(0,3);
+      if(top.length){
+        document.getElementById("attentionGrid").innerHTML = top.map((s,i)=>`
+          <article class="attention-item">
+            <div class="item-num">${String(i+1).padStart(2,"0")}</div>
+            <h3>${escapeHtml(s.length>90?s.slice(0,90)+"…":s)}</h3>
+            <p>${escapeHtml(s.length>90?s:"Theo dõi tác động thực tế đến dòng tiền và quyết định.")}</p>
+          </article>
+        `).join("");
+      }
+
+      const view = candidates.find(s => s.length>90) || candidates[3];
+      if(view){
+        document.getElementById("viewCopy").textContent = view;
+      }
+    }catch(_){}
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  const menuBtn = document.getElementById("mobileMenuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  const closeMenu = () => {
+    mobileMenu.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded","false");
+    menuBtn.textContent = "☰";
+  };
+
+  menuBtn.addEventListener("click",e=>{
+    e.stopPropagation();
+    const opened = mobileMenu.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded",opened?"true":"false");
+    menuBtn.textContent = opened ? "×" : "☰";
+  });
+
+  mobileMenu.querySelectorAll("a").forEach(a=>a.addEventListener("click",closeMenu));
+
+  document.addEventListener("click",e=>{
+    if(mobileMenu.classList.contains("open") &&
+       !mobileMenu.contains(e.target) &&
+       !menuBtn.contains(e.target)){
+      closeMenu();
+    }
+  });
+
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape") closeMenu();
+  });
+
+  loadMarket();
+  loadDerivatives();
+  loadHotStocks();
+  loadBrief();
+
+  setInterval(loadMarket,15000);
+  setInterval(loadDerivatives,3000);
+  setInterval(loadHotStocks,60000);
+  setInterval(loadBrief,300000);
+})();
+</script>
+
+<script src="assets/js/lead-capture-v1.js" defer></script>
+</body>
+</html>
