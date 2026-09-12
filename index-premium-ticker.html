@@ -2027,41 +2027,299 @@
       text-align:center;
     }
 
-    /* HERO DESKTOP - HÒA MÉP ẢNH VÀO NỀN */
-@media (min-width:1181px){
+  
+    /* =========================================================
+       MỞ TÀI KHOẢN CHỨNG KHOÁN
+       Chỉ dùng cho khối mới nằm giữa CTA cuối và Footer.
+    ========================================================= */
+    .open-account-section{
+      margin-top:18px;
+      border-top:1px solid rgba(224,187,99,.12);
+      border-bottom:1px solid rgba(224,187,99,.12);
+      background:
+        radial-gradient(circle at 14% 0%,rgba(224,187,99,.065),transparent 28%),
+        linear-gradient(180deg,rgba(5,19,33,.98),rgba(4,15,27,.98));
+    }
 
-  .home-hero-visual::before{
-    content:"";
-    position:absolute;
-    top:0;
-    bottom:0;
-    left:0;
-    right:auto;
-    width:190px;
-    z-index:3;
-    pointer-events:none;
+    .open-account-inner{
+      width:min(calc(100% - 32px),var(--max));
+      margin:0 auto;
+      padding:26px 0 28px;
+    }
 
-    background:linear-gradient(
-      90deg,
-      #06172a 0%,
-      rgba(6,23,42,.96) 15%,
-      rgba(6,23,42,.78) 38%,
-      rgba(6,23,42,.48) 60%,
-      rgba(6,23,42,.18) 80%,
-      rgba(6,23,42,0) 100%
-    );
-  }
+    .open-account-head{
+      max-width:820px;
+      margin:0 auto;
+      text-align:center;
+    }
 
-  .home-hero-visual picture{
-    z-index:2;
-  }
+    .open-account-kicker{
+      margin:0 0 7px;
+      color:var(--gold-2);
+      font-size:11px;
+      line-height:1.3;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
 
-  .hero-quote-mini{
-    z-index:4;
-  }
+    .open-account-head h2{
+      margin:0;
+      font-size:28px;
+      line-height:1.25;
+      letter-spacing:-.025em;
+    }
 
-}
-    
+    .open-account-head p{
+      max-width:760px;
+      margin:10px auto 0;
+      color:var(--muted-2);
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .open-account-grid{
+      max-width:880px;
+      margin:20px auto 0;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .open-account-card{
+      position:relative;
+      overflow:hidden;
+      min-width:0;
+      padding:18px;
+      border:1px solid rgba(224,187,99,.16);
+      border-radius:17px;
+      background:
+        radial-gradient(circle at 100% 0%,rgba(224,187,99,.055),transparent 42%),
+        linear-gradient(180deg,rgba(12,34,53,.96),rgba(7,24,39,.96));
+    }
+
+    .open-account-card::before{
+      content:"";
+      position:absolute;
+      left:18px;
+      right:18px;
+      top:0;
+      height:2px;
+      border-radius:999px;
+      background:linear-gradient(90deg,transparent,rgba(224,187,99,.78),transparent);
+    }
+
+    .open-account-top{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .open-account-logo{
+      width:46px;
+      height:46px;
+      flex:0 0 auto;
+      display:grid;
+      place-items:center;
+      border-radius:13px;
+      border:1px solid rgba(224,187,99,.26);
+      background:rgba(224,187,99,.075);
+      color:#f3cf74;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.04em;
+    }
+
+    .open-account-card h3{
+      margin:0;
+      font-size:17px;
+      line-height:1.35;
+    }
+
+    .open-account-card .broker-desc{
+      margin:3px 0 0;
+      color:var(--muted-2);
+      font-size:11px;
+      line-height:1.45;
+    }
+
+    .open-account-meta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:16px;
+      padding-top:13px;
+      border-top:1px solid rgba(255,255,255,.065);
+    }
+
+    .open-account-id{
+      min-width:0;
+    }
+
+    .open-account-id span{
+      display:block;
+      color:var(--muted-2);
+      font-size:9px;
+      line-height:1.3;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .open-account-id strong{
+      display:block;
+      margin-top:3px;
+      color:#fff;
+      font-size:15px;
+      line-height:1.25;
+      letter-spacing:.02em;
+    }
+
+    .open-account-btn{
+      min-height:40px;
+      padding:0 15px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:11px;
+      border:1px solid rgba(224,187,99,.42);
+      background:linear-gradient(180deg,#f0cf79,#d8b254);
+      color:#201703;
+      font-size:11px;
+      line-height:1;
+      font-weight:800;
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+
+    .open-account-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px rgba(224,187,99,.14);
+    }
+
+    .open-account-note{
+      margin:13px auto 0;
+      max-width:780px;
+      text-align:center;
+      color:rgba(231,237,246,.48);
+      font-size:9.5px;
+      line-height:1.5;
+    }
+
+    @media(max-width:680px){
+      .open-account-section{
+        margin-top:12px;
+      }
+
+      .open-account-inner{
+        width:min(calc(100% - 20px),var(--max));
+        padding:21px 0 22px;
+      }
+
+      .open-account-kicker{
+        font-size:9px;
+      }
+
+      .open-account-head h2{
+        font-size:22px;
+      }
+
+      .open-account-head p{
+        font-size:12px;
+        line-height:1.6;
+      }
+
+      .open-account-grid{
+        grid-template-columns:1fr;
+        gap:9px;
+        margin-top:16px;
+      }
+
+      .open-account-card{
+        padding:14px;
+      }
+
+      .open-account-logo{
+        width:42px;
+        height:42px;
+        border-radius:12px;
+        font-size:12px;
+      }
+
+      .open-account-card h3{
+        font-size:15px;
+      }
+
+      .open-account-card .broker-desc{
+        font-size:10.5px;
+      }
+
+      .open-account-meta{
+        margin-top:12px;
+        padding-top:11px;
+      }
+
+      .open-account-id span{
+        font-size:8px;
+      }
+
+      .open-account-id strong{
+        font-size:13px;
+      }
+
+      .open-account-btn{
+        min-height:38px;
+        padding:0 12px;
+        font-size:10px;
+      }
+
+      .open-account-note{
+        font-size:8.5px;
+      }
+    }
+
+  
+    /* =========================================================
+       HERO DESKTOP - HÒA MÉP ẢNH VÀO NỀN
+       Chỉ áp dụng desktop lớn, không ảnh hưởng mobile/tablet.
+    ========================================================= */
+    @media (min-width:1181px){
+
+      .home-hero-visual::before{
+        content:"";
+        position:absolute;
+
+        top:0;
+        bottom:0;
+        left:0;
+        right:auto;
+
+        width:190px;
+
+        z-index:3;
+        pointer-events:none;
+
+        background:linear-gradient(
+          90deg,
+          #06172a 0%,
+          rgba(6,23,42,.96) 15%,
+          rgba(6,23,42,.78) 38%,
+          rgba(6,23,42,.48) 60%,
+          rgba(6,23,42,.18) 80%,
+          rgba(6,23,42,0) 100%
+        );
+      }
+
+      .home-hero-visual picture{
+        z-index:2;
+      }
+
+      .hero-quote-mini{
+        z-index:4;
+      }
+
+    }
+
   </style>
 </head>
 <body>
@@ -2499,6 +2757,120 @@
 
     </div>
   </main>
+
+
+  <!-- =======================================================
+       MỞ TÀI KHOẢN CHỨNG KHOÁN
+       Chèn đúng giữa CTA cuối và Footer.
+  ======================================================== -->
+  <section class="open-account-section" aria-labelledby="openAccountTitle">
+
+    <div class="open-account-inner">
+
+      <div class="open-account-head">
+
+        <div class="open-account-kicker">
+          BẮT ĐẦU ĐẦU TƯ
+        </div>
+
+        <h2 id="openAccountTitle">
+          Sẵn sàng bắt đầu đầu tư bài bản hơn?
+        </h2>
+
+        <p>
+          Nếu bạn chưa có tài khoản chứng khoán hoặc muốn bắt đầu với một quy trình rõ ràng hơn,
+          có thể mở tài khoản và đi tiếp cùng hệ thống Võ Hoàng.
+        </p>
+
+      </div>
+
+
+      <div class="open-account-grid">
+
+        <article class="open-account-card">
+
+          <div class="open-account-top">
+
+            <div class="open-account-logo" aria-hidden="true">
+              VPS
+            </div>
+
+            <div>
+              <h3>Mở tài khoản tại VPS</h3>
+              <p class="broker-desc">Đăng ký trực tuyến qua liên kết giới thiệu của Võ Hoàng.</p>
+            </div>
+
+          </div>
+
+
+          <div class="open-account-meta">
+
+            <div class="open-account-id">
+              <span>Mã ID giới thiệu</span>
+              <strong>7251</strong>
+            </div>
+
+            <a
+              class="open-account-btn"
+              href="https://openaccount.vps.com.vn/?MKTID=7251"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Mở tài khoản VPS →
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <article class="open-account-card">
+
+          <div class="open-account-top">
+
+            <div class="open-account-logo" aria-hidden="true">
+              TCBS
+            </div>
+
+            <div>
+              <h3>Mở tài khoản tại TCBS</h3>
+              <p class="broker-desc">Đăng ký trực tuyến qua liên kết giới thiệu của Võ Hoàng.</p>
+            </div>
+
+          </div>
+
+
+          <div class="open-account-meta">
+
+            <div class="open-account-id">
+              <span>Mã ID giới thiệu</span>
+              <strong>D72226</strong>
+            </div>
+
+            <a
+              class="open-account-btn"
+              href="https://iwp.tcbs.com.vn/105CD72226"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Mở tài khoản TCBS →
+            </a>
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <p class="open-account-note">
+        Bạn có thể chọn nền tảng phù hợp với nhu cầu của mình. Liên kết sẽ mở trang đăng ký chính thức của từng công ty chứng khoán.
+      </p>
+
+    </div>
+
+  </section>
+
 
   <footer class="footer">
     <div class="wrap">
