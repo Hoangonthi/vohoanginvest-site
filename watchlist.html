@@ -474,6 +474,40 @@
       font-weight:700;
     }
 
+    .wl-market-live{
+      min-height:34px;
+
+      margin-top:10px;
+
+      padding:0 11px;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      width:max-content;
+      max-width:100%;
+
+      border-radius:10px;
+
+      border:
+        1px solid rgba(77,226,216,.24);
+
+      background:
+        rgba(3,15,26,.58);
+
+      color:rgba(231,237,246,.78);
+
+      font-size:9.5px;
+      line-height:1.35;
+
+      backdrop-filter:blur(6px);
+    }
+
+    .wl-market-live b{
+      color:#fff;
+    }
+
     .wl-principles{
       position:relative;
 
@@ -2357,6 +2391,15 @@
           <div class="wl-hero-actions">
             <a href="#them-ma">＋ Thêm mã theo dõi</a>
             <a href="#danh-sach">Xem danh sách của tôi →</a>
+          </div>
+
+
+          <!-- watchlist.js cần đúng ID này để hiển thị trạng thái dữ liệu -->
+          <div
+            class="wl-market-live"
+            id="marketLive"
+          >
+            Đang đọc thị trường…
           </div>
 
         </div>
