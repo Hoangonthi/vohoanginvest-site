@@ -9,7 +9,7 @@
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -1287,6 +1287,445 @@
       .hide-mobile{display:none}
       .hide-desktop{display:inline-flex}
     }
+
+
+    /* ===== UI V2 — SANG NAY CAN NHIN GI ===== */
+    /* 1. Hero: bo ranh gioi giua noi dung va hinh, tao cam giac mot khoi lien tuc */
+    .hero-shell{
+      background:
+        radial-gradient(circle at 82% 18%, rgba(224,187,99,.10), transparent 28%),
+        linear-gradient(90deg,#06172a 0%,#06172a 44%,#071a2d 100%);
+    }
+
+    .hero-visual{
+      border-left:0;
+      margin-left:-54px;
+    }
+
+    .hero-visual::before{
+      background:
+        linear-gradient(90deg,
+          #06172a 0%,
+          rgba(6,23,42,.98) 8%,
+          rgba(6,23,42,.80) 20%,
+          rgba(6,23,42,.34) 38%,
+          rgba(6,23,42,.08) 62%,
+          rgba(6,23,42,0) 100%);
+    }
+
+    .hero-visual::after{
+      background:
+        linear-gradient(180deg,rgba(4,17,31,.02),rgba(4,17,31,.24));
+    }
+
+    .hero-quote{
+      border-color:rgba(224,187,99,.18);
+      background:linear-gradient(135deg,rgba(6,20,35,.60),rgba(8,23,39,.40));
+    }
+
+    .hero-quote blockquote{
+      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
+      font-size:23px;
+      line-height:1.42;
+      font-weight:700;
+      letter-spacing:.005em;
+    }
+
+    .hero-quote .signature{
+      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
+      font-size:21px;
+      font-weight:700;
+    }
+
+    /* 2. Market cards: can giua ca desktop va mobile */
+    .stat-card{
+      min-height:154px;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      gap:10px;
+    }
+
+    .stat-card > div{
+      width:100%;
+      text-align:center;
+    }
+
+    .stat-card .label,
+    .stat-card .value,
+    .stat-card .sub{
+      text-align:center;
+    }
+
+    .mini-bars,
+    .mini-line{
+      margin:0 auto;
+    }
+
+    /* 4. Tai diem dang chu y: can giua toan bo */
+    .spotlight-card .card-head{
+      justify-content:center;
+      text-align:center;
+    }
+
+    .spotlight-card .title-side{
+      width:100%;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    .spotlight-card .spotlight-grid{
+      align-items:stretch;
+    }
+
+    .spotlight-card .spot-item{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      text-align:center;
+    }
+
+    .spotlight-card .spot-index{
+      margin:0 auto 12px;
+    }
+
+    /* 5. Co phieu dang chu y: gon, mot hang ma, anh hoa dan ve phai */
+    .hot-card{
+      position:relative;
+      isolation:isolate;
+      padding-bottom:14px;
+    }
+
+    .hot-card > *{
+      position:relative;
+      z-index:2;
+    }
+
+    .hot-card::after{
+      content:"";
+      position:absolute;
+      z-index:0;
+      top:0;
+      right:0;
+      bottom:0;
+      width:48%;
+      height:auto;
+      border-radius:0 var(--radius) var(--radius) 0;
+      background:url("hero-sang-nay-can-nhin-gi-desktop.webp") center right/cover no-repeat;
+      opacity:.30;
+      filter:saturate(.82) contrast(1.08);
+      -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.25) 22%,#000 64%);
+      mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.25) 22%,#000 64%);
+      pointer-events:none;
+    }
+
+    .hot-card::before{
+      content:"";
+      position:absolute;
+      z-index:1;
+      inset:0;
+      border-radius:inherit;
+      background:linear-gradient(90deg,rgba(8,26,45,.98) 0%,rgba(8,26,45,.90) 48%,rgba(8,26,45,.46) 100%);
+      pointer-events:none;
+    }
+
+    .hot-card .card-head{
+      margin-bottom:8px;
+    }
+
+    .hot-card .live-status{
+      min-height:26px;
+      margin-top:0;
+      padding:4px 10px;
+    }
+
+    .hot-pills{
+      flex-wrap:nowrap;
+      gap:6px;
+      margin-top:10px;
+      padding-right:0;
+      overflow-x:auto;
+      overflow-y:hidden;
+      scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .hot-pills::-webkit-scrollbar{display:none}
+
+    .stock-pill{
+      min-width:max-content;
+      height:34px;
+      padding:0 11px;
+      font-size:13px;
+      border-radius:10px;
+    }
+
+    .hot-card .ps-note{
+      margin-top:9px;
+      max-width:72%;
+    }
+
+    /* 7. Phai sinh: hang hep va nen xen ke */
+    .ps-table{
+      margin-top:10px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:12px;
+      border-top-color:rgba(255,255,255,.07);
+      border-bottom-color:rgba(255,255,255,.07);
+    }
+
+    .ps-row{
+      padding:8px 12px;
+      border-bottom:0;
+    }
+
+    .ps-row:nth-child(odd){background:rgba(255,255,255,.045)}
+    .ps-row:nth-child(even){background:rgba(255,255,255,.015)}
+
+    .ps-label{font-size:13px}
+    .ps-value{font-size:14px}
+
+    /* 8. Nhan ban do thi truong: 2 hang gon */
+    .subscribe-compact{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      padding:16px 18px;
+    }
+
+    .subscribe-topline{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      min-width:0;
+    }
+
+    .subscribe-compact .subscribe-copy{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .subscribe-compact .subscribe-copy .icon-box{
+      width:44px;
+      height:44px;
+      border-radius:13px;
+      margin:0;
+    }
+
+    .subscribe-compact .subscribe-copy p{
+      margin:3px 0 0;
+      font-size:13px;
+      line-height:1.5;
+      color:var(--muted);
+    }
+
+    .subscribe-trust{
+      flex:0 0 auto;
+      font-size:12px;
+      color:#f2d98f;
+      white-space:nowrap;
+    }
+
+    .subscribe-form-inline{
+      display:grid;
+      grid-template-columns:1fr 1fr 1.15fr auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    .subscribe-form-inline input,
+    .subscribe-form-inline .btn-gold{
+      height:44px;
+      border-radius:12px;
+    }
+
+    /* 10. Footer bottom: hai nua can doi, khong co ve trai */
+    .footer-bottom{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      align-items:center;
+      gap:22px;
+      width:100%;
+    }
+
+    .footer-legal{
+      justify-content:flex-start;
+      align-content:center;
+      min-width:0;
+    }
+
+    .footer-copy{
+      width:100%;
+      max-width:none;
+      text-align:right;
+    }
+
+    @media (max-width:1180px){
+      .hero-visual{
+        margin-left:0;
+        border-top:0;
+      }
+
+      .hero-visual::before{
+        background:
+          linear-gradient(180deg,#06172a 0%,rgba(6,23,42,.72) 16%,rgba(6,23,42,.10) 48%,rgba(6,23,42,0) 72%);
+      }
+    }
+
+    @media (max-width:680px){
+      /* Hero lien khoi tren mobile */
+      .hero-copy{
+        padding-bottom:14px;
+      }
+
+      .hero-visual{
+        margin-top:-2px;
+        border-top:0;
+      }
+
+      .hero-quote blockquote{
+        font-size:20px;
+        line-height:1.38;
+      }
+
+      /* Market cards */
+      .stat-card{
+        min-height:148px;
+        padding:14px 10px;
+      }
+
+      .stat-card .label{margin-bottom:7px}
+      .stat-card .sub{margin-top:6px}
+
+      /* 6. Khong nen lam sang nay: so + text can giua */
+      .alert-item{
+        text-align:center;
+      }
+
+      .alert-item .alert-no{
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      /* Hot stocks van chi 1 hang */
+      .hot-card::after{
+        width:62%;
+        opacity:.22;
+      }
+
+      .hot-card::before{
+        background:linear-gradient(90deg,rgba(8,26,45,.98) 0%,rgba(8,26,45,.88) 52%,rgba(8,26,45,.52) 100%);
+      }
+
+      .hot-card .ps-note{
+        max-width:100%;
+      }
+
+      .stock-pill{
+        height:32px;
+        padding:0 9px;
+        font-size:12px;
+      }
+
+      /* Subscribe: van 2 khoi ngang ro rang, responsive */
+      .subscribe-compact{
+        padding:14px 12px;
+        gap:10px;
+      }
+
+      .subscribe-topline{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:7px;
+        text-align:center;
+      }
+
+      .subscribe-compact .subscribe-copy{
+        justify-content:center;
+        text-align:left;
+      }
+
+      .subscribe-trust{
+        text-align:center;
+        white-space:normal;
+      }
+
+      .subscribe-form-inline{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      }
+
+      .subscribe-form-inline .btn-gold{
+        width:100%;
+      }
+
+      /* 9. Di nhanh + He sinh thai: mot hang tren dien thoai */
+      .quick-links,
+      .ecosystem-links{
+        width:100%;
+        display:flex;
+        flex-direction:row;
+        flex-wrap:nowrap;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        overflow-x:auto;
+        white-space:nowrap;
+        scrollbar-width:none;
+      }
+
+      .quick-links::-webkit-scrollbar,
+      .ecosystem-links::-webkit-scrollbar{display:none}
+
+      .quick-links a,
+      .ecosystem-links a{
+        flex:0 0 auto;
+        font-size:12px;
+      }
+
+      /* Footer phan bo deu, can giua hai ben */
+      .footer-bottom{
+        grid-template-columns:1fr;
+        gap:16px;
+        width:100%;
+      }
+
+      .footer-legal{
+        width:100%;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px 10px;
+        justify-content:stretch;
+      }
+
+      .footer-legal a{
+        width:100%;
+        text-align:center;
+        white-space:normal;
+        font-size:12px;
+        line-height:1.45;
+      }
+
+      .footer-legal a:last-child{
+        grid-column:1 / -1;
+      }
+
+      .footer-copy{
+        width:100%;
+        padding:0 8px;
+        text-align:center;
+        font-size:12px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1477,7 +1916,7 @@
       </section>
 
       <section class="section">
-        <article class="card">
+        <article class="card spotlight-card">
           <div class="card-head">
             <div class="title-side">
               <div class="icon-box">
@@ -1734,42 +2173,27 @@
       </section>
 
       <section class="section">
-        <article class="card subscribe">
-          <div class="subscribe-copy">
-            <div class="icon-box">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
-                <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5zm2 .5v.2l7 5.2l7-5.2V7h-14Zm14 2.7l-6.4 4.8a1 1 0 0 1-1.2 0L5 9.7v8.3h14z"/>
-              </svg>
+        <article class="card subscribe subscribe-compact">
+          <div class="subscribe-topline">
+            <div class="subscribe-copy">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+                  <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5zm2 .5v.2l7 5.2l7-5.2V7h-14Zm14 2.7l-6.4 4.8a1 1 0 0 1-1.2 0L5 9.7v8.3h14z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Nhận bản đồ thị trường</div>
+                <p>Cập nhật góc nhìn mới nhất từ Võ Hoàng khi bối cảnh thị trường có thay đổi đáng chú ý.</p>
+              </div>
             </div>
-
-            <div>
-              <div class="overline">Nhận bản đồ thị trường</div>
-              <h3>Muốn nhận bản tin và góc nhìn khi có thay đổi?</h3>
-              <p>
-                Cập nhật bản đồ thị trường và góc nhìn đầu tư mới nhất từ Võ Hoàng,
-                để không bỏ lỡ cơ hội quan trọng.
-              </p>
-
-              <ul class="subscribe-points">
-                <li>Có bối cảnh</li>
-                <li>Đúng điều quan trọng</li>
-                <li>Có hành động cụ thể</li>
-              </ul>
-            </div>
+            <div class="subscribe-trust">Có bối cảnh · Đúng điều quan trọng · Không spam</div>
           </div>
 
-          <form class="subscribe-form">
-            <div class="form-row">
-              <input type="text" placeholder="Họ và tên">
-              <input type="text" placeholder="Số điện thoại / Zalo">
-            </div>
-
-            <div class="subscribe-submit">
-              <input type="email" placeholder="Nhập email của bạn">
-              <button class="btn-gold" type="button">Nhận ngay →</button>
-            </div>
-
-            <small>Chỉ gửi những thông tin thực sự quan trọng. Không spam.</small>
+          <form class="subscribe-form subscribe-form-inline">
+            <input type="text" placeholder="Họ và tên">
+            <input type="text" placeholder="Số điện thoại / Zalo">
+            <input type="email" placeholder="Email">
+            <button class="btn-gold" type="button">Nhận bản đồ →</button>
           </form>
         </article>
       </section>
@@ -1793,7 +2217,7 @@
 
         <div class="footer-col">
           <h4>Đi nhanh</h4>
-          <div class="footer-links">
+          <div class="footer-links quick-links">
             <a href="thi-truong-hom-nay.html">Thị trường</a>
             <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
             <a href="sau-phien-cua-toi.html">Sau phiên</a>
@@ -1803,7 +2227,7 @@
 
         <div class="footer-col">
           <h4>Hệ sinh thái</h4>
-          <div class="footer-links">
+          <div class="footer-links ecosystem-links">
             <a href="./">Trang chủ</a>
             <a href="kien-thuc.html">Kiến thức</a>
             <a href="investor-calculator.html">Công cụ</a>
