@@ -2027,6 +2027,41 @@
       text-align:center;
     }
 
+    /* HERO DESKTOP - HÒA MÉP ẢNH VÀO NỀN */
+@media (min-width:1181px){
+
+  .home-hero-visual::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:auto;
+    width:190px;
+    z-index:3;
+    pointer-events:none;
+
+    background:linear-gradient(
+      90deg,
+      #06172a 0%,
+      rgba(6,23,42,.96) 15%,
+      rgba(6,23,42,.78) 38%,
+      rgba(6,23,42,.48) 60%,
+      rgba(6,23,42,.18) 80%,
+      rgba(6,23,42,0) 100%
+    );
+  }
+
+  .home-hero-visual picture{
+    z-index:2;
+  }
+
+  .hero-quote-mini{
+    z-index:4;
+  }
+
+}
+    
   </style>
 </head>
 <body>
