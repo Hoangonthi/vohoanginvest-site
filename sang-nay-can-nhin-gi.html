@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-desktop.webp" media="(min-width:681px)" fetchpriority="high">
-  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-mobi.webp" media="(max-width:680px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-desktop.webp.png" media="(min-width:681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-mobi.webp.png" media="(max-width:680px)" fetchpriority="high">
 
   <style>
     :root{
@@ -49,8 +49,7 @@
     img,svg{max-width:100%}
 
     .wrap{
-      width:calc(100% - 40px);
-      max-width:var(--max);
+      width:min(var(--max),calc(100% - 40px));
       margin-left:auto;
       margin-right:auto;
     }
@@ -71,7 +70,7 @@
     .nav{
       display:flex;
       align-items:center;
-      gap:18px;
+      gap:24px;
       width:100%;
       min-width:0;
     }
@@ -110,11 +109,9 @@
     .navlinks{
       display:flex;
       align-items:center;
-      justify-content:flex-end;
-      gap:18px;
+      gap:24px;
       margin-left:auto;
       min-width:0;
-      flex:1 1 auto;
     }
 
     .navlinks a{
@@ -344,24 +341,6 @@
     }
 
     .market-card > div:first-child{min-width:0}
-
-    .market-grid,
-    .attention-grid,
-    .two-col,
-    .live-grid{
-      width:100%;
-      max-width:100%;
-    }
-
-    .market-card,
-    .attention-item,
-    .panel,
-    .decision-item,
-    .avoid-card{
-      min-width:0;
-      max-width:100%;
-    }
-
 
     .market-label{
       color:#9aa8b5;
@@ -887,7 +866,7 @@
       }
 
       .hero-art img{
-        content:url("hero-sang-nay-can-nhin-gi-mobi.webp");
+        content:url("hero-sang-nay-can-nhin-gi-mobi.webp.png");
         object-position:center;
       }
 
@@ -992,9 +971,9 @@
 
 <section class="hero">
   <picture class="hero-art" aria-hidden="true">
-    <source media="(max-width:680px)" srcset="hero-sang-nay-can-nhin-gi-mobi.webp">
+    <source media="(max-width:680px)" srcset="hero-sang-nay-can-nhin-gi-mobi.webp.png">
     <img
-      src="hero-sang-nay-can-nhin-gi-desktop.webp"
+      src="hero-sang-nay-can-nhin-gi-desktop.webp.png"
       alt=""
       width="1600"
       height="900"
@@ -1367,52 +1346,25 @@
     }
   );
 
-  const nf0 = new Intl.NumberFormat("vi-VN");
-
-  const num = value => {
-    if(
-      value === null ||
-      value === undefined ||
-      value === ""
-    ){
-      return null;
-    }
-
-    const normalized =
-      typeof value === "string"
-        ? value.replace(/,/g,"").trim()
-        : value;
-
-    const n = Number(normalized);
-
-    return Number.isFinite(n)
-      ? n
-      : null;
+  const num = v => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
   };
 
-  const fmt = value => {
-    const n = num(value);
-
-    return n === null
-      ? "—"
-      : nf2.format(n);
+  const fmt = v => {
+    const n = num(v);
+    return n === null ? "—" : nf2.format(n);
   };
 
-  const getPath = (obj,path) =>
-    path
-      .split(".")
-      .reduce(
-        (acc,key) =>
-          acc &&
-          acc[key] !== undefined
-            ? acc[key]
-            : undefined,
-        obj
-      );
-
-  const first = (obj,paths) => {
-    for(const path of paths){
-      const value = getPath(obj,path);
+  const first = (obj,keys) => {
+    for(const key of keys){
+      const value =
+        key
+          .split(".")
+          .reduce(
+            (a,p) => a?.[p],
+            obj
+          );
 
       if(
         value !== undefined &&
@@ -1426,54 +1378,9 @@
     return null;
   };
 
-  const firstNumber = (obj,paths) => {
-    for(const path of paths){
-      const n = num(getPath(obj,path));
-
-      if(n !== null){
-        return n;
-      }
-    }
-
-    return null;
-  };
-
-  const firstText = (obj,paths) => {
-    for(const path of paths){
-      const value = getPath(obj,path);
-
-      if(
-        typeof value === "string" &&
-        value.trim()
-      ){
-        return value.trim();
-      }
-    }
-
-    return "";
-  };
-
-  function escapeHtml(value){
-    return String(value)
-      .replace(
-        /[&<>"']/g,
-        char => (
-          {
-            "&":"&amp;",
-            "<":"&lt;",
-            ">":"&gt;",
-            '"':"&quot;",
-            "'":"&#039;"
-          }[char]
-        )
-      );
-  }
-
-  /* ---------------- MARKET ---------------- */
-
   async function loadMarket(){
     try{
-      const response =
+      const r =
         await fetch(
           MARKET_URL,
           {
@@ -1481,217 +1388,153 @@
           }
         );
 
-      if(!response.ok){
+      if(!r.ok){
         throw new Error("market");
       }
 
-      const data =
-        await response.json();
+      const d =
+        await r.json();
 
       const indexes =
-        Array.isArray(data?.indexes)
-          ? data.indexes
-          : Array.isArray(data?.data?.indexes)
-            ? data.data.indexes
-            : [];
+        Array.isArray(d?.indexes)
+          ? d.indexes
+          : [];
 
       const vni =
         indexes.find(
-          item =>
+          x =>
             String(
-              item?.symbol ||
-              item?.code ||
-              item?.name ||
-              ""
-            )
-            .toUpperCase()
-            .replace(/\s+/g,"")
-            .includes("VN-INDEX")
+              x?.symbol || ""
+            ).toUpperCase()
+            === "VN-INDEX"
         )
         ||
         indexes[0]
         ||
-        data?.vnindex
-        ||
-        data?.vn_index
-        ||
-        data?.data?.vnindex
-        ||
         {};
 
       const value =
-        firstNumber(
-          vni,
-          [
-            "value",
-            "close",
-            "last",
-            "price",
-            "current",
-            "index",
-            "last_price"
-          ]
-        );
-
-      const change =
-        firstNumber(
-          vni,
-          [
-            "change",
-            "change_value",
-            "point_change",
-            "delta",
-            "chg"
-          ]
+        num(
+          first(
+            vni,
+            [
+              "value",
+              "close",
+              "last",
+              "price",
+              "current"
+            ]
+          )
         );
 
       const pct =
-        firstNumber(
-          vni,
-          [
-            "change_pct",
-            "change_percent",
-            "percent_change",
-            "pct_change",
-            "percent",
-            "pct"
-          ]
+        num(
+          first(
+            vni,
+            [
+              "change_pct",
+              "change_percent",
+              "percent_change",
+              "pct_change"
+            ]
+          )
         );
 
-      const vniValue =
-        document.getElementById("vniValue");
-
-      if(vniValue){
-        vniValue.textContent =
+      document
+        .getElementById("vniValue")
+        .textContent =
           value === null
             ? "—"
             : nf2.format(value);
-      }
 
       const vniChange =
-        document.getElementById("vniChange");
+        document
+          .getElementById("vniChange");
 
-      if(vniChange){
-        const pieces = [];
-
-        if(change !== null){
-          pieces.push(
-            `${change>0?"+":""}${nf2.format(change)} điểm`
-          );
-        }
-
-        if(pct !== null){
-          pieces.push(
-            `${pct>0?"+":""}${nf2.format(pct)}%`
-          );
-        }
-
+      if(pct !== null){
         vniChange.textContent =
-          pieces.length
-            ? pieces.join(" · ")
-            : "Chưa có dữ liệu biến động";
+          `${pct>0?"+":""}${nf2.format(pct)}%`;
 
         vniChange.className =
           "market-sub "
           +
           (
-            pct > 0 || (pct===null && change>0)
+            pct>0
               ? "up"
-              : pct < 0 || (pct===null && change<0)
+              : pct<0
                 ? "down"
                 : ""
           );
       }
 
-      const intelligence =
-        data?.market_intelligence ||
-        data?.intelligence ||
-        data?.data?.market_intelligence ||
+      const intel =
+        d?.market_intelligence
+        ||
         {};
 
       const breadth =
-        intelligence?.breadth ||
-        data?.breadth ||
-        data?.market_breadth ||
-        data?.data?.breadth ||
+        intel?.breadth
+        ||
         {};
 
       const adv =
-        firstNumber(
-          breadth,
-          [
-            "adv",
-            "advance",
-            "advancers",
-            "up",
-            "gain",
-            "gainers",
-            "green"
-          ]
+        num(
+          first(
+            breadth,
+            [
+              "adv",
+              "advance",
+              "up"
+            ]
+          )
         );
 
       const dec =
-        firstNumber(
-          breadth,
-          [
-            "dec",
-            "decline",
-            "decliners",
-            "down",
-            "loss",
-            "losers",
-            "red"
-          ]
+        num(
+          first(
+            breadth,
+            [
+              "dec",
+              "decline",
+              "down"
+            ]
+          )
         );
 
-      const breadthValue =
-        document.getElementById("breadthValue");
-
-      if(breadthValue){
-        if(
-          adv !== null ||
-          dec !== null
-        ){
-          breadthValue.innerHTML =
-            `<span class="up">${adv===null?"—":nf0.format(adv)} Tăng</span>
+      if(
+        adv !== null
+        ||
+        dec !== null
+      ){
+        document
+          .getElementById("breadthValue")
+          .innerHTML =
+            `<span class="up">${adv??"—"} Tăng</span>
              <span style="color:#627381">|</span>
-             <span class="down">${dec===null?"—":nf0.format(dec)} Giảm</span>`;
-        }else{
-          breadthValue.textContent = "—";
-        }
+             <span class="down">${dec??"—"} Giảm</span>`;
       }
 
       const leaders =
-        firstText(
-          intelligence,
+        first(
+          intel,
           [
             "leaders.label",
             "leaders.text",
             "leading.label",
             "leading.text",
-            "lead_group",
-            "leading_group",
-            "leader_group"
-          ]
-        )
-        ||
-        firstText(
-          data,
-          [
-            "leaders.label",
-            "leaders.text",
-            "leading_group",
-            "lead_group",
-            "market_leader"
+            "leaders"
           ]
         );
 
-      const leadersValue =
-        document.getElementById("leadersValue");
-
-      if(leadersValue){
-        leadersValue.textContent =
-          leaders || "Theo dõi";
+      if(
+        typeof leaders === "string"
+        &&
+        leaders.trim()
+      ){
+        document
+          .getElementById("leadersValue")
+          .textContent =
+            leaders;
       }
 
       let score = 70;
@@ -1708,13 +1551,16 @@
       }
 
       if(
-        adv !== null &&
-        dec !== null &&
+        adv !== null
+        &&
+        dec !== null
+        &&
         adv + dec > 0
       ){
         score +=
           (
-            (adv-dec) /
+            (adv-dec)
+            /
             (adv+dec)
           )
           * 15;
@@ -1729,99 +1575,31 @@
           )
         );
 
-      const scoreEl =
-        document.getElementById("marketScore");
-
-      const scoreNote =
-        document.getElementById("marketScoreNote");
-
-      if(scoreEl){
-        scoreEl.textContent =
+      document
+        .getElementById("marketScore")
+        .textContent =
           `${score}/100`;
-      }
 
-      if(scoreNote){
-        scoreNote.textContent =
+      document
+        .getElementById("marketScoreNote")
+        .textContent =
           score >= 75
             ? "Tâm lý thị trường tích cực"
             : score >= 55
               ? "Thị trường trung tính"
               : "Rủi ro thị trường đang cao";
-      }
 
-    }catch(error){
-      const note =
-        document.getElementById("marketScoreNote");
-
-      if(note){
-        note.textContent =
+    }catch(_){
+      document
+        .getElementById("marketScoreNote")
+        .textContent =
           "Chưa lấy được dữ liệu thị trường.";
-      }
     }
-  }
-
-  /* ---------------- DERIVATIVES ---------------- */
-
-  function findObjectWithKeys(root,keys,depth=0){
-    if(
-      !root ||
-      typeof root !== "object" ||
-      depth > 6
-    ){
-      return null;
-    }
-
-    const ownKeys =
-      Object.keys(root);
-
-    if(
-      keys.some(
-        key =>
-          ownKeys.includes(key)
-      )
-    ){
-      return root;
-    }
-
-    for(const value of Object.values(root)){
-      if(
-        value &&
-        typeof value === "object"
-      ){
-        const found =
-          findObjectWithKeys(
-            value,
-            keys,
-            depth+1
-          );
-
-        if(found){
-          return found;
-        }
-      }
-    }
-
-    return null;
   }
 
   async function loadDerivatives(){
-    const trendEl =
-      document.getElementById("psTrend");
-
-    const systemEl =
-      document.getElementById("psSystem");
-
-    const currentEl =
-      document.getElementById("psCurrent");
-
-    const targetsEl =
-      document.getElementById("psTargets");
-
-    const reversalEl =
-      document.getElementById("psReversal");
-
     try{
-      const response =
+      const r =
         await fetch(
           PS_URL,
           {
@@ -1829,268 +1607,66 @@
           }
         );
 
-      if(!response.ok){
+      if(!r.ok){
         throw new Error("ps");
       }
 
-      const raw =
-        await response.json();
-
-      const data =
-        raw?.data ||
-        raw?.result ||
-        raw?.payload ||
-        raw;
-
-      const candidate =
-        findObjectWithKeys(
-          data,
-          [
-            "trend",
-            "system_price",
-            "systemPrice",
-            "last_price",
-            "lastPrice",
-            "current_price",
-            "price",
-            "reversal_price",
-            "reversalPrice"
-          ]
-        )
-        ||
-        data;
-
-      const trend =
-        firstText(
-          candidate,
-          [
-            "trend",
-            "direction",
-            "signal",
-            "bias",
-            "status",
-            "trend_label"
-          ]
-        );
-
-      const systemPrice =
-        firstNumber(
-          candidate,
-          [
-            "system_price",
-            "systemPrice",
-            "system.price",
-            "signal_price",
-            "signalPrice",
-            "entry",
-            "entry_price"
-          ]
-        );
-
-      const currentPrice =
-        firstNumber(
-          candidate,
-          [
-            "last_price",
-            "lastPrice",
-            "current_price",
-            "currentPrice",
-            "price",
-            "last",
-            "close"
-          ]
-        );
-
-      const reversal =
-        firstNumber(
-          candidate,
-          [
-            "reversal_price",
-            "reversalPrice",
-            "reverse_price",
-            "reversePrice",
-            "stop",
-            "stop_price",
-            "invalidation"
-          ]
-        );
-
-      const t1 =
-        firstNumber(
-          candidate,
-          [
-            "targets.t1",
-            "target1",
-            "t1",
-            "target_1"
-          ]
-        );
-
-      const t2 =
-        firstNumber(
-          candidate,
-          [
-            "targets.t2",
-            "target2",
-            "t2",
-            "target_2"
-          ]
-        );
-
-      const t3 =
-        firstNumber(
-          candidate,
-          [
-            "targets.t3",
-            "target3",
-            "t3",
-            "target_3"
-          ]
-        );
-
-      if(trendEl){
-        const normalized =
-          trend.toLowerCase();
-
-        trendEl.textContent =
-          trend || "Chưa có tín hiệu";
-
-        trendEl.style.color =
-          normalized.includes("tăng") ||
-          normalized.includes("long") ||
-          normalized.includes("up")
-            ? "var(--green)"
-            : normalized.includes("giảm") ||
-              normalized.includes("short") ||
-              normalized.includes("down")
-                ? "var(--red)"
-                : "var(--gold)";
-      }
-
-      if(systemEl){
-        systemEl.textContent =
-          systemPrice === null
-            ? "—"
-            : fmt(systemPrice);
-      }
-
-      if(currentEl){
-        currentEl.textContent =
-          currentPrice === null
-            ? "—"
-            : fmt(currentPrice);
-      }
-
-      if(targetsEl){
-        const targets =
-          [
-            t1===null?null:`T1 ${fmt(t1)}`,
-            t2===null?null:`T2 ${fmt(t2)}`,
-            t3===null?null:`T3 ${fmt(t3)}`
-          ]
-          .filter(Boolean);
-
-        targetsEl.textContent =
-          targets.length
-            ? targets.join(" · ")
-            : "—";
-      }
-
-      if(reversalEl){
-        reversalEl.textContent =
-          reversal === null
-            ? "—"
-            : fmt(reversal);
-      }
-
-    }catch(error){
-      if(trendEl){
-        trendEl.textContent =
-          "Chưa có dữ liệu";
-      }
-    }
-  }
-
-  /* ---------------- HOT STOCKS ---------------- */
-
-  function extractSymbols(value,bucket=[],depth=0){
-    if(
-      value === null ||
-      value === undefined ||
-      depth > 7 ||
-      bucket.length > 30
-    ){
-      return bucket;
-    }
-
-    if(typeof value === "string"){
-      const clean =
-        value
-          .toUpperCase()
-          .trim();
+      const d =
+        await r.json();
 
       if(
-        /^[A-Z]{3}$/.test(clean)
+        !d
+        ||
+        d.fresh !== true
+        ||
+        !d.trend
       ){
-        bucket.push(clean);
-      }else{
-        const matches =
-          clean.match(
-            /\b[A-Z]{3}\b/g
-          );
-
-        if(matches){
-          bucket.push(...matches);
-        }
+        return;
       }
 
-      return bucket;
-    }
+      const trend =
+        String(d.trend);
 
-    if(Array.isArray(value)){
-      value.forEach(
-        item =>
-          extractSymbols(
-            item,
-            bucket,
-            depth+1
-          )
-      );
+      const trendEl =
+        document
+          .getElementById("psTrend");
 
-      return bucket;
-    }
+      trendEl.textContent =
+        trend;
 
-    if(typeof value === "object"){
-      for(
-        const [key,item]
-        of Object.entries(value)
-      ){
-        if(
-          /symbol|ticker|code|stock/i.test(key)
-        ){
-          extractSymbols(
-            item,
-            bucket,
-            depth+1
-          );
-        }else if(
-          typeof item === "object"
-        ){
-          extractSymbols(
-            item,
-            bucket,
-            depth+1
-          );
-        }
-      }
-    }
+      trendEl.style.color =
+        trend.toLowerCase()==="tăng"
+          ? "var(--green)"
+          : trend.toLowerCase()==="giảm"
+            ? "var(--red)"
+            : "var(--gold)";
 
-    return bucket;
+      document
+        .getElementById("psSystem")
+        .textContent =
+          fmt(d.system_price);
+
+      document
+        .getElementById("psCurrent")
+        .textContent =
+          fmt(d.last_price);
+
+      document
+        .getElementById("psTargets")
+        .textContent =
+          `T1 ${fmt(d.targets?.t1)} · T2 ${fmt(d.targets?.t2)} · T3 ${fmt(d.targets?.t3)}`;
+
+      document
+        .getElementById("psReversal")
+        .textContent =
+          fmt(d.reversal_price);
+
+    }catch(_){}
   }
 
   async function loadHotStocks(){
     try{
-      const response =
+      const r =
         await fetch(
           HOT_URL,
           {
@@ -2098,146 +1674,64 @@
           }
         );
 
-      if(!response.ok){
+      if(!r.ok){
         throw new Error("hot");
       }
 
-      const data =
-        await response.json();
-
-      const invalid =
-        new Set([
-          "API",
-          "URL",
-          "GET",
-          "POST",
-          "VNI",
-          "HOSE",
-          "HNX",
-          "UPCOM",
-          "VND"
-        ]);
+      const d =
+        await r.json();
 
       const symbols =
-        [
-          ...new Set(
-            extractSymbols(
-              data,
-              []
-            )
-          )
-        ]
-        .filter(
-          symbol =>
-            !invalid.has(symbol)
-        )
-        .slice(0,10);
-
-      const box =
-        document.getElementById("hotSymbols");
+        Array.isArray(d?.symbols)
+          ? d.symbols.filter(Boolean)
+          : Array.isArray(d?.stocks)
+            ? d.stocks
+                .map(x=>x?.symbol)
+                .filter(Boolean)
+            : [];
 
       if(
-        box &&
-        symbols.length
+        !d
+        ||
+        d.fresh !== true
+        ||
+        symbols.length === 0
       ){
-        box.innerHTML =
+        return;
+      }
+
+      document
+        .getElementById("hotSymbols")
+        .innerHTML =
           symbols
+            .slice(0,10)
             .map(
-              symbol =>
-                `<span class="hot-chip">${escapeHtml(symbol)}</span>`
+              s =>
+                `<span class="hot-chip">${escapeHtml(String(s).toUpperCase())}</span>`
             )
             .join("");
-      }else if(box){
-        box.innerHTML =
-          `<span class="hot-chip">Đang theo dõi</span>`;
-      }
 
-    }catch(error){
-      const box =
-        document.getElementById("hotSymbols");
-
-      if(box){
-        box.innerHTML =
-          `<span class="hot-chip">Chưa có dữ liệu</span>`;
-      }
-    }
+    }catch(_){}
   }
 
-  /* ---------------- MORNING BRIEF ---------------- */
-
-  const TECHNICAL_WORDS =
-    /vndirect|realtime|totalvaluetraded|uuid|provider|source|endpoint|payload|request|response|session|token|function|database|supabase|schema|created_at|updated_at|timestamp|cache|status_code|market-feed|hot-stocks-feed|broker-brief|derivatives-feed/i;
-
-  const UUID_RE =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-  function isHumanText(value){
-    if(typeof value !== "string"){
-      return false;
-    }
-
-    const text =
-      value
-        .replace(/\s+/g," ")
-        .trim();
-
-    if(
-      text.length < 22 ||
-      text.length > 420
-    ){
-      return false;
-    }
-
-    if(UUID_RE.test(text)){
-      return false;
-    }
-
-    if(TECHNICAL_WORDS.test(text)){
-      return false;
-    }
-
-    if(/^https?:\/\//i.test(text)){
-      return false;
-    }
-
-    if(/^[A-Z0-9_.:/\- ]+$/.test(text)){
-      return false;
-    }
-
-    const letters =
-      (
-        text.match(
-          /[A-Za-zÀ-ỹ]/g
-        )
-        ||
-        []
-      ).length;
-
-    return letters >= 12;
-  }
-
-  function collectEditorialText(
+  function collectStrings(
     value,
-    bucket=[],
-    depth=0,
-    parentKey=""
+    bucket=[]
   ){
-    if(
-      value === null ||
-      value === undefined ||
-      depth > 8 ||
-      bucket.length > 100
-    ){
+    if(bucket.length > 80){
       return bucket;
     }
 
     if(typeof value === "string"){
-      if(isHumanText(value)){
-        bucket.push(
-          value
-            .replace(/\s+/g," ")
-            .trim()
-        );
+      const s =
+        value.trim();
+
+      if(
+        s.length >= 18
+        &&
+        s.length <= 260
+      ){
+        bucket.push(s);
       }
 
       return bucket;
@@ -2245,122 +1739,64 @@
 
     if(Array.isArray(value)){
       value.forEach(
-        item =>
-          collectEditorialText(
-            item,
-            bucket,
-            depth+1,
-            parentKey
+        v =>
+          collectStrings(
+            v,
+            bucket
           )
       );
 
       return bucket;
     }
 
-    if(typeof value === "object"){
-      const preferredKey =
-        /title|headline|summary|content|description|analysis|comment|note|message|reason|brief|view|outlook|focus|risk|action|scenario|market/i;
-
-      for(
-        const [key,item]
-        of Object.entries(value)
-      ){
-        const skipKey =
-          /(^id$|_id$|uuid|token|key|provider|source|endpoint|url|symbol|ticker|code|created|updated|timestamp|raw|metadata|field)/i;
-
-        if(skipKey.test(key)){
-          continue;
-        }
-
-        if(
-          typeof item === "string"
-        ){
-          if(
-            preferredKey.test(key)
-            &&
-            isHumanText(item)
-          ){
-            bucket.push(
-              item
-                .replace(/\s+/g," ")
-                .trim()
-            );
-          }
-        }else{
-          collectEditorialText(
-            item,
-            bucket,
-            depth+1,
-            key
-          );
-        }
-      }
+    if(
+      value
+      &&
+      typeof value === "object"
+    ){
+      Object
+        .values(value)
+        .forEach(
+          v =>
+            collectStrings(
+              v,
+              bucket
+            )
+        );
     }
 
     return bucket;
   }
 
-  function uniqueText(items){
+  function uniqueText(arr){
     const seen =
       new Set();
 
-    return items.filter(
-      item => {
-        const key =
-          item
+    return arr.filter(
+      s => {
+        const k =
+          s
             .toLowerCase()
             .replace(
-              /[^a-zà-ỹ0-9]+/gi,
+              /\s+/g,
               " "
             )
             .trim();
 
-        if(
-          !key ||
-          seen.has(key)
-        ){
+        if(seen.has(k)){
           return false;
         }
 
-        seen.add(key);
+        seen.add(k);
 
         return true;
       }
     );
   }
 
-  function sentenceTitle(text){
-    const clean =
-      text.trim();
-
-    if(clean.length <= 88){
-      return clean;
-    }
-
-    const firstSentence =
-      clean
-        .split(
-          /(?<=[.!?])\s+/
-        )[0];
-
-    return firstSentence.length <= 100
-      ? firstSentence
-      : clean.slice(0,96) + "…";
-  }
-
-  function sentenceSummary(text){
-    if(text.length <= 115){
-      return "Theo dõi tác động thực tế đến dòng tiền và quyết định.";
-    }
-
-    return text.length <= 220
-      ? text
-      : text.slice(0,216) + "…";
-  }
-
   async function loadBrief(){
     try{
-      const response =
+      const r =
         await fetch(
           BRIEF_URL,
           {
@@ -2368,92 +1804,100 @@
           }
         );
 
-      if(!response.ok){
+      if(!r.ok){
         throw new Error("brief");
       }
 
-      const data =
-        await response.json();
+      const d =
+        await r.json();
 
-      const editorial =
+      const strings =
         uniqueText(
-          collectEditorialText(
-            data,
+          collectStrings(
+            d,
             []
           )
         );
 
-      if(!editorial.length){
+      if(!strings.length){
         return;
       }
 
+      const candidates =
+        strings.filter(
+          s =>
+            !/https?:\/\//i.test(s)
+            &&
+            !/^\d{4}-\d{2}-\d{2}/.test(s)
+        );
+
       const top =
-        editorial.slice(0,3);
+        candidates.slice(0,3);
 
-      const attention =
-        document.getElementById("attentionGrid");
-
-      if(
-        attention &&
-        top.length
-      ){
-        attention.innerHTML =
-          top
-            .map(
-              (text,index) => `
-                <article class="attention-item">
-                  <div class="item-num">${String(index+1).padStart(2,"0")}</div>
-                  <h3>${escapeHtml(sentenceTitle(text))}</h3>
-                  <p>${escapeHtml(sentenceSummary(text))}</p>
-                </article>
-              `
-            )
-            .join("");
+      if(top.length){
+        document
+          .getElementById("attentionGrid")
+          .innerHTML =
+            top
+              .map(
+                (s,i) => `
+                  <article class="attention-item">
+                    <div class="item-num">${String(i+1).padStart(2,"0")}</div>
+                    <h3>${escapeHtml(s.length>90?s.slice(0,90)+"…":s)}</h3>
+                    <p>${escapeHtml(s.length>90?s:"Theo dõi tác động thực tế đến dòng tiền và quyết định.")}</p>
+                  </article>
+                `
+              )
+              .join("");
       }
 
       const view =
-        editorial.find(
-          text =>
-            text.length >= 90
+        candidates.find(
+          s =>
+            s.length > 90
         )
         ||
-        editorial[0];
+        candidates[3];
 
-      const viewBox =
-        document.getElementById("viewCopy");
-
-      if(
-        viewBox &&
-        view
-      ){
-        viewBox.textContent =
-          view;
+      if(view){
+        document
+          .getElementById("viewCopy")
+          .textContent =
+            view;
       }
 
-    }catch(error){
-      /*
-        Giữ nội dung dự phòng có nghĩa,
-        không đưa raw API/internal keys lên giao diện.
-      */
-    }
+    }catch(_){}
   }
 
-  /* ---------------- MOBILE MENU ---------------- */
+  function escapeHtml(s){
+    return String(s)
+      .replace(
+        /[&<>"']/g,
+        m => (
+          {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+          }[m]
+        )
+      );
+  }
 
   const menuBtn =
-    document.getElementById("mobileMenuBtn");
+    document
+      .getElementById(
+        "mobileMenuBtn"
+      );
 
   const mobileMenu =
-    document.getElementById("mobileMenu");
+    document
+      .getElementById(
+        "mobileMenu"
+      );
 
   const closeMenu = () => {
-    if(
-      !menuBtn ||
-      !mobileMenu
-    ){
-      return;
-    }
-
     mobileMenu
       .classList
       .remove("open");
@@ -2468,96 +1912,74 @@
       "☰";
   };
 
-  if(
-    menuBtn &&
-    mobileMenu
-  ){
-    menuBtn.addEventListener(
-      "click",
-      event => {
-        event.stopPropagation();
+  menuBtn.addEventListener(
+    "click",
+    e => {
+      e.stopPropagation();
 
-        const opened =
-          mobileMenu
-            .classList
-            .toggle("open");
+      const opened =
+        mobileMenu
+          .classList
+          .toggle("open");
 
-        menuBtn
-          .setAttribute(
-            "aria-expanded",
-            opened
-              ? "true"
-              : "false"
-          );
-
-        menuBtn.textContent =
+      menuBtn
+        .setAttribute(
+          "aria-expanded",
           opened
-            ? "×"
-            : "☰";
-      }
+            ? "true"
+            : "false"
+        );
+
+      menuBtn.textContent =
+        opened
+          ? "×"
+          : "☰";
+    }
+  );
+
+  mobileMenu
+    .querySelectorAll("a")
+    .forEach(
+      a =>
+        a.addEventListener(
+          "click",
+          closeMenu
+        )
     );
 
-    mobileMenu
-      .querySelectorAll("a")
-      .forEach(
-        link =>
-          link.addEventListener(
-            "click",
-            closeMenu
-          )
-      );
-
-    document.addEventListener(
-      "click",
-      event => {
-        if(
-          mobileMenu.classList.contains("open")
-          &&
-          !mobileMenu.contains(event.target)
-          &&
-          !menuBtn.contains(event.target)
-        ){
-          closeMenu();
-        }
+  document.addEventListener(
+    "click",
+    e => {
+      if(
+        mobileMenu.classList.contains("open")
+        &&
+        !mobileMenu.contains(e.target)
+        &&
+        !menuBtn.contains(e.target)
+      ){
+        closeMenu();
       }
-    );
+    }
+  );
 
-    document.addEventListener(
-      "keydown",
-      event => {
-        if(event.key === "Escape"){
-          closeMenu();
-        }
+  document.addEventListener(
+    "keydown",
+    e => {
+      if(e.key === "Escape"){
+        closeMenu();
       }
-    );
-  }
-
-  /* ---------------- START ---------------- */
+    }
+  );
 
   loadMarket();
   loadDerivatives();
   loadHotStocks();
   loadBrief();
 
-  setInterval(
-    loadMarket,
-    15000
-  );
-
-  setInterval(
-    loadDerivatives,
-    5000
-  );
-
-  setInterval(
-    loadHotStocks,
-    60000
-  );
-
-  setInterval(
-    loadBrief,
-    300000
-  );
+  setInterval(loadMarket,15000);
+  setInterval(loadDerivatives,3000);
+  setInterval(loadHotStocks,60000);
+  setInterval(loadBrief,300000);
 })();
 </script>
 
