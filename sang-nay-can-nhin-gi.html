@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-  <link rel="preload" as="image" href="hero-sau-phien-desktop.webp" media="(min-width:681px)" fetchpriority="high">
-  <link rel="preload" as="image" href="hero-sau-phien-mobile.webp" media="(max-width:680px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-desktop.webp" media="(min-width:681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-mobi.webp" media="(max-width:680px)" fetchpriority="high">
 
   <style>
     :root{
@@ -23,12 +23,10 @@
       --line:rgba(255,255,255,.10);
       --gold:#f2cf7c;
       --gold2:#d6a53b;
-      --gold3:#ffc84e;
       --text:#f9f6ef;
       --muted:#9eacb9;
       --green:#2bd88e;
       --red:#ff5d62;
-      --cyan:#55cfff;
       --amber:#f5bc4f;
       --max:1240px;
     }
@@ -48,6 +46,8 @@
 
     a{color:inherit}
     button,input,select,textarea{font:inherit}
+    img,svg{max-width:100%}
+
     .wrap{
       width:min(var(--max),calc(100% - 40px));
       margin-left:auto;
@@ -62,7 +62,7 @@
       height:70px;
       display:flex;
       align-items:center;
-      background:rgba(5,15,25,.96);
+      background:rgba(5,15,25,.97);
       backdrop-filter:blur(14px);
       border-bottom:1px solid var(--line);
     }
@@ -70,15 +70,16 @@
     .nav{
       display:flex;
       align-items:center;
-      gap:26px;
+      gap:24px;
       width:100%;
+      min-width:0;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:11px;
-      min-width:220px;
+      min-width:210px;
       text-decoration:none;
     }
 
@@ -86,6 +87,7 @@
       width:46px;
       height:46px;
       object-fit:contain;
+      flex:none;
     }
 
     .brand strong{
@@ -107,14 +109,16 @@
     .navlinks{
       display:flex;
       align-items:center;
-      gap:28px;
+      gap:24px;
       margin-left:auto;
+      min-width:0;
     }
 
     .navlinks a{
       color:#e4ebf1;
-      font-size:12px;
+      font-size:11px;
       text-decoration:none;
+      white-space:nowrap;
     }
 
     .navlinks a:hover{color:var(--gold)}
@@ -126,21 +130,23 @@
     }
 
     .search{
-      margin-left:8px;
+      margin-left:4px;
       color:#e4ebf1;
       font-size:18px;
+      flex:none;
     }
 
     .nav-cta{
-      margin-left:8px;
-      padding:11px 22px;
+      margin-left:4px;
+      padding:10px 19px;
       border-radius:9px;
       background:linear-gradient(180deg,#f7d47d,#e4b657);
       color:#17202a;
       text-decoration:none;
-      font-size:13px;
+      font-size:12px;
       font-weight:800;
       white-space:nowrap;
+      flex:none;
     }
 
     .mobile-menu-btn,
@@ -175,7 +181,7 @@
       display:block;
       object-fit:cover;
       object-position:center;
-      opacity:.90;
+      opacity:.92;
     }
 
     .hero-art:after{
@@ -183,7 +189,14 @@
       position:absolute;
       inset:0;
       background:
-        linear-gradient(90deg,#06111d 0%,rgba(6,17,29,.90) 12%,rgba(6,17,29,.50) 34%,rgba(6,17,29,.14) 74%,rgba(6,17,29,.24) 100%);
+        linear-gradient(
+          90deg,
+          #06111d 0%,
+          rgba(6,17,29,.90) 12%,
+          rgba(6,17,29,.50) 34%,
+          rgba(6,17,29,.12) 72%,
+          rgba(6,17,29,.22) 100%
+        );
     }
 
     .hero-grid{
@@ -199,6 +212,7 @@
     .hero-copy{
       max-width:700px;
       padding:38px 0 30px;
+      min-width:0;
     }
 
     .eyebrow{
@@ -417,6 +431,7 @@
     .panel{
       border-radius:12px;
       padding:18px 20px;
+      overflow:hidden;
     }
 
     .section-head{
@@ -462,7 +477,6 @@
       line-height:1.5;
     }
 
-    /* HIGHLIGHTS */
     .attention{
       margin-top:0;
       border-color:rgba(242,207,124,.34);
@@ -472,6 +486,7 @@
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:10px;
+      width:100%;
     }
 
     .attention-item{
@@ -501,6 +516,7 @@
       margin:0 0 5px;
       font-size:13px;
       line-height:1.45;
+      overflow-wrap:anywhere;
     }
 
     .attention-item p,
@@ -509,14 +525,23 @@
       color:#9aa8b5;
       font-size:10px;
       line-height:1.55;
+      overflow-wrap:anywhere;
     }
 
-    /* 2 column rows */
-    .two-col{
+    .two-col,
+    .live-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:12px;
       margin-top:12px;
+      width:100%;
+    }
+
+    .two-col > *,
+    .live-grid > *{
+      min-width:0;
+      width:100%;
+      max-width:100%;
     }
 
     .decision-list{
@@ -527,7 +552,7 @@
     .decision-item{
       min-width:0;
       display:grid;
-      grid-template-columns:38px 1fr;
+      grid-template-columns:38px minmax(0,1fr);
       gap:10px;
       padding:10px 0;
       border-bottom:1px solid rgba(255,255,255,.06);
@@ -545,6 +570,7 @@
       color:#cdd6de;
       font-size:11px;
       line-height:1.75;
+      overflow-wrap:anywhere;
     }
 
     .avoid-grid{
@@ -574,14 +600,6 @@
       line-height:1.5;
     }
 
-    /* LIVE */
-    .live-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-
     .live-table{
       display:grid;
       gap:0;
@@ -599,7 +617,7 @@
 
     .live-row:last-child{border-bottom:0}
     .live-row span:first-child{color:#99a8b4}
-    .live-row strong{text-align:right}
+    .live-row strong{text-align:right;min-width:0;overflow-wrap:anywhere}
 
     .hot-symbols{
       display:flex;
@@ -627,19 +645,19 @@
       line-height:1.55;
     }
 
-    /* CTA */
     .lead-wrap{
       margin-top:12px;
       padding:18px 20px;
       border:1px solid rgba(242,207,124,.34);
       border-radius:12px;
-      background:
-        linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
+      background:linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
+      overflow:hidden;
     }
 
     #vh-lead-capture{
       max-width:none!important;
       margin:0!important;
+      width:100%!important;
     }
 
     /* FOOTER */
@@ -654,6 +672,7 @@
       display:flex;
       align-items:center;
       gap:20px;
+      min-width:0;
     }
 
     .foot .brand{min-width:auto}
@@ -698,6 +717,7 @@
       text-decoration:none;
       font-size:10px;
       font-weight:800;
+      white-space:nowrap;
     }
 
     .legal-links{
@@ -726,6 +746,12 @@
       line-height:1.6;
     }
 
+    @media(max-width:1180px){
+      .navlinks{gap:16px}
+      .navlinks a{font-size:10px}
+      .nav-cta{padding:9px 14px}
+    }
+
     @media(max-width:980px){
       .navlinks{display:none}
       .search{margin-left:auto}
@@ -736,8 +762,8 @@
       .trustline{justify-content:center}
       .hero-quote{display:none}
       .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .two-col,.live-grid{grid-template-columns:1fr}
       .attention-grid{grid-template-columns:1fr}
+      .two-col,.live-grid{grid-template-columns:1fr}
       .foot{flex-direction:column;text-align:center}
       .foot-links{margin-left:0;justify-content:center}
       .social{margin-left:0}
@@ -795,7 +821,7 @@
         justify-self:end;
         margin-left:0;
         padding:9px 12px;
-        white-space:nowrap;
+        font-size:11px;
       }
 
       .mobile-menu{
@@ -833,14 +859,14 @@
       .hero{min-height:auto}
 
       .hero-art{
-        right:12px;
         left:12px;
+        right:12px;
         width:auto;
-        opacity:.34;
+        opacity:.38;
       }
 
       .hero-art img{
-        content:url("hero-sau-phien-mobile.webp");
+        content:url("hero-sang-nay-can-nhin-gi-mobi.webp");
         object-position:center;
       }
 
@@ -856,6 +882,7 @@
       .hero h1{font-size:38px}
       .hero p{font-size:13px}
       .trustline{justify-content:center}
+
       .market-area{margin-top:0}
 
       .market-grid{
@@ -884,16 +911,26 @@
       .section-title{font-size:22px}
       .attention-grid,.avoid-grid{grid-template-columns:1fr}
       .live-row{align-items:flex-start}
+
       .foot-links,.legal-links{justify-content:center}
       .legal-links{flex-direction:column;align-items:center}
       .copyright{flex-direction:column;align-items:center}
+    }
+
+    @media(max-width:420px){
+      .brand strong{font-size:13px}
+      .brand small{display:none}
+      .nav-cta{padding:8px 10px;font-size:10px}
+      .market-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 
 <body>
+
 <header class="topbar">
   <div class="wrap nav">
+
     <a class="brand" href="index.html">
       <img src="LOGO.webp" alt="Võ Hoàng">
       <span>
@@ -934,15 +971,28 @@
 
 <section class="hero">
   <picture class="hero-art" aria-hidden="true">
-    <source media="(max-width:680px)" srcset="hero-sau-phien-mobile.webp">
-    <img src="hero-sau-phien-desktop.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async">
+    <source media="(max-width:680px)" srcset="hero-sang-nay-can-nhin-gi-mobi.webp">
+    <img
+      src="hero-sang-nay-can-nhin-gi-desktop.webp"
+      alt=""
+      width="1600"
+      height="900"
+      fetchpriority="high"
+      decoding="async"
+    >
   </picture>
 
   <div class="wrap hero-grid">
+
     <div class="hero-copy">
       <div class="eyebrow">BẢN ĐỒ ĐẦU TƯ</div>
+
       <h1>Sáng nay <span>cần nhìn gì?</span></h1>
-      <p>Cập nhật nhanh bức tranh thị trường, nhận diện những yếu tố quan trọng có thể làm thay đổi quyết định đầu tư trong hôm nay.</p>
+
+      <p>
+        Cập nhật nhanh bức tranh thị trường, nhận diện những yếu tố quan trọng
+        có thể làm thay đổi quyết định đầu tư trong hôm nay.
+      </p>
 
       <div class="trustline">
         <span><i>◎</i>Nhìn đúng bối cảnh</span>
@@ -952,15 +1002,27 @@
     </div>
 
     <aside class="hero-quote">
-      <blockquote>“Buổi sáng không cần đoán đúng thị trường. Chỉ cần biết điều gì đủ quan trọng để làm thay đổi quyết định.”</blockquote>
+      <blockquote>
+        “Buổi sáng không cần đoán đúng thị trường.
+        Chỉ cần biết điều gì đủ quan trọng để làm thay đổi quyết định.”
+      </blockquote>
+
       <span class="signature">Võ Hoàng</span>
-      <div class="quote-tags">Kiến thức<br>Kỷ luật<br>Hệ thống<br>Tài sản tự do</div>
+
+      <div class="quote-tags">
+        Kiến thức<br>
+        Kỷ luật<br>
+        Hệ thống<br>
+        Tài sản tự do
+      </div>
     </aside>
+
   </div>
 </section>
 
 <section class="market-area">
   <div class="wrap market-grid">
+
     <article class="market-card">
       <div>
         <div class="market-label">Market Score</div>
@@ -976,6 +1038,7 @@
         <div class="market-main" id="vniValue">—</div>
         <div class="market-sub" id="vniChange">Đang tải...</div>
       </div>
+
       <svg class="spark" viewBox="0 0 120 44" aria-hidden="true">
         <polyline points="2,36 10,31 18,34 27,24 35,28 44,19 52,23 61,15 70,19 79,10 88,14 98,8 108,11 118,3"></polyline>
       </svg>
@@ -987,7 +1050,10 @@
         <div class="market-main" id="breadthValue">—</div>
         <div class="market-sub">Số mã tăng / giảm</div>
       </div>
-      <div class="breadth-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+      <div class="breadth-bars" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
     </article>
 
     <article class="market-card">
@@ -997,6 +1063,7 @@
         <div class="market-sub">Dòng tiền tập trung, hút thanh khoản</div>
       </div>
     </article>
+
   </div>
 </section>
 
@@ -1006,6 +1073,7 @@
     <section class="panel attention">
       <div class="section-head">
         <div class="section-icon">◎</div>
+
         <div>
           <div class="section-kicker">Tại điểm đáng chú ý</div>
           <h2 class="section-title">Những biến số có thể làm thay đổi quyết định hôm nay</h2>
@@ -1014,13 +1082,28 @@
       </div>
 
       <div class="attention-grid" id="attentionGrid">
-        <article class="attention-item"><div class="item-num">01</div><h3>Đang cập nhật điểm đáng chú ý</h3><p>Hệ thống đang đọc bản tin buổi sáng.</p></article>
-        <article class="attention-item"><div class="item-num">02</div><h3>Đang cập nhật bối cảnh</h3><p>Chỉ hiển thị các yếu tố có khả năng ảnh hưởng quyết định.</p></article>
-        <article class="attention-item"><div class="item-num">03</div><h3>Đang cập nhật dòng tiền</h3><p>Ưu tiên diễn biến có ý nghĩa với thị trường và danh mục.</p></article>
+        <article class="attention-item">
+          <div class="item-num">01</div>
+          <h3>Đang cập nhật điểm đáng chú ý</h3>
+          <p>Hệ thống đang đọc bản tin buổi sáng.</p>
+        </article>
+
+        <article class="attention-item">
+          <div class="item-num">02</div>
+          <h3>Đang cập nhật bối cảnh</h3>
+          <p>Chỉ hiển thị các yếu tố có khả năng ảnh hưởng quyết định.</p>
+        </article>
+
+        <article class="attention-item">
+          <div class="item-num">03</div>
+          <h3>Đang cập nhật dòng tiền</h3>
+          <p>Ưu tiên diễn biến có ý nghĩa với thị trường và danh mục.</p>
+        </article>
       </div>
     </section>
 
     <div class="two-col">
+
       <section class="panel">
         <div class="section-head">
           <div class="section-icon">◉</div>
@@ -1030,10 +1113,30 @@
           </div>
         </div>
 
-        <div class="decision-list" id="focusList">
-          <div class="decision-item"><div class="item-num">01</div><div><h3>VN-Index ở vùng quan trọng</h3><p>Quan sát phản ứng giá và thanh khoản thay vì chỉ nhìn điểm số.</p></div></div>
-          <div class="decision-item"><div class="item-num">02</div><div><h3>Dòng tiền vào nhóm dẫn dắt</h3><p>Nhìn xem nhóm mạnh có tiếp tục giữ sức mạnh tương đối hay không.</p></div></div>
-          <div class="decision-item"><div class="item-num">03</div><div><h3>Thông tin doanh nghiệp đáng chú ý</h3><p>Chỉ giữ những thông tin có khả năng ảnh hưởng đến kỳ vọng và dòng tiền.</p></div></div>
+        <div class="decision-list">
+          <div class="decision-item">
+            <div class="item-num">01</div>
+            <div>
+              <h3>VN-Index ở vùng quan trọng</h3>
+              <p>Quan sát phản ứng giá và thanh khoản thay vì chỉ nhìn điểm số.</p>
+            </div>
+          </div>
+
+          <div class="decision-item">
+            <div class="item-num">02</div>
+            <div>
+              <h3>Dòng tiền vào nhóm dẫn dắt</h3>
+              <p>Nhìn xem nhóm mạnh có tiếp tục giữ sức mạnh tương đối hay không.</p>
+            </div>
+          </div>
+
+          <div class="decision-item">
+            <div class="item-num">03</div>
+            <div>
+              <h3>Thông tin doanh nghiệp đáng chú ý</h3>
+              <p>Chỉ giữ những thông tin có khả năng ảnh hưởng đến kỳ vọng và dòng tiền.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1046,15 +1149,37 @@
           </div>
         </div>
 
-        <div class="decision-list" id="changeList">
-          <div class="decision-item"><div class="item-num">01</div><div><h3>VN-Index mất vùng hỗ trợ quan trọng</h3><p>Độ bền cấu trúc suy yếu và không có lực cầu hấp thụ.</p></div></div>
-          <div class="decision-item"><div class="item-num">02</div><div><h3>Dòng tiền suy yếu rõ rệt</h3><p>Độ rộng thu hẹp, nhóm dẫn dắt hạ nhiệt và thanh khoản yếu.</p></div></div>
-          <div class="decision-item"><div class="item-num">03</div><div><h3>Xuất hiện thông tin bất lợi lớn</h3><p>Ưu tiên điều chỉnh kịch bản thay vì bảo vệ dự đoán cũ.</p></div></div>
+        <div class="decision-list">
+          <div class="decision-item">
+            <div class="item-num">01</div>
+            <div>
+              <h3>VN-Index mất vùng hỗ trợ quan trọng</h3>
+              <p>Độ bền cấu trúc suy yếu và không có lực cầu hấp thụ.</p>
+            </div>
+          </div>
+
+          <div class="decision-item">
+            <div class="item-num">02</div>
+            <div>
+              <h3>Dòng tiền suy yếu rõ rệt</h3>
+              <p>Độ rộng thu hẹp, nhóm dẫn dắt hạ nhiệt và thanh khoản yếu.</p>
+            </div>
+          </div>
+
+          <div class="decision-item">
+            <div class="item-num">03</div>
+            <div>
+              <h3>Xuất hiện thông tin bất lợi lớn</h3>
+              <p>Ưu tiên điều chỉnh kịch bản thay vì bảo vệ dự đoán cũ.</p>
+            </div>
+          </div>
         </div>
       </section>
+
     </div>
 
     <div class="two-col">
+
       <section class="panel">
         <div class="section-head">
           <div class="section-icon">▥</div>
@@ -1063,8 +1188,11 @@
             <h2 class="section-title">Bối cảnh trước, hành động sau</h2>
           </div>
         </div>
+
         <div class="view-copy" id="viewCopy">
-          Không cần cố đoán toàn bộ phiên. Trước tiên xác định trạng thái thị trường, sức mạnh của nhóm dẫn dắt và điều kiện nào khiến kịch bản hiện tại không còn đúng. Khi dữ liệu thay đổi, hành động thay đổi.
+          Không cần cố đoán toàn bộ phiên. Trước tiên xác định trạng thái thị trường,
+          sức mạnh của nhóm dẫn dắt và điều kiện nào khiến kịch bản hiện tại không còn đúng.
+          Khi dữ liệu thay đổi, hành động thay đổi.
         </div>
       </section>
 
@@ -1078,14 +1206,27 @@
         </div>
 
         <div class="avoid-grid">
-          <div class="avoid-card"><b>01 · Mua đuổi</b><span>Không chạy theo giá chỉ vì sợ bỏ lỡ cơ hội.</span></div>
-          <div class="avoid-card"><b>02 · Quá lớn tỷ trọng</b><span>Chưa rõ bối cảnh thì không cần đặt cược quá lớn.</span></div>
-          <div class="avoid-card"><b>03 · Bỏ quản trị rủi ro</b><span>Luôn biết điều kiện nào khiến mình phải giảm vị thế.</span></div>
+          <div class="avoid-card">
+            <b>01 · Mua đuổi</b>
+            <span>Không chạy theo giá chỉ vì sợ bỏ lỡ cơ hội.</span>
+          </div>
+
+          <div class="avoid-card">
+            <b>02 · Quá lớn tỷ trọng</b>
+            <span>Chưa rõ bối cảnh thì không cần đặt cược quá lớn.</span>
+          </div>
+
+          <div class="avoid-card">
+            <b>03 · Bỏ quản trị rủi ro</b>
+            <span>Luôn biết điều kiện nào khiến mình phải giảm vị thế.</span>
+          </div>
         </div>
       </section>
+
     </div>
 
     <div class="live-grid">
+
       <section class="panel">
         <div class="section-head">
           <div class="section-icon">↗</div>
@@ -1116,8 +1257,12 @@
         <div class="hot-symbols" id="hotSymbols">
           <span class="hot-chip">—</span>
         </div>
-        <div class="hot-note">ACE cần thêm thông tin chi tiết từng mã, inbox Ad để trao đổi thêm.</div>
+
+        <div class="hot-note">
+          ACE cần thêm thông tin chi tiết từng mã, inbox Ad để trao đổi thêm.
+        </div>
       </section>
+
     </div>
 
     <section class="lead-wrap">
@@ -1129,7 +1274,9 @@
 
 <footer>
   <div class="wrap">
+
     <div class="foot">
+
       <a class="brand" href="index.html">
         <img src="LOGO.webp" alt="Võ Hoàng">
         <span>
@@ -1171,6 +1318,7 @@
       <span>© 2026 VÕ HOÀNG. All rights reserved.</span>
       <span>Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.</span>
     </div>
+
   </div>
 </footer>
 
@@ -1178,12 +1326,25 @@
 (() => {
   "use strict";
 
-  const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
-  const PS_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
-  const HOT_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
-  const BRIEF_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public";
+  const MARKET_URL =
+    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
 
-  const nf2 = new Intl.NumberFormat("vi-VN",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const PS_URL =
+    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
+
+  const HOT_URL =
+    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
+
+  const BRIEF_URL =
+    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public";
+
+  const nf2 = new Intl.NumberFormat(
+    "vi-VN",
+    {
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    }
+  );
 
   const num = v => {
     const n = Number(v);
@@ -1195,203 +1356,620 @@
     return n === null ? "—" : nf2.format(n);
   };
 
-  const first = (obj, keys) => {
+  const first = (obj,keys) => {
     for(const key of keys){
-      const value = key.split(".").reduce((a,p)=>a?.[p],obj);
-      if(value !== undefined && value !== null && value !== "") return value;
+      const value =
+        key
+          .split(".")
+          .reduce(
+            (a,p) => a?.[p],
+            obj
+          );
+
+      if(
+        value !== undefined &&
+        value !== null &&
+        value !== ""
+      ){
+        return value;
+      }
     }
+
     return null;
   };
 
   async function loadMarket(){
     try{
-      const r = await fetch(MARKET_URL,{cache:"no-store"});
-      if(!r.ok) throw new Error("market");
-      const d = await r.json();
+      const r =
+        await fetch(
+          MARKET_URL,
+          {
+            cache:"no-store"
+          }
+        );
 
-      const indexes = Array.isArray(d?.indexes) ? d.indexes : [];
-      const vni = indexes.find(x => String(x?.symbol||"").toUpperCase()==="VN-INDEX") || indexes[0] || {};
+      if(!r.ok){
+        throw new Error("market");
+      }
 
-      const value = num(first(vni,["value","close","last","price","current"]));
-      const pct = num(first(vni,["change_pct","change_percent","percent_change","pct_change"]));
+      const d =
+        await r.json();
 
-      document.getElementById("vniValue").textContent = value===null ? "—" : nf2.format(value);
+      const indexes =
+        Array.isArray(d?.indexes)
+          ? d.indexes
+          : [];
 
-      const vniChange = document.getElementById("vniChange");
+      const vni =
+        indexes.find(
+          x =>
+            String(
+              x?.symbol || ""
+            ).toUpperCase()
+            === "VN-INDEX"
+        )
+        ||
+        indexes[0]
+        ||
+        {};
+
+      const value =
+        num(
+          first(
+            vni,
+            [
+              "value",
+              "close",
+              "last",
+              "price",
+              "current"
+            ]
+          )
+        );
+
+      const pct =
+        num(
+          first(
+            vni,
+            [
+              "change_pct",
+              "change_percent",
+              "percent_change",
+              "pct_change"
+            ]
+          )
+        );
+
+      document
+        .getElementById("vniValue")
+        .textContent =
+          value === null
+            ? "—"
+            : nf2.format(value);
+
+      const vniChange =
+        document
+          .getElementById("vniChange");
+
       if(pct !== null){
-        vniChange.textContent = `${pct>0?"+":""}${nf2.format(pct)}%`;
-        vniChange.className = "market-sub " + (pct>0?"up":pct<0?"down":"");
+        vniChange.textContent =
+          `${pct>0?"+":""}${nf2.format(pct)}%`;
+
+        vniChange.className =
+          "market-sub "
+          +
+          (
+            pct>0
+              ? "up"
+              : pct<0
+                ? "down"
+                : ""
+          );
       }
 
-      const intel = d?.market_intelligence || {};
-      const breadth = intel?.breadth || {};
+      const intel =
+        d?.market_intelligence
+        ||
+        {};
 
-      const adv = num(first(breadth,["adv","advance","up"]));
-      const dec = num(first(breadth,["dec","decline","down"]));
+      const breadth =
+        intel?.breadth
+        ||
+        {};
 
-      if(adv !== null || dec !== null){
-        document.getElementById("breadthValue").innerHTML =
-          `<span class="up">${adv??"—"} Tăng</span> <span style="color:#627381">|</span> <span class="down">${dec??"—"} Giảm</span>`;
+      const adv =
+        num(
+          first(
+            breadth,
+            [
+              "adv",
+              "advance",
+              "up"
+            ]
+          )
+        );
+
+      const dec =
+        num(
+          first(
+            breadth,
+            [
+              "dec",
+              "decline",
+              "down"
+            ]
+          )
+        );
+
+      if(
+        adv !== null
+        ||
+        dec !== null
+      ){
+        document
+          .getElementById("breadthValue")
+          .innerHTML =
+            `<span class="up">${adv??"—"} Tăng</span>
+             <span style="color:#627381">|</span>
+             <span class="down">${dec??"—"} Giảm</span>`;
       }
 
-      const leaders = first(intel,["leaders.label","leaders.text","leading.label","leading.text","leaders"]);
-      if(typeof leaders === "string" && leaders.trim()){
-        document.getElementById("leadersValue").textContent = leaders;
+      const leaders =
+        first(
+          intel,
+          [
+            "leaders.label",
+            "leaders.text",
+            "leading.label",
+            "leading.text",
+            "leaders"
+          ]
+        );
+
+      if(
+        typeof leaders === "string"
+        &&
+        leaders.trim()
+      ){
+        document
+          .getElementById("leadersValue")
+          .textContent =
+            leaders;
       }
 
       let score = 70;
-      if(pct !== null) score += Math.max(-15,Math.min(15,pct*10));
-      if(adv !== null && dec !== null && adv+dec>0){
-        score += ((adv-dec)/(adv+dec))*15;
-      }
-      score = Math.max(0,Math.min(100,Math.round(score)));
 
-      document.getElementById("marketScore").textContent = `${score}/100`;
-      document.getElementById("marketScoreNote").textContent =
-        score>=75 ? "Tâm lý thị trường tích cực" :
-        score>=55 ? "Thị trường trung tính" :
-        "Rủi ro thị trường đang cao";
+      if(pct !== null){
+        score +=
+          Math.max(
+            -15,
+            Math.min(
+              15,
+              pct * 10
+            )
+          );
+      }
+
+      if(
+        adv !== null
+        &&
+        dec !== null
+        &&
+        adv + dec > 0
+      ){
+        score +=
+          (
+            (adv-dec)
+            /
+            (adv+dec)
+          )
+          * 15;
+      }
+
+      score =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(score)
+          )
+        );
+
+      document
+        .getElementById("marketScore")
+        .textContent =
+          `${score}/100`;
+
+      document
+        .getElementById("marketScoreNote")
+        .textContent =
+          score >= 75
+            ? "Tâm lý thị trường tích cực"
+            : score >= 55
+              ? "Thị trường trung tính"
+              : "Rủi ro thị trường đang cao";
 
     }catch(_){
-      document.getElementById("marketScoreNote").textContent = "Chưa lấy được dữ liệu thị trường.";
+      document
+        .getElementById("marketScoreNote")
+        .textContent =
+          "Chưa lấy được dữ liệu thị trường.";
     }
   }
 
   async function loadDerivatives(){
     try{
-      const r = await fetch(PS_URL,{cache:"no-store"});
-      if(!r.ok) throw new Error("ps");
-      const d = await r.json();
+      const r =
+        await fetch(
+          PS_URL,
+          {
+            cache:"no-store"
+          }
+        );
 
-      if(!d || d.fresh !== true || !d.trend) return;
+      if(!r.ok){
+        throw new Error("ps");
+      }
 
-      const trend = String(d.trend);
-      const trendEl = document.getElementById("psTrend");
-      trendEl.textContent = trend;
-      trendEl.style.color = trend.toLowerCase()==="tăng" ? "var(--green)" :
-                            trend.toLowerCase()==="giảm" ? "var(--red)" : "var(--gold)";
+      const d =
+        await r.json();
 
-      document.getElementById("psSystem").textContent = fmt(d.system_price);
-      document.getElementById("psCurrent").textContent = fmt(d.last_price);
-      document.getElementById("psTargets").textContent =
-        `T1 ${fmt(d.targets?.t1)} · T2 ${fmt(d.targets?.t2)} · T3 ${fmt(d.targets?.t3)}`;
-      document.getElementById("psReversal").textContent = fmt(d.reversal_price);
+      if(
+        !d
+        ||
+        d.fresh !== true
+        ||
+        !d.trend
+      ){
+        return;
+      }
+
+      const trend =
+        String(d.trend);
+
+      const trendEl =
+        document
+          .getElementById("psTrend");
+
+      trendEl.textContent =
+        trend;
+
+      trendEl.style.color =
+        trend.toLowerCase()==="tăng"
+          ? "var(--green)"
+          : trend.toLowerCase()==="giảm"
+            ? "var(--red)"
+            : "var(--gold)";
+
+      document
+        .getElementById("psSystem")
+        .textContent =
+          fmt(d.system_price);
+
+      document
+        .getElementById("psCurrent")
+        .textContent =
+          fmt(d.last_price);
+
+      document
+        .getElementById("psTargets")
+        .textContent =
+          `T1 ${fmt(d.targets?.t1)} · T2 ${fmt(d.targets?.t2)} · T3 ${fmt(d.targets?.t3)}`;
+
+      document
+        .getElementById("psReversal")
+        .textContent =
+          fmt(d.reversal_price);
+
     }catch(_){}
   }
 
   async function loadHotStocks(){
     try{
-      const r = await fetch(HOT_URL,{cache:"no-store"});
-      if(!r.ok) throw new Error("hot");
-      const d = await r.json();
+      const r =
+        await fetch(
+          HOT_URL,
+          {
+            cache:"no-store"
+          }
+        );
 
-      const symbols = Array.isArray(d?.symbols)
-        ? d.symbols.filter(Boolean)
-        : Array.isArray(d?.stocks)
-          ? d.stocks.map(x=>x?.symbol).filter(Boolean)
-          : [];
+      if(!r.ok){
+        throw new Error("hot");
+      }
 
-      if(!d || d.fresh !== true || symbols.length===0) return;
+      const d =
+        await r.json();
 
-      document.getElementById("hotSymbols").innerHTML =
-        symbols.slice(0,10).map(s=>`<span class="hot-chip">${String(s).toUpperCase()}</span>`).join("");
+      const symbols =
+        Array.isArray(d?.symbols)
+          ? d.symbols.filter(Boolean)
+          : Array.isArray(d?.stocks)
+            ? d.stocks
+                .map(x=>x?.symbol)
+                .filter(Boolean)
+            : [];
+
+      if(
+        !d
+        ||
+        d.fresh !== true
+        ||
+        symbols.length === 0
+      ){
+        return;
+      }
+
+      document
+        .getElementById("hotSymbols")
+        .innerHTML =
+          symbols
+            .slice(0,10)
+            .map(
+              s =>
+                `<span class="hot-chip">${escapeHtml(String(s).toUpperCase())}</span>`
+            )
+            .join("");
+
     }catch(_){}
   }
 
-  function collectStrings(value, bucket=[]){
-    if(bucket.length>80) return bucket;
-    if(typeof value==="string"){
-      const s = value.trim();
-      if(s.length>=18 && s.length<=260) bucket.push(s);
+  function collectStrings(
+    value,
+    bucket=[]
+  ){
+    if(bucket.length > 80){
       return bucket;
     }
+
+    if(typeof value === "string"){
+      const s =
+        value.trim();
+
+      if(
+        s.length >= 18
+        &&
+        s.length <= 260
+      ){
+        bucket.push(s);
+      }
+
+      return bucket;
+    }
+
     if(Array.isArray(value)){
-      value.forEach(v=>collectStrings(v,bucket));
+      value.forEach(
+        v =>
+          collectStrings(
+            v,
+            bucket
+          )
+      );
+
       return bucket;
     }
-    if(value && typeof value==="object"){
-      Object.values(value).forEach(v=>collectStrings(v,bucket));
+
+    if(
+      value
+      &&
+      typeof value === "object"
+    ){
+      Object
+        .values(value)
+        .forEach(
+          v =>
+            collectStrings(
+              v,
+              bucket
+            )
+        );
     }
+
     return bucket;
   }
 
   function uniqueText(arr){
-    const seen = new Set();
-    return arr.filter(s=>{
-      const k = s.toLowerCase().replace(/\s+/g," ").trim();
-      if(seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
+    const seen =
+      new Set();
+
+    return arr.filter(
+      s => {
+        const k =
+          s
+            .toLowerCase()
+            .replace(
+              /\s+/g,
+              " "
+            )
+            .trim();
+
+        if(seen.has(k)){
+          return false;
+        }
+
+        seen.add(k);
+
+        return true;
+      }
+    );
   }
 
   async function loadBrief(){
     try{
-      const r = await fetch(BRIEF_URL,{cache:"no-store"});
-      if(!r.ok) throw new Error("brief");
-      const d = await r.json();
+      const r =
+        await fetch(
+          BRIEF_URL,
+          {
+            cache:"no-store"
+          }
+        );
 
-      const strings = uniqueText(collectStrings(d,[]));
-      if(!strings.length) return;
+      if(!r.ok){
+        throw new Error("brief");
+      }
 
-      const candidates = strings.filter(s =>
-        !/https?:\/\//i.test(s) &&
-        !/^\d{4}-\d{2}-\d{2}/.test(s)
-      );
+      const d =
+        await r.json();
 
-      const top = candidates.slice(0,3);
+      const strings =
+        uniqueText(
+          collectStrings(
+            d,
+            []
+          )
+        );
+
+      if(!strings.length){
+        return;
+      }
+
+      const candidates =
+        strings.filter(
+          s =>
+            !/https?:\/\//i.test(s)
+            &&
+            !/^\d{4}-\d{2}-\d{2}/.test(s)
+        );
+
+      const top =
+        candidates.slice(0,3);
+
       if(top.length){
-        document.getElementById("attentionGrid").innerHTML = top.map((s,i)=>`
-          <article class="attention-item">
-            <div class="item-num">${String(i+1).padStart(2,"0")}</div>
-            <h3>${escapeHtml(s.length>90?s.slice(0,90)+"…":s)}</h3>
-            <p>${escapeHtml(s.length>90?s:"Theo dõi tác động thực tế đến dòng tiền và quyết định.")}</p>
-          </article>
-        `).join("");
+        document
+          .getElementById("attentionGrid")
+          .innerHTML =
+            top
+              .map(
+                (s,i) => `
+                  <article class="attention-item">
+                    <div class="item-num">${String(i+1).padStart(2,"0")}</div>
+                    <h3>${escapeHtml(s.length>90?s.slice(0,90)+"…":s)}</h3>
+                    <p>${escapeHtml(s.length>90?s:"Theo dõi tác động thực tế đến dòng tiền và quyết định.")}</p>
+                  </article>
+                `
+              )
+              .join("");
       }
 
-      const view = candidates.find(s => s.length>90) || candidates[3];
+      const view =
+        candidates.find(
+          s =>
+            s.length > 90
+        )
+        ||
+        candidates[3];
+
       if(view){
-        document.getElementById("viewCopy").textContent = view;
+        document
+          .getElementById("viewCopy")
+          .textContent =
+            view;
       }
+
     }catch(_){}
   }
 
   function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g,m=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
+    return String(s)
+      .replace(
+        /[&<>"']/g,
+        m => (
+          {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+          }[m]
+        )
+      );
   }
 
-  const menuBtn = document.getElementById("mobileMenuBtn");
-  const mobileMenu = document.getElementById("mobileMenu");
+  const menuBtn =
+    document
+      .getElementById(
+        "mobileMenuBtn"
+      );
+
+  const mobileMenu =
+    document
+      .getElementById(
+        "mobileMenu"
+      );
 
   const closeMenu = () => {
-    mobileMenu.classList.remove("open");
-    menuBtn.setAttribute("aria-expanded","false");
-    menuBtn.textContent = "☰";
+    mobileMenu
+      .classList
+      .remove("open");
+
+    menuBtn
+      .setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+    menuBtn.textContent =
+      "☰";
   };
 
-  menuBtn.addEventListener("click",e=>{
-    e.stopPropagation();
-    const opened = mobileMenu.classList.toggle("open");
-    menuBtn.setAttribute("aria-expanded",opened?"true":"false");
-    menuBtn.textContent = opened ? "×" : "☰";
-  });
+  menuBtn.addEventListener(
+    "click",
+    e => {
+      e.stopPropagation();
 
-  mobileMenu.querySelectorAll("a").forEach(a=>a.addEventListener("click",closeMenu));
+      const opened =
+        mobileMenu
+          .classList
+          .toggle("open");
 
-  document.addEventListener("click",e=>{
-    if(mobileMenu.classList.contains("open") &&
-       !mobileMenu.contains(e.target) &&
-       !menuBtn.contains(e.target)){
-      closeMenu();
+      menuBtn
+        .setAttribute(
+          "aria-expanded",
+          opened
+            ? "true"
+            : "false"
+        );
+
+      menuBtn.textContent =
+        opened
+          ? "×"
+          : "☰";
     }
-  });
+  );
 
-  document.addEventListener("keydown",e=>{
-    if(e.key==="Escape") closeMenu();
-  });
+  mobileMenu
+    .querySelectorAll("a")
+    .forEach(
+      a =>
+        a.addEventListener(
+          "click",
+          closeMenu
+        )
+    );
+
+  document.addEventListener(
+    "click",
+    e => {
+      if(
+        mobileMenu.classList.contains("open")
+        &&
+        !mobileMenu.contains(e.target)
+        &&
+        !menuBtn.contains(e.target)
+      ){
+        closeMenu();
+      }
+    }
+  );
+
+  document.addEventListener(
+    "keydown",
+    e => {
+      if(e.key === "Escape"){
+        closeMenu();
+      }
+    }
+  );
 
   loadMarket();
   loadDerivatives();
@@ -1406,5 +1984,6 @@
 </script>
 
 <script src="assets/js/lead-capture-v1.js" defer></script>
+
 </body>
 </html>
