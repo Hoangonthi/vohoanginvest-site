@@ -3729,6 +3729,38 @@
       }
     }
 
+  
+    /* =========================================================
+       LIÊN HỆ TRỰC TIẾP - FULL WIDTH BÊN DƯỚI 2 CỘT
+    ========================================================= */
+    .direct-contact-wide{
+      margin-top:16px;
+    }
+
+    .direct-contact-wide .direct-contact-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .direct-contact-wide .direct-contact-card{
+      min-height:92px;
+    }
+
+    @media(max-width:1050px){
+      .direct-contact-wide .direct-contact-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:680px){
+      .direct-contact-wide{
+        margin-top:12px;
+      }
+
+      .direct-contact-wide .direct-contact-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -3808,46 +3840,6 @@
           <div class="policy-kicker">ĐI NHANH</div>
           <h2>Bạn đang cần hỗ trợ việc gì?</h2>
           <p>Chọn đúng nhu cầu để tiết kiệm thời gian và có đủ thông tin trước khi trao đổi.</p>
-
-          <div class="direct-contact-grid">
-
-            <div class="direct-contact-card">
-              <div class="direct-contact-icon">GM</div>
-              <div class="direct-contact-info">
-                <span>Gmail</span>
-                <strong>vohoang.bank@gmail.com</strong>
-              </div>
-              <a class="direct-contact-action" href="mailto:vohoang.bank@gmail.com">Gửi mail →</a>
-            </div>
-
-            <div class="direct-contact-card">
-              <div class="direct-contact-icon">VPS</div>
-              <div class="direct-contact-info">
-                <span>Email công việc</span>
-                <strong>hoangvv1@vps.com.vn</strong>
-              </div>
-              <a class="direct-contact-action" href="mailto:hoangvv1@vps.com.vn">Gửi mail →</a>
-            </div>
-
-            <div class="direct-contact-card">
-              <div class="direct-contact-icon">TEL</div>
-              <div class="direct-contact-info">
-                <span>Điện thoại</span>
-                <strong>0971 853 227</strong>
-              </div>
-              <a class="direct-contact-action" href="tel:+84971853227">Gọi ngay →</a>
-            </div>
-
-            <div class="direct-contact-card">
-              <div class="direct-contact-icon">ZL</div>
-              <div class="direct-contact-info">
-                <span>Zalo</span>
-                <strong>0928 007 302</strong>
-              </div>
-              <a class="direct-contact-action" href="https://zalo.me/0928007302" target="_blank" rel="noopener noreferrer">Mở Zalo →</a>
-            </div>
-
-          </div>
 
           <div class="contact-options">
 
@@ -3952,6 +3944,52 @@
         </section>
 
       </div>
+
+      <section class="contact-card direct-contact-wide">
+
+        <div class="policy-kicker">LIÊN HỆ TRỰC TIẾP</div>
+        <h2>Gmail, điện thoại hoặc Zalo</h2>
+        <p>Bạn có thể liên hệ trực tiếp với Võ Hoàng qua một trong các kênh dưới đây.</p>
+
+        <div class="direct-contact-grid">
+<div class="direct-contact-card">
+              <div class="direct-contact-icon">GM</div>
+              <div class="direct-contact-info">
+                <span>Gmail</span>
+                <strong>vohoang.bank@gmail.com</strong>
+              </div>
+              <a class="direct-contact-action" href="mailto:vohoang.bank@gmail.com">Gửi mail →</a>
+            </div>
+
+            <div class="direct-contact-card">
+              <div class="direct-contact-icon">VPS</div>
+              <div class="direct-contact-info">
+                <span>Email công việc</span>
+                <strong>hoangvv1@vps.com.vn</strong>
+              </div>
+              <a class="direct-contact-action" href="mailto:hoangvv1@vps.com.vn">Gửi mail →</a>
+            </div>
+
+            <div class="direct-contact-card">
+              <div class="direct-contact-icon">TEL</div>
+              <div class="direct-contact-info">
+                <span>Điện thoại</span>
+                <strong>0971 853 227</strong>
+              </div>
+              <a class="direct-contact-action" href="tel:+84971853227">Gọi ngay →</a>
+            </div>
+
+            <div class="direct-contact-card">
+              <div class="direct-contact-icon">ZL</div>
+              <div class="direct-contact-info">
+                <span>Zalo</span>
+                <strong>0928 007 302</strong>
+              </div>
+              <a class="direct-contact-action" href="https://zalo.me/0928007302" target="_blank" rel="noopener noreferrer">Mở Zalo →</a>
+            </div>
+        </div>
+
+      </section>
 
     </div>
   </main>
