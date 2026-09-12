@@ -4,25 +4,711 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Thị trường hôm nay realtime | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
-  <meta name="description" content="Đọc thị trường chứng khoán Việt Nam realtime: Market Score, độ rộng, dòng tiền, nhóm ngành dẫn dắt, cảnh báo rủi ro và hành động tiếp theo.">
-  <meta name="theme-color" content="#050b12">
+  <meta name="description" content="Đọc thị trường chứng khoán Việt Nam realtime: trạng thái, độ rộng, dòng tiền, nhóm ngành dẫn dắt, cảnh báo rủi ro và hành động tiếp theo.">
+  <meta name="theme-color" content="#04111f">
   <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html">
-  <meta property="og:type" content="website"><meta property="og:site_name" content="VÕ HOÀNG – Đầu tư chuẩn hệ thống"><meta property="og:title" content="Thị trường hôm nay realtime | Võ Hoàng"><meta property="og:description" content="Không chỉ nhìn chỉ số. Đọc trạng thái, độ rộng, dòng tiền, nhóm dẫn dắt và việc nên làm tiếp theo."><meta property="og:url" content="https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html"><meta property="og:image" content="https://hoangonthi.github.io/vohoanginvest-site/LOGO.png">
-  <link rel="icon" href="LOGO.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/market-reader.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Bộ đọc thị trường realtime – Võ Hoàng","applicationCategory":"FinanceApplication","operatingSystem":"Web","url":"https://hoangonthi.github.io/vohoanginvest-site/thi-truong-hom-nay.html","description":"Công cụ đọc trạng thái thị trường chứng khoán Việt Nam từ dữ liệu realtime.","author":{"@type":"Person","name":"Võ Hoàng"}}</script>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="hero-thi-truong-hom-nay.webp" fetchpriority="high">
+  <link rel="stylesheet" href="assets/css/market-lead.css" data-market-lead-css>
+
+  <style>
+    :root{
+      --bg:#04111f;
+      --bg2:#061827;
+      --panel:#081b2e;
+      --panel2:#0b2238;
+      --line:rgba(224,187,99,.20);
+      --line-soft:rgba(255,255,255,.08);
+      --gold:#e0bb63;
+      --gold2:#f3cf74;
+      --text:#f5f7fb;
+      --muted:rgba(231,237,246,.74);
+      --muted2:rgba(231,237,246,.54);
+      --green:#35e08b;
+      --red:#ff5f70;
+      --orange:#ff9f43;
+      --cyan:#4de2d8;
+      --blue:#67a9ff;
+      --max:1240px;
+      --radius:18px;
+      --shadow:0 18px 44px rgba(0,0,0,.25);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 92% 4%,rgba(224,187,99,.08),transparent 23%),
+        radial-gradient(circle at 8% 45%,rgba(32,124,178,.08),transparent 26%),
+        linear-gradient(180deg,#03101d 0%,#061726 48%,#04111f 100%);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    button,input,select{font:inherit}
+
+    .wrap{width:min(calc(100% - 32px),var(--max));margin:0 auto}
+
+    /* =========================================================
+       HEADER — ĐỒNG BỘ TRANG CHỦ / SÁNG NAY CẦN NHÌN GÌ
+    ========================================================= */
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      backdrop-filter:blur(10px);
+      background:rgba(3,11,20,.90);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{
+      width:min(calc(100% - 24px),1340px);
+      margin:0 auto;min-height:78px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+    }
+    .brand{min-width:0;display:flex;align-items:center;gap:12px}
+    .brand img{width:46px;height:46px;object-fit:contain;flex:0 0 auto}
+    .brand-text{min-width:0;line-height:normal;overflow:visible;padding:1px 0 2px}
+    .brand-text strong{
+      display:block;font-size:17px;line-height:1.35;font-weight:800;
+      color:var(--gold2);letter-spacing:.035em;white-space:nowrap;
+    }
+    .brand-text span{
+      display:block;margin-top:1px;font-size:9.5px;line-height:1.45;
+      color:#e8cf8f;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+    }
+    .nav{display:flex;align-items:center;justify-content:center;gap:26px;flex:1 1 auto;min-width:0}
+    .nav a{
+      font-size:14px;color:rgba(255,255,255,.82);padding:28px 0 24px;
+      position:relative;white-space:nowrap;transition:.2s ease;
+    }
+    .nav a:hover{color:#fff}
+    .nav a.active{color:#fff;font-weight:700}
+    .nav a.active::after{
+      content:"";position:absolute;left:0;right:0;bottom:-1px;margin:auto;
+      width:100%;height:3px;border-radius:999px;
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+    }
+    .topbar-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+    .search-btn,.menu-btn{
+      width:42px;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.02);color:#fff;display:grid;place-items:center;cursor:pointer;
+    }
+    .menu-btn{display:none}
+    .login-btn{
+      height:42px;padding:0 18px;border-radius:12px;border:1px solid rgba(224,187,99,.44);
+      background:linear-gradient(180deg,#f0cf79,#d8b254);color:#1f1604;
+      font-size:14px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;
+      white-space:nowrap;box-shadow:0 10px 24px rgba(224,187,99,.16);
+    }
+    .mobile-drawer{display:none;border-top:1px solid rgba(255,255,255,.06);background:#071423}
+    .mobile-drawer.open{display:block}
+    .mobile-drawer .wrap{padding:14px 0 18px;display:grid;gap:12px}
+    .mobile-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .mobile-links a{
+      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);
+      color:#f6f8fc;padding:12px 14px;border-radius:14px;font-size:14px;font-weight:600;text-align:center;
+    }
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+    .market-main{padding:26px 0 0}
+    .dashboard{display:grid;gap:14px}
+
+    .hero-market{
+      position:relative;overflow:hidden;min-height:318px;
+      border:1px solid var(--line);border-radius:24px;
+      background:#071829;box-shadow:var(--shadow);
+    }
+    .hero-market::before{
+      content:"";position:absolute;inset:0;z-index:1;
+      background:
+        linear-gradient(90deg,rgba(4,17,31,.99) 0%,rgba(4,17,31,.96) 43%,rgba(4,17,31,.48) 67%,rgba(4,17,31,.18) 100%);
+      pointer-events:none;
+    }
+    .hero-market-art{
+      position:absolute;inset:0 0 0 auto;width:58%;height:100%;object-fit:cover;object-position:center;
+      opacity:.90;filter:saturate(.92) contrast(1.04);
+    }
+    .hero-market-copy{position:relative;z-index:2;width:min(700px,65%);padding:34px 34px 30px}
+    .eyebrow{
+      margin:0 0 10px;color:var(--gold2);font-size:12px;font-weight:800;
+      letter-spacing:.16em;text-transform:uppercase;
+    }
+    .hero-market h1{margin:0;font-size:52px;line-height:1.02;letter-spacing:-.035em;font-weight:800}
+    .hero-market h1 span{color:var(--gold2)}
+    .hero-market-copy>p{margin:15px 0 0;max-width:650px;color:var(--muted);font-size:15px;line-height:1.68}
+    .proofs{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+    .proofs span{
+      border:1px solid rgba(77,226,216,.40);background:rgba(77,226,216,.035);
+      border-radius:999px;padding:8px 13px;color:#eefcff;font-size:12px;font-weight:600;
+    }
+    .hero-live{
+      position:absolute;z-index:3;right:20px;bottom:18px;
+    }
+    .reader-live{
+      min-height:38px;padding:0 13px;border-radius:11px;border:1px solid rgba(77,226,216,.35);
+      background:rgba(4,15,27,.82);display:flex;align-items:center;gap:8px;color:#eaf7f7;font-size:12px;
+      backdrop-filter:blur(9px);
+    }
+    .reader-live i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px currentColor}
+    .reader-live.is-positive{color:var(--green);border-color:rgba(53,224,139,.35)}
+    .reader-live.is-positive i{background:var(--green)}
+    .reader-live.is-warning{color:var(--orange);border-color:rgba(255,159,67,.40)}
+    .reader-live.is-warning i{background:var(--orange)}
+    .reader-live.is-danger{color:var(--red);border-color:rgba(255,95,112,.40)}
+    .reader-live.is-danger i{background:var(--red)}
+
+    .top-grid{display:grid;grid-template-columns:.92fr 1.28fr .78fr;gap:14px}
+    .panel{
+      min-width:0;border:1px solid var(--line-soft);border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(10,29,48,.96),rgba(6,22,38,.96));
+      box-shadow:0 14px 32px rgba(0,0,0,.18);
+    }
+    .status-card,.action-card,.quick-card{padding:19px 20px;position:relative;overflow:hidden}
+    .status-card::after,.action-card::after{
+      content:"";position:absolute;width:110px;height:110px;border-radius:50%;right:-28px;bottom:-44px;
+      background:radial-gradient(circle,rgba(224,187,99,.14),transparent 64%);pointer-events:none;
+    }
+    .mini-title{display:flex;align-items:center;gap:8px;color:var(--gold2);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .mini-title::before{content:"";width:8px;height:8px;border-radius:50%;border:2px solid currentColor;box-shadow:inset 0 0 0 2px rgba(255,255,255,.05)}
+    .reader-score-row{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:11px}
+    .reader-score-row>strong{font-size:28px;line-height:1.05;color:#fff}
+    .reader-score-row>b{font-size:37px;line-height:1;color:#fff}
+    .reader-score-row small{font-size:13px;color:var(--muted2);margin-left:3px}
+    .reader-score-track{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:16px}
+    .reader-score-track i{display:block;width:0;height:100%;border-radius:inherit;background:var(--gold);transition:width .35s ease,background .25s ease}
+    #readerTrend{margin:10px 0 0;color:var(--muted2);font-size:12px;line-height:1.55}
+
+    .status-card[data-tone="positive"]{border-color:rgba(53,224,139,.38);background:linear-gradient(180deg,rgba(53,224,139,.075),rgba(6,22,38,.96))}
+    .status-card[data-tone="positive"] .reader-score-row>strong,.status-card[data-tone="positive"] .reader-score-row>b{color:var(--green)}
+    .status-card[data-tone="positive"] .reader-score-track i{background:var(--green)}
+    .status-card[data-tone="warning"]{border-color:rgba(255,159,67,.38);background:linear-gradient(180deg,rgba(255,159,67,.075),rgba(6,22,38,.96))}
+    .status-card[data-tone="warning"] .reader-score-row>strong,.status-card[data-tone="warning"] .reader-score-row>b{color:var(--orange)}
+    .status-card[data-tone="warning"] .reader-score-track i{background:var(--orange)}
+    .status-card[data-tone="danger"]{border-color:rgba(255,95,112,.40);background:linear-gradient(180deg,rgba(255,95,112,.08),rgba(6,22,38,.96))}
+    .status-card[data-tone="danger"] .reader-score-row>strong,.status-card[data-tone="danger"] .reader-score-row>b{color:var(--red)}
+    .status-card[data-tone="danger"] .reader-score-track i{background:var(--red)}
+    .status-card[data-tone="neutral"]{border-color:rgba(224,187,99,.32)}
+
+    .action-card h2{margin:10px 0 7px;font-size:24px;line-height:1.2}
+    .action-card[data-tone="positive"] h2{color:var(--green)}
+    .action-card[data-tone="warning"] h2{color:var(--orange)}
+    .action-card[data-tone="danger"] h2{color:var(--red)}
+    .action-card[data-tone="neutral"] h2{color:#fff}
+    .action-card>p{margin:0;color:var(--muted);font-size:13px;line-height:1.62}
+    .reader-action-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+    .reader-action-links a{
+      min-height:36px;padding:0 13px;border-radius:10px;border:1px solid rgba(224,187,99,.55);
+      display:inline-flex;align-items:center;justify-content:center;color:#f6d98a;font-size:12px;font-weight:700;
+      background:rgba(224,187,99,.04);
+    }
+    .action-card[data-tone="positive"]{border-color:rgba(53,224,139,.28);background:linear-gradient(180deg,rgba(53,224,139,.055),rgba(6,22,38,.96))}
+    .action-card[data-tone="warning"]{border-color:rgba(255,159,67,.30);background:linear-gradient(180deg,rgba(255,159,67,.055),rgba(6,22,38,.96))}
+    .action-card[data-tone="danger"]{border-color:rgba(255,95,112,.30);background:linear-gradient(180deg,rgba(255,95,112,.055),rgba(6,22,38,.96))}
+
+    .quick-card{padding-bottom:15px}
+    .quick-links{display:grid;gap:8px;margin-top:12px}
+    .quick-links a{
+      min-height:42px;padding:0 12px;border-radius:11px;border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.018);display:flex;align-items:center;justify-content:space-between;
+      font-size:12px;color:#f5f7fb;transition:.2s ease;
+    }
+    .quick-links a:hover{transform:translateX(2px);border-color:rgba(224,187,99,.26);color:#f3cf74}
+    .quick-links a span:last-child{color:var(--gold2);font-size:18px}
+
+    .day-highlight{
+      display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:13px 16px;
+      border:1px solid rgba(224,187,99,.35);border-radius:14px;
+      background:linear-gradient(90deg,rgba(224,187,99,.09),rgba(9,28,47,.94) 22%,rgba(9,28,47,.94));
+    }
+    .day-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:var(--gold2);background:rgba(224,187,99,.10);font-size:18px}
+    .day-copy span{display:block;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .day-copy strong{display:block;margin-top:3px;font-size:13px;line-height:1.5;color:#f6f8fc}
+    .day-highlight a{font-size:11px;color:#f3cf74;font-weight:700;white-space:nowrap}
+
+    .reader-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .metric-card{
+      --tone:var(--cyan);position:relative;min-height:112px;padding:15px 16px 14px;
+      border:1px solid rgba(77,226,216,.28);border-radius:14px;
+      background:linear-gradient(180deg,rgba(77,226,216,.04),rgba(7,23,40,.98));overflow:hidden;
+      transition:border-color .25s ease,background .25s ease;
+    }
+    .metric-card::after{
+      content:"";position:absolute;right:-16px;bottom:-24px;width:86px;height:86px;border-radius:50%;
+      background:radial-gradient(circle,var(--tone),transparent 64%);opacity:.08;pointer-events:none;
+    }
+    .metric-card>span{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;color:rgba(255,255,255,.65);text-transform:uppercase}
+    .metric-card>strong{display:block;margin-top:8px;font-size:23px;line-height:1.1;color:var(--tone)}
+    .metric-card>small{display:block;margin-top:7px;font-size:11px;line-height:1.45;color:var(--tone);font-weight:700}
+    .metric-card.tone-positive{--tone:var(--green);border-color:rgba(53,224,139,.34);background:linear-gradient(180deg,rgba(53,224,139,.055),rgba(7,23,40,.98))}
+    .metric-card.tone-danger{--tone:var(--red);border-color:rgba(255,95,112,.34);background:linear-gradient(180deg,rgba(255,95,112,.055),rgba(7,23,40,.98))}
+    .metric-card.tone-warning{--tone:var(--orange);border-color:rgba(255,159,67,.34);background:linear-gradient(180deg,rgba(255,159,67,.055),rgba(7,23,40,.98))}
+    .metric-card.tone-neutral{--tone:var(--gold);border-color:rgba(224,187,99,.26)}
+
+    .reader-sharebar{
+      padding:13px 16px;border:1px solid rgba(224,187,99,.22);border-radius:14px;
+      background:rgba(9,28,47,.76);display:grid;grid-template-columns:1fr auto;gap:10px 18px;align-items:center;
+    }
+    .reader-sharebar span{display:block;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .reader-sharebar strong{display:block;margin-top:3px;font-size:13px;line-height:1.5}
+    .reader-sharebar p{grid-column:1/-1;margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+    .reader-share-actions{display:flex;gap:8px}
+    .reader-share-actions button{
+      border:1px solid rgba(224,187,99,.35);border-radius:9px;background:rgba(224,187,99,.06);
+      color:#f2d98f;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer;
+    }
+    #readerShareMessage{margin:0!important;color:var(--green)!important}
+
+    .reader-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    .reader-panel{padding:18px;border:1px solid var(--line-soft);border-radius:var(--radius);background:linear-gradient(180deg,rgba(9,28,47,.96),rgba(6,22,38,.96));min-width:0}
+    .reader-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .reader-label{display:block;color:var(--gold2);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+    .reader-panel h2{margin:4px 0 0;font-size:19px;line-height:1.2}
+    .reader-panel-head>small{color:var(--muted2);font-size:10px;white-space:nowrap}
+
+    .sector-table{display:grid;gap:5px}
+    .sector-row{
+      display:grid;grid-template-columns:minmax(145px,1.1fr) minmax(90px,1fr) 74px;align-items:center;gap:12px;
+      min-height:37px;padding:5px 8px;border-radius:9px;background:rgba(255,255,255,.018);
+    }
+    .sector-name{min-width:0}.sector-name b{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sector-name small{display:block;margin-top:2px;color:var(--muted2);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sector-bar{height:5px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+    .sector-bar i{display:block;height:100%;border-radius:999px;background:var(--gold)}
+    .sector-row>strong{text-align:right;font-size:11px;color:var(--gold)}
+    .sector-row.up .sector-bar i{background:var(--green)}.sector-row.up>strong{color:var(--green)}
+    .sector-row.down .sector-bar i{background:var(--red)}.sector-row.down>strong{color:var(--red)}
+    .sector-row.flat .sector-bar i{background:var(--gold)}.sector-row.flat>strong{color:var(--gold)}
+
+    .reader-alerts{display:grid;gap:8px}
+    .reader-alert{
+      position:relative;padding:12px 13px 12px 15px;border-radius:11px;border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.018);overflow:hidden;
+    }
+    .reader-alert::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+    .reader-alert b{display:block;font-size:12px}.reader-alert p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
+    .reader-alert.is-positive{border-color:rgba(53,224,139,.22);background:rgba(53,224,139,.035)}.reader-alert.is-positive::before{background:var(--green)}
+    .reader-alert.is-warning{border-color:rgba(255,159,67,.24);background:rgba(255,159,67,.035)}.reader-alert.is-warning::before{background:var(--orange)}
+    .reader-alert.is-danger{border-color:rgba(255,95,112,.26);background:rgba(255,95,112,.04)}.reader-alert.is-danger::before{background:var(--red)}
+
+    .reader-grid-secondary{grid-template-columns:1.05fr .95fr}
+    .baseline-box{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .baseline-box>div{
+      min-height:78px;padding:12px 10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;
+      background:rgba(255,255,255,.018);text-align:center;
+    }
+    .baseline-box span{display:block;color:var(--muted2);font-size:9px}.baseline-box strong{display:block;margin-top:6px;font-size:14px;color:#fff}
+    .baseline-box>div.tone-positive{border-color:rgba(53,224,139,.25);background:rgba(53,224,139,.035)}.baseline-box>div.tone-positive strong{color:var(--green)}
+    .baseline-box>div.tone-danger{border-color:rgba(255,95,112,.25);background:rgba(255,95,112,.035)}.baseline-box>div.tone-danger strong{color:var(--red)}
+    .baseline-box>div.tone-warning{border-color:rgba(255,159,67,.25);background:rgba(255,159,67,.035)}.baseline-box>div.tone-warning strong{color:var(--orange)}
+    .reader-note{margin:10px 0 0;color:var(--muted2);font-size:10px;line-height:1.55}
+
+    .reader-rules{display:grid;gap:6px}
+    .reader-rules p{
+      margin:0;display:grid;grid-template-columns:68px 1fr;gap:8px;align-items:center;
+      padding:8px 10px;border-radius:9px;background:rgba(255,255,255,.018);font-size:10px;color:var(--muted);
+    }
+    .reader-rules b{color:#fff}
+    .reader-rules p:nth-child(1){border-left:3px solid var(--green)}
+    .reader-rules p:nth-child(2){border-left:3px solid #7ce7a8}
+    .reader-rules p:nth-child(3){border-left:3px solid var(--gold)}
+    .reader-rules p:nth-child(4){border-left:3px solid var(--orange)}
+    .reader-rules p:nth-child(5){border-left:3px solid var(--red)}
+
+    .reader-lead{
+      display:grid;grid-template-columns:.82fr 1.18fr;gap:18px;padding:18px;
+      border:1px solid rgba(224,187,99,.30);border-radius:16px;
+      background:linear-gradient(90deg,rgba(224,187,99,.07),rgba(8,26,45,.96) 30%,rgba(8,26,45,.96));
+      align-items:start;
+    }
+    .reader-lead-copy h2{margin:5px 0 7px;font-size:20px}.reader-lead-copy p{margin:0;color:var(--muted);font-size:11px;line-height:1.58}
+    .reader-lead-form{min-width:0}
+
+    .reader-convert{
+      display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:17px 18px;
+      border:1px solid rgba(224,187,99,.24);border-radius:15px;background:rgba(5,20,35,.88);
+    }
+    .reader-convert h2{margin:5px 0 4px;font-size:17px}.reader-convert p{margin:0;color:var(--muted2);font-size:10px;line-height:1.5}
+    .reader-convert-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px;max-width:430px}
+    .reader-convert-actions a{padding:8px 10px;border-radius:8px;border:1px solid rgba(224,187,99,.32);color:#f2d98f;font-size:10px;font-weight:700}
+
+    .reader-footer-note{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;padding:2px 2px 12px;color:var(--muted2);font-size:9px;line-height:1.55;
+    }
+    .reader-footer-note p{margin:0;max-width:950px}.reader-footer-note a{color:#f3cf74;white-space:nowrap;font-weight:700}
+
+    /* =========================================================
+       FOOTER CHUNG — BẢN ĐÃ CHỐT
+    ========================================================= */
+    .footer{
+      margin-top:30px;border-top:1px solid rgba(255,255,255,.07);
+      background:radial-gradient(circle at 10% 0%,rgba(224,187,99,.045),transparent 28%),linear-gradient(180deg,rgba(3,12,22,.88),rgba(2,8,15,.98));
+    }
+    .footer .footer-main{
+      padding:30px 0 22px;display:grid;
+      grid-template-columns:minmax(280px,1.25fr) minmax(300px,1fr) minmax(270px,1fr);
+      gap:28px 44px;align-items:start;
+    }
+    .footer-brand-block{min-width:0}.footer-brand-link{width:max-content;max-width:100%}
+    .footer .footer-slogan{margin:12px 0 0;max-width:340px;font-size:12px;line-height:1.6;color:rgba(231,237,246,.78)}
+    .footer .footer-gold-line{width:100%;max-width:340px;height:1px;margin:10px 0 8px;background:linear-gradient(90deg,rgba(224,187,99,.88),rgba(224,187,99,.34) 58%,rgba(224,187,99,0))}
+    .footer .footer-risk{margin:0;max-width:340px;font-size:9px;line-height:1.5;color:rgba(231,237,246,.43)}
+    .footer .footer-col h4{margin:2px 0 12px;font-size:12px;line-height:1.2;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2)}
+    .footer .footer-nav-all .quick-links{display:grid;grid-template-columns:repeat(2,max-content);gap:9px 28px;justify-content:start}
+    .footer .footer-links a{font-size:12px;line-height:1.45;color:rgba(255,255,255,.80);transition:.2s ease}
+    .footer .footer-links a:hover{color:#fff;transform:translateX(2px)}
+    .footer .footer-socials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .footer .footer-socials .social{
+      min-width:0;min-height:38px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 10px;
+      border:1px solid rgba(255,255,255,.09);border-radius:11px;background:rgba(255,255,255,.018);font-size:11px;font-weight:700;
+    }
+    .footer .footer-socials svg{width:16px;height:16px;fill:currentColor;flex:0 0 auto}
+    .footer .footer-bottom{width:100%;padding:12px 0 15px;border-top:1px solid rgba(224,187,99,.15)}
+    .footer .footer-bottom-row{width:100%;display:flex;align-items:center;justify-content:center;gap:9px 17px;flex-wrap:wrap;text-align:center}
+    .footer .footer-copyright{font-size:11px;line-height:1.5;color:rgba(231,237,246,.66);white-space:nowrap}
+    .footer .footer-copyright strong{color:rgba(255,255,255,.86)}
+    .footer .footer-legal{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 9px}
+    .footer .footer-legal a{font-size:11px;line-height:1.45;color:rgba(231,237,246,.66);white-space:nowrap}.footer .footer-legal a:hover{color:#f1cf78}
+    .footer .footer-legal span{font-size:7px;color:rgba(224,187,99,.65)}
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media(max-width:1120px){
+      .nav{gap:18px}.nav a{font-size:12px}.login-btn{display:none}
+      .hero-market-copy{width:70%}.hero-market h1{font-size:46px}
+      .top-grid{grid-template-columns:1fr 1.3fr}.quick-card{grid-column:1/-1}.quick-links{grid-template-columns:repeat(3,1fr)}
+      .reader-lead{grid-template-columns:1fr}
+    }
+
+    @media(max-width:860px){
+      .topbar-inner{min-height:70px}.nav{display:none}.menu-btn{display:grid}.search-btn{display:none}
+      .market-main{padding-top:16px}
+      .hero-market{min-height:390px}.hero-market-copy{width:100%;padding:25px 22px 170px}.hero-market h1{font-size:40px}.hero-market-copy>p{font-size:13px;max-width:590px}
+      .hero-market-art{width:100%;height:55%;top:auto;bottom:0;object-position:center 38%;opacity:.58}
+      .hero-market::before{background:linear-gradient(180deg,rgba(4,17,31,.99) 0%,rgba(4,17,31,.96) 52%,rgba(4,17,31,.66) 72%,rgba(4,17,31,.22) 100%)}
+      .top-grid{grid-template-columns:1fr}.quick-card{grid-column:auto}.quick-links{grid-template-columns:repeat(3,1fr)}
+      .reader-metrics{grid-template-columns:repeat(2,1fr)}
+      .reader-grid,.reader-grid-secondary{grid-template-columns:1fr}
+      .reader-convert{grid-template-columns:1fr}.reader-convert-actions{justify-content:flex-start;max-width:none}
+      .footer .footer-main{grid-template-columns:1fr 1fr}.footer .footer-connect{grid-column:1/-1}.footer .footer-socials{grid-template-columns:repeat(4,1fr)}
+    }
+
+    @media(max-width:680px){
+      .wrap{width:min(calc(100% - 20px),var(--max))}
+      .brand img{width:44px;height:44px}.brand-text strong{font-size:16px;line-height:1.38}.brand-text span{font-size:9px;line-height:1.45;letter-spacing:.075em}
+      .mobile-links{grid-template-columns:1fr 1fr}
+      .hero-market{border-radius:18px;min-height:430px}.hero-market-copy{padding:22px 16px 194px}.hero-market h1{font-size:34px;line-height:1.05}.hero-market-copy>p{font-size:12px;line-height:1.6}.proofs{gap:7px}.proofs span{font-size:10px;padding:7px 9px}
+      .hero-market-art{height:48%;object-position:center 38%}.hero-live{right:11px;bottom:11px}.reader-live{font-size:10px;min-height:34px;padding:0 10px}
+      .top-grid{gap:10px}.status-card,.action-card,.quick-card{padding:16px}.reader-score-row>strong{font-size:24px}.reader-score-row>b{font-size:32px}.action-card h2{font-size:20px}
+      .quick-links{grid-template-columns:1fr}.day-highlight{grid-template-columns:auto 1fr;padding:12px}.day-highlight>a{grid-column:2}
+      .reader-metrics{grid-template-columns:1fr 1fr;gap:8px}.metric-card{min-height:104px;padding:13px 12px}.metric-card>strong{font-size:19px}.metric-card>small{font-size:9.5px}
+      .reader-sharebar{grid-template-columns:1fr}.reader-share-actions{justify-content:flex-start}
+      .reader-panel{padding:14px}.sector-row{grid-template-columns:minmax(120px,1.15fr) minmax(70px,.85fr) 62px;gap:8px;padding:5px}.sector-name b{font-size:10px}.sector-name small{font-size:8px}.sector-row>strong{font-size:10px}
+      .baseline-box{grid-template-columns:1fr 1fr}.reader-rules p{grid-template-columns:56px 1fr;font-size:9px}
+      .reader-lead{padding:14px}.reader-lead-copy h2{font-size:18px}
+      .reader-convert{padding:14px}.reader-convert-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.reader-convert-actions a{text-align:center}
+      .reader-footer-note{flex-direction:column;align-items:flex-start;gap:5px}
+
+      .footer .footer-main{padding:25px 0 18px;grid-template-columns:1fr;gap:18px;text-align:center}
+      .footer .footer-brand-link{margin:0 auto;justify-content:center}.footer .footer-slogan{margin-left:auto;margin-right:auto;max-width:320px}.footer .footer-gold-line{width:170px;margin:10px auto 8px}.footer .footer-risk{max-width:300px;margin:auto;font-size:9px;text-align:center}
+      .footer .footer-nav-all .quick-links{width:100%;display:grid;grid-template-columns:repeat(4,max-content);justify-content:center;gap:8px 12px;overflow:visible;white-space:normal}.footer .footer-nav-all .quick-links a{font-size:10.5px;text-align:center;white-space:nowrap}
+      .footer .footer-connect{grid-column:auto}.footer .footer-socials{width:min(100%,360px);margin:0 auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .footer .footer-bottom{padding:11px 0 14px}.footer .footer-bottom-row{flex-direction:column;gap:7px}.footer .footer-copyright{width:100%;font-size:10px;white-space:normal}.footer .footer-legal{width:100%;column-gap:7px;row-gap:5px}.footer .footer-legal a{font-size:10px}.footer .footer-legal span{font-size:7px}
+    }
+
+    @media(max-width:430px){
+      .hero-market h1{font-size:31px}.reader-metrics{grid-template-columns:1fr}.baseline-box{grid-template-columns:1fr 1fr}.footer .footer-nav-all .quick-links{grid-template-columns:repeat(2,max-content);gap:9px 22px}.reader-convert-actions{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
-<header class="reader-topbar"><div class="reader-topbar-inner"><a class="reader-brand" href="./">VÕ HOÀNG <span>· ĐẦU TƯ CHUẨN HỆ THỐNG</span></a><nav><a href="./">Trang chủ</a><a href="sau-phien-cua-toi.html">Sau phiên của tôi</a><a href="watchlist.html">Watchlist</a><a href="nhat-ky-he-thong.html">Nhật ký hệ thống</a><a href="investor-calculator.html">Máy tính</a><a href="./?start=contact&utm_source=market_reader">Trao đổi</a></nav></div></header>
-<main class="reader-wrap">
-<section class="reader-hero"><div><p class="reader-eyebrow">BỘ ĐỌC THỊ TRƯỜNG REALTIME</p><h1>Không chỉ nhìn chỉ số.<br>Đọc xem thị trường đang nói gì.</h1><p>Hệ thống tổng hợp điểm số, độ rộng, dòng tiền và sức mạnh nhóm ngành để trả lời một câu hỏi: <strong>lúc này nên hành động thế nào?</strong></p><div class="reader-proof"><b>Realtime</b><b>Cập nhật theo nhịp 60 giây</b><b>Không phím hàng</b></div></div><div class="reader-live" id="readerLive"><i></i><span>Đang kết nối dữ liệu…</span></div></section>
-<section class="reader-state-shell"><article class="reader-score-card" id="readerScoreCard"><span class="reader-label">TRẠNG THÁI THỊ TRƯỜNG</span><div class="reader-score-row"><strong id="readerState">—</strong><b><span id="readerScore">—</span><small>/100</small></b></div><div class="reader-score-track"><i id="readerScoreBar"></i></div><p id="readerTrend">Đang tải dữ liệu…</p></article><article class="reader-action-card"><span class="reader-label">HÀNH ĐỘNG HỆ THỐNG</span><h2 id="readerAction">Đang đọc thị trường…</h2><p id="readerActionDetail">Hệ thống sẽ đưa ra việc nên làm tiếp theo từ trạng thái hiện tại.</p><div class="reader-action-links" id="readerActions"></div></article></section>
-<section class="reader-sharebar" aria-label="Chia sẻ nhận định thị trường"><div><span>CHIA SẺ NHANH</span><strong>Biến dữ liệu thành một đoạn nhận định có thể gửi cho ACE.</strong></div><div class="reader-share-actions"><button id="copyReaderBrief" type="button">Sao chép nhận định</button><button id="shareReaderBrief" type="button">Chia sẻ</button></div><p id="readerShareMessage" aria-live="polite"></p></section>
-<section class="reader-metrics" aria-label="Chỉ số thị trường chính"><article><span>VN-INDEX</span><strong id="vnIndex">—</strong><small id="vnIndexSub">—</small></article><article><span>ĐỘ RỘNG</span><strong id="breadthState">—</strong><small id="breadthSub">—</small></article><article><span>DÒNG TIỀN</span><strong id="flowValue">—</strong><small id="flowSub">—</small></article><article><span>NHÓM DẪN DẮT</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article></section>
-<section class="reader-grid"><article class="reader-panel"><div class="reader-panel-head"><div><span class="reader-label">DÒNG TIỀN Ở ĐÂU?</span><h2>Xếp hạng nhóm ngành</h2></div><small>Thay đổi trong phiên</small></div><div class="sector-table" id="sectorTable"></div></article><article class="reader-panel"><div class="reader-panel-head"><div><span class="reader-label">CẢNH BÁO</span><h2>Điều đáng chú ý</h2></div><small>Tự sinh từ dữ liệu</small></div><div class="reader-alerts" id="readerAlerts"></div></article></section>
-<section class="reader-grid reader-grid-secondary"><article class="reader-panel"><div class="reader-panel-head"><div><span class="reader-label">THANH KHOẢN</span><h2>Chuẩn cùng thời điểm</h2></div><small id="baselineStatus">Đang tích lũy</small></div><div class="baseline-box"><div><span>GT hiện tại</span><strong id="currentGt">—</strong></div><div><span>So với TB cùng giờ</span><strong id="sameTimeRatio">—</strong></div><div><span>Nhịp 15 phút</span><strong id="paceRatio">—</strong></div><div><span>Dữ liệu chuẩn</span><strong id="baselineDays">—</strong></div></div><p class="reader-note">Chuẩn cùng thời điểm cần tối thiểu 5 phiên để bắt đầu so sánh và sẽ tốt dần khi tích lũy đến 20 phiên.</p></article><article class="reader-panel"><div class="reader-panel-head"><div><span class="reader-label">NGUYÊN TẮC</span><h2>Cách đọc điểm thị trường</h2></div></div><div class="reader-rules"><p><b>72–100:</b> Tích cực — có thể duy trì kế hoạch nhưng vẫn phải tính rủi ro từng lệnh.</p><p><b>58–71:</b> Nghiêng tích cực — tham gia chọn lọc, tránh mua đuổi.</p><p><b>46–57:</b> Phân hóa — chọn đúng nhóm quan trọng hơn đoán chỉ số.</p><p><b>32–45:</b> Thận trọng — chưa mở rộng tỷ trọng, hạn chế tăng margin.</p><p><b>0–31:</b> Rủi ro cao — ưu tiên bảo toàn vốn và xử lý vị thế sai kế hoạch.</p></div></article></section>
-<section class="reader-lead"><div class="reader-lead-copy"><span class="reader-label">NHẬN BẢN ĐỒ THỊ TRƯỜNG</span><h2>Không cần mở bảng giá cả ngày để biết điều gì đáng chú ý.</h2><p>Đăng ký để Võ Hoàng có thể gửi nội dung thị trường khi có điểm đáng lưu ý: trạng thái, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.</p></div><div class="reader-lead-form" data-market-lead-root data-lead-source="MARKET_READER_BRIEF"></div></section>
-<section class="reader-convert"><div><span class="reader-label">THỊ TRƯỜNG LÀ BỐI CẢNH · TÀI KHOẢN MỚI LÀ BÀI TOÁN</span><h2>Phiên kết thúc rồi: tài khoản của anh/chị đang khỏe hơn hay yếu hơn thị trường?</h2><p>Đối chiếu ngay lời/lỗ, margin, cổ phiếu đang giữ và lỗi hành vi để biết phần nào do thị trường, phần nào do danh mục của chính mình.</p></div><div class="reader-convert-actions"><a href="sau-phien-cua-toi.html?utm_source=market_reader&utm_medium=after_session">Mở Sau phiên của tôi</a><a href="watchlist.html?utm_source=market_reader">Watchlist có lý do</a><a href="nhat-ky-he-thong.html?utm_source=market_reader">Xem lịch sử Market Score</a><a href="./?start=contact&utm_source=market_reader&utm_medium=cta">Trao đổi cùng Võ Hoàng</a></div></section>
-<footer class="reader-footer"><p><strong>Điểm trạng thái không phải tín hiệu mua/bán.</strong> Đây là thước đo tổng hợp để hỗ trợ kỷ luật ra quyết định. Mỗi lệnh vẫn phải đi qua kế hoạch vốn, điểm cắt lỗ và quy mô vị thế.</p><a href="sau-phien-cua-toi.html">Đối chiếu với tài khoản tôi →</a></footer>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script type="module" src="assets/js/market-reader.js"></script>
-</body></html>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="./">
+        <img src="LOGO.webp" alt="Võ Hoàng logo">
+        <div class="brand-text">
+          <strong>VÕ HOÀNG</strong>
+          <span>Đầu tư chuẩn hệ thống</span>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a class="active" href="thi-truong-hom-nay.html">Thị trường</a>
+        <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+        <a href="sau-phien-cua-toi.html">Sau phiên</a>
+        <a href="watchlist.html">Watchlist</a>
+        <a href="./">Trang chủ</a>
+        <a href="kien-thuc.html">Kiến thức</a>
+        <a href="investor-calculator.html">Công cụ</a>
+        <a href="ve-toi.html">Về tôi</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="search-btn" type="button" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15Zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11Zm10.2 13.8l-3.2-3.2l-1.4 1.4l3.2 3.2a1 1 0 0 0 1.4-1.4Z"/></svg>
+        </button>
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Mở menu">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        </button>
+        <a class="login-btn" href="dang-nhap.html">Đăng nhập</a>
+      </div>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <div class="wrap">
+        <div class="mobile-links">
+          <a href="thi-truong-hom-nay.html">Thị trường</a>
+          <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+          <a href="sau-phien-cua-toi.html">Sau phiên</a>
+          <a href="watchlist.html">Watchlist</a>
+          <a href="./">Trang chủ</a>
+          <a href="kien-thuc.html">Kiến thức</a>
+          <a href="investor-calculator.html">Công cụ</a>
+          <a href="ve-toi.html">Về tôi</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="market-main">
+    <div class="wrap dashboard">
+
+      <section class="hero-market">
+        <img class="hero-market-art" src="hero-thi-truong-hom-nay.webp" alt="Bối cảnh thị trường hôm nay" width="1200" height="650" fetchpriority="high" decoding="async">
+        <div class="hero-market-copy">
+          <p class="eyebrow">Bức tranh thị trường realtime</p>
+          <h1>Không chỉ nhìn chỉ số.<br><span>Đọc xem thị trường đang nói gì.</span></h1>
+          <p>Hệ thống tổng hợp điểm số, độ rộng, dòng tiền và sức mạnh nhóm ngành để giúp bạn nhìn rõ bối cảnh thị trường và biết lúc này nên hành động thế nào.</p>
+          <div class="proofs"><span>Realtime</span><span>Có hệ thống</span><span>Không phím hàng</span></div>
+        </div>
+        <div class="hero-live"><div class="reader-live" id="readerLive"><i></i><span>Đang kết nối dữ liệu…</span></div></div>
+      </section>
+
+      <section class="top-grid">
+        <article class="panel status-card" id="readerScoreCard" data-tone="neutral">
+          <span class="mini-title">Trạng thái thị trường</span>
+          <div class="reader-score-row">
+            <strong id="readerState">—</strong>
+            <b><span id="readerScore">—</span><small>/100</small></b>
+          </div>
+          <div class="reader-score-track"><i id="readerScoreBar"></i></div>
+          <p id="readerTrend">Đang tải dữ liệu…</p>
+        </article>
+
+        <article class="panel action-card" id="readerActionCard" data-tone="neutral">
+          <span class="mini-title">Hành động hệ thống</span>
+          <h2 id="readerAction">Đang đọc thị trường…</h2>
+          <p id="readerActionDetail">Hệ thống sẽ đưa ra việc nên làm tiếp theo từ trạng thái hiện tại.</p>
+          <div class="reader-action-links" id="readerActions"></div>
+        </article>
+
+        <article class="panel quick-card">
+          <span class="mini-title">Công cụ nhanh</span>
+          <div class="quick-links">
+            <a href="sang-nay-can-nhin-gi.html"><span>Sáng nay cần nhìn gì?</span><span>→</span></a>
+            <a href="sau-phien-cua-toi.html"><span>Sau phiên của tôi</span><span>→</span></a>
+            <a href="watchlist.html"><span>Watchlist của tôi</span><span>→</span></a>
+          </div>
+        </article>
+      </section>
+
+      <section class="day-highlight">
+        <div class="day-icon">✦</div>
+        <div class="day-copy"><span>Điểm nhấn trong ngày</span><strong id="dayHighlight">Hệ thống đang đọc các biến số quan trọng của phiên.</strong></div>
+        <a href="#marketAlerts">Xem đầy đủ nhận định →</a>
+      </section>
+
+      <section class="reader-metrics" aria-label="Chỉ số thị trường chính">
+        <article class="metric-card tone-neutral" id="metricVn"><span>VN-Index</span><strong id="vnIndex">—</strong><small id="vnIndexSub">—</small></article>
+        <article class="metric-card tone-neutral" id="metricBreadth"><span>Độ rộng</span><strong id="breadthState">—</strong><small id="breadthSub">—</small></article>
+        <article class="metric-card tone-neutral" id="metricFlow"><span>Dòng tiền</span><strong id="flowValue">—</strong><small id="flowSub">—</small></article>
+        <article class="metric-card tone-neutral" id="metricLeader"><span>Nhóm dẫn dắt</span><strong id="leaderName">—</strong><small id="leaderSub">—</small></article>
+      </section>
+
+      <section class="reader-sharebar" aria-label="Chia sẻ nhận định thị trường">
+        <div><span>Chia sẻ nhanh</span><strong>Biến dữ liệu thành một đoạn nhận định có thể gửi cho ACE.</strong></div>
+        <div class="reader-share-actions"><button id="copyReaderBrief" type="button">Sao chép nhận định</button><button id="shareReaderBrief" type="button">Chia sẻ</button></div>
+        <p id="readerShareMessage" aria-live="polite"></p>
+      </section>
+
+      <section class="reader-grid">
+        <article class="reader-panel">
+          <div class="reader-panel-head"><div><span class="reader-label">Dòng tiền ở đâu?</span><h2>Xếp hạng nhóm ngành</h2></div><small>Thay đổi trong phiên</small></div>
+          <div class="sector-table" id="sectorTable"></div>
+        </article>
+
+        <article class="reader-panel" id="marketAlerts">
+          <div class="reader-panel-head"><div><span class="reader-label">Cảnh báo & lưu ý</span><h2>Điều đang cần chú ý</h2></div><small>Tự sinh từ dữ liệu</small></div>
+          <div class="reader-alerts" id="readerAlerts"></div>
+        </article>
+      </section>
+
+      <section class="reader-grid reader-grid-secondary">
+        <article class="reader-panel">
+          <div class="reader-panel-head"><div><span class="reader-label">Thanh khoản & mặt bằng định giá</span><h2>Chuẩn cùng thời điểm</h2></div><small id="baselineStatus">Đang tích lũy</small></div>
+          <div class="baseline-box">
+            <div id="baseCurrent"><span>GT hiện tại</span><strong id="currentGt">—</strong></div>
+            <div id="baseSame"><span>So với TB cùng giờ</span><strong id="sameTimeRatio">—</strong></div>
+            <div id="basePace"><span>Nhịp 15 phút</span><strong id="paceRatio">—</strong></div>
+            <div id="baseDays"><span>Dữ liệu chuẩn</span><strong id="baselineDays">—</strong></div>
+          </div>
+          <p class="reader-note">Chuẩn cùng thời điểm cần tối thiểu 5 phiên để bắt đầu so sánh và sẽ tốt dần khi tích lũy đến 20 phiên.</p>
+        </article>
+
+        <article class="reader-panel">
+          <div class="reader-panel-head"><div><span class="reader-label">Cách đọc điểm thị trường</span><h2>Hiểu nhanh ý nghĩa các mức điểm</h2></div></div>
+          <div class="reader-rules">
+            <p><b>72–100</b><span>Tích cực — có thể duy trì kế hoạch nhưng vẫn phải tính rủi ro từng lệnh.</span></p>
+            <p><b>58–71</b><span>Nghiêng tích cực — tham gia chọn lọc, tránh mua đuổi.</span></p>
+            <p><b>46–57</b><span>Phân hóa — chọn đúng nhóm quan trọng hơn đoán chỉ số.</span></p>
+            <p><b>32–45</b><span>Thận trọng — chưa mở rộng tỷ trọng, hạn chế tăng margin.</span></p>
+            <p><b>0–31</b><span>Rủi ro cao — ưu tiên bảo toàn vốn và xử lý vị thế sai kế hoạch.</span></p>
+          </div>
+        </article>
+      </section>
+
+      <section class="reader-lead">
+        <div class="reader-lead-copy"><span class="reader-label">Nhận bản đồ thị trường</span><h2>Không cần mở bảng giá cả ngày để biết điều gì đáng chú ý.</h2><p>Đăng ký để Võ Hoàng có thể gửi nội dung thị trường khi có điểm đáng lưu ý: trạng thái, dòng tiền, nhóm dẫn dắt, rủi ro và việc nên làm tiếp theo.</p></div>
+        <div class="reader-lead-form" data-market-lead-root data-lead-source="MARKET_READER_BRIEF"></div>
+      </section>
+
+      <section class="reader-convert">
+        <div><span class="reader-label">Thị trường là bối cảnh · tài khoản mới là bài toán</span><h2>Phiên kết thúc rồi: tài khoản của anh/chị đang khỏe hơn hay yếu hơn thị trường?</h2><p>Đối chiếu lời/lỗ, margin, cổ phiếu đang giữ và lỗi hành vi để biết phần nào do thị trường, phần nào do danh mục.</p></div>
+        <div class="reader-convert-actions">
+          <a href="sau-phien-cua-toi.html?utm_source=market_reader&utm_medium=after_session">Mở Sau phiên của tôi</a>
+          <a href="watchlist.html?utm_source=market_reader">Watchlist có lý do</a>
+          <a href="nhat-ky-he-thong.html?utm_source=market_reader">Lịch sử Market Score</a>
+          <a href="./?start=contact&utm_source=market_reader&utm_medium=cta">Trao đổi cùng Võ Hoàng</a>
+        </div>
+      </section>
+
+      <div class="reader-footer-note">
+        <p><strong>Điểm trạng thái không phải tín hiệu mua/bán.</strong> Đây là thước đo tổng hợp để hỗ trợ kỷ luật ra quyết định. Mỗi lệnh vẫn phải đi qua kế hoạch vốn, điểm cắt lỗ và quy mô vị thế.</p>
+        <a href="sau-phien-cua-toi.html">Đối chiếu với tài khoản tôi →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-main">
+        <div class="footer-brand-block">
+          <a class="brand footer-brand-link" href="./">
+            <img src="LOGO.webp" alt="Võ Hoàng logo">
+            <div class="brand-text"><strong>VÕ HOÀNG</strong><span>Đầu tư chuẩn hệ thống</span></div>
+          </a>
+          <p class="footer-slogan">Kiến thức tạo nền tảng. Hệ thống tạo khác biệt. Tài sản tạo tự do.</p>
+          <div class="footer-gold-line" aria-hidden="true"></div>
+          <p class="footer-risk">Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.</p>
+        </div>
+
+        <div class="footer-col footer-nav-col footer-nav-all">
+          <h4>Đi nhanh</h4>
+          <div class="footer-links quick-links">
+            <a href="thi-truong-hom-nay.html">Thị trường</a>
+            <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+            <a href="sau-phien-cua-toi.html">Sau phiên</a>
+            <a href="watchlist.html">Watchlist</a>
+            <a href="./">Trang chủ</a>
+            <a href="kien-thuc.html">Kiến thức</a>
+            <a href="investor-calculator.html">Công cụ</a>
+            <a href="ve-toi.html">Về tôi</a>
+          </div>
+        </div>
+
+        <div class="footer-col footer-connect">
+          <h4>Kết nối với Võ Hoàng</h4>
+          <div class="footer-socials">
+            <a class="social" href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/></svg>YouTube</a>
+            <a class="social" href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/></svg>Facebook</a>
+            <a class="social" href="./" aria-label="Website"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/></svg>Website</a>
+            <a class="social" href="#" aria-label="Ôn Thi Plus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/></svg>Ôn Thi Plus</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom"><div class="footer-bottom-row">
+        <div class="footer-copyright">© 2026 <strong>VÕ HOÀNG</strong>. All rights reserved.</div>
+        <div class="footer-legal">
+          <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a><span>•</span>
+          <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a><span>•</span>
+          <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a><span>•</span>
+          <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a><span>•</span>
+          <a href="lien-he.html">Liên hệ</a>
+        </div>
+      </div></div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="assets/js/market-reader.js"></script>
+
+  <script>
+    (function(){
+      const menuBtn=document.getElementById('menuBtn');
+      const drawer=document.getElementById('mobileDrawer');
+      if(menuBtn&&drawer){menuBtn.addEventListener('click',()=>drawer.classList.toggle('open'))}
+
+      const TONES=['tone-positive','tone-danger','tone-warning','tone-neutral'];
+      function setTone(el,tone){if(!el)return;el.classList.remove(...TONES);el.classList.add('tone-'+tone)}
+      function numberFrom(text){
+        const s=String(text||'').replace(/\s/g,'').replace(/%/g,'').replace(/\./g,'').replace(',','.');
+        const m=s.match(/[+-]?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN;
+      }
+      function signTone(text){
+        const n=numberFrom(text);if(!Number.isFinite(n))return 'neutral';
+        if(n>0)return 'positive';if(n<0)return 'danger';return 'neutral';
+      }
+      function breadthTone(text){
+        const m=String(text||'').match(/(\d+)\s*tăng.*?(\d+)\s*TC.*?(\d+)\s*giảm/i);
+        if(!m)return 'neutral';const adv=Number(m[1]),dec=Number(m[3]);
+        const r=adv/Math.max(dec,1);if(r>=1.25)return 'positive';if(r<=.60)return 'danger';if(r<.90)return 'warning';return 'neutral';
+      }
+      function flowTone(text){
+        const t=String(text||'').toLowerCase();
+        if(/mạnh|cải thiện|tích cực|cao hơn|gia tăng/.test(t))return 'positive';
+        if(/yếu|suy giảm|thấp|co hẹp|rút/.test(t))return 'danger';
+        if(/chậm|thận trọng|trung bình|phân hóa/.test(t))return 'warning';
+        return 'neutral';
+      }
+      function ratioTone(text){
+        const n=numberFrom(text);if(!Number.isFinite(n))return 'neutral';
+        if(n>=105)return 'positive';if(n<85)return 'danger';if(n<95)return 'warning';return 'neutral';
+      }
+      function syncColors(){
+        const state=document.getElementById('readerScoreCard');
+        const action=document.getElementById('readerActionCard');
+        if(state&&action)action.dataset.tone=state.dataset.tone||'neutral';
+
+        setTone(document.getElementById('metricVn'),signTone(document.getElementById('vnIndexSub')?.textContent));
+        setTone(document.getElementById('metricBreadth'),breadthTone(document.getElementById('breadthSub')?.textContent));
+        setTone(document.getElementById('metricFlow'),flowTone(document.getElementById('flowSub')?.textContent));
+        setTone(document.getElementById('metricLeader'),signTone(document.getElementById('leaderSub')?.textContent));
+        setTone(document.getElementById('baseSame'),ratioTone(document.getElementById('sameTimeRatio')?.textContent));
+        setTone(document.getElementById('basePace'),ratioTone(document.getElementById('paceRatio')?.textContent));
+
+        const firstAlert=document.querySelector('#readerAlerts .reader-alert');
+        const highlight=document.getElementById('dayHighlight');
+        if(firstAlert&&highlight){
+          const b=firstAlert.querySelector('b')?.textContent?.trim()||'';
+          const p=firstAlert.querySelector('p')?.textContent?.trim()||'';
+          highlight.textContent=[b,p].filter(Boolean).join(' — ');
+        }
+      }
+      const targets=['readerScoreCard','vnIndexSub','breadthSub','flowSub','leaderSub','sameTimeRatio','paceRatio','readerAlerts'];
+      const observer=new MutationObserver(syncColors);
+      targets.forEach(id=>{const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['data-tone','class']})});
+      syncColors();
+    })();
+  </script>
+</body>
+</html>
