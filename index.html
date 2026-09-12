@@ -1335,16 +1335,73 @@
       .btn-primary,.btn-secondary{width:100%;min-height:45px;font-size:13px}
       .hero-proof{gap:9px 12px}
       .hero-proof li{font-size:12px}
-      .home-hero-visual{min-height:320px;margin-top:-3px}
-      .home-hero-visual picture{width:min(100%,370px)}
-      .hero-quote-mini{
-      left:12px;
-      right:12px;
-      top:auto;
-      bottom:12px;
-      width:auto;
-      padding:12px 14px;
+      /* HERO MOBILE - LOẠI BỎ KHOẢNG HỞ TRƯỚC ẢNH */
+
+      .home-hero-visual{
+        min-height:0;
+        height:auto;
+        margin-top:0;
+        padding:0;
+      
+        display:block;
+        position:relative;
+        overflow:hidden;
       }
+      
+      
+      /* Ảnh chiếm đúng chiều rộng khối */
+      .home-hero-visual picture{
+        display:block;
+        width:100%;
+        margin:0;
+        padding:0;
+        transform:none;
+      }
+      
+      
+      /* Không để flex / max-height tạo khoảng trống */
+      .home-hero-visual img{
+        display:block;
+        width:100%;
+        height:auto;
+        max-height:none;
+      
+        margin:0;
+        padding:0;
+      
+        object-fit:cover;
+        object-position:center top;
+      }
+      
+      
+      /* Quote vẫn nằm trên ảnh */
+      .hero-quote-mini{
+        position:absolute;
+      
+        left:12px;
+        right:12px;
+        bottom:12px;
+        top:auto;
+      
+        width:auto;
+      
+        padding:12px 14px;
+      
+        border-radius:14px;
+      
+        background:
+          linear-gradient(
+            135deg,
+            rgba(6,20,35,.82),
+            rgba(8,23,39,.64)
+          );
+      
+        backdrop-filter:blur(8px);
+      
+        box-shadow:
+          0 10px 24px rgba(0,0,0,.22);
+      }
+      
       
       .hero-quote-mini blockquote{
         font-size:17px;
