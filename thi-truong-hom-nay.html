@@ -563,6 +563,13 @@
         radial-gradient(circle at 100% 100%,rgba(var(--tone-rgb),.08),transparent 42%),
         rgba(8,27,46,.94);
       overflow:hidden;
+
+      /* Center toàn bộ text trên desktop + mobile */
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
     }
     .metric-card > span{
       display:block;
@@ -586,6 +593,13 @@
       color:var(--muted-2);
       font-size:10px;
       line-height:1.4;
+    }
+
+    .metric-card > span,
+    .metric-card > strong,
+    .metric-card > small{
+      width:100%;
+      text-align:center;
     }
     .tone-positive{--tone:var(--green);--tone-rgb:53,224,139}
     .tone-danger{--tone:var(--red);--tone-rgb:255,102,115}
@@ -899,20 +913,36 @@
       background:rgba(255,255,255,.018);
     }
 
-    .reader-news-row time{
-      color:rgba(231,237,246,.62);
-      font-size:9px;
-      font-variant-numeric:tabular-nums;
+    .reader-news-source{
+      min-width:0;
+      color:var(--gold-2);
+      font-size:8px;
+      font-weight:800;
+      line-height:1.2;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .reader-news-row span{
+    .reader-news-row > a,
+    .reader-news-row > span:last-child{
       min-width:0;
-      color:rgba(245,247,251,.88);
+      color:rgba(245,247,251,.90);
       font-size:9.5px;
       line-height:1.35;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+    }
+
+    .reader-news-row > a{
+      transition:color .18s ease;
+    }
+
+    .reader-news-row > a:hover{
+      color:var(--gold-2);
     }
 
 
@@ -1442,8 +1472,9 @@
         padding:4px 6px;
       }
 
-      .reader-news-row time{font-size:8px}
-      .reader-news-row span{font-size:8.5px}
+      .reader-news-source{font-size:7px}
+      .reader-news-row > a,
+      .reader-news-row > span:last-child{font-size:8.5px}
 
       .reader-lead{
         padding:12px 10px !important;
@@ -1860,11 +1891,11 @@
               <span class="reader-label">TIN TỨC & SỰ KIỆN NỔI BẬT</span>
               <h2>Cập nhật nhanh</h2>
             </div>
-            <small>Từ dữ liệu thị trường</small>
+            <small>Từ hệ thống tin tức</small>
           </div>
 
           <div class="reader-news-list" id="marketNewsList">
-            <div class="reader-news-row"><time>—</time><span>Đang tổng hợp cập nhật thị trường…</span></div>
+            <div class="reader-news-row"><span class="reader-news-source">TIN</span><span>Đang tải tin mới từ hệ thống tin tức…</span></div>
           </div>
         </article>
       </section>
@@ -2095,44 +2126,137 @@
         applyTone(document.getElementById("baselineDaysBox"), ready ? "positive" : "warning");
       }
 
-      function buildMarketNews(){
+      /* ======================================================
+         TIN TỨC THẬT TỪ HỆ THỐNG NEWS
+         Dùng đúng public endpoint đang được broker-brief-public.js sử dụng.
+      ====================================================== */
+      const NEWS_ENDPOINT =
+        "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public";
+
+      function escapeNewsHtml(value){
+        return String(value ?? "")
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;");
+      }
+
+      function newsMeta(item){
+        const raw =
+          item?.published_at_snapshot ||
+          item?.published_at ||
+          item?.created_at ||
+          "";
+
+        if(raw){
+          const d = new Date(raw);
+
+          if(!Number.isNaN(d.getTime())){
+            return new Intl.DateTimeFormat("vi-VN",{
+              timeZone:"Asia/Ho_Chi_Minh",
+              hour:"2-digit",
+              minute:"2-digit",
+              hour12:false
+            }).format(d);
+          }
+        }
+
+        return String(item?.source_name_snapshot || "TIN").trim() || "TIN";
+      }
+
+      async function loadSystemNews(){
         const root = document.getElementById("marketNewsList");
         if(!root) return;
 
-        const now = new Date();
-        const time = now.toLocaleTimeString("vi-VN",{
-          hour:"2-digit",
-          minute:"2-digit",
-          hour12:false
-        });
+        try{
+          const response = await fetch(NEWS_ENDPOINT,{cache:"no-store"});
+          if(!response.ok) throw new Error("HTTP " + response.status);
 
-        const vnValue = document.getElementById("vnIndex")?.textContent?.trim() || "—";
-        const vnSub = document.getElementById("vnIndexSub")?.textContent?.trim() || "—";
-        const breadth = document.getElementById("breadthSub")?.textContent?.trim() || "Chưa đủ dữ liệu";
-        const flow = document.getElementById("flowSub")?.textContent?.trim() || "Đang theo dõi";
-        const leader = document.getElementById("leaderName")?.textContent?.trim() || "Chưa xác định";
-        const leaderSub = document.getElementById("leaderSub")?.textContent?.trim() || "";
-        const state = document.getElementById("readerState")?.textContent?.trim() || "—";
+          const data = await response.json();
+          const items = Array.isArray(data?.items)
+            ? data.items.slice(0,5)
+            : [];
 
-        const items = [
-          `VN-Index ${vnValue} · ${vnSub}`,
-          `Trạng thái thị trường: ${state}`,
-          `Độ rộng: ${breadth}`,
-          `Dòng tiền: ${flow}`,
-          `Dẫn dắt: ${leader}${leaderSub && leaderSub !== "—" ? " · " + leaderSub : ""}`
-        ];
+          if(!data?.ok || !items.length){
+            root.innerHTML = `
+              <div class="reader-news-row">
+                <span class="reader-news-source">TIN</span>
+                <span>Chưa có bản tin đã duyệt mới từ hệ thống.</span>
+              </div>`;
+            return;
+          }
 
-        root.innerHTML = items.map((headline,index) => {
-          const minute = String(Math.max(0, now.getMinutes() - index * 3)).padStart(2,"0");
-          const hh = String(now.getHours()).padStart(2,"0");
-          return `<div class="reader-news-row"><time>${hh}:${minute}</time><span>${headline}</span></div>`;
-        }).join("");
+          root.innerHTML = items.map(item => {
+            const title = escapeNewsHtml(item?.title_snapshot || "Tin thị trường");
+            const meta = escapeNewsHtml(newsMeta(item));
+            const href = String(item?.source_url_snapshot || "").trim();
+
+            const headline = href
+              ? `<a href="${escapeNewsHtml(href)}" target="_blank" rel="noopener noreferrer">${title}</a>`
+              : `<span>${title}</span>`;
+
+            return `
+              <div class="reader-news-row">
+                <span class="reader-news-source">${meta}</span>
+                ${headline}
+              </div>`;
+          }).join("");
+        }catch(_){
+          root.innerHTML = `
+            <div class="reader-news-row">
+              <span class="reader-news-source">TIN</span>
+              <span>Hệ thống tin tức đang cập nhật. Vui lòng xem lại sau.</span>
+            </div>`;
+        }
+      }
+
+      /* Dòng nhỏ dưới Market Score nói về chuyển biến,
+         không dùng "ổn định" gây hiểu nhầm là thị trường an toàn. */
+      function syncTrendWording(){
+        const trendEl = document.getElementById("readerTrend");
+        const stateEl = document.getElementById("readerState");
+        if(!trendEl || !stateEl) return;
+
+        const state = String(stateEl.textContent || "").trim();
+        const raw = String(trendEl.textContent || "").trim();
+
+        if(!raw || /đang tải dữ liệu/i.test(raw)) return;
+
+        const match = raw.match(/15\s*phút\s*([+-]?\d+(?:[.,]\d+)?)\s*điểm/i);
+        let next = "";
+
+        if(match){
+          const delta = Number(match[1].replace(",","."));
+
+          if(delta > 0){
+            next = `15 phút: +${delta} điểm · đang cải thiện`;
+          }else if(delta < 0){
+            next = `15 phút: ${delta} điểm · đang suy yếu`;
+          }else if(/RỦI RO|THẬN TRỌNG/i.test(state)){
+            next = "15 phút: chưa cải thiện";
+          }else if(/TÍCH CỰC/i.test(state)){
+            next = "15 phút: trạng thái tích cực được duy trì";
+          }else{
+            next = "15 phút: chưa có thay đổi đáng kể";
+          }
+        }else if(/RỦI RO|THẬN TRỌNG/i.test(state)){
+          next = "15 phút: chưa cải thiện";
+        }else if(/TÍCH CỰC/i.test(state)){
+          next = "15 phút: trạng thái tích cực được duy trì";
+        }else{
+          next = "15 phút: chưa có thay đổi đáng kể";
+        }
+
+        if(next && trendEl.textContent !== next){
+          trendEl.textContent = next;
+        }
       }
 
       function syncAll(){
         syncStateTone();
         syncMetricTones();
-        buildMarketNews();
+        syncTrendWording();
       }
 
       // Quan sát CHỈ nội dung dữ liệu thay đổi.
@@ -2158,11 +2282,19 @@
         characterData:true
       });
 
-      window.addEventListener("DOMContentLoaded",syncAll);
-      setTimeout(syncAll,700);
+      window.addEventListener("DOMContentLoaded",() => {
+        syncAll();
+        loadSystemNews();
+      });
 
-      // Dự phòng nhẹ: không cần chạy liên tục.
+      setTimeout(syncAll,700);
+      setTimeout(loadSystemNews,900);
+
+      /* Dữ liệu thị trường */
       setInterval(syncAll,10000);
+
+      /* Tin tức: 5 phút cập nhật một lần */
+      setInterval(loadSystemNews,300000);
     })();
   </script>
 </body>
