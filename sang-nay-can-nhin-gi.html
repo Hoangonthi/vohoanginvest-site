@@ -1979,7 +1979,405 @@
     grid-template-columns:1fr;
     gap:14px;
     }
-</style>
+
+    /* =========================================================
+       MARKET CARDS — MÀU & BIỂU TƯỢNG THEO TRẠNG THÁI
+    ========================================================= */
+
+    .market-card{
+      --status-color:rgba(231,237,246,.62);
+      --status-border:rgba(255,255,255,.08);
+      --status-bg:rgba(255,255,255,.01);
+      position:relative;
+      min-height:138px;
+      padding:18px 54px 16px 16px;
+      border-color:var(--status-border);
+      background:
+        linear-gradient(180deg,var(--status-bg),rgba(7,22,38,.95));
+      transition:border-color .25s ease, background .25s ease, box-shadow .25s ease;
+    }
+
+    .market-card .market-card-content{
+      width:100%;
+      text-align:center;
+      position:relative;
+      z-index:2;
+    }
+
+    .market-card .label{
+      margin-bottom:8px;
+      font-size:11px;
+      line-height:1.35;
+      color:rgba(255,255,255,.72);
+    }
+
+    .market-card .value,
+    .market-card .value small{
+      color:var(--status-color);
+      transition:color .25s ease;
+    }
+
+    .market-card .sub{
+      color:rgba(231,237,246,.62);
+    }
+
+    .market-card #vnChange,
+    .market-card #leaderSub{
+      font-weight:700;
+      color:var(--status-color);
+    }
+
+    .market-card .stat-icon{
+      position:absolute;
+      right:13px;
+      top:50%;
+      transform:translateY(-50%);
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      color:var(--status-color);
+      opacity:.72;
+      pointer-events:none;
+      transition:color .25s ease, opacity .25s ease;
+    }
+
+    .market-card .stat-icon svg{
+      width:34px;
+      height:34px;
+      display:block;
+    }
+
+    .market-card.status-danger{
+      --status-color:#ff6b72;
+      --status-border:rgba(255,107,114,.34);
+      --status-bg:rgba(255,107,114,.065);
+    }
+
+    .market-card.status-warning{
+      --status-color:#ffad55;
+      --status-border:rgba(255,173,85,.31);
+      --status-bg:rgba(255,173,85,.055);
+    }
+
+    .market-card.status-neutral{
+      --status-color:#e0bb63;
+      --status-border:rgba(224,187,99,.29);
+      --status-bg:rgba(224,187,99,.045);
+    }
+
+    .market-card.status-positive{
+      --status-color:#35e08b;
+      --status-border:rgba(53,224,139,.30);
+      --status-bg:rgba(53,224,139,.055);
+    }
+
+    .market-card.status-muted{
+      --status-color:rgba(231,237,246,.60);
+      --status-border:rgba(255,255,255,.08);
+      --status-bg:rgba(255,255,255,.012);
+    }
+
+
+    /* =========================================================
+       FOOTER — BẢN CHÍNH, KHÔNG DÙNG TÊN PHIÊN BẢN
+    ========================================================= */
+
+    .footer{
+      margin-top:30px;
+      border-top:1px solid rgba(255,255,255,.07);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(224,187,99,.045),transparent 28%),
+        linear-gradient(180deg,rgba(3,12,22,.88),rgba(2,8,15,.98));
+    }
+
+    .footer .footer-main{
+      padding:34px 0 24px;
+      display:grid;
+      grid-template-columns:minmax(280px,1.35fr) minmax(135px,.7fr) minmax(145px,.75fr) minmax(270px,1.05fr);
+      gap:26px 38px;
+      align-items:start;
+    }
+
+    .footer-brand-block{
+      min-width:0;
+    }
+
+    .footer-brand-link{
+      width:max-content;
+      max-width:100%;
+    }
+
+    .footer .footer-slogan{
+      margin:13px 0 0;
+      max-width:340px;
+      font-size:13px;
+      line-height:1.65;
+      color:rgba(231,237,246,.80);
+    }
+
+    .footer .footer-gold-line{
+      width:100%;
+      max-width:340px;
+      height:1px;
+      margin:11px 0 8px;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(224,187,99,.88) 0%,
+          rgba(224,187,99,.34) 58%,
+          rgba(224,187,99,0) 100%
+        );
+    }
+
+    .footer .footer-risk{
+      margin:0;
+      max-width:340px;
+      font-size:10px;
+      line-height:1.55;
+      color:rgba(231,237,246,.44);
+    }
+
+    .footer .footer-col h4{
+      margin:2px 0 13px;
+      font-size:13px;
+      line-height:1.2;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold-2);
+    }
+
+    .footer .footer-links{
+      display:grid;
+      gap:8px;
+    }
+
+    .footer .footer-links a{
+      width:max-content;
+      max-width:100%;
+      font-size:13px;
+      line-height:1.45;
+      color:rgba(255,255,255,.82);
+      transition:color .2s ease,transform .2s ease;
+    }
+
+    .footer .footer-links a:hover{
+      color:#fff;
+      transform:translateX(2px);
+    }
+
+    .footer .footer-socials{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .footer .footer-socials .social{
+      min-width:0;
+      justify-content:center;
+      padding:9px 11px;
+      border-radius:12px;
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    .footer .footer-bottom{
+      width:100%;
+      padding:13px 0 17px;
+      border-top:1px solid rgba(224,187,99,.15);
+      display:block;
+    }
+
+    .footer .footer-bottom-row{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px 18px;
+      flex-wrap:wrap;
+    }
+
+    .footer .footer-copyright{
+      flex:0 0 auto;
+      font-size:11px;
+      line-height:1.45;
+      color:rgba(231,237,246,.60);
+      white-space:nowrap;
+    }
+
+    .footer .footer-copyright strong{
+      color:rgba(255,255,255,.86);
+      font-weight:700;
+    }
+
+    .footer .footer-legal{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+      gap:5px 9px;
+      min-width:0;
+    }
+
+    .footer .footer-legal a{
+      font-size:11px;
+      line-height:1.45;
+      color:rgba(231,237,246,.68);
+      white-space:nowrap;
+      transition:color .2s ease;
+    }
+
+    .footer .footer-legal a:hover{
+      color:#f1cf78;
+    }
+
+    .footer .footer-legal span{
+      font-size:8px;
+      color:rgba(224,187,99,.66);
+    }
+
+
+    @media (max-width:980px){
+      .footer .footer-main{
+        grid-template-columns:1.2fr .8fr .8fr;
+      }
+
+      .footer .footer-connect{
+        grid-column:1 / -1;
+      }
+
+      .footer .footer-socials{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+    }
+
+
+    @media (max-width:680px){
+
+      .market-card{
+        min-height:132px;
+        padding:14px 40px 14px 10px;
+      }
+
+      .market-card .label{
+        font-size:10px;
+      }
+
+      .market-card .stat-icon{
+        right:7px;
+        width:30px;
+        height:30px;
+        opacity:.62;
+      }
+
+      .market-card .stat-icon svg{
+        width:28px;
+        height:28px;
+      }
+
+      .footer .footer-main{
+        padding:26px 0 19px;
+        grid-template-columns:1fr;
+        gap:20px;
+        text-align:center;
+      }
+
+      .footer .footer-brand-link{
+        margin:0 auto;
+        justify-content:center;
+      }
+
+      .footer .footer-slogan{
+        margin-left:auto;
+        margin-right:auto;
+        max-width:320px;
+        text-align:center;
+      }
+
+      .footer .footer-gold-line{
+        width:170px;
+        margin:11px auto 8px;
+      }
+
+      .footer .footer-risk{
+        max-width:300px;
+        margin-left:auto;
+        margin-right:auto;
+        font-size:9px;
+        line-height:1.5;
+        text-align:center;
+      }
+
+      .footer .footer-col h4{
+        margin-bottom:9px;
+      }
+
+      .footer .quick-links,
+      .footer .ecosystem-links{
+        width:100%;
+        display:flex;
+        flex-direction:row;
+        flex-wrap:nowrap;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        overflow-x:auto;
+        white-space:nowrap;
+        scrollbar-width:none;
+      }
+
+      .footer .quick-links::-webkit-scrollbar,
+      .footer .ecosystem-links::-webkit-scrollbar{
+        display:none;
+      }
+
+      .footer .quick-links a,
+      .footer .ecosystem-links a{
+        flex:0 0 auto;
+        width:auto;
+        font-size:11px;
+      }
+
+      .footer .footer-connect{
+        grid-column:auto;
+      }
+
+      .footer .footer-socials{
+        width:min(100%,360px);
+        margin:0 auto;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+
+      .footer .footer-bottom{
+        padding:12px 0 16px;
+      }
+
+      .footer .footer-bottom-row{
+        justify-content:center;
+        gap:8px 12px;
+        text-align:center;
+      }
+
+      .footer .footer-copyright{
+        width:100%;
+        text-align:center;
+        font-size:10px;
+      }
+
+      .footer .footer-legal{
+        width:100%;
+        justify-content:center;
+        gap:5px 7px;
+      }
+
+      .footer .footer-legal a{
+        font-size:10px;
+      }
+    }
+
+  </style>
 </head>
 <body>
 
@@ -2083,88 +2481,48 @@
         </div>
       </section>
 
-      <section class="stats">
+      <section class="stats" id="marketStats">
         <div class="stats-grid">
-          <article class="stat-card">
-            <div>
-              <span class="label">Market Score</span>
-              <div class="value"><span id="marketState">—</span> <small id="marketScore">—</small></div>
+
+          <article class="stat-card market-card status-muted" id="marketScoreCard">
+            <div class="market-card-content">
+              <span class="label">Điểm trạng thái thị trường</span>
+              <div class="value">
+                <span id="marketState">—</span>
+                <small id="marketScore">—</small>
+              </div>
               <div class="sub">Tâm lý và bối cảnh thị trường hiện tại.</div>
             </div>
-
-            <svg class="mini-bars" viewBox="0 0 84 44" aria-hidden="true">
-              <defs>
-                <linearGradient id="barsGold" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#f4d784"/>
-                  <stop offset="100%" stop-color="#b78a2d"/>
-                </linearGradient>
-              </defs>
-              <rect x="5"  y="28" width="8" height="11" rx="2" fill="url(#barsGold)"/>
-              <rect x="18" y="22" width="8" height="17" rx="2" fill="url(#barsGold)"/>
-              <rect x="31" y="17" width="8" height="22" rx="2" fill="url(#barsGold)"/>
-              <rect x="44" y="12" width="8" height="27" rx="2" fill="url(#barsGold)"/>
-              <rect x="57" y="7"  width="8" height="32" rx="2" fill="url(#barsGold)"/>
-              <rect x="70" y="3"  width="8" height="36" rx="2" fill="url(#barsGold)"/>
-            </svg>
+            <div class="stat-icon" id="marketScoreIcon" aria-hidden="true"></div>
           </article>
 
-          <article class="stat-card">
-            <div>
+          <article class="stat-card market-card status-muted" id="vnIndexCard">
+            <div class="market-card-content">
               <span class="label">VN-Index</span>
               <div class="value" id="vnValue">—</div>
               <div class="sub" id="vnChange">—</div>
             </div>
-
-            <svg class="mini-line" viewBox="0 0 84 44" aria-hidden="true">
-              <polyline
-                points="2,30 12,26 20,28 28,21 36,24 45,18 55,20 65,13 74,16 82,9"
-                fill="none"
-                stroke="#35e08b"
-                stroke-width="2.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <div class="stat-icon" id="vnIndexIcon" aria-hidden="true"></div>
           </article>
 
-          <article class="stat-card">
-            <div>
+          <article class="stat-card market-card status-muted" id="breadthCard">
+            <div class="market-card-content">
               <span class="label">Độ rộng</span>
               <div class="value" id="breadthLabel">—</div>
               <div class="sub" id="breadthSub">Số mã tăng / giảm</div>
             </div>
-
-            <svg class="mini-bars" viewBox="0 0 84 44" aria-hidden="true">
-              <rect x="7"  y="22" width="8" height="17" rx="2" fill="#ff5a66"/>
-              <rect x="20" y="12" width="8" height="27" rx="2" fill="#ff5a66"/>
-              <rect x="33" y="4"  width="8" height="35" rx="2" fill="#ff7a65"/>
-              <rect x="46" y="16" width="8" height="23" rx="2" fill="#34e48e"/>
-              <rect x="59" y="21" width="8" height="18" rx="2" fill="#36d88a"/>
-              <rect x="72" y="25" width="8" height="14" rx="2" fill="#41c879"/>
-            </svg>
+            <div class="stat-icon" id="breadthIcon" aria-hidden="true"></div>
           </article>
 
-          <article class="stat-card">
-            <div>
+          <article class="stat-card market-card status-muted" id="leaderCard">
+            <div class="market-card-content">
               <span class="label">Nhóm dẫn dắt</span>
               <div class="value" id="leaderName">—</div>
               <div class="sub" id="leaderSub">Dòng tiền dẫn dắt của hôm nay.</div>
             </div>
-
-            <svg class="mini-bars" viewBox="0 0 84 44" aria-hidden="true">
-              <defs>
-                <linearGradient id="barsGold2" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#f4d784"/>
-                  <stop offset="100%" stop-color="#b78a2d"/>
-                </linearGradient>
-              </defs>
-              <rect x="8"  y="28" width="8" height="11" rx="2" fill="url(#barsGold2)"/>
-              <rect x="22" y="21" width="8" height="18" rx="2" fill="url(#barsGold2)"/>
-              <rect x="36" y="16" width="8" height="23" rx="2" fill="url(#barsGold2)"/>
-              <rect x="50" y="10" width="8" height="29" rx="2" fill="url(#barsGold2)"/>
-              <rect x="64" y="4"  width="8" height="35" rx="2" fill="url(#barsGold2)"/>
-            </svg>
+            <div class="stat-icon" id="leaderIcon" aria-hidden="true"></div>
           </article>
+
         </div>
       </section>
 
@@ -2454,27 +2812,30 @@
     </div>
   </main>
 
-   <div class="footer-brand">
-    <a class="brand" href="./">
-      <img src="LOGO.webp" alt="Võ Hoàng logo">
-  
-      <div class="brand-text">
-        <strong>VÕ HOÀNG</strong>
-        <span>Đầu tư chuẩn hệ thống</span>
-      </div>
-    </a>
-  
-    <p class="footer-slogan">
-      Kiến thức tạo nền tảng. Hệ thống tạo khác biệt. Tài sản tạo tự do.
-    </p>
-  
-    <div class="footer-gold-line"></div>
-  
-    <p class="footer-risk">
-      Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ
-      không đảm bảo kết quả trong tương lai.
-    </p>
-  </div>
+  <footer class="footer">
+    <div class="wrap">
+
+      <div class="footer-main">
+
+        <div class="footer-brand-block">
+          <a class="brand footer-brand-link" href="./">
+            <img src="LOGO.webp" alt="Võ Hoàng logo">
+            <div class="brand-text">
+              <strong>VÕ HOÀNG</strong>
+              <span>Đầu tư chuẩn hệ thống</span>
+            </div>
+          </a>
+
+          <p class="footer-slogan">
+            Kiến thức tạo nền tảng. Hệ thống tạo khác biệt. Tài sản tạo tự do.
+          </p>
+
+          <div class="footer-gold-line" aria-hidden="true"></div>
+
+          <p class="footer-risk">
+            Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+          </p>
+        </div>
 
         <div class="footer-col footer-nav-col">
           <h4>Đi nhanh</h4>
@@ -2498,221 +2859,65 @@
 
         <div class="footer-col footer-connect">
           <h4>Kết nối với Võ Hoàng</h4>
-          <div class="socials footer-socials">
+
+          <div class="footer-socials">
             <a class="social" href="#" aria-label="YouTube">
-              <svg viewBox="0 0 24 24"><path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/>
+              </svg>
               YouTube
             </a>
+
             <a class="social" href="#" aria-label="Facebook">
-              <svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/>
+              </svg>
               Facebook
             </a>
+
             <a class="social" href="./" aria-label="Website">
-              <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/>
+              </svg>
               Website
             </a>
+
             <a class="social" href="#" aria-label="Ôn Thi Plus">
-              <svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/>
+              </svg>
               Ôn Thi Plus
             </a>
           </div>
         </div>
+
       </div>
 
-    <div class="footer-bottom">
+      <div class="footer-bottom">
+        <div class="footer-bottom-row">
 
-  <div class="footer-bottom-row">
+          <div class="footer-copyright">
+            © 2026 <strong>VÕ HOÀNG</strong>. All rights reserved.
+          </div>
 
-      <div class="footer-copyright">
-        © 2026 <strong>VÕ HOÀNG</strong>. All rights reserved.
+          <div class="footer-legal">
+            <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
+            <span aria-hidden="true">•</span>
+            <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+            <span aria-hidden="true">•</span>
+            <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+            <span aria-hidden="true">•</span>
+            <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
+            <span aria-hidden="true">•</span>
+            <a href="lien-he.html">Liên hệ</a>
+          </div>
+
+        </div>
       </div>
-  
-      <div class="footer-legal">
-        <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
-        <span>•</span>
-  
-        <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
-        <span>•</span>
-  
-        <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
-        <span>•</span>
-  
-        <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
-        <span>•</span>
-  
-        <a href="lien-he.html">Liên hệ</a>
-      </div>
-  
+
     </div>
-  
-  </div>
   </footer>
-  /* =========================================================
-   FOOTER - TINH CHỈNH CUỐI
-========================================================= */
 
-.footer-brand .footer-slogan{
-  margin:12px 0 0;
-  max-width:340px;
-  font-size:13px;
-  line-height:1.65;
-  color:rgba(231,237,246,.82);
-}
-
-
-/* Line vàng kim ngăn giữa slogan và cảnh báo */
-.footer-gold-line{
-  width:100%;
-  max-width:340px;
-  height:1px;
-  margin:12px 0 9px;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(224,187,99,.82),
-      rgba(224,187,99,.28),
-      transparent
-    );
-}
-
-
-/* Cảnh báo rủi ro nhỏ hơn 2 bậc */
-.footer-brand .footer-risk{
-  margin:0;
-  max-width:340px;
-  font-size:10px;
-  line-height:1.6;
-  color:rgba(231,237,246,.46);
-}
-
-
-/* Dòng cuối */
-.footer-bottom{
-  padding:14px 0 18px;
-  border-top:1px solid rgba(255,255,255,.06);
-}
-
-
-.footer-bottom-row{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  gap:24px;
-  flex-wrap:wrap;
-}
-
-
-/* Copyright nằm đầu hàng */
-.footer-copyright{
-  flex:0 0 auto;
-  font-size:11px;
-  line-height:1.4;
-  color:rgba(231,237,246,.62);
-  white-space:nowrap;
-}
-
-
-.footer-copyright strong{
-  color:rgba(255,255,255,.88);
-  font-weight:700;
-}
-
-
-/* Legal nằm cùng hàng copyright */
-.footer-legal{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  flex-wrap:wrap;
-  gap:6px 10px;
-}
-
-
-.footer-legal a{
-  font-size:11px;
-  line-height:1.4;
-  color:rgba(231,237,246,.68);
-  white-space:nowrap;
-  transition:.2s ease;
-}
-
-
-.footer-legal a:hover{
-  color:#f1cf78;
-}
-
-
-.footer-legal span{
-  font-size:8px;
-  color:rgba(224,187,99,.68);
-}
-
-
-/* Footer-copy cũ không còn dùng */
-.footer-copy{
-  display:none;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width:680px){
-
-  .footer-brand .footer-slogan{
-    margin-left:auto;
-    margin-right:auto;
-    max-width:320px;
-    text-align:center;
-  }
-
-
-  .footer-gold-line{
-    width:160px;
-    margin:12px auto 9px;
-  }
-
-
-  .footer-brand .footer-risk{
-    max-width:300px;
-    margin-left:auto;
-    margin-right:auto;
-    text-align:center;
-    font-size:9px;
-    line-height:1.55;
-  }
-
-
-  .footer-bottom-row{
-    justify-content:center;
-    gap:9px 14px;
-    text-align:center;
-  }
-
-
-  .footer-copyright{
-    width:100%;
-    text-align:center;
-    font-size:10px;
-  }
-
-
-  .footer-legal{
-    width:100%;
-    justify-content:center;
-    gap:6px 8px;
-  }
-
-
-  .footer-legal a{
-    font-size:10px;
-  }
-
-}
-
-  
   <script>
     (function(){
       const menuBtn = document.getElementById("menuBtn");
@@ -2797,6 +3002,225 @@
       loadHotStocks();
       setInterval(loadDerivatives, 3000);
       setInterval(loadHotStocks, 60000);
+    })();
+  </script>
+
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STATUS_CLASSES = [
+        "status-danger",
+        "status-warning",
+        "status-neutral",
+        "status-positive",
+        "status-muted"
+      ];
+
+      const ICONS = {
+        alert: `
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 5L43 40H5L24 5Z"/>
+            <path d="M24 17V28"/>
+            <circle cx="24" cy="34" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        `,
+        shield: `
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 5L39 11V22C39 32 33 39 24 43C15 39 9 32 9 22V11L24 5Z"/>
+            <path d="M17 24L22 29L32 18"/>
+          </svg>
+        `,
+        up: `
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 35L17 26L25 30L40 14"/>
+            <path d="M31 14H40V23"/>
+          </svg>
+        `,
+        down: `
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 13L17 22L25 18L40 34"/>
+            <path d="M31 34H40V25"/>
+          </svg>
+        `,
+        flat: `
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 24H40"/>
+            <path d="M34 18L40 24L34 30"/>
+          </svg>
+        `,
+        breadthDown: `
+          <svg viewBox="0 0 48 48" fill="currentColor">
+            <rect x="6" y="10" width="6" height="30" rx="2"/>
+            <rect x="17" y="17" width="6" height="23" rx="2" opacity=".82"/>
+            <rect x="28" y="24" width="6" height="16" rx="2" opacity=".64"/>
+            <rect x="39" y="31" width="4" height="9" rx="2" opacity=".46"/>
+          </svg>
+        `,
+        breadthUp: `
+          <svg viewBox="0 0 48 48" fill="currentColor">
+            <rect x="6" y="31" width="4" height="9" rx="2" opacity=".46"/>
+            <rect x="16" y="24" width="6" height="16" rx="2" opacity=".64"/>
+            <rect x="27" y="17" width="6" height="23" rx="2" opacity=".82"/>
+            <rect x="38" y="10" width="6" height="30" rx="2"/>
+          </svg>
+        `,
+        star: `
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 5L29 17L42 18L32 27L35 40L24 33L13 40L16 27L6 18L19 17L24 5Z"/>
+          </svg>
+        `
+      };
+
+      function setCard(cardId, status, iconName) {
+        const card = document.getElementById(cardId);
+        if (!card) return;
+
+        card.classList.remove(...STATUS_CLASSES);
+        card.classList.add(`status-${status}`);
+
+        const icon = card.querySelector(".stat-icon");
+        if (icon && icon.dataset.icon !== iconName) {
+          icon.dataset.icon = iconName;
+          icon.innerHTML = ICONS[iconName] || ICONS.flat;
+        }
+      }
+
+      function normalizedNumber(text) {
+        const raw = String(text || "")
+          .replace(/\s/g, "")
+          .replace(/%/g, "")
+          .replace(/\./g, "")
+          .replace(",", ".");
+
+        const match = raw.match(/[+-]?\d+(?:\.\d+)?/);
+        return match ? Number(match[0]) : NaN;
+      }
+
+      function refreshMarketCards() {
+        const stateText = document.getElementById("marketState")?.textContent?.trim() || "";
+        const scoreText = document.getElementById("marketScore")?.textContent || "";
+        const score = normalizedNumber(scoreText);
+        const stateLower = stateText.toLowerCase();
+
+        if (!Number.isFinite(score)) {
+          setCard("marketScoreCard", "muted", "flat");
+        } else if (score < 32 || stateLower.includes("rủi ro cao") || stateLower.includes("rất cao")) {
+          setCard("marketScoreCard", "danger", "alert");
+        } else if (score < 46 || stateLower.includes("thận trọng") || stateLower.includes("rủi ro")) {
+          setCard("marketScoreCard", "warning", "alert");
+        } else if (score < 58 || stateLower.includes("trung tính")) {
+          setCard("marketScoreCard", "neutral", "flat");
+        } else {
+          setCard("marketScoreCard", "positive", "shield");
+        }
+
+
+        const vnChangeText = document.getElementById("vnChange")?.textContent || "";
+        const vnChange = normalizedNumber(vnChangeText);
+
+        if (!Number.isFinite(vnChange)) {
+          setCard("vnIndexCard", "muted", "flat");
+        } else if (vnChange > 0) {
+          setCard("vnIndexCard", "positive", "up");
+        } else if (vnChange < 0) {
+          setCard("vnIndexCard", "danger", "down");
+        } else {
+          setCard("vnIndexCard", "neutral", "flat");
+        }
+
+
+        const breadthLabel = (document.getElementById("breadthLabel")?.textContent || "").trim().toLowerCase();
+        const breadthSub = document.getElementById("breadthSub")?.textContent || "";
+        const counts = breadthSub.match(/(\d+)\s*tăng.*?(\d+)\s*TC.*?(\d+)\s*giảm/i);
+
+        let breadthStatus = "muted";
+        let breadthIcon = "flat";
+
+        if (breadthLabel.includes("rất yếu")) {
+          breadthStatus = "danger";
+          breadthIcon = "breadthDown";
+        } else if (breadthLabel.includes("yếu")) {
+          breadthStatus = "warning";
+          breadthIcon = "breadthDown";
+        } else if (
+          breadthLabel.includes("mạnh") ||
+          breadthLabel.includes("tốt") ||
+          breadthLabel.includes("tích cực")
+        ) {
+          breadthStatus = "positive";
+          breadthIcon = "breadthUp";
+        } else if (
+          breadthLabel.includes("trung tính") ||
+          breadthLabel.includes("cân bằng")
+        ) {
+          breadthStatus = "neutral";
+          breadthIcon = "flat";
+        } else if (counts) {
+          const adv = Number(counts[1]);
+          const dec = Number(counts[3]);
+          const ratio = adv / Math.max(dec, 1);
+
+          if (ratio < .5) {
+            breadthStatus = "danger";
+            breadthIcon = "breadthDown";
+          } else if (ratio < .8) {
+            breadthStatus = "warning";
+            breadthIcon = "breadthDown";
+          } else if (ratio <= 1.2) {
+            breadthStatus = "neutral";
+            breadthIcon = "flat";
+          } else {
+            breadthStatus = "positive";
+            breadthIcon = "breadthUp";
+          }
+        }
+
+        setCard("breadthCard", breadthStatus, breadthIcon);
+
+
+        const leaderText = document.getElementById("leaderSub")?.textContent || "";
+        const leaderChange = normalizedNumber(leaderText);
+
+        if (!Number.isFinite(leaderChange)) {
+          setCard("leaderCard", "muted", "star");
+        } else if (leaderChange > 0) {
+          setCard("leaderCard", "positive", "star");
+        } else if (leaderChange < 0) {
+          setCard("leaderCard", "danger", "down");
+        } else {
+          setCard("leaderCard", "neutral", "flat");
+        }
+      }
+
+      const observedIds = [
+        "marketState",
+        "marketScore",
+        "vnChange",
+        "breadthLabel",
+        "breadthSub",
+        "leaderSub"
+      ];
+
+      let raf = 0;
+      const scheduleRefresh = () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(refreshMarketCards);
+      };
+
+      observedIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        new MutationObserver(scheduleRefresh).observe(el, {
+          childList:true,
+          subtree:true,
+          characterData:true
+        });
+      });
+
+      refreshMarketCards();
     })();
   </script>
 
