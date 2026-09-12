@@ -330,14 +330,15 @@
     }
 
     .home-hero-visual{
-      position:relative;
-      min-width:0;
-      overflow:hidden;
-      min-height:500px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-      margin-left:-46px;
+    position:relative;
+    min-width:0;
+    overflow:hidden;
+    min-height:500px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-end;
+    margin-left:-46px;
+    padding-right:10px;
     }
 
     .home-hero-visual::before{
@@ -365,10 +366,11 @@
     }
 
     .home-hero-visual picture{
-      position:relative;
-      z-index:2;
-      width:min(100%,480px);
-      align-self:flex-end;
+    position:relative;
+    z-index:2;
+    width:min(100%,500px);
+    align-self:flex-end;
+    transform:translateX(18px);
     }
     .home-hero-visual img{
       width:100%;
@@ -379,33 +381,37 @@
     }
 
     .hero-quote-mini{
-      position:absolute;
-      z-index:3;
-      right:20px;
-      top:22px;
-      width:min(280px,calc(100% - 40px));
-      padding:17px 18px 15px;
-      border-radius:17px;
-      border:1px solid rgba(224,187,99,.18);
-      background:linear-gradient(135deg,rgba(6,20,35,.72),rgba(8,23,39,.46));
-      backdrop-filter:blur(8px);
-    }
-    .hero-quote-mini blockquote{
-      margin:0;
-      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
-      font-size:21px;
-      line-height:1.35;
-      font-weight:700;
-      color:#fff;
-    }
-    .hero-quote-mini span{
-      display:block;
-      margin-top:8px;
-      font-size:12px;
-      color:#f2d98f;
-      font-weight:700;
-      text-align:right;
-    }
+    position:absolute;
+    z-index:3;
+    left:16px;
+    top:18px;
+    right:auto;
+    width:min(190px,36%);
+    padding:14px 14px 12px;
+    border-radius:14px;
+    border:1px solid rgba(224,187,99,.16);
+    background:linear-gradient(135deg,rgba(6,20,35,.76),rgba(8,23,39,.52));
+    backdrop-filter:blur(8px);
+    box-shadow:0 10px 24px rgba(0,0,0,.22);
+  }
+  
+  .hero-quote-mini blockquote{
+    margin:0;
+    font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
+    font-size:18px;
+    line-height:1.52;
+    font-weight:700;
+    color:rgba(255,255,255,.92);
+  }
+  
+  .hero-quote-mini span{
+    display:block;
+    margin-top:10px;
+    font-size:11px;
+    color:#f2d98f;
+    font-weight:700;
+    text-align:right;
+  }
 
     /* =========================================================
        GENERAL SECTIONS / CARDS
@@ -866,8 +872,19 @@
       .hero-proof li{font-size:12px}
       .home-hero-visual{min-height:320px;margin-top:-3px}
       .home-hero-visual picture{width:min(100%,370px)}
-      .hero-quote-mini{right:12px;left:12px;top:auto;bottom:12px;width:auto;padding:13px 14px}
-      .hero-quote-mini blockquote{font-size:18px}
+      .hero-quote-mini{
+      left:12px;
+      right:12px;
+      top:auto;
+      bottom:12px;
+      width:auto;
+      padding:12px 14px;
+      }
+      
+      .hero-quote-mini blockquote{
+        font-size:17px;
+        line-height:1.45;
+      }
 
       .section-shell{padding:17px 13px;border-radius:18px}
       .section-head{margin-bottom:14px}
