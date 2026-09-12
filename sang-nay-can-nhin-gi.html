@@ -4,1986 +4,1941 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Sáng nay cần nhìn gì? | Võ Hoàng</title>
-  <meta name="description" content="Bản đồ đầu ngày: bối cảnh thị trường, điểm đáng chú ý, điều kiện thay đổi quan điểm, phái sinh và cổ phiếu đáng chú ý.">
-  <link rel="icon" type="image/png" href="/vohoanginvest-site/favicon.png">
-
+  <meta name="description" content="Bản đồ đầu ngày: nhìn đúng bối cảnh, tập trung điều quan trọng, có hành động cụ thể trước giờ giao dịch.">
+  <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/sang-nay-can-nhin-gi.html">
+  <link rel="icon" href="favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-
-  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-desktop.webp.png" media="(min-width:681px)" fetchpriority="high">
-  <link rel="preload" as="image" href="hero-sang-nay-can-nhin-gi-mobi.webp.png" media="(max-width:680px)" fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#06111d;
-      --bg2:#071824;
-      --card:#0b1d2c;
-      --card2:#0e2233;
-      --line:rgba(255,255,255,.10);
-      --gold:#f2cf7c;
-      --gold2:#d6a53b;
-      --text:#f9f6ef;
-      --muted:#9eacb9;
-      --green:#2bd88e;
-      --red:#ff5d62;
-      --amber:#f5bc4f;
+      --bg:#04111f;
+      --bg-2:#07192b;
+      --panel:#091c31;
+      --panel-2:#0b223a;
+      --line:rgba(212,176,92,.20);
+      --line-soft:rgba(255,255,255,.08);
+      --gold:#e0bb63;
+      --gold-2:#f3cf74;
+      --text:#f5f7fb;
+      --muted:rgba(231,237,246,.76);
+      --muted-2:rgba(231,237,246,.56);
+      --green:#35e08b;
+      --red:#ff6b72;
+      --cyan:#4de2d8;
+      --shadow:0 18px 44px rgba(0,0,0,.26);
+      --radius:20px;
       --max:1240px;
     }
 
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    html,body{margin:0;padding:0}
     body{
-      margin:0;
-      overflow-x:hidden;
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
-      font-family:"Be Vietnam Pro",system-ui,sans-serif;
       background:
-        radial-gradient(circle at 5% 34%,rgba(224,187,103,.08),transparent 26%),
-        radial-gradient(circle at 95% 60%,rgba(224,187,103,.06),transparent 25%),
-        linear-gradient(180deg,#06111d,#06131f);
+        radial-gradient(circle at top right, rgba(224,187,99,.09), transparent 24%),
+        linear-gradient(180deg,#04111d 0%, #06172a 42%, #04111f 100%);
+      overflow-x:hidden;
     }
 
-    a{color:inherit}
-    button,input,select,textarea{font:inherit}
-    img,svg{max-width:100%}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button,input{font:inherit}
 
     .wrap{
-      width:min(var(--max),calc(100% - 40px));
-      margin-left:auto;
-      margin-right:auto;
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
     }
 
-    /* HEADER */
     .topbar{
       position:sticky;
       top:0;
-      z-index:60;
-      height:70px;
+      z-index:100;
+      backdrop-filter:blur(10px);
+      background:rgba(3,11,20,.88);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .topbar-inner{
+      width:min(calc(100% - 24px), 1340px);
+      margin:0 auto;
+      min-height:78px;
       display:flex;
       align-items:center;
-      background:rgba(5,15,25,.97);
-      backdrop-filter:blur(14px);
-      border-bottom:1px solid var(--line);
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .brand{
+      min-width:0;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brand img{
+      width:44px;
+      height:44px;
+      object-fit:contain;
+      flex:0 0 auto;
+    }
+
+    .brand-text{
+      min-width:0;
+      line-height:1.05;
+    }
+
+    .brand-text strong{
+      display:block;
+      font-size:15px;
+      font-weight:800;
+      color:var(--gold-2);
+      letter-spacing:.02em;
+      white-space:nowrap;
+    }
+
+    .brand-text span{
+      display:block;
+      font-size:11px;
+      color:#e8cf8f;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
     }
 
     .nav{
       display:flex;
       align-items:center;
-      gap:24px;
+      justify-content:center;
+      gap:26px;
+      flex:1 1 auto;
+      min-width:0;
+    }
+
+    .nav a{
+      font-size:14px;
+      color:rgba(255,255,255,.82);
+      padding:28px 0 24px;
+      position:relative;
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+
+    .nav a:hover{color:#fff}
+    .nav a.active{
+      color:#fff;
+      font-weight:700;
+    }
+
+    .nav a.active::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:-1px;
+      margin:auto;
       width:100%;
-      min-width:0;
+      height:3px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--gold),var(--gold-2));
     }
 
-    .brand{
+    .topbar-actions{
       display:flex;
       align-items:center;
-      gap:11px;
-      min-width:210px;
-      text-decoration:none;
+      gap:12px;
+      flex:0 0 auto;
     }
 
-    .brand img{
-      width:46px;
-      height:46px;
-      object-fit:contain;
-      flex:none;
+    .search-btn,
+    .menu-btn{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.02);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
     }
 
-    .brand strong{
-      display:block;
-      color:var(--gold);
-      font-size:17px;
-      line-height:1;
-      letter-spacing:.04em;
-    }
+    .menu-btn{display:none}
 
-    .brand small{
-      display:block;
-      color:#d0b469;
-      font-size:8px;
-      letter-spacing:.12em;
-      margin-top:4px;
-    }
-
-    .navlinks{
-      display:flex;
-      align-items:center;
-      gap:24px;
-      margin-left:auto;
-      min-width:0;
-    }
-
-    .navlinks a{
-      color:#e4ebf1;
-      font-size:11px;
-      text-decoration:none;
-      white-space:nowrap;
-    }
-
-    .navlinks a:hover{color:var(--gold)}
-
-    .navlinks a.active{
-      color:var(--gold);
-      border-bottom:2px solid var(--gold);
-      padding-bottom:8px;
-    }
-
-    .search{
-      margin-left:4px;
-      color:#e4ebf1;
-      font-size:18px;
-      flex:none;
-    }
-
-    .nav-cta{
-      margin-left:4px;
-      padding:10px 19px;
-      border-radius:9px;
-      background:linear-gradient(180deg,#f7d47d,#e4b657);
-      color:#17202a;
-      text-decoration:none;
-      font-size:12px;
+    .login-btn{
+      height:42px;
+      padding:0 18px;
+      border-radius:12px;
+      border:1px solid rgba(224,187,99,.44);
+      background:linear-gradient(180deg,#f0cf79,#d8b254);
+      color:#1f1604;
+      font-size:14px;
       font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       white-space:nowrap;
-      flex:none;
+      box-shadow:0 10px 24px rgba(224,187,99,.16);
     }
 
-    .mobile-menu-btn,
-    .mobile-menu{
+    .mobile-drawer{
       display:none;
+      border-top:1px solid rgba(255,255,255,.06);
+      background:#071423;
     }
 
-    /* HERO */
+    .mobile-drawer.open{display:block}
+
+    .mobile-drawer .wrap{
+      padding:14px 0 18px;
+      display:grid;
+      gap:12px;
+    }
+
+    .mobile-links{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .mobile-links a{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.02);
+      color:#f6f8fc;
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:600;
+      text-align:center;
+    }
+
     .hero{
+      padding:28px 0 0;
+    }
+
+    .hero-shell{
       position:relative;
       overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:
+        linear-gradient(90deg, rgba(4,18,35,.97) 0%, rgba(6,23,40,.95) 42%, rgba(10,28,45,.92) 100%);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr);
+      align-items:stretch;
       min-height:340px;
-      border-bottom:1px solid rgba(224,187,103,.14);
-      background:#07131f;
     }
 
-    .hero-art{
-      position:absolute;
-      z-index:1;
-      top:0;
-      bottom:0;
-      right:max(20px,calc((100vw - var(--max))/2));
-      width:min(48%,600px);
+    .hero-copy{
+      position:relative;
+      z-index:2;
+      padding:34px 34px 28px;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin:0 0 12px;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--gold-2);
+    }
+
+    .hero h1{
+      margin:0;
+      max-width:640px;
+      font-size:64px;
+      line-height:.98;
+      letter-spacing:-.03em;
+      font-weight:800;
+    }
+
+    .hero p{
+      margin:18px 0 0;
+      max-width:640px;
+      font-size:18px;
+      line-height:1.68;
+      color:var(--muted);
+    }
+
+    .hero-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 18px;
+      margin:24px 0 0;
+      padding:0;
+      list-style:none;
+    }
+
+    .hero-chips li{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:14px;
+      color:#fbfcff;
+    }
+
+    .hero-chips li::before{
+      content:"";
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      border:1px solid rgba(224,187,99,.6);
+      box-shadow:inset 0 0 0 4px rgba(224,187,99,.10);
+      background:
+        radial-gradient(circle at center, rgba(224,187,99,.9) 0 2px, transparent 3px);
+      flex:0 0 auto;
+    }
+
+    .hero-visual{
+      position:relative;
+      min-width:0;
+      min-height:340px;
       overflow:hidden;
-      border-radius:0 0 12px 12px;
-      pointer-events:none;
+      border-left:1px solid rgba(255,255,255,.05);
     }
 
-    .hero-art img{
-      width:100%;
-      height:100%;
-      display:block;
-      object-fit:cover;
-      object-position:center;
-      opacity:.92;
-    }
-
-    .hero-art:after{
+    .hero-visual::before{
       content:"";
       position:absolute;
       inset:0;
       background:
-        linear-gradient(
-          90deg,
-          #06111d 0%,
-          rgba(6,17,29,.90) 12%,
-          rgba(6,17,29,.50) 34%,
-          rgba(6,17,29,.12) 72%,
-          rgba(6,17,29,.22) 100%
-        );
+        linear-gradient(90deg, rgba(6,19,34,.72) 0%, rgba(6,19,34,.18) 20%, rgba(6,19,34,.08) 100%);
+      z-index:1;
+      pointer-events:none;
     }
 
-    .hero-grid{
-      position:relative;
-      z-index:3;
-      min-height:340px;
+    .hero-visual::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.26));
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .hero-art{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .hero-art-mobile{display:none}
+
+    .hero-quote{
+      position:absolute;
+      right:22px;
+      top:22px;
+      z-index:2;
+      width:min(290px, calc(100% - 44px));
+      padding:22px 20px 18px;
+      border-radius:18px;
+      border:1px solid rgba(224,187,99,.20);
+      background:rgba(4,14,26,.64);
+      backdrop-filter:blur(10px);
+      box-shadow:0 14px 34px rgba(0,0,0,.24);
+    }
+
+    .hero-quote blockquote{
+      margin:0;
+      font-size:18px;
+      line-height:1.55;
+      font-weight:700;
+      color:#f8f7f3;
+    }
+
+    .hero-quote .signature{
+      display:block;
+      margin-top:14px;
+      font-size:18px;
+      font-weight:800;
+      font-style:italic;
+      color:#fff;
+    }
+
+    .hero-quote .quote-tags{
+      margin-top:14px;
+      padding-left:12px;
+      border-left:2px solid rgba(224,187,99,.8);
+      font-size:12px;
+      line-height:1.62;
+      color:#f3d07c;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .stats{
+      margin-top:18px;
+    }
+
+    .stats-grid{
       display:grid;
-      grid-template-columns:minmax(0,1.3fr) minmax(240px,.5fr);
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .stat-card,
+    .card,
+    .split-card,
+    .sub-card{
+      min-width:0;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:
+        linear-gradient(180deg, rgba(8,26,45,.96), rgba(7,22,38,.94));
+      box-shadow:var(--shadow);
+    }
+
+    .stat-card{
+      padding:20px 20px 18px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .stat-card .label{
+      display:block;
+      margin-bottom:10px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.78);
+    }
+
+    .stat-card .value{
+      font-size:20px;
+      line-height:1.15;
+      font-weight:800;
+      color:#fff;
+    }
+
+    .stat-card .sub{
+      margin-top:8px;
+      font-size:13px;
+      color:var(--muted-2);
+      line-height:1.45;
+    }
+
+    .stat-card .positive{color:var(--green)}
+    .stat-card .negative{color:var(--red)}
+
+    .mini-bars,
+    .mini-line{
+      flex:0 0 auto;
+      width:84px;
+      height:44px;
+      opacity:.95;
+    }
+
+    .stat-card .value small{
+      font-size:13px;
+      font-weight:700;
+      color:var(--muted-2);
+    }
+
+    .section{
+      margin-top:18px;
+    }
+
+    .card{
+      padding:20px 20px 18px;
+    }
+
+    .card-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:14px;
+    }
+
+    .title-side{
+      display:flex;
+      gap:12px;
+      min-width:0;
+    }
+
+    .icon-box{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      border:1px solid rgba(224,187,99,.28);
+      background:linear-gradient(180deg, rgba(236,196,96,.22), rgba(236,196,96,.10));
+      display:grid;
+      place-items:center;
+      color:var(--gold-2);
+      flex:0 0 auto;
+    }
+
+    .overline{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--gold-2);
+      margin:0 0 4px;
+    }
+
+    .card h2,
+    .card h3{
+      margin:0;
+      line-height:1.15;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .card p.lead,
+    .card .lead{
+      margin:6px 0 0;
+      font-size:13px;
+      line-height:1.58;
+      color:var(--muted-2);
+    }
+
+    .card-action{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      font-weight:700;
+      color:#f2d98f;
+      white-space:nowrap;
+      padding-top:4px;
+      flex:0 0 auto;
+    }
+
+    .spotlight-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .spot-item{
+      min-width:0;
+      padding:16px 16px 14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .spot-index{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:34px;
+      height:34px;
+      padding:0 10px;
+      border-radius:12px;
+      border:1px solid rgba(224,187,99,.22);
+      background:rgba(224,187,99,.10);
+      color:#f6d784;
+      font-weight:800;
+      font-size:13px;
+      margin-bottom:12px;
+    }
+
+    .spot-item h4{
+      margin:0;
+      font-size:16px;
+      line-height:1.4;
+      font-weight:700;
+    }
+
+    .spot-item p{
+      margin:8px 0 0;
+      font-size:13px;
+      line-height:1.6;
+      color:var(--muted-2);
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+
+    .list-box{
+      display:grid;
+      gap:12px;
+      min-width:0;
+    }
+
+    .list-item{
+      display:grid;
+      grid-template-columns:36px minmax(0,1fr);
+      gap:12px;
+      align-items:flex-start;
+      padding:0 0 12px;
+      border-bottom:1px solid var(--line-soft);
+      min-width:0;
+    }
+
+    .list-item:last-child{
+      padding-bottom:0;
+      border-bottom:0;
+    }
+
+    .index-chip{
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      border:1px solid rgba(224,187,99,.24);
+      background:rgba(224,187,99,.08);
+      color:#f7d47b;
+      font-size:13px;
+      font-weight:800;
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+    }
+
+    .list-item strong{
+      display:block;
+      font-size:15px;
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .list-item span,
+    .list-item p{
+      display:block;
+      margin:4px 0 0;
+      font-size:13px;
+      line-height:1.58;
+      color:var(--muted-2);
+    }
+
+    .view-card .view-text{
+      margin-top:6px;
+      font-size:15px;
+      line-height:1.78;
+      color:var(--muted);
+    }
+
+    .alert-list{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .alert-item{
+      padding:14px 14px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.02);
+      min-width:0;
+    }
+
+    .alert-item .alert-no{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      border:1px solid rgba(224,187,99,.22);
+      background:rgba(224,187,99,.10);
+      color:#f7d47b;
+      font-weight:800;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .alert-item strong{
+      display:block;
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .alert-item p{
+      margin:6px 0 0;
+      font-size:13px;
+      line-height:1.56;
+      color:var(--muted-2);
+    }
+
+    .live-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+      gap:18px;
+    }
+
+    .live-card{
+      position:relative;
+    }
+
+    .live-status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:30px;
+      margin-top:4px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    .live-status::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--green);
+      box-shadow:0 0 0 5px rgba(53,224,139,.10);
+      flex:0 0 auto;
+    }
+
+    .ps-table{
+      margin-top:14px;
+      border-top:1px solid var(--line-soft);
+      border-bottom:1px solid var(--line-soft);
+    }
+
+    .ps-row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+      padding:12px 0;
+      border-bottom:1px solid var(--line-soft);
+    }
+
+    .ps-row:last-child{border-bottom:0}
+
+    .ps-label{
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .ps-value{
+      text-align:right;
+      font-size:15px;
+      font-weight:800;
+      color:#fff;
+      min-width:0;
+    }
+
+    .ps-value.up{color:var(--green)}
+    .ps-value.down{color:var(--red)}
+    .ps-note{
+      margin-top:12px;
+      font-size:13px;
+      line-height:1.55;
+      color:var(--muted-2);
+    }
+
+    .hot-card{
+      overflow:hidden;
+    }
+
+    .hot-card::after{
+      content:"";
+      position:absolute;
+      right:-8px;
+      bottom:-8px;
+      width:168px;
+      height:118px;
+      border-radius:24px 0 20px 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0) 8%, rgba(255,255,255,.02) 60%),
+        url("hero-sang-nay-can-nhin-gi-desktop.webp") center/cover no-repeat;
+      opacity:.28;
+      pointer-events:none;
+      filter:saturate(.82) contrast(1.08);
+    }
+
+    .hot-pills{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+      padding-right:120px;
+    }
+
+    .stock-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:54px;
+      height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(7,17,31,.52);
+      backdrop-filter:blur(4px);
+      color:#f8fbff;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .subscribe{
+      margin-top:18px;
+      padding:22px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(380px,.92fr);
       gap:22px;
       align-items:center;
     }
 
-    .hero-copy{
-      max-width:700px;
-      padding:38px 0 30px;
-      min-width:0;
-    }
-
-    .eyebrow{
-      color:var(--gold);
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.18em;
-      margin-bottom:8px;
-    }
-
-    .hero h1{
-      margin:0 0 12px;
-      font-family:"Playfair Display",serif;
-      font-size:58px;
-      line-height:1.02;
-      max-width:710px;
-    }
-
-    .hero h1 span{color:var(--gold)}
-
-    .hero p{
-      margin:0 0 18px;
-      max-width:700px;
-      color:#d7e0e7;
-      font-size:15px;
-      line-height:1.7;
-    }
-
-    .trustline{
+    .subscribe-copy{
       display:flex;
-      flex-wrap:wrap;
-      gap:14px 22px;
-      color:#dfe6ec;
-      font-size:11px;
-    }
-
-    .trustline span{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .trustline i{
-      width:22px;
-      height:22px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--gold);
-      border-radius:50%;
-      color:var(--gold);
-      font-style:normal;
-      font-size:10px;
-    }
-
-    .hero-quote{
-      justify-self:end;
-      width:min(100%,270px);
-      padding:18px;
-      border-radius:12px;
-      background:rgba(5,15,25,.55);
-      border:1px solid rgba(242,207,124,.15);
-      backdrop-filter:blur(6px);
-      box-shadow:0 16px 36px rgba(0,0,0,.22);
-    }
-
-    .hero-quote blockquote{
-      margin:0 0 12px;
-      font-family:"Playfair Display",serif;
-      font-size:19px;
-      line-height:1.5;
-    }
-
-    .signature{
-      display:inline-block;
-      margin-left:28px;
-      color:#fff;
-      font-family:"Playfair Display",serif;
-      font-size:25px;
-      font-style:italic;
-      transform:rotate(-6deg);
-    }
-
-    .quote-tags{
-      margin-top:14px;
-      padding-left:10px;
-      border-left:2px solid var(--gold2);
-      color:#d8b149;
-      font-size:9px;
-      line-height:1.8;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      font-weight:700;
-    }
-
-    /* MARKET */
-    .market-area{
-      position:relative;
-      z-index:5;
-      margin-top:-8px;
-    }
-
-    .market-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .market-card,
-    .panel{
-      min-width:0;
-      max-width:100%;
-      border:1px solid rgba(255,255,255,.11);
-      background:linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
-      box-shadow:0 14px 30px rgba(0,0,0,.15);
-    }
-
-    .market-card{
-      min-height:104px;
-      padding:14px 16px;
-      overflow:hidden;
-      border-radius:10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .market-card > div:first-child{min-width:0}
-
-    .market-label{
-      color:#9aa8b5;
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.11em;
-      font-weight:700;
-    }
-
-    .market-main{
-      margin-top:7px;
-      font-size:24px;
-      font-weight:800;
-      line-height:1.14;
-    }
-
-    .market-sub{
-      margin-top:6px;
-      color:#8695a2;
-      font-size:9px;
-      line-height:1.45;
-    }
-
-    .up{color:var(--green)}
-    .down{color:var(--red)}
-
-    .score-bars{
-      width:64px;
-      height:46px;
-      display:flex;
-      align-items:flex-end;
-      gap:4px;
-      flex:none;
-    }
-
-    .score-bars i{
-      display:block;
-      width:7px;
-      border-radius:2px 2px 0 0;
-      background:linear-gradient(180deg,#f6d47c,#9b6817);
-    }
-
-    .score-bars i:nth-child(1){height:12px}
-    .score-bars i:nth-child(2){height:18px}
-    .score-bars i:nth-child(3){height:26px}
-    .score-bars i:nth-child(4){height:34px}
-    .score-bars i:nth-child(5){height:44px}
-
-    .spark{
-      width:84px;
-      height:42px;
-      flex:none;
-    }
-
-    .spark polyline{
-      fill:none;
-      stroke:var(--green);
-      stroke-width:2.2;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-    }
-
-    .breadth-bars{
-      width:76px;
-      height:46px;
-      display:flex;
-      align-items:flex-end;
-      gap:4px;
-      flex:none;
-    }
-
-    .breadth-bars i{
-      display:block;
-      width:7px;
-      border-radius:2px 2px 0 0;
-    }
-
-    .breadth-bars i:nth-child(1){height:16px;background:var(--red)}
-    .breadth-bars i:nth-child(2){height:31px;background:var(--red)}
-    .breadth-bars i:nth-child(3){height:44px;background:var(--red)}
-    .breadth-bars i:nth-child(4){height:29px;background:var(--green)}
-    .breadth-bars i:nth-child(5){height:20px;background:var(--green)}
-    .breadth-bars i:nth-child(6){height:14px;background:var(--green)}
-
-    /* MAIN */
-    main{padding:12px 0 18px}
-
-    .panel{
-      border-radius:12px;
-      padding:18px 20px;
-      overflow:hidden;
-    }
-
-    .section-head{
-      display:flex;
-      align-items:flex-start;
       gap:14px;
-      margin-bottom:14px;
+      min-width:0;
     }
 
-    .section-icon{
-      width:44px;
-      height:44px;
-      flex:none;
-      border-radius:9px;
-      display:grid;
-      place-items:center;
-      color:#16202a;
-      background:linear-gradient(180deg,#f7d57d,#e5b85a);
-      font-size:21px;
-      font-weight:800;
+    .subscribe-copy .icon-box{
+      width:52px;
+      height:52px;
+      border-radius:16px;
     }
 
-    .section-kicker{
-      color:var(--gold);
-      font-size:10px;
-      font-weight:800;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin-bottom:4px;
-    }
-
-    .section-title{
+    .subscribe h3{
       margin:0;
-      font-family:"Playfair Display",serif;
-      font-size:24px;
+      font-size:26px;
       line-height:1.2;
     }
 
-    .section-desc{
-      margin:4px 0 0;
-      color:#8f9da9;
-      font-size:10px;
-      line-height:1.5;
+    .subscribe p{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
     }
 
-    .attention{
-      margin-top:0;
-      border-color:rgba(242,207,124,.34);
-    }
-
-    .attention-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:10px;
-      width:100%;
-    }
-
-    .attention-item{
-      min-width:0;
-      padding:14px;
-      border-radius:9px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.018);
-    }
-
-    .item-num{
-      width:34px;
-      height:34px;
-      display:grid;
-      place-items:center;
-      border-radius:8px;
-      background:rgba(242,207,124,.08);
-      border:1px solid rgba(242,207,124,.22);
-      color:var(--gold);
-      font-size:11px;
-      font-weight:800;
-      margin-bottom:10px;
-    }
-
-    .attention-item h3,
-    .decision-item h3{
-      margin:0 0 5px;
-      font-size:13px;
-      line-height:1.45;
-      overflow-wrap:anywhere;
-    }
-
-    .attention-item p,
-    .decision-item p{
-      margin:0;
-      color:#9aa8b5;
-      font-size:10px;
-      line-height:1.55;
-      overflow-wrap:anywhere;
-    }
-
-    .two-col,
-    .live-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-      margin-top:12px;
-      width:100%;
-    }
-
-    .two-col > *,
-    .live-grid > *{
-      min-width:0;
-      width:100%;
-      max-width:100%;
-    }
-
-    .decision-list{
-      display:grid;
-      gap:8px;
-    }
-
-    .decision-item{
-      min-width:0;
-      display:grid;
-      grid-template-columns:38px minmax(0,1fr);
-      gap:10px;
-      padding:10px 0;
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-
-    .decision-item:last-child{border-bottom:0}
-
-    .decision-item .item-num{
-      margin:0;
-      width:32px;
-      height:32px;
-    }
-
-    .view-copy{
-      color:#cdd6de;
-      font-size:11px;
-      line-height:1.75;
-      overflow-wrap:anywhere;
-    }
-
-    .avoid-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:8px;
-    }
-
-    .avoid-card{
-      min-width:0;
-      padding:11px;
-      border-radius:9px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.018);
-    }
-
-    .avoid-card b{
-      display:block;
-      color:var(--gold);
-      font-size:10px;
-      margin-bottom:5px;
-    }
-
-    .avoid-card span{
-      color:#a5b1bc;
-      font-size:9px;
-      line-height:1.5;
-    }
-
-    .live-table{
-      display:grid;
-      gap:0;
-      margin-top:8px;
-    }
-
-    .live-row{
-      display:flex;
-      justify-content:space-between;
-      gap:16px;
-      padding:8px 0;
-      border-bottom:1px solid rgba(255,255,255,.07);
-      font-size:10px;
-    }
-
-    .live-row:last-child{border-bottom:0}
-    .live-row span:first-child{color:#99a8b4}
-    .live-row strong{text-align:right;min-width:0;overflow-wrap:anywhere}
-
-    .hot-symbols{
+    .subscribe-points{
       display:flex;
       flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-    }
-
-    .hot-chip{
-      min-width:54px;
-      padding:8px 11px;
-      border-radius:999px;
-      border:1px solid rgba(242,207,124,.35);
-      color:#fff;
-      text-align:center;
-      font-size:11px;
-      font-weight:800;
-      background:rgba(242,207,124,.04);
-    }
-
-    .hot-note{
-      margin-top:12px;
-      color:#9aa8b5;
-      font-size:10px;
-      line-height:1.55;
-    }
-
-    .lead-wrap{
-      margin-top:12px;
-      padding:18px 20px;
-      border:1px solid rgba(242,207,124,.34);
-      border-radius:12px;
-      background:linear-gradient(145deg,rgba(14,33,50,.98),rgba(7,20,32,.98));
-      overflow:hidden;
-    }
-
-    #vh-lead-capture{
-      max-width:none!important;
-      margin:0!important;
-      width:100%!important;
-    }
-
-    /* FOOTER */
-    footer{
+      gap:10px 18px;
       margin-top:14px;
-      padding:18px 0 22px;
-      background:#06111d;
-      border-top:1px solid var(--line);
+      padding:0;
+      list-style:none;
     }
 
-    .foot{
-      display:flex;
+    .subscribe-points li{
+      display:inline-flex;
       align-items:center;
-      gap:20px;
-      min-width:0;
+      gap:8px;
+      font-size:13px;
+      color:#eef4fb;
     }
 
-    .foot .brand{min-width:auto}
-
-    .foot-links{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      margin-left:auto;
-    }
-
-    .foot-links a{
-      color:#a7b4bf;
-      font-size:10px;
-      text-decoration:none;
-    }
-
-    .social{
-      display:flex;
-      gap:9px;
-      margin-left:10px;
-    }
-
-    .social a{
-      width:26px;
-      height:26px;
+    .subscribe-points li::before{
+      content:"✓";
+      width:20px;
+      height:20px;
+      border-radius:999px;
       display:grid;
       place-items:center;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.15);
-      color:#e6edf3;
-      text-decoration:none;
-      font-size:10px;
-    }
-
-    .eco{
-      margin-left:10px;
-      padding:9px 13px;
-      border-radius:9px;
-      background:var(--gold);
-      color:#17202a;
-      text-decoration:none;
-      font-size:10px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.10);
+      color:#f3d27e;
+      font-size:12px;
       font-weight:800;
-      white-space:nowrap;
     }
 
-    .legal-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px 18px;
-      margin-top:14px;
-      padding-top:12px;
-      border-top:1px solid rgba(255,255,255,.06);
+    .subscribe-form{
+      display:grid;
+      gap:12px;
     }
 
-    .legal-links a{
-      color:#8e9ca9;
-      font-size:9px;
-      text-decoration:none;
+    .form-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
     }
 
-    .copyright{
-      display:flex;
-      justify-content:space-between;
-      gap:20px;
-      flex-wrap:wrap;
-      margin-top:12px;
-      color:#748391;
-      font-size:9px;
+    .subscribe input{
+      width:100%;
+      height:48px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:#fff;
+      padding:0 16px;
+      outline:none;
+    }
+
+    .subscribe input::placeholder{
+      color:rgba(255,255,255,.42);
+    }
+
+    .subscribe-submit{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:12px;
+      align-items:center;
+    }
+
+    .subscribe small{
+      color:var(--muted-2);
+      font-size:12px;
       line-height:1.6;
     }
 
-    @media(max-width:1180px){
-      .navlinks{gap:16px}
-      .navlinks a{font-size:10px}
-      .nav-cta{padding:9px 14px}
+    .btn-gold{
+      height:48px;
+      padding:0 22px;
+      border:0;
+      border-radius:14px;
+      background:linear-gradient(180deg,#f0cf79,#d8b254);
+      color:#201703;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(224,187,99,.18);
     }
 
-    @media(max-width:980px){
-      .navlinks{display:none}
-      .search{margin-left:auto}
-      .hero-grid{grid-template-columns:1fr}
-      .hero-copy{text-align:center}
-      .hero h1{margin-left:auto;margin-right:auto;font-size:46px}
-      .hero p{margin-left:auto;margin-right:auto}
-      .trustline{justify-content:center}
-      .hero-quote{display:none}
-      .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .attention-grid{grid-template-columns:1fr}
-      .two-col,.live-grid{grid-template-columns:1fr}
-      .foot{flex-direction:column;text-align:center}
-      .foot-links{margin-left:0;justify-content:center}
-      .social{margin-left:0}
-      .eco{margin-left:0}
-      .legal-links{justify-content:center}
-      .copyright{justify-content:center;text-align:center}
+    .footer{
+      margin-top:26px;
+      border-top:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg, rgba(3,10,18,.56), rgba(2,8,15,.92));
     }
 
-    @media(max-width:680px){
+    .footer-top{
+      padding:28px 0 18px;
+      display:grid;
+      grid-template-columns:minmax(220px,1.1fr) repeat(2,minmax(160px,.8fr)) minmax(240px,1fr);
+      gap:18px 28px;
+      align-items:flex-start;
+    }
+
+    .footer-brand p{
+      margin:12px 0 0;
+      font-size:14px;
+      line-height:1.7;
+      color:var(--muted);
+      max-width:320px;
+    }
+
+    .footer-col h4{
+      margin:0 0 12px;
+      font-size:14px;
+      font-weight:800;
+      color:#f0d281;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .footer-links{
+      display:grid;
+      gap:10px;
+    }
+
+    .footer-links a{
+      font-size:14px;
+      color:rgba(255,255,255,.82);
+    }
+
+    .footer-links a:hover{color:#fff}
+
+    .socials{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .social{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:#fff;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .social svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+      flex:0 0 auto;
+    }
+
+    .footer-bottom{
+      padding:16px 0 26px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px 24px;
+      flex-wrap:wrap;
+    }
+
+    .footer-legal{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px 18px;
+    }
+
+    .footer-legal a{
+      font-size:14px;
+      color:rgba(255,255,255,.82);
+      white-space:nowrap;
+    }
+
+    .footer-copy{
+      color:var(--muted-2);
+      font-size:13px;
+      line-height:1.6;
+      text-align:right;
+    }
+
+    .hide-desktop{display:none}
+
+    @media (max-width:1180px){
+      .hero h1{font-size:56px}
+      .hero-grid{grid-template-columns:minmax(0,1fr)}
+      .hero-visual{
+        min-height:320px;
+        border-left:0;
+        border-top:1px solid rgba(255,255,255,.05);
+      }
+      .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .spotlight-grid{grid-template-columns:1fr}
+      .alert-list{grid-template-columns:1fr}
+      .live-grid{grid-template-columns:1fr}
+      .subscribe{
+        grid-template-columns:1fr;
+      }
+      .footer-top{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width:860px){
+      .topbar-inner{
+        width:min(calc(100% - 20px), 100%);
+        min-height:74px;
+      }
+
+      .nav,
+      .topbar-actions .search-btn{
+        display:none;
+      }
+
+      .menu-btn{
+        display:grid;
+      }
+
+      .brand img{
+        width:42px;height:42px;
+      }
+
+      .brand-text strong{font-size:14px}
+      .brand-text span{font-size:10px}
+
+      .hero{
+        padding-top:18px;
+      }
+
+      .hero h1{
+        font-size:42px;
+        max-width:100%;
+      }
+
+      .hero p{
+        font-size:16px;
+      }
+
+      .hero-copy{
+        padding:26px 22px 22px;
+      }
+
+      .hero-visual{
+        min-height:260px;
+      }
+
+      .hero-quote{
+        right:14px;
+        top:14px;
+        padding:16px 14px 14px;
+        width:min(250px, calc(100% - 28px));
+      }
+
+      .hero-quote blockquote{
+        font-size:16px;
+      }
+
+      .two-col{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:680px){
       .wrap{
-        width:calc(100% - 24px);
-        max-width:var(--max);
+        width:min(calc(100% - 20px), var(--max));
+      }
+
+      .brand{
+        flex:1 1 auto;
+        min-width:0;
+      }
+
+      .brand-text{
+        overflow:hidden;
+      }
+
+      .brand-text strong,
+      .brand-text span{
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .topbar-inner{
+        gap:10px;
+      }
+
+      .topbar-actions{
+        gap:8px;
+      }
+
+      .login-btn{
+        height:40px;
+        padding:0 14px;
+        font-size:13px;
+      }
+
+      .hero-shell{
+        border-radius:22px;
+      }
+
+      .hero-grid{
+        min-height:unset;
+      }
+
+      .hero-copy{
+        padding:22px 18px 20px;
+      }
+
+      .hero h1{
+        font-size:34px;
+        line-height:1.04;
+      }
+
+      .hero p{
+        font-size:15px;
+        line-height:1.65;
+      }
+
+      .hero-chips{
+        margin-top:18px;
+        gap:10px 12px;
+      }
+
+      .hero-chips li{
+        font-size:13px;
+      }
+
+      .hero-visual{
+        min-height:220px;
+      }
+
+      .hero-art-desktop{display:none}
+      .hero-art-mobile{display:block}
+
+      .hero-quote{
+        right:12px;
+        left:12px;
+        width:auto;
+        top:auto;
+        bottom:12px;
+      }
+
+      .stats-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+      }
+
+      .stat-card{
+        padding:16px 14px;
+        gap:10px;
+      }
+
+      .stat-card .value{
+        font-size:17px;
+      }
+
+      .mini-bars,.mini-line{
+        width:58px;
+        height:36px;
+      }
+
+      .card{
+        padding:16px 14px 14px;
+      }
+
+      .card-head{
+        gap:10px;
+      }
+
+      .card h2,.card h3{
+        font-size:17px;
+      }
+
+      .spot-item h4,
+      .list-item strong,
+      .alert-item strong{
+        font-size:14px;
+      }
+
+      .hot-pills{
+        padding-right:0;
+      }
+
+      .hot-card::after{
+        opacity:.18;
+        width:120px;
+        height:92px;
+      }
+
+      .subscribe{
+        padding:18px 14px;
+      }
+
+      .subscribe-copy{
+        display:block;
+      }
+
+      .subscribe-copy .icon-box{
+        margin-bottom:12px;
+      }
+
+      .subscribe h3{
+        font-size:22px;
+      }
+
+      .form-row,
+      .subscribe-submit{
+        grid-template-columns:1fr;
+      }
+
+      .footer-top{
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+
+      .footer-brand .brand{
+        justify-content:center;
+      }
+
+      .footer-brand p{
         margin-left:auto;
         margin-right:auto;
       }
 
-      .topbar{height:64px}
+      .socials{
+        justify-content:center;
+      }
 
-      .nav{
-        display:grid;
-        grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);
+      .footer-links{
+        justify-items:center;
+      }
+
+      .footer-bottom{
+        flex-direction:column;
         align-items:center;
-        gap:8px;
-        width:100%;
       }
 
-      .brand{
-        justify-self:start;
-        min-width:0;
-      }
-
-      .brand img{width:40px;height:40px}
-      .brand strong{font-size:15px}
-      .brand small{font-size:7px}
-
-      .navlinks,.search{display:none}
-
-      .mobile-menu-btn{
-        display:grid;
-        place-items:center;
-        justify-self:center;
-        width:40px;
-        height:40px;
-        padding:0;
-        border:0;
-        border-radius:9px;
-        background:transparent;
-        color:var(--gold);
-        font-size:25px;
-        line-height:1;
-        cursor:pointer;
-      }
-
-      .nav-cta{
-        justify-self:end;
-        margin-left:0;
-        padding:9px 12px;
-        font-size:11px;
-      }
-
-      .mobile-menu{
-        position:fixed;
-        top:64px;
-        left:12px;
-        right:12px;
-        z-index:70;
-        padding:8px;
-        border-radius:12px;
-        background:rgba(8,23,37,.98);
-        border:1px solid rgba(242,207,124,.20);
-        box-shadow:0 18px 40px rgba(0,0,0,.38);
-        backdrop-filter:blur(14px);
-      }
-
-      .mobile-menu.open{display:grid}
-
-      .mobile-menu a{
-        display:flex;
+      .footer-legal{
+        flex-direction:row;
+        justify-content:center;
         align-items:center;
-        min-height:42px;
-        padding:10px 13px;
-        border-radius:8px;
-        color:#e7edf3;
-        text-decoration:none;
-        font-size:13px;
-      }
-
-      .mobile-menu a.active{
-        color:var(--gold);
-        background:rgba(242,207,124,.07);
-      }
-
-      .hero{min-height:auto}
-
-      .hero-art{
-        left:12px;
-        right:12px;
-        width:auto;
-        opacity:.38;
-      }
-
-      .hero-art img{
-        content:url("hero-sang-nay-can-nhin-gi-mobi.webp.png");
-        object-position:center;
-      }
-
-      .hero-art:after{
-        background:rgba(6,17,29,.58);
-      }
-
-      .hero-copy{
-        padding:34px 0 24px;
+        gap:8px 14px;
         text-align:center;
       }
 
-      .hero h1{font-size:38px}
-      .hero p{font-size:13px}
-      .trustline{justify-content:center}
-
-      .market-area{margin-top:0}
-
-      .market-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
+      .footer-copy{
+        text-align:center;
       }
 
-      .market-card{
-        min-width:0;
-        width:100%;
-        max-width:100%;
-        padding:11px;
-        gap:6px;
-      }
-
-      .market-main{
-        font-size:19px;
-        overflow-wrap:anywhere;
-      }
-
-      .score-bars{width:48px;flex:0 0 48px}
-      .spark{width:54px;flex:0 0 54px}
-      .breadth-bars{width:52px;flex:0 0 52px}
-
-      .panel{padding:16px}
-      .section-title{font-size:22px}
-      .attention-grid,.avoid-grid{grid-template-columns:1fr}
-      .live-row{align-items:flex-start}
-
-      .foot-links,.legal-links{justify-content:center}
-      .legal-links{flex-direction:column;align-items:center}
-      .copyright{flex-direction:column;align-items:center}
-    }
-
-    @media(max-width:420px){
-      .brand strong{font-size:13px}
-      .brand small{display:none}
-      .nav-cta{padding:8px 10px;font-size:10px}
-      .market-grid{grid-template-columns:1fr}
+      .hide-mobile{display:none}
+      .hide-desktop{display:inline-flex}
     }
   </style>
 </head>
-
 <body>
 
-<header class="topbar">
-  <div class="wrap nav">
-
-    <a class="brand" href="index.html">
-      <img src="LOGO.webp" alt="Võ Hoàng">
-      <span>
-        <strong>VÕ HOÀNG</strong>
-        <small>ĐẦU TƯ CHUẨN HỆ THỐNG</small>
-      </span>
-    </a>
-
-    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="mobileMenu">☰</button>
-
-    <nav class="navlinks">
-      <a href="thi-truong-hom-nay.html">Thị trường</a>
-      <a class="active" href="sang-nay-can-nhin-gi.html">Sáng nay</a>
-      <a href="sau-phien-cua-toi.html">Sau phiên</a>
-      <a href="watchlist.html">Watchlist</a>
-      <a href="index.html">Trang chủ</a>
-      <a href="#">Kiến thức</a>
-      <a href="investor-calculator.html">Công cụ</a>
-      <a href="index.html#ve-toi">Về tôi</a>
-    </nav>
-
-    <div class="search">⌕</div>
-    <a class="nav-cta" href="index.html">Đăng nhập</a>
-  </div>
-</header>
-
-<nav class="mobile-menu" id="mobileMenu">
-  <a href="thi-truong-hom-nay.html">Thị trường</a>
-  <a class="active" href="sang-nay-can-nhin-gi.html">Sáng nay</a>
-  <a href="sau-phien-cua-toi.html">Sau phiên</a>
-  <a href="watchlist.html">Watchlist</a>
-  <a href="index.html">Trang chủ</a>
-  <a href="#">Kiến thức</a>
-  <a href="investor-calculator.html">Công cụ</a>
-  <a href="index.html#ve-toi">Về tôi</a>
-  <a href="lien-he.html">Liên hệ</a>
-</nav>
-
-<section class="hero">
-  <picture class="hero-art" aria-hidden="true">
-    <source media="(max-width:680px)" srcset="hero-sang-nay-can-nhin-gi-mobi.webp.png">
-    <img
-      src="hero-sang-nay-can-nhin-gi-desktop.webp.png"
-      alt=""
-      width="1600"
-      height="900"
-      fetchpriority="high"
-      decoding="async"
-    >
-  </picture>
-
-  <div class="wrap hero-grid">
-
-    <div class="hero-copy">
-      <div class="eyebrow">BẢN ĐỒ ĐẦU TƯ</div>
-
-      <h1>Sáng nay <span>cần nhìn gì?</span></h1>
-
-      <p>
-        Cập nhật nhanh bức tranh thị trường, nhận diện những yếu tố quan trọng
-        có thể làm thay đổi quyết định đầu tư trong hôm nay.
-      </p>
-
-      <div class="trustline">
-        <span><i>◎</i>Nhìn đúng bối cảnh</span>
-        <span><i>◇</i>Tập trung điều quan trọng</span>
-        <span><i>↗</i>Có hành động cụ thể</span>
-      </div>
-    </div>
-
-    <aside class="hero-quote">
-      <blockquote>
-        “Buổi sáng không cần đoán đúng thị trường.
-        Chỉ cần biết điều gì đủ quan trọng để làm thay đổi quyết định.”
-      </blockquote>
-
-      <span class="signature">Võ Hoàng</span>
-
-      <div class="quote-tags">
-        Kiến thức<br>
-        Kỷ luật<br>
-        Hệ thống<br>
-        Tài sản tự do
-      </div>
-    </aside>
-
-  </div>
-</section>
-
-<section class="market-area">
-  <div class="wrap market-grid">
-
-    <article class="market-card">
-      <div>
-        <div class="market-label">Market Score</div>
-        <div class="market-main" id="marketScore">—</div>
-        <div class="market-sub" id="marketScoreNote">Đang đọc thị trường...</div>
-      </div>
-      <div class="score-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    </article>
-
-    <article class="market-card">
-      <div>
-        <div class="market-label">VN-Index</div>
-        <div class="market-main" id="vniValue">—</div>
-        <div class="market-sub" id="vniChange">Đang tải...</div>
-      </div>
-
-      <svg class="spark" viewBox="0 0 120 44" aria-hidden="true">
-        <polyline points="2,36 10,31 18,34 27,24 35,28 44,19 52,23 61,15 70,19 79,10 88,14 98,8 108,11 118,3"></polyline>
-      </svg>
-    </article>
-
-    <article class="market-card">
-      <div>
-        <div class="market-label">Độ rộng thị trường</div>
-        <div class="market-main" id="breadthValue">—</div>
-        <div class="market-sub">Số mã tăng / giảm</div>
-      </div>
-
-      <div class="breadth-bars" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-      </div>
-    </article>
-
-    <article class="market-card">
-      <div>
-        <div class="market-label">Nhóm dẫn dắt</div>
-        <div class="market-main" id="leadersValue" style="font-size:20px">Theo dõi</div>
-        <div class="market-sub">Dòng tiền tập trung, hút thanh khoản</div>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<main>
-  <div class="wrap">
-
-    <section class="panel attention">
-      <div class="section-head">
-        <div class="section-icon">◎</div>
-
-        <div>
-          <div class="section-kicker">Tại điểm đáng chú ý</div>
-          <h2 class="section-title">Những biến số có thể làm thay đổi quyết định hôm nay</h2>
-          <p class="section-desc">Ưu tiên điều có tác động thực sự đến bối cảnh, dòng tiền và hành động.</p>
-        </div>
-      </div>
-
-      <div class="attention-grid" id="attentionGrid">
-        <article class="attention-item">
-          <div class="item-num">01</div>
-          <h3>Đang cập nhật điểm đáng chú ý</h3>
-          <p>Hệ thống đang đọc bản tin buổi sáng.</p>
-        </article>
-
-        <article class="attention-item">
-          <div class="item-num">02</div>
-          <h3>Đang cập nhật bối cảnh</h3>
-          <p>Chỉ hiển thị các yếu tố có khả năng ảnh hưởng quyết định.</p>
-        </article>
-
-        <article class="attention-item">
-          <div class="item-num">03</div>
-          <h3>Đang cập nhật dòng tiền</h3>
-          <p>Ưu tiên diễn biến có ý nghĩa với thị trường và danh mục.</p>
-        </article>
-      </div>
-    </section>
-
-    <div class="two-col">
-
-      <section class="panel">
-        <div class="section-head">
-          <div class="section-icon">◉</div>
-          <div>
-            <div class="section-kicker">3 điều cần nhìn</div>
-            <h2 class="section-title">Chỉ tập trung vào tín hiệu có thể làm thay đổi quyết định</h2>
-          </div>
-        </div>
-
-        <div class="decision-list">
-          <div class="decision-item">
-            <div class="item-num">01</div>
-            <div>
-              <h3>VN-Index ở vùng quan trọng</h3>
-              <p>Quan sát phản ứng giá và thanh khoản thay vì chỉ nhìn điểm số.</p>
-            </div>
-          </div>
-
-          <div class="decision-item">
-            <div class="item-num">02</div>
-            <div>
-              <h3>Dòng tiền vào nhóm dẫn dắt</h3>
-              <p>Nhìn xem nhóm mạnh có tiếp tục giữ sức mạnh tương đối hay không.</p>
-            </div>
-          </div>
-
-          <div class="decision-item">
-            <div class="item-num">03</div>
-            <div>
-              <h3>Thông tin doanh nghiệp đáng chú ý</h3>
-              <p>Chỉ giữ những thông tin có khả năng ảnh hưởng đến kỳ vọng và dòng tiền.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-head">
-          <div class="section-icon">↔</div>
-          <div>
-            <div class="section-kicker">Điều kiện thay đổi quan điểm</div>
-            <h2 class="section-title">Không cố quan điểm bằng cảm tính</h2>
-          </div>
-        </div>
-
-        <div class="decision-list">
-          <div class="decision-item">
-            <div class="item-num">01</div>
-            <div>
-              <h3>VN-Index mất vùng hỗ trợ quan trọng</h3>
-              <p>Độ bền cấu trúc suy yếu và không có lực cầu hấp thụ.</p>
-            </div>
-          </div>
-
-          <div class="decision-item">
-            <div class="item-num">02</div>
-            <div>
-              <h3>Dòng tiền suy yếu rõ rệt</h3>
-              <p>Độ rộng thu hẹp, nhóm dẫn dắt hạ nhiệt và thanh khoản yếu.</p>
-            </div>
-          </div>
-
-          <div class="decision-item">
-            <div class="item-num">03</div>
-            <div>
-              <h3>Xuất hiện thông tin bất lợi lớn</h3>
-              <p>Ưu tiên điều chỉnh kịch bản thay vì bảo vệ dự đoán cũ.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-    <div class="two-col">
-
-      <section class="panel">
-        <div class="section-head">
-          <div class="section-icon">▥</div>
-          <div>
-            <div class="section-kicker">Cách Võ Hoàng nhìn</div>
-            <h2 class="section-title">Bối cảnh trước, hành động sau</h2>
-          </div>
-        </div>
-
-        <div class="view-copy" id="viewCopy">
-          Không cần cố đoán toàn bộ phiên. Trước tiên xác định trạng thái thị trường,
-          sức mạnh của nhóm dẫn dắt và điều kiện nào khiến kịch bản hiện tại không còn đúng.
-          Khi dữ liệu thay đổi, hành động thay đổi.
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-head">
-          <div class="section-icon">!</div>
-          <div>
-            <div class="section-kicker">Không nên làm sáng nay</div>
-            <h2 class="section-title">Tránh biến một buổi sáng thành quyết định cảm tính</h2>
-          </div>
-        </div>
-
-        <div class="avoid-grid">
-          <div class="avoid-card">
-            <b>01 · Mua đuổi</b>
-            <span>Không chạy theo giá chỉ vì sợ bỏ lỡ cơ hội.</span>
-          </div>
-
-          <div class="avoid-card">
-            <b>02 · Quá lớn tỷ trọng</b>
-            <span>Chưa rõ bối cảnh thì không cần đặt cược quá lớn.</span>
-          </div>
-
-          <div class="avoid-card">
-            <b>03 · Bỏ quản trị rủi ro</b>
-            <span>Luôn biết điều kiện nào khiến mình phải giảm vị thế.</span>
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-    <div class="live-grid">
-
-      <section class="panel">
-        <div class="section-head">
-          <div class="section-icon">↗</div>
-          <div>
-            <div class="section-kicker">Xu hướng phái sinh</div>
-            <h2 class="section-title">Dữ liệu hệ thống theo thời gian thực</h2>
-          </div>
-        </div>
-
-        <div class="live-table">
-          <div class="live-row"><span>Xu hướng</span><strong id="psTrend">—</strong></div>
-          <div class="live-row"><span>Giá hệ thống báo</span><strong id="psSystem">—</strong></div>
-          <div class="live-row"><span>Giá hiện tại</span><strong id="psCurrent">—</strong></div>
-          <div class="live-row"><span>Mục tiêu xu hướng</span><strong id="psTargets">—</strong></div>
-          <div class="live-row"><span>Đảo chiều xu hướng</span><strong id="psReversal">—</strong></div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-head">
-          <div class="section-icon">★</div>
-          <div>
-            <div class="section-kicker">Cổ phiếu đáng chú ý hôm nay</div>
-            <h2 class="section-title">Những mã đang có tín hiệu dòng tiền</h2>
-          </div>
-        </div>
-
-        <div class="hot-symbols" id="hotSymbols">
-          <span class="hot-chip">—</span>
-        </div>
-
-        <div class="hot-note">
-          ACE cần thêm thông tin chi tiết từng mã, inbox Ad để trao đổi thêm.
-        </div>
-      </section>
-
-    </div>
-
-    <section class="lead-wrap">
-      <div id="vh-lead-capture"></div>
-    </section>
-
-  </div>
-</main>
-
-<footer>
-  <div class="wrap">
-
-    <div class="foot">
-
-      <a class="brand" href="index.html">
-        <img src="LOGO.webp" alt="Võ Hoàng">
-        <span>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="./">
+        <img src="LOGO.webp" alt="Võ Hoàng logo">
+        <div class="brand-text">
           <strong>VÕ HOÀNG</strong>
-          <small>ĐẦU TƯ CHUẨN HỆ THỐNG</small>
-        </span>
+          <span>Đầu tư chuẩn hệ thống</span>
+        </div>
       </a>
 
-      <div class="foot-links">
+      <nav class="nav">
         <a href="thi-truong-hom-nay.html">Thị trường</a>
-        <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+        <a class="active" href="sang-nay-can-nhin-gi.html">Sáng nay</a>
         <a href="sau-phien-cua-toi.html">Sau phiên</a>
         <a href="watchlist.html">Watchlist</a>
-        <a href="index.html">Trang chủ</a>
-        <a href="#">Kiến thức</a>
+        <a href="./">Trang chủ</a>
+        <a href="kien-thuc.html">Kiến thức</a>
         <a href="investor-calculator.html">Công cụ</a>
-        <a href="index.html#ve-toi">Về tôi</a>
-        <a href="lien-he.html">Liên hệ</a>
+        <a href="ve-toi.html">Về tôi</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="search-btn" type="button" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M10.5 3a7.5 7.5 0 1 1 0 15a7.5 7.5 0 0 1 0-15Zm0 2a5.5 5.5 0 1 0 0 11a5.5 5.5 0 0 0 0-11Zm10.2 13.8l-3.2-3.2l-1.4 1.4l3.2 3.2a1 1 0 0 0 1.4-1.4Z"/>
+          </svg>
+        </button>
+
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Mở menu">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+        </button>
+
+        <a class="login-btn" href="dang-nhap.html">Đăng nhập</a>
+      </div>
+    </div>
+
+    <div class="mobile-drawer" id="mobileDrawer">
+      <div class="wrap">
+        <div class="mobile-links">
+          <a href="thi-truong-hom-nay.html">Thị trường</a>
+          <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+          <a href="sau-phien-cua-toi.html">Sau phiên</a>
+          <a href="watchlist.html">Watchlist</a>
+          <a href="./">Trang chủ</a>
+          <a href="kien-thuc.html">Kiến thức</a>
+          <a href="investor-calculator.html">Công cụ</a>
+          <a href="ve-toi.html">Về tôi</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="wrap">
+
+      <section class="hero-shell">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Bản đồ đầu tư</div>
+            <h1>Sáng nay cần nhìn gì?</h1>
+            <p>
+              Cập nhật nhanh bức tranh thị trường, nhận diện những yếu tố quan trọng
+              có thể làm thay đổi quyết định đầu tư của bạn trong hôm nay.
+            </p>
+
+            <ul class="hero-chips">
+              <li>Nhìn đúng bối cảnh</li>
+              <li>Tập trung điều quan trọng</li>
+              <li>Có hành động cụ thể</li>
+            </ul>
+          </div>
+
+          <div class="hero-visual">
+            <img
+              class="hero-art hero-art-desktop"
+              src="hero-sang-nay-can-nhin-gi-desktop.webp"
+              alt="Bối cảnh thị trường sáng nay"
+              onerror="this.onerror=null;this.src='hero-sang-nay-can-nhin-gi-desktop.webp';"
+            >
+            <img
+              class="hero-art hero-art-mobile"
+              src="hero-sang-nay-can-nhin-gi-mobi.webp"
+              alt="Bối cảnh thị trường sáng nay trên điện thoại"
+              onerror="this.onerror=null;this.src='hero-sang-nay-can-nhin-gi-mobi.webp';"
+            >
+
+            <aside class="hero-quote">
+              <blockquote>
+                “Buổi sáng không cần đoán đúng thị trường.
+                Chỉ cần biết điều gì đủ quan trọng để làm thay đổi quyết định.”
+              </blockquote>
+              <span class="signature">– Võ Hoàng</span>
+              <div class="quote-tags">Kiến thức · Kỷ luật · Hệ thống · Tài sản tự do</div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div>
+              <span class="label">Market Score</span>
+              <div class="value"><span id="marketState">—</span> <small id="marketScore">—</small></div>
+              <div class="sub">Tâm lý và bối cảnh thị trường hiện tại.</div>
+            </div>
+
+            <svg class="mini-bars" viewBox="0 0 84 44" aria-hidden="true">
+              <defs>
+                <linearGradient id="barsGold" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#f4d784"/>
+                  <stop offset="100%" stop-color="#b78a2d"/>
+                </linearGradient>
+              </defs>
+              <rect x="5"  y="28" width="8" height="11" rx="2" fill="url(#barsGold)"/>
+              <rect x="18" y="22" width="8" height="17" rx="2" fill="url(#barsGold)"/>
+              <rect x="31" y="17" width="8" height="22" rx="2" fill="url(#barsGold)"/>
+              <rect x="44" y="12" width="8" height="27" rx="2" fill="url(#barsGold)"/>
+              <rect x="57" y="7"  width="8" height="32" rx="2" fill="url(#barsGold)"/>
+              <rect x="70" y="3"  width="8" height="36" rx="2" fill="url(#barsGold)"/>
+            </svg>
+          </article>
+
+          <article class="stat-card">
+            <div>
+              <span class="label">VN-Index</span>
+              <div class="value" id="vnValue">—</div>
+              <div class="sub" id="vnChange">—</div>
+            </div>
+
+            <svg class="mini-line" viewBox="0 0 84 44" aria-hidden="true">
+              <polyline
+                points="2,30 12,26 20,28 28,21 36,24 45,18 55,20 65,13 74,16 82,9"
+                fill="none"
+                stroke="#35e08b"
+                stroke-width="2.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </article>
+
+          <article class="stat-card">
+            <div>
+              <span class="label">Độ rộng</span>
+              <div class="value" id="breadthLabel">—</div>
+              <div class="sub" id="breadthSub">Số mã tăng / giảm</div>
+            </div>
+
+            <svg class="mini-bars" viewBox="0 0 84 44" aria-hidden="true">
+              <rect x="7"  y="22" width="8" height="17" rx="2" fill="#ff5a66"/>
+              <rect x="20" y="12" width="8" height="27" rx="2" fill="#ff5a66"/>
+              <rect x="33" y="4"  width="8" height="35" rx="2" fill="#ff7a65"/>
+              <rect x="46" y="16" width="8" height="23" rx="2" fill="#34e48e"/>
+              <rect x="59" y="21" width="8" height="18" rx="2" fill="#36d88a"/>
+              <rect x="72" y="25" width="8" height="14" rx="2" fill="#41c879"/>
+            </svg>
+          </article>
+
+          <article class="stat-card">
+            <div>
+              <span class="label">Nhóm dẫn dắt</span>
+              <div class="value" id="leaderName">—</div>
+              <div class="sub" id="leaderSub">Dòng tiền dẫn dắt của hôm nay.</div>
+            </div>
+
+            <svg class="mini-bars" viewBox="0 0 84 44" aria-hidden="true">
+              <defs>
+                <linearGradient id="barsGold2" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#f4d784"/>
+                  <stop offset="100%" stop-color="#b78a2d"/>
+                </linearGradient>
+              </defs>
+              <rect x="8"  y="28" width="8" height="11" rx="2" fill="url(#barsGold2)"/>
+              <rect x="22" y="21" width="8" height="18" rx="2" fill="url(#barsGold2)"/>
+              <rect x="36" y="16" width="8" height="23" rx="2" fill="url(#barsGold2)"/>
+              <rect x="50" y="10" width="8" height="29" rx="2" fill="url(#barsGold2)"/>
+              <rect x="64" y="4"  width="8" height="35" rx="2" fill="url(#barsGold2)"/>
+            </svg>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <article class="card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0-18Zm0 2a7 7 0 1 1 0 14a7 7 0 0 1 0-14Zm2.9 2.8l1.4 1.4l-4.2 4.2l-2.1-2.1l-1.4 1.4l3.5 3.5z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Tại điểm đáng chú ý</div>
+                <h2>Những biến số có thể làm thay đổi quyết định hôm nay</h2>
+                <p class="lead">Ưu tiên điều đủ tác động đến bối cảnh, dòng tiền và hành động.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="spotlight-grid">
+            <div class="spot-item">
+              <div class="spot-index">01</div>
+              <h4>FPT phát hành 71 triệu cổ phiếu thưởng</h4>
+              <p>Thông tin tích cực, củng cố nền tảng tăng trưởng dài hạn và giữ sức hút của nhóm công nghệ.</p>
+            </div>
+            <div class="spot-item">
+              <div class="spot-index">02</div>
+              <h4>Thanh khoản thị trường cải thiện</h4>
+              <p>Dòng tiền lan tỏa tốt hơn, đặc biệt ở nhóm ngân hàng, chứng khoán và một số mã có nền tích lũy đẹp.</p>
+            </div>
+            <div class="spot-item">
+              <div class="spot-index">03</div>
+              <h4>Diễn biến quốc tế tiếp tục hỗ trợ</h4>
+              <p>Bối cảnh bên ngoài chưa gây áp lực lớn, giúp tâm lý trong nước ổn định hơn trước giờ mở cửa.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section two-col">
+        <article class="card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="M12 5c5.5 0 9.7 4.2 10.8 6.1c.3.5.3 1.2 0 1.7C21.7 14.8 17.5 19 12 19S2.3 14.8 1.2 12.8a1.7 1.7 0 0 1 0-1.7C2.3 9.2 6.5 5 12 5Zm0 2C7.7 7 4.3 10.1 3.2 12c1.1 1.9 4.5 5 8.8 5s7.7-3.1 8.8-5c-1.1-1.9-4.5-5-8.8-5Zm0 2.3a2.7 2.7 0 1 1 0 5.4a2.7 2.7 0 0 1 0-5.4Z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">3 điều cần nhìn</div>
+                <h3>Chỉ tập trung vào tín hiệu có thể làm thay đổi quyết định</h3>
+              </div>
+            </div>
+            <a class="card-action" href="thi-truong-hom-nay.html">Xem chi tiết →</a>
+          </div>
+
+          <div class="list-box" id="watchBox">
+            <div class="list-item">
+              <div class="index-chip">01</div>
+              <div>
+                <strong>Diễn biến VN-Index tại vùng hỗ trợ / kháng cự quan trọng</strong>
+                <span>Quan sát phản ứng giá, biên độ và thanh khoản để biết lực đỡ có thực sự bền hay không.</span>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="index-chip">02</div>
+              <div>
+                <strong>Dòng tiền vào nhóm dẫn dắt</strong>
+                <span>Ngân hàng, chứng khoán, công nghệ có duy trì được sức mạnh hay chỉ là kéo điểm số ngắn hạn.</span>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="index-chip">03</div>
+              <div>
+                <strong>Thông tin doanh nghiệp đáng chú ý</strong>
+                <span>Tin doanh nghiệp, kế hoạch kinh doanh, chia thưởng và các yếu tố có thể hút dòng tiền sớm.</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="M8 5h11v2H8zm0 6h11v2H8zm0 6h11v2H8zM3 6.5l1.4-1.4L6 6.7l3.6-3.6L11 4.5L6 9.5z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Điều kiện thay đổi quan điểm</div>
+                <h3>Không giữ quan điểm bằng cảm tính</h3>
+              </div>
+            </div>
+            <a class="card-action" href="thi-truong-hom-nay.html">Xem chi tiết →</a>
+          </div>
+
+          <div class="list-box" id="changeBox">
+            <div class="list-item">
+              <div class="index-chip">01</div>
+              <div>
+                <strong>VN-Index mất vùng đỡ quan trọng</strong>
+                <span>Đặc biệt nếu đi kèm thanh khoản tăng mạnh và nhóm trụ suy yếu rõ rệt.</span>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="index-chip">02</div>
+              <div>
+                <strong>Dòng tiền suy yếu rõ nét</strong>
+                <span>Độ rộng xấu đi nhanh, nhóm dẫn dắt hạ nhiệt và mức lan tỏa bị thu hẹp.</span>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="index-chip">03</div>
+              <div>
+                <strong>Xuất hiện thông tin bất lợi lớn</strong>
+                <span>Từ lãi suất, tỷ giá, sự kiện quốc tế đến rủi ro riêng của nhóm ngành đang cầm tiền.</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section two-col">
+        <article class="card view-card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="M4 18h2V8H4zm7 0h2V4h-2zm7 0h2v-7h-2z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Cách Võ Hoàng nhìn</div>
+                <h3 id="viewHeadline">Ưu tiên bối cảnh trước, hành động sau</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="view-text" id="viewText">
+            Thị trường đang ở giai đoạn cần quan sát sự đồng thuận giữa điểm số, dòng tiền và độ rộng.
+            Nếu có sự cải thiện đồng bộ, ưu tiên theo dõi các cổ phiếu có nền chặt và thanh khoản vào rõ.
+            Nếu chưa đồng thuận, giữ nhịp bình tĩnh và không cần vội.
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2l10 18H2L12 2Zm0 5.2L5.4 18h13.2L12 7.2ZM11 10h2v4h-2zm0 5h2v2h-2z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Không nên làm sáng nay</div>
+                <h3>Tránh biến một buổi sáng thành quyết định cảm tính</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-list" id="avoidBox">
+            <div class="alert-item">
+              <div class="alert-no">01</div>
+              <strong>Mua đuổi ở vùng giá cao</strong>
+              <p>Tránh FOMO khi thị trường đang hưng phấn nhưng chưa xác nhận xu hướng rõ.</p>
+            </div>
+            <div class="alert-item">
+              <div class="alert-no">02</div>
+              <strong>Giao dịch quá lớn tỷ trọng</strong>
+              <p>Chưa có xác nhận rõ mà vào lệnh quá mạnh sẽ khiến áp lực xử lý tăng lên.</p>
+            </div>
+            <div class="alert-item">
+              <div class="alert-no">03</div>
+              <strong>Bỏ quên quản trị rủi ro</strong>
+              <p>Luôn biết điểm quan sát, điều kiện sai và cách xử lý trước khi bấm lệnh.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section live-grid">
+        <article class="card live-card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="M4 17h16v2H4zM6 15l3.5-4l3 2l4.5-6L19 8.4V15z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Xu hướng phái sinh</div>
+                <h3>Dữ liệu hệ thống theo thời gian thực</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="live-status" id="vh-ps-status">Dữ liệu cuối cùng</div>
+
+          <div class="ps-table">
+            <div class="ps-row">
+              <div class="ps-label">Xu hướng</div>
+              <div class="ps-value" id="vh-ps-trend">—</div>
+            </div>
+            <div class="ps-row">
+              <div class="ps-label">Giá hệ thống báo</div>
+              <div class="ps-value" id="vh-ps-entry">—</div>
+            </div>
+            <div class="ps-row">
+              <div class="ps-label">Giá hiện tại</div>
+              <div class="ps-value" id="vh-ps-current">—</div>
+            </div>
+            <div class="ps-row">
+              <div class="ps-label">Mục tiêu xu hướng</div>
+              <div class="ps-value" id="vh-ps-targets">—</div>
+            </div>
+            <div class="ps-row">
+              <div class="ps-label">Đảo chiều xu hướng</div>
+              <div class="ps-value" id="vh-ps-reversal">—</div>
+            </div>
+          </div>
+
+          <div class="ps-note">
+            Chỉ dùng như dữ liệu hỗ trợ quan sát. Không thay thế cho kỷ luật quản trị rủi ro.
+          </div>
+        </article>
+
+        <article class="card live-card hot-card">
+          <div class="card-head">
+            <div class="title-side">
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path d="m12 2 2.3 5.3L20 8l-4.3 3.7L17 18l-5-3l-5 3l1.3-6.3L4 8l5.7-.7z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="overline">Cổ phiếu đáng chú ý hôm nay</div>
+                <h3>Những mã đang có tín hiệu dòng tiền</h3>
+              </div>
+            </div>
+            <a class="card-action" href="watchlist.html">Xem thêm →</a>
+          </div>
+
+          <div class="live-status" id="vh-hot-status">Dữ liệu cuối cùng</div>
+
+          <div class="hot-pills" id="vh-hot-symbols">
+            <span class="stock-pill">FPT</span>
+            <span class="stock-pill">HPG</span>
+            <span class="stock-pill">SSI</span>
+            <span class="stock-pill">VCB</span>
+            <span class="stock-pill">PVD</span>
+          </div>
+
+          <div class="ps-note">
+            ACE cần thêm thông tin chi tiết từng mã, inbox Ad để trao đổi thêm.
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <article class="card subscribe">
+          <div class="subscribe-copy">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+                <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5zm2 .5v.2l7 5.2l7-5.2V7h-14Zm14 2.7l-6.4 4.8a1 1 0 0 1-1.2 0L5 9.7v8.3h14z"/>
+              </svg>
+            </div>
+
+            <div>
+              <div class="overline">Nhận bản đồ thị trường</div>
+              <h3>Muốn nhận bản tin và góc nhìn khi có thay đổi?</h3>
+              <p>
+                Cập nhật bản đồ thị trường và góc nhìn đầu tư mới nhất từ Võ Hoàng,
+                để không bỏ lỡ cơ hội quan trọng.
+              </p>
+
+              <ul class="subscribe-points">
+                <li>Có bối cảnh</li>
+                <li>Đúng điều quan trọng</li>
+                <li>Có hành động cụ thể</li>
+              </ul>
+            </div>
+          </div>
+
+          <form class="subscribe-form">
+            <div class="form-row">
+              <input type="text" placeholder="Họ và tên">
+              <input type="text" placeholder="Số điện thoại / Zalo">
+            </div>
+
+            <div class="subscribe-submit">
+              <input type="email" placeholder="Nhập email của bạn">
+              <button class="btn-gold" type="button">Nhận ngay →</button>
+            </div>
+
+            <small>Chỉ gửi những thông tin thực sự quan trọng. Không spam.</small>
+          </form>
+        </article>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="./">
+            <img src="LOGO.webp" alt="Võ Hoàng logo">
+            <div class="brand-text">
+              <strong>VÕ HOÀNG</strong>
+              <span>Đầu tư chuẩn hệ thống</span>
+            </div>
+          </a>
+          <p>Kiến thức tạo nền tảng. Hệ thống tạo khác biệt. Tài sản tạo tự do.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Đi nhanh</h4>
+          <div class="footer-links">
+            <a href="thi-truong-hom-nay.html">Thị trường</a>
+            <a href="sang-nay-can-nhin-gi.html">Sáng nay</a>
+            <a href="sau-phien-cua-toi.html">Sau phiên</a>
+            <a href="watchlist.html">Watchlist</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hệ sinh thái</h4>
+          <div class="footer-links">
+            <a href="./">Trang chủ</a>
+            <a href="kien-thuc.html">Kiến thức</a>
+            <a href="investor-calculator.html">Công cụ</a>
+            <a href="ve-toi.html">Về tôi</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Kết nối với Võ Hoàng</h4>
+          <div class="socials">
+            <a class="social" href="#" aria-label="YouTube">
+              <svg viewBox="0 0 24 24"><path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/></svg>
+              YouTube
+            </a>
+            <a class="social" href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/></svg>
+              Facebook
+            </a>
+            <a class="social" href="./" aria-label="Website">
+              <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/></svg>
+              Website
+            </a>
+            <a class="social" href="#" aria-label="Ôn Thi Plus">
+              <svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/></svg>
+              Ôn Thi Plus
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div class="social">
-        <a href="https://www.youtube.com/@vohoanginvest" target="_blank" rel="noopener">▶</a>
-        <a href="https://www.facebook.com/vohoanginvest" target="_blank" rel="noopener">f</a>
-        <a href="index.html">◎</a>
+      <div class="footer-bottom">
+        <div class="footer-legal">
+          <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
+          <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+          <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+          <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
+          <a href="lien-he.html">Liên hệ</a>
+        </div>
+
+        <div class="footer-copy">
+          © 2026 VÕ HOÀNG. All rights reserved.<br>
+          Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+        </div>
       </div>
-
-      <a class="eco" href="https://onthiplus.com" target="_blank" rel="noopener">Ôn Thi Plus →</a>
     </div>
+  </footer>
 
-    <div class="legal-links">
-      <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
-      <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
-      <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
-      <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
-      <a href="lien-he.html">Liên hệ</a>
-    </div>
+  <script>
+    (function(){
+      const menuBtn = document.getElementById("menuBtn");
+      const mobileDrawer = document.getElementById("mobileDrawer");
 
-    <div class="copyright">
-      <span>© 2026 VÕ HOÀNG. All rights reserved.</span>
-      <span>Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.</span>
-    </div>
-
-  </div>
-</footer>
-
-<script>
-(() => {
-  "use strict";
-
-  const MARKET_URL =
-    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
-
-  const PS_URL =
-    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
-
-  const HOT_URL =
-    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
-
-  const BRIEF_URL =
-    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public";
-
-  const nf2 = new Intl.NumberFormat(
-    "vi-VN",
-    {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    }
-  );
-
-  const num = v => {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  };
-
-  const fmt = v => {
-    const n = num(v);
-    return n === null ? "—" : nf2.format(n);
-  };
-
-  const first = (obj,keys) => {
-    for(const key of keys){
-      const value =
-        key
-          .split(".")
-          .reduce(
-            (a,p) => a?.[p],
-            obj
-          );
-
-      if(
-        value !== undefined &&
-        value !== null &&
-        value !== ""
-      ){
-        return value;
+      if(menuBtn && mobileDrawer){
+        menuBtn.addEventListener("click", function(){
+          mobileDrawer.classList.toggle("open");
+        });
       }
-    }
+    })();
+  </script>
 
-    return null;
-  };
+  <script>
+    (() => {
+      "use strict";
 
-  async function loadMarket(){
-    try{
-      const r =
-        await fetch(
-          MARKET_URL,
-          {
-            cache:"no-store"
-          }
-        );
+      const HOT_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
+      const PS_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
 
-      if(!r.ok){
-        throw new Error("market");
+      const nf = new Intl.NumberFormat("vi-VN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      function num(v){
+        const n = Number(v);
+        return Number.isFinite(n) ? nf.format(n) : "—";
       }
 
-      const d =
-        await r.json();
+      async function loadDerivatives(){
+        try{
+          const r = await fetch(PS_URL, { cache:"no-store" });
+          if(!r.ok) throw new Error("HTTP " + r.status);
 
-      const indexes =
-        Array.isArray(d?.indexes)
-          ? d.indexes
-          : [];
+          const d = await r.json();
+          if(!d || !d.trend) return;
 
-      const vni =
-        indexes.find(
-          x =>
-            String(
-              x?.symbol || ""
-            ).toUpperCase()
-            === "VN-INDEX"
-        )
-        ||
-        indexes[0]
-        ||
-        {};
+          const trend = String(d.trend).trim();
+          const trendEl = document.getElementById("vh-ps-trend");
 
-      const value =
-        num(
-          first(
-            vni,
-            [
-              "value",
-              "close",
-              "last",
-              "price",
-              "current"
-            ]
-          )
-        );
-
-      const pct =
-        num(
-          first(
-            vni,
-            [
-              "change_pct",
-              "change_percent",
-              "percent_change",
-              "pct_change"
-            ]
-          )
-        );
-
-      document
-        .getElementById("vniValue")
-        .textContent =
-          value === null
-            ? "—"
-            : nf2.format(value);
-
-      const vniChange =
-        document
-          .getElementById("vniChange");
-
-      if(pct !== null){
-        vniChange.textContent =
-          `${pct>0?"+":""}${nf2.format(pct)}%`;
-
-        vniChange.className =
-          "market-sub "
-          +
-          (
-            pct>0
+          trendEl.textContent = trend;
+          trendEl.className =
+            "ps-value " +
+            (trend.toLowerCase() === "tăng"
               ? "up"
-              : pct<0
-                ? "down"
-                : ""
-          );
+              : trend.toLowerCase() === "giảm"
+              ? "down"
+              : "");
+
+          document.getElementById("vh-ps-entry").textContent = num(d.system_price);
+          document.getElementById("vh-ps-current").textContent = num(d.last_price);
+          document.getElementById("vh-ps-targets").textContent =
+            `T1 ${num(d.targets?.t1)} · T2 ${num(d.targets?.t2)} · T3 ${num(d.targets?.t3)}`;
+          document.getElementById("vh-ps-reversal").textContent = num(d.reversal_price);
+          document.getElementById("vh-ps-status").textContent =
+            d.fresh === true ? "Realtime" : "Dữ liệu cuối cùng";
+        }catch(_){}
       }
 
-      const intel =
-        d?.market_intelligence
-        ||
-        {};
+      async function loadHotStocks(){
+        try{
+          const r = await fetch(HOT_URL, { cache:"no-store" });
+          if(!r.ok) throw new Error("HTTP " + r.status);
 
-      const breadth =
-        intel?.breadth
-        ||
-        {};
+          const d = await r.json();
+          const symbols = Array.isArray(d?.symbols) ? d.symbols.filter(Boolean) : [];
+          if(!symbols.length) return;
 
-      const adv =
-        num(
-          first(
-            breadth,
-            [
-              "adv",
-              "advance",
-              "up"
-            ]
-          )
-        );
-
-      const dec =
-        num(
-          first(
-            breadth,
-            [
-              "dec",
-              "decline",
-              "down"
-            ]
-          )
-        );
-
-      if(
-        adv !== null
-        ||
-        dec !== null
-      ){
-        document
-          .getElementById("breadthValue")
-          .innerHTML =
-            `<span class="up">${adv??"—"} Tăng</span>
-             <span style="color:#627381">|</span>
-             <span class="down">${dec??"—"} Giảm</span>`;
-      }
-
-      const leaders =
-        first(
-          intel,
-          [
-            "leaders.label",
-            "leaders.text",
-            "leading.label",
-            "leading.text",
-            "leaders"
-          ]
-        );
-
-      if(
-        typeof leaders === "string"
-        &&
-        leaders.trim()
-      ){
-        document
-          .getElementById("leadersValue")
-          .textContent =
-            leaders;
-      }
-
-      let score = 70;
-
-      if(pct !== null){
-        score +=
-          Math.max(
-            -15,
-            Math.min(
-              15,
-              pct * 10
-            )
-          );
-      }
-
-      if(
-        adv !== null
-        &&
-        dec !== null
-        &&
-        adv + dec > 0
-      ){
-        score +=
-          (
-            (adv-dec)
-            /
-            (adv+dec)
-          )
-          * 15;
-      }
-
-      score =
-        Math.max(
-          0,
-          Math.min(
-            100,
-            Math.round(score)
-          )
-        );
-
-      document
-        .getElementById("marketScore")
-        .textContent =
-          `${score}/100`;
-
-      document
-        .getElementById("marketScoreNote")
-        .textContent =
-          score >= 75
-            ? "Tâm lý thị trường tích cực"
-            : score >= 55
-              ? "Thị trường trung tính"
-              : "Rủi ro thị trường đang cao";
-
-    }catch(_){
-      document
-        .getElementById("marketScoreNote")
-        .textContent =
-          "Chưa lấy được dữ liệu thị trường.";
-    }
-  }
-
-  async function loadDerivatives(){
-    try{
-      const r =
-        await fetch(
-          PS_URL,
-          {
-            cache:"no-store"
-          }
-        );
-
-      if(!r.ok){
-        throw new Error("ps");
-      }
-
-      const d =
-        await r.json();
-
-      if(
-        !d
-        ||
-        d.fresh !== true
-        ||
-        !d.trend
-      ){
-        return;
-      }
-
-      const trend =
-        String(d.trend);
-
-      const trendEl =
-        document
-          .getElementById("psTrend");
-
-      trendEl.textContent =
-        trend;
-
-      trendEl.style.color =
-        trend.toLowerCase()==="tăng"
-          ? "var(--green)"
-          : trend.toLowerCase()==="giảm"
-            ? "var(--red)"
-            : "var(--gold)";
-
-      document
-        .getElementById("psSystem")
-        .textContent =
-          fmt(d.system_price);
-
-      document
-        .getElementById("psCurrent")
-        .textContent =
-          fmt(d.last_price);
-
-      document
-        .getElementById("psTargets")
-        .textContent =
-          `T1 ${fmt(d.targets?.t1)} · T2 ${fmt(d.targets?.t2)} · T3 ${fmt(d.targets?.t3)}`;
-
-      document
-        .getElementById("psReversal")
-        .textContent =
-          fmt(d.reversal_price);
-
-    }catch(_){}
-  }
-
-  async function loadHotStocks(){
-    try{
-      const r =
-        await fetch(
-          HOT_URL,
-          {
-            cache:"no-store"
-          }
-        );
-
-      if(!r.ok){
-        throw new Error("hot");
-      }
-
-      const d =
-        await r.json();
-
-      const symbols =
-        Array.isArray(d?.symbols)
-          ? d.symbols.filter(Boolean)
-          : Array.isArray(d?.stocks)
-            ? d.stocks
-                .map(x=>x?.symbol)
-                .filter(Boolean)
-            : [];
-
-      if(
-        !d
-        ||
-        d.fresh !== true
-        ||
-        symbols.length === 0
-      ){
-        return;
-      }
-
-      document
-        .getElementById("hotSymbols")
-        .innerHTML =
-          symbols
-            .slice(0,10)
-            .map(
-              s =>
-                `<span class="hot-chip">${escapeHtml(String(s).toUpperCase())}</span>`
-            )
+          const root = document.getElementById("vh-hot-symbols");
+          root.innerHTML = symbols
+            .slice(0, 8)
+            .map(s => `<span class="stock-pill">${String(s).trim()}</span>`)
             .join("");
 
-    }catch(_){}
-  }
-
-  function collectStrings(
-    value,
-    bucket=[]
-  ){
-    if(bucket.length > 80){
-      return bucket;
-    }
-
-    if(typeof value === "string"){
-      const s =
-        value.trim();
-
-      if(
-        s.length >= 18
-        &&
-        s.length <= 260
-      ){
-        bucket.push(s);
+          document.getElementById("vh-hot-status").textContent =
+            d.fresh === true ? "Realtime" : "Dữ liệu cuối cùng";
+        }catch(_){}
       }
 
-      return bucket;
-    }
+      loadDerivatives();
+      loadHotStocks();
+      setInterval(loadDerivatives, 3000);
+      setInterval(loadHotStocks, 60000);
+    })();
+  </script>
 
-    if(Array.isArray(value)){
-      value.forEach(
-        v =>
-          collectStrings(
-            v,
-            bucket
-          )
-      );
-
-      return bucket;
-    }
-
-    if(
-      value
-      &&
-      typeof value === "object"
-    ){
-      Object
-        .values(value)
-        .forEach(
-          v =>
-            collectStrings(
-              v,
-              bucket
-            )
-        );
-    }
-
-    return bucket;
-  }
-
-  function uniqueText(arr){
-    const seen =
-      new Set();
-
-    return arr.filter(
-      s => {
-        const k =
-          s
-            .toLowerCase()
-            .replace(
-              /\s+/g,
-              " "
-            )
-            .trim();
-
-        if(seen.has(k)){
-          return false;
-        }
-
-        seen.add(k);
-
-        return true;
-      }
-    );
-  }
-
-  async function loadBrief(){
-    try{
-      const r =
-        await fetch(
-          BRIEF_URL,
-          {
-            cache:"no-store"
-          }
-        );
-
-      if(!r.ok){
-        throw new Error("brief");
-      }
-
-      const d =
-        await r.json();
-
-      const strings =
-        uniqueText(
-          collectStrings(
-            d,
-            []
-          )
-        );
-
-      if(!strings.length){
-        return;
-      }
-
-      const candidates =
-        strings.filter(
-          s =>
-            !/https?:\/\//i.test(s)
-            &&
-            !/^\d{4}-\d{2}-\d{2}/.test(s)
-        );
-
-      const top =
-        candidates.slice(0,3);
-
-      if(top.length){
-        document
-          .getElementById("attentionGrid")
-          .innerHTML =
-            top
-              .map(
-                (s,i) => `
-                  <article class="attention-item">
-                    <div class="item-num">${String(i+1).padStart(2,"0")}</div>
-                    <h3>${escapeHtml(s.length>90?s.slice(0,90)+"…":s)}</h3>
-                    <p>${escapeHtml(s.length>90?s:"Theo dõi tác động thực tế đến dòng tiền và quyết định.")}</p>
-                  </article>
-                `
-              )
-              .join("");
-      }
-
-      const view =
-        candidates.find(
-          s =>
-            s.length > 90
-        )
-        ||
-        candidates[3];
-
-      if(view){
-        document
-          .getElementById("viewCopy")
-          .textContent =
-            view;
-      }
-
-    }catch(_){}
-  }
-
-  function escapeHtml(s){
-    return String(s)
-      .replace(
-        /[&<>"']/g,
-        m => (
-          {
-            "&":"&amp;",
-            "<":"&lt;",
-            ">":"&gt;",
-            '"':"&quot;",
-            "'":"&#039;"
-          }[m]
-        )
-      );
-  }
-
-  const menuBtn =
-    document
-      .getElementById(
-        "mobileMenuBtn"
-      );
-
-  const mobileMenu =
-    document
-      .getElementById(
-        "mobileMenu"
-      );
-
-  const closeMenu = () => {
-    mobileMenu
-      .classList
-      .remove("open");
-
-    menuBtn
-      .setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-    menuBtn.textContent =
-      "☰";
-  };
-
-  menuBtn.addEventListener(
-    "click",
-    e => {
-      e.stopPropagation();
-
-      const opened =
-        mobileMenu
-          .classList
-          .toggle("open");
-
-      menuBtn
-        .setAttribute(
-          "aria-expanded",
-          opened
-            ? "true"
-            : "false"
-        );
-
-      menuBtn.textContent =
-        opened
-          ? "×"
-          : "☰";
-    }
-  );
-
-  mobileMenu
-    .querySelectorAll("a")
-    .forEach(
-      a =>
-        a.addEventListener(
-          "click",
-          closeMenu
-        )
-    );
-
-  document.addEventListener(
-    "click",
-    e => {
-      if(
-        mobileMenu.classList.contains("open")
-        &&
-        !mobileMenu.contains(e.target)
-        &&
-        !menuBtn.contains(e.target)
-      ){
-        closeMenu();
-      }
-    }
-  );
-
-  document.addEventListener(
-    "keydown",
-    e => {
-      if(e.key === "Escape"){
-        closeMenu();
-      }
-    }
-  );
-
-  loadMarket();
-  loadDerivatives();
-  loadHotStocks();
-  loadBrief();
-
-  setInterval(loadMarket,15000);
-  setInterval(loadDerivatives,3000);
-  setInterval(loadHotStocks,60000);
-  setInterval(loadBrief,300000);
-})();
-</script>
-
-<script src="assets/js/lead-capture-v1.js" defer></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="assets/js/morning-brief.js"></script>
 </body>
 </html>
