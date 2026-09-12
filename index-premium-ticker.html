@@ -11,37 +11,34 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-  <link rel="preload" as="image" href="AVATAR2-mobile.webp" media="(max-width:680px)" fetchpriority="high">
-  <link rel="preload" as="image" href="AVATAR2.webp" media="(min-width:681px)" fetchpriority="high">
+  <link rel="preload" as="image" href="home-hero-steps.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="AVATAR2.webp" media="(min-width:681px)">
 
   <style>
     :root{
       --bg:#04111f;
-      --bg-2:#07192b;
-      --panel:#091c31;
-      --panel-2:#0b223a;
-      --panel-3:#0b1d30;
-
-      --line:rgba(212,176,92,.20);
-      --line-soft:rgba(255,255,255,.08);
-
+      --bg2:#061827;
+      --ink:#07121d;
+      --navy:#061522;
+      --navy2:#091b2b;
+      --panel:#0a1b2b;
+      --panel2:#0d2236;
+      --cream:#f5f1ea;
+      --cream2:#eee7dc;
+      --cream-text:#101820;
+      --line:rgba(224,187,99,.22);
+      --line2:rgba(255,255,255,.08);
       --gold:#e0bb63;
-      --gold-2:#f3cf74;
-
+      --gold2:#f1cc72;
       --text:#f5f7fb;
-      --muted:rgba(231,237,246,.76);
-      --muted-2:rgba(231,237,246,.56);
-
+      --muted:rgba(231,237,246,.74);
+      --muted2:rgba(231,237,246,.55);
       --green:#35e08b;
       --red:#ff6673;
-      --orange:#ff9f43;
       --cyan:#4de2d8;
-      --purple:#a78bfa;
-
-      --shadow:0 18px 44px rgba(0,0,0,.26);
-      --radius:20px;
+      --purple:#b49cff;
       --max:1240px;
     }
 
@@ -52,9 +49,7 @@
     body{
       font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
-      background:
-        radial-gradient(circle at top right,rgba(224,187,99,.08),transparent 22%),
-        linear-gradient(180deg,#04111d 0%,#06172a 42%,#04111f 100%);
+      background:#04111f;
       overflow-x:hidden;
     }
 
@@ -67,9 +62,13 @@
       margin:0 auto;
     }
 
+    .serif{
+      font-family:"Playfair Display",Georgia,serif;
+    }
+
 
     /* =========================================================
-       HEADER — GIỮ NGUYÊN HỆ HIỆN TẠI
+       HEADER — GIỮ NGUYÊN HỆ INDEX HIỆN TẠI
     ========================================================= */
     .topbar{
       position:sticky;
@@ -116,7 +115,7 @@
       font-size:17px;
       line-height:1.35;
       font-weight:800;
-      color:var(--gold-2);
+      color:var(--gold2);
       letter-spacing:.035em;
       white-space:nowrap;
     }
@@ -163,7 +162,7 @@
       width:100%;
       height:3px;
       border-radius:999px;
-      background:linear-gradient(90deg,var(--gold),var(--gold-2));
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
     }
 
     .topbar-actions{
@@ -236,916 +235,746 @@
 
 
     /* =========================================================
-       MAIN — THIẾT KẾ BÁM MẪU MỚI
+       HERO — SÁT HÌNH MẪU
     ========================================================= */
-    .home-main{
-      padding:0 0 0;
-    }
-
-    .home-section{
-      margin-top:12px;
-    }
-
-    .premium-shell{
+    .home-hero{
       position:relative;
       overflow:hidden;
-      border:1px solid rgba(224,187,99,.17);
-      border-radius:18px;
+      min-height:448px;
       background:
-        radial-gradient(circle at 100% 0%,rgba(224,187,99,.055),transparent 31%),
-        linear-gradient(180deg,rgba(8,26,45,.98),rgba(6,21,36,.97));
-      box-shadow:0 16px 36px rgba(0,0,0,.18);
+        radial-gradient(circle at 82% 18%,rgba(224,187,99,.10),transparent 26%),
+        linear-gradient(90deg,#061521 0%,#071725 46%,#071724 100%);
+      border-bottom:1px solid rgba(224,187,99,.13);
     }
 
-    .section-pad{
-      padding:20px 20px 18px;
-    }
-
-    .section-title{
-      margin:0;
-      font-size:23px;
-      line-height:1.25;
-      letter-spacing:-.025em;
-    }
-
-    .section-sub{
-      margin:6px 0 0;
-      color:var(--muted-2);
-      font-size:11px;
-      line-height:1.55;
-    }
-
-    .section-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:14px;
-    }
-
-    .section-link{
-      margin-top:4px;
-      color:var(--gold-2);
-      font-size:9.5px;
-      font-weight:800;
-      white-space:nowrap;
-    }
-
-    .eyebrow{
-      display:flex;
-      align-items:center;
-      gap:7px;
-      margin:0 0 9px;
-      color:var(--gold-2);
-      font-size:9px;
-      line-height:1.3;
-      font-weight:800;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-
-    /* =========================================================
-       HERO — BÁM MẪU TỐI ĐA
-    ========================================================= */
-    .hero-premium{
-      position:relative;
-      min-height:560px;
-      overflow:hidden;
-      background:
-        linear-gradient(90deg,#061625 0%,#061625 39%,rgba(6,22,37,.76) 55%,rgba(5,18,31,.32) 74%,rgba(5,18,31,.75) 100%);
-      border-bottom:1px solid rgba(224,187,99,.12);
+    .home-hero::after{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:0;
+      height:90px;
+      background:linear-gradient(180deg,transparent,rgba(2,10,17,.30));
+      pointer-events:none;
     }
 
     .hero-inner{
       width:min(calc(100% - 32px),var(--max));
-      min-height:560px;
+      min-height:448px;
       margin:0 auto;
-      display:grid;
-      grid-template-columns:minmax(0,1.02fr) minmax(440px,.98fr);
       position:relative;
-      z-index:2;
+      display:grid;
+      grid-template-columns:minmax(0,1.02fr) minmax(470px,.98fr);
+      align-items:stretch;
     }
 
     .hero-copy{
       position:relative;
-      z-index:5;
-      padding:52px 0 40px;
+      z-index:4;
       display:flex;
       flex-direction:column;
       justify-content:center;
+      padding:48px 0 42px;
       min-width:0;
     }
 
-    .hero-copy h1{
-      margin:0;
-      max-width:660px;
-      font-size:52px;
-      line-height:1.04;
-      letter-spacing:-.035em;
-      font-weight:800;
+    .hero-eyebrow{
+      margin:0 0 13px;
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.20em;
       text-transform:uppercase;
     }
 
-    .hero-copy h1 span{
-      display:block;
-      margin-top:6px;
-      color:var(--gold-2);
+    .hero-title{
+      margin:0;
+      max-width:690px;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:53px;
+      line-height:1.03;
+      letter-spacing:-.034em;
+      font-weight:700;
+      color:#fff;
     }
 
-    .hero-copy > p{
-      margin:17px 0 0;
+    .hero-title span{
+      display:block;
+      margin-top:2px;
+      color:var(--gold2);
+    }
+
+    .hero-lead{
+      margin:18px 0 0;
       max-width:590px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.67;
+      color:rgba(243,246,250,.85);
+      font-size:16px;
+      line-height:1.7;
     }
 
     .hero-actions{
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
+      gap:12px;
       margin-top:22px;
     }
 
-    .btn-primary,.btn-secondary{
-      min-height:46px;
-      padding:0 18px;
-      border-radius:11px;
+    .hero-btn{
+      min-height:48px;
+      padding:0 20px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:7px;
-      font-size:11px;
+      gap:8px;
+      border-radius:10px;
+      font-size:13px;
       font-weight:800;
       transition:.18s ease;
     }
 
-    .btn-primary{
-      background:linear-gradient(180deg,#f2d17c,#d8b254);
-      color:#201703;
-      border:1px solid rgba(255,225,145,.72);
-      box-shadow:0 10px 24px rgba(224,187,99,.18);
+    .hero-btn.primary{
+      color:#211703;
+      border:1px solid rgba(255,229,155,.68);
+      background:linear-gradient(180deg,#f0cf79,#dcb75a);
+      box-shadow:0 12px 26px rgba(224,187,99,.18);
     }
 
-    .btn-secondary{
+    .hero-btn.secondary{
       color:#fff;
-      border:1px solid rgba(77,226,216,.30);
-      background:rgba(255,255,255,.018);
+      border:1px solid rgba(224,187,99,.60);
+      background:rgba(4,17,31,.46);
     }
 
-    .btn-primary:hover,.btn-secondary:hover{
-      transform:translateY(-1px);
-    }
+    .hero-btn:hover{transform:translateY(-1px)}
 
-    .hero-stats{
-      width:min(100%,630px);
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:0;
-      margin-top:22px;
-      border-top:1px solid rgba(255,255,255,.055);
-      padding-top:14px;
-    }
-
-    .hero-stat{
-      min-height:58px;
-      padding:0 13px 0 0;
-      border-right:1px solid rgba(255,255,255,.055);
-    }
-
-    .hero-stat:last-child{
-      border-right:0;
-      padding-right:0;
-    }
-
-    .hero-stat strong{
-      display:block;
-      color:#fff;
-      font-size:21px;
-      line-height:1.1;
-      font-weight:800;
-    }
-
-    .hero-stat span{
-      display:block;
-      margin-top:4px;
-      color:var(--muted-2);
-      font-size:8px;
-      line-height:1.35;
-    }
-
-
-    /* Hero visual */
     .hero-visual{
       position:relative;
-      min-height:560px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-      overflow:visible;
+      z-index:2;
+      min-height:448px;
     }
 
     .hero-visual::before{
       content:"";
       position:absolute;
-      inset:0 -80px 0 -110px;
+      inset:0 -75px 0 -155px;
       background:
-        linear-gradient(90deg,rgba(6,22,37,1) 0%,rgba(6,22,37,.72) 16%,rgba(6,22,37,.10) 46%,rgba(6,22,37,0) 70%),
-        radial-gradient(circle at 55% 32%,rgba(224,187,99,.16),transparent 35%);
-      z-index:1;
+        linear-gradient(90deg,#061521 0%,rgba(6,21,33,.94) 11%,rgba(6,21,33,.60) 28%,rgba(6,21,33,.08) 55%,rgba(6,21,33,0) 72%),
+        url("home-hero-steps.webp") right center / auto 100% no-repeat;
       pointer-events:none;
     }
 
-    .hero-market-glow{
-      position:absolute;
-      inset:44px -90px 52px 0;
-      z-index:1;
-      opacity:.42;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg,transparent 0 6%,rgba(224,187,99,.10) 6.2% 6.5%,transparent 6.7% 14%,rgba(53,224,139,.16) 14.2% 14.5%,transparent 14.7% 21%,rgba(255,102,115,.15) 21.2% 21.5%,transparent 21.7% 30%,rgba(224,187,99,.11) 30.2% 30.5%,transparent 30.7% 38%,rgba(53,224,139,.15) 38.2% 38.5%,transparent 38.7% 46%,rgba(255,102,115,.13) 46.2% 46.5%,transparent 46.7% 55%,rgba(224,187,99,.10) 55.2% 55.5%,transparent 55.7%);
-      filter:blur(.1px);
-    }
-
-    .hero-candle{
-      position:absolute;
-      bottom:120px;
-      width:12px;
-      border-radius:2px;
-      opacity:.44;
-      z-index:1;
-      box-shadow:0 0 18px currentColor;
-    }
-
-    .hero-candle::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:-26px;
-      bottom:-26px;
-      width:2px;
-      transform:translateX(-50%);
-      background:currentColor;
-      opacity:.65;
-    }
-
-    .c1{right:64px;height:86px;color:#35e08b}
-    .c2{right:96px;height:52px;color:#ff6673;bottom:105px}
-    .c3{right:128px;height:112px;color:#35e08b;bottom:124px}
-    .c4{right:160px;height:66px;color:#e0bb63;bottom:111px}
-    .c5{right:195px;height:95px;color:#35e08b;bottom:126px}
-
-    .hero-visual picture{
-      position:relative;
-      z-index:3;
-      width:min(100%,510px);
-      margin:0 auto;
-      transform:translateX(-4px);
-    }
-
-    .hero-visual img{
-      width:100%;
-      max-height:545px;
-      object-fit:contain;
-      object-position:center bottom;
-      filter:drop-shadow(0 24px 38px rgba(0,0,0,.42));
-    }
-
-    .hero-quote{
-      position:absolute;
-      z-index:5;
-      right:-2px;
-      top:58px;
-      width:190px;
-      text-align:left;
-      color:rgba(238,243,248,.82);
-    }
-
-    .hero-quote blockquote{
-      margin:0;
-      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
-      font-size:19px;
-      line-height:1.48;
-      font-weight:600;
-    }
-
-    .hero-quote .sig{
-      display:block;
-      margin-top:9px;
-      color:var(--gold-2);
-      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
-      font-size:22px;
-      text-align:right;
-    }
-
-    .hero-words{
-      position:absolute;
-      z-index:4;
-      right:3px;
-      bottom:70px;
-      display:grid;
-      gap:7px;
-      text-align:right;
-      color:rgba(231,237,246,.45);
-      font-size:10px;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
 
     /* =========================================================
-       4 CARD ĐI NHANH
+       3 LỢI ÍCH — NẰM NGAY DƯỚI HERO NHƯ HÌNH
     ========================================================= */
-    .quick-grid{
+    .hero-benefits{
+      background:#050f18;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .benefit-grid{
+      min-height:108px;
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .quick-card{
-      --accent:var(--gold-2);
-      --accent-rgb:224,187,99;
-
-      min-height:150px;
-      padding:15px 14px 13px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      align-items:flex-start;
-      border:1px solid rgba(var(--accent-rgb),.15);
-      border-radius:13px;
-      background:
-        radial-gradient(circle at 100% 0%,rgba(var(--accent-rgb),.08),transparent 42%),
-        rgba(255,255,255,.014);
-      transition:.18s ease;
-    }
-
-    .quick-card:nth-child(2){
-      --accent:var(--cyan);
-      --accent-rgb:77,226,216;
-    }
-
-    .quick-card:nth-child(3){
-      --accent:var(--purple);
-      --accent-rgb:167,139,250;
-    }
-
-    .quick-card:nth-child(4){
-      --accent:var(--green);
-      --accent-rgb:53,224,139;
-    }
-
-    .quick-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(var(--accent-rgb),.34);
-    }
-
-    .quick-icon{
-      width:34px;
-      height:34px;
-      display:grid;
-      place-items:center;
-      border-radius:9px;
-      border:1px solid rgba(var(--accent-rgb),.28);
-      background:rgba(var(--accent-rgb),.06);
-      color:var(--accent);
-    }
-
-    .quick-icon svg{
-      width:17px;
-      height:17px;
-      fill:currentColor;
-    }
-
-    .quick-card h3{
-      margin:11px 0 0;
-      font-size:13px;
-      line-height:1.35;
-    }
-
-    .quick-card p{
-      margin:5px 0 0;
-      color:var(--muted-2);
-      font-size:9px;
-      line-height:1.55;
-    }
-
-    .quick-card b{
-      margin-top:10px;
-      color:var(--accent);
-      font-size:8.7px;
-    }
-
-
-    /* =========================================================
-       HÀNH TRÌNH NĐT
-    ========================================================= */
-    .journey-shell{
-      position:relative;
-    }
-
-    .journey-note{
-      position:absolute;
-      right:20px;
-      top:14px;
-      max-width:260px;
-      color:#efca70;
-      font-family:"Dancing Script","Be Vietnam Pro",sans-serif;
-      font-size:18px;
-      line-height:1.35;
-      transform:rotate(-2deg);
-      text-align:right;
-      opacity:.92;
-    }
-
-    .journey-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:9px;
-      margin-top:14px;
-    }
-
-    .journey-card{
-      min-height:116px;
-      padding:13px;
-      display:grid;
-      grid-template-columns:34px minmax(0,1fr);
-      gap:10px;
-      align-items:start;
-      border:1px solid rgba(255,255,255,.075);
-      border-radius:12px;
-      background:rgba(255,255,255,.014);
-    }
-
-    .journey-symbol{
-      width:32px;
-      height:32px;
-      display:grid;
-      place-items:center;
-      border-radius:9px;
-      font-size:15px;
-      font-weight:800;
-    }
-
-    .journey-card:nth-child(1) .journey-symbol{
-      color:#78edb1;
-      background:rgba(53,224,139,.10);
-    }
-
-    .journey-card:nth-child(2) .journey-symbol{
-      color:#8fb6ff;
-      background:rgba(96,135,255,.12);
-    }
-
-    .journey-card:nth-child(3) .journey-symbol{
-      color:#ff8690;
-      background:rgba(255,102,115,.12);
-    }
-
-    .journey-card:nth-child(4) .journey-symbol{
-      color:#7aedac;
-      background:rgba(53,224,139,.10);
-    }
-
-    .journey-card h3{
-      margin:0;
-      font-size:11px;
-      line-height:1.35;
-    }
-
-    .journey-card p{
-      margin:4px 0 0;
-      color:var(--muted-2);
-      font-size:8px;
-      line-height:1.45;
-    }
-
-    .journey-card a{
-      display:inline-flex;
-      margin-top:7px;
-      min-height:27px;
-      padding:0 10px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       align-items:center;
-      justify-content:center;
-      border-radius:999px;
-      border:1px solid rgba(224,187,99,.26);
-      color:#fff;
-      font-size:7.5px;
-      font-weight:700;
     }
 
-    .journey-card:nth-child(3) a{
-      color:#f7d987;
-      border-color:rgba(224,187,99,.48);
-    }
-
-
-    /* =========================================================
-       TRUST STRIP
-    ========================================================= */
-    .trust-strip{
+    .benefit-item{
+      min-height:62px;
+      padding:0 28px;
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:0;
-      padding:0;
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:12px;
-      overflow:hidden;
-      background:rgba(255,255,255,.012);
-    }
-
-    .trust-item{
-      min-height:47px;
-      padding:0 14px;
-      display:flex;
+      grid-template-columns:52px minmax(0,1fr);
       align-items:center;
-      justify-content:center;
-      gap:8px;
-      text-align:center;
-      border-right:1px solid rgba(255,255,255,.06);
-      color:rgba(241,245,249,.82);
-      font-size:8.5px;
+      gap:14px;
+      border-right:1px solid rgba(255,255,255,.08);
     }
 
-    .trust-item:last-child{border-right:0}
+    .benefit-item:first-child{padding-left:6px}
+    .benefit-item:last-child{
+      padding-right:6px;
+      border-right:0;
+    }
 
-    .trust-icon{
-      width:24px;
-      height:24px;
-      flex:0 0 24px;
+    .benefit-icon{
+      width:52px;
+      height:52px;
+      border:1px solid rgba(224,187,99,.80);
+      border-radius:50%;
       display:grid;
       place-items:center;
-      border-radius:50%;
-      border:1px solid rgba(224,187,99,.28);
-      color:var(--gold-2);
-      font-size:11px;
+      color:var(--gold2);
     }
 
-
-    /* =========================================================
-       VH6 + TOOL SPLIT
-    ========================================================= */
-    .system-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1.8fr) minmax(300px,.72fr);
-      gap:10px;
-    }
-
-    .vh6-list{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:7px;
-      margin-top:13px;
-    }
-
-    .vh6-item{
-      text-align:center;
-      min-width:0;
-    }
-
-    .vh6-orb{
-      width:72px;
-      height:72px;
-      margin:0 auto;
-      display:grid;
-      place-items:center;
-      border-radius:50%;
-      border:1px solid rgba(224,187,99,.17);
-      background:
-        radial-gradient(circle at 50% 40%,rgba(224,187,99,.10),transparent 55%),
-        #0a1b2c;
-      box-shadow:inset 0 0 22px rgba(224,187,99,.035);
-    }
-
-    .vh6-orb svg{
-      width:30px;
-      height:30px;
+    .benefit-icon svg{
+      width:28px;
+      height:28px;
       fill:none;
-      stroke:var(--gold-2);
-      stroke-width:1.8;
+      stroke:currentColor;
+      stroke-width:1.7;
       stroke-linecap:round;
       stroke-linejoin:round;
     }
 
-    .vh6-item:nth-child(2) .vh6-orb svg{stroke:#84a7ff}
-    .vh6-item:nth-child(3) .vh6-orb svg{stroke:#9aa7ff}
-    .vh6-item:nth-child(4) .vh6-orb svg{stroke:#ff6d7b}
-    .vh6-item:nth-child(5) .vh6-orb svg{stroke:#f2c660}
-    .vh6-item:nth-child(6) .vh6-orb svg{stroke:#e0bb63}
-
-    .vh6-item h3{
-      margin:8px 0 0;
-      font-size:8.7px;
-      line-height:1.3;
-    }
-
-    .vh6-item span{
-      display:block;
-      margin-top:3px;
-      color:var(--muted-2);
-      font-size:7px;
-      line-height:1.35;
-    }
-
-    .tool-list{
-      display:grid;
-      gap:7px;
-      margin-top:12px;
-    }
-
-    .tool-row{
-      min-height:45px;
-      padding:7px 9px;
-      display:grid;
-      grid-template-columns:30px minmax(0,1fr) auto;
-      align-items:center;
-      gap:8px;
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:10px;
-      background:rgba(255,255,255,.014);
-    }
-
-    .tool-row-icon{
-      width:28px;
-      height:28px;
-      display:grid;
-      place-items:center;
-      border-radius:8px;
-      color:var(--gold-2);
-      background:rgba(224,187,99,.07);
-      border:1px solid rgba(224,187,99,.18);
-    }
-
-    .tool-row-icon svg{
-      width:15px;
-      height:15px;
-      fill:currentColor;
-    }
-
-    .tool-row strong{
-      display:block;
-      font-size:9.5px;
-      line-height:1.3;
-    }
-
-    .tool-row span{
-      display:block;
-      margin-top:2px;
-      color:var(--muted-2);
-      font-size:7.2px;
-      line-height:1.35;
-    }
-
-    .tool-row .go{
-      color:var(--gold-2);
-      font-size:10px;
-      font-weight:800;
-    }
-
-
-    /* =========================================================
-       LOWER 3 COLUMNS
-    ========================================================= */
-    .lower-grid{
-      display:grid;
-      grid-template-columns:1.02fr .82fr 1.05fr;
-      gap:10px;
-    }
-
-    .lower-card{
-      min-height:238px;
-      padding:16px;
-    }
-
-    .lower-card h2{
+    .benefit-item h3{
       margin:0;
-      font-size:17px;
-      line-height:1.3;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:18px;
+      line-height:1.25;
+      font-weight:600;
     }
 
-    .lower-sub{
+    .benefit-item p{
       margin:4px 0 0;
-      color:var(--muted-2);
-      font-size:8.5px;
+      color:var(--muted);
+      font-size:11px;
       line-height:1.45;
     }
 
 
-    /* About */
-    .about-mini{
+    /* =========================================================
+       CÔNG CỤ — NỀN SÁNG GIỐNG HÌNH MẪU
+    ========================================================= */
+    .tools-band{
+      background:
+        radial-gradient(circle at 68% 0%,rgba(224,187,99,.10),transparent 28%),
+        var(--cream);
+      color:var(--cream-text);
+      border-bottom:1px solid rgba(15,24,32,.13);
+    }
+
+    .tools-inner{
+      padding:30px 0 27px;
+    }
+
+    .light-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:17px;
+    }
+
+    .light-kicker{
+      margin:0 0 5px;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:#232b31;
+    }
+
+    .light-head h2{
+      margin:0;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:32px;
+      line-height:1.15;
+      letter-spacing:-.025em;
+      color:#10171c;
+    }
+
+    .light-more{
+      flex:0 0 auto;
+      padding-bottom:6px;
+      border-bottom:1px solid rgba(16,24,31,.27);
+      color:#2a3137;
+      font-size:10px;
+      white-space:nowrap;
+    }
+
+    .tool-card-grid{
       display:grid;
-      grid-template-columns:98px minmax(0,1fr);
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
-      margin-top:12px;
-      align-items:start;
+    }
+
+    .tool-card{
+      --accent:#72c9ff;
+      min-height:225px;
+      padding:17px 15px 15px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      border-radius:11px;
+      color:#fff;
+      border:1px solid rgba(255,255,255,.05);
+      background:
+        radial-gradient(circle at 80% 10%,rgba(255,255,255,.08),transparent 36%),
+        linear-gradient(145deg,#0b2a3e,#06131f);
+      box-shadow:0 10px 26px rgba(10,18,25,.12);
+      transition:.18s ease;
+    }
+
+    .tool-card:nth-child(2){
+      --accent:#55deb2;
+      background:
+        radial-gradient(circle at 75% 10%,rgba(73,217,176,.20),transparent 38%),
+        linear-gradient(145deg,#0a3a36,#061b1b);
+    }
+
+    .tool-card:nth-child(3){
+      --accent:#efbd58;
+      background:
+        radial-gradient(circle at 75% 10%,rgba(225,176,79,.20),transparent 38%),
+        linear-gradient(145deg,#493418,#17120a);
+    }
+
+    .tool-card:nth-child(4){
+      --accent:#c9b7ff;
+      background:
+        radial-gradient(circle at 75% 10%,rgba(177,150,255,.18),transparent 40%),
+        linear-gradient(145deg,#393153,#131524);
+    }
+
+    .tool-card:nth-child(5){
+      --accent:#b7c3d5;
+      background:
+        radial-gradient(circle at 75% 10%,rgba(180,196,216,.12),transparent 40%),
+        linear-gradient(145deg,#14293b,#07131d);
+    }
+
+    .tool-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 30px rgba(10,18,25,.18);
+    }
+
+    .tool-icon{
+      width:41px;
+      height:41px;
+      display:grid;
+      place-items:center;
+      color:var(--accent);
+    }
+
+    .tool-icon svg{
+      width:36px;
+      height:36px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.55;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .tool-card h3{
+      margin:15px 0 0;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:18px;
+      line-height:1.25;
+      font-weight:600;
+    }
+
+    .tool-card p{
+      margin:8px 0 0;
+      color:rgba(245,247,251,.76);
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    .tool-arrow{
+      width:34px;
+      height:34px;
+      margin-top:auto;
+      border:1px solid currentColor;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      color:var(--accent);
+      font-size:17px;
+    }
+
+
+    /* compact funnel under tool cards */
+    .journey-compact{
+      margin-top:18px;
+      padding-top:14px;
+      border-top:1px solid rgba(16,24,31,.15);
+      display:grid;
+      grid-template-columns:auto repeat(4,1fr);
+      gap:10px;
+      align-items:center;
+    }
+
+    .journey-label{
+      padding-right:8px;
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#60666b;
+      white-space:nowrap;
+    }
+
+    .journey-link{
+      min-height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:#1a2229;
+      border-left:1px solid rgba(16,24,31,.14);
+      font-size:9px;
+      font-weight:700;
+    }
+
+    .journey-link:hover{color:#9b7427}
+
+
+    /* =========================================================
+       VH6 — DARK SECTION, BỐ CỤC GIỐNG KHỐI PERFORMANCE
+    ========================================================= */
+    .vh6-band{
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 85% 15%,rgba(224,187,99,.08),transparent 28%),
+        linear-gradient(180deg,#061521,#04111d);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .vh6-inner{
+      min-height:320px;
+      display:grid;
+      grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr);
+      gap:32px;
+      align-items:center;
+      padding:32px 0;
+    }
+
+    .dark-kicker{
+      color:var(--gold2);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.17em;
+      text-transform:uppercase;
+    }
+
+    .vh6-copy h2{
+      margin:8px 0 0;
+      max-width:420px;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:35px;
+      line-height:1.15;
+      letter-spacing:-.025em;
+    }
+
+    .vh6-copy p{
+      margin:12px 0 0;
+      max-width:420px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.65;
+    }
+
+    .vh6-copy .hero-btn{
+      margin-top:18px;
+      min-height:42px;
+      font-size:10px;
+    }
+
+    .decision-map{
+      position:relative;
+      min-height:248px;
+      padding:26px 20px 22px;
+      border-left:1px solid rgba(255,255,255,.06);
+    }
+
+    .decision-map::before{
+      content:"";
+      position:absolute;
+      left:8%;
+      right:4%;
+      top:47%;
+      height:2px;
+      background:linear-gradient(90deg,rgba(224,187,99,.30),rgba(224,187,99,.95));
+      transform:rotate(-7deg);
+      transform-origin:left center;
+      box-shadow:0 0 22px rgba(224,187,99,.18);
+    }
+
+    .decision-points{
+      height:205px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:4px;
+      align-items:end;
+      position:relative;
+      z-index:2;
+    }
+
+    .decision-point{
+      text-align:center;
+      min-width:0;
+    }
+
+    .decision-point:nth-child(1){transform:translateY(25px)}
+    .decision-point:nth-child(2){transform:translateY(12px)}
+    .decision-point:nth-child(3){transform:translateY(1px)}
+    .decision-point:nth-child(4){transform:translateY(-15px)}
+    .decision-point:nth-child(5){transform:translateY(-29px)}
+    .decision-point:nth-child(6){transform:translateY(-43px)}
+
+    .decision-orb{
+      width:58px;
+      height:58px;
+      margin:0 auto;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(224,187,99,.35);
+      border-radius:50%;
+      background:#081a29;
+      box-shadow:0 10px 28px rgba(0,0,0,.22);
+      color:var(--gold2);
+      font-size:17px;
+      font-weight:800;
+    }
+
+    .decision-point:nth-child(2) .decision-orb{color:#80a8ff}
+    .decision-point:nth-child(3) .decision-orb{color:#8ec4ff}
+    .decision-point:nth-child(4) .decision-orb{color:#ff7883}
+    .decision-point:nth-child(5) .decision-orb{color:#f0bf5a}
+    .decision-point:nth-child(6) .decision-orb{color:#65e5a1}
+
+    .decision-point strong{
+      display:block;
+      margin-top:8px;
+      font-size:8px;
+      line-height:1.35;
+    }
+
+    .decision-point span{
+      display:block;
+      margin-top:2px;
+      color:var(--muted2);
+      font-size:6.5px;
+      line-height:1.3;
+    }
+
+
+    /* =========================================================
+       ABOUT — NỀN SÁNG + ẢNH + QUOTE DARK, NHƯ HÌNH MẪU
+    ========================================================= */
+    .about-band{
+      background:
+        radial-gradient(circle at 34% 0%,rgba(224,187,99,.08),transparent 26%),
+        var(--cream);
+      color:var(--cream-text);
+    }
+
+    .about-inner{
+      min-height:300px;
+      display:grid;
+      grid-template-columns:minmax(320px,.86fr) minmax(245px,.55fr) minmax(330px,.78fr);
+      align-items:stretch;
+    }
+
+    .about-copy{
+      padding:33px 28px 28px 0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .about-copy h2{
+      margin:8px 0 0;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:34px;
+      line-height:1.17;
+      letter-spacing:-.025em;
+    }
+
+    .about-copy p{
+      margin:11px 0 0;
+      max-width:470px;
+      color:#41484e;
+      font-size:11px;
+      line-height:1.65;
+    }
+
+    .about-copy .hero-btn{
+      width:max-content;
+      min-height:42px;
+      margin-top:17px;
+      font-size:10px;
     }
 
     .about-photo{
+      position:relative;
       overflow:hidden;
-      border-radius:11px;
-      border:1px solid rgba(224,187,99,.18);
-      background:#071725;
+      min-height:300px;
+      align-self:end;
+    }
+
+    .about-photo::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 0;
+      height:48px;
+      background:linear-gradient(180deg,transparent,var(--cream));
+      pointer-events:none;
     }
 
     .about-photo img{
       width:100%;
-      aspect-ratio:3/4;
+      height:100%;
+      min-height:300px;
       object-fit:cover;
-      object-position:center top;
+      object-position:center 10%;
+      filter:drop-shadow(0 20px 28px rgba(0,0,0,.18));
     }
 
-    .about-list{
-      display:grid;
-      gap:7px;
-    }
-
-    .about-line{
-      display:grid;
-      grid-template-columns:14px minmax(0,1fr);
-      gap:6px;
-      color:rgba(239,244,249,.82);
-      font-size:8px;
-      line-height:1.45;
-    }
-
-    .about-line b{
-      color:var(--gold-2);
-      font-size:10px;
-    }
-
-    .mini-button{
-      display:inline-flex;
-      min-height:29px;
-      margin-top:9px;
-      padding:0 10px;
-      align-items:center;
+    .about-quote{
+      position:relative;
+      min-height:300px;
+      padding:34px 29px 25px;
+      overflow:hidden;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
       justify-content:center;
-      border:1px solid rgba(224,187,99,.34);
-      border-radius:8px;
-      color:#f4d785;
-      font-size:7.5px;
+      background:
+        linear-gradient(90deg,rgba(13,25,34,.90),rgba(17,14,12,.93)),
+        url("hero-market.webp") center/cover no-repeat;
+    }
+
+    .about-quote::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 80% 22%,rgba(224,187,99,.15),transparent 35%);
+      pointer-events:none;
+    }
+
+    .quote-text{
+      position:relative;
+      z-index:2;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:23px;
+      line-height:1.35;
+    }
+
+    .quote-rule{
+      position:relative;
+      z-index:2;
+      width:42px;
+      height:1px;
+      margin:18px 0 3px;
+      background:var(--gold);
+    }
+
+    .quote-sign{
+      position:relative;
+      z-index:2;
+      align-self:flex-end;
+      margin-top:-4px;
+      color:#f4d581;
+      font-family:"Dancing Script",cursive;
+      font-size:27px;
+    }
+
+    .principle-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:4px;
+      margin-top:18px;
+      padding-top:15px;
+      border-top:1px solid rgba(255,255,255,.11);
+    }
+
+    .principle{
+      text-align:center;
+      color:rgba(255,255,255,.78);
+      font-size:7px;
+    }
+
+    .principle b{
+      display:grid;
+      place-items:center;
+      width:27px;
+      height:27px;
+      margin:0 auto 5px;
+      color:var(--gold2);
+      font-size:15px;
+      border:1px solid rgba(224,187,99,.24);
+      border-radius:50%;
+    }
+
+
+    /* =========================================================
+       3 NHỊP LÀM VIỆC — GỌN, KHÔNG PHÁ MẪU
+    ========================================================= */
+    .process-strip{
+      background:#071522;
+      border-top:1px solid rgba(224,187,99,.14);
+      border-bottom:1px solid rgba(224,187,99,.14);
+    }
+
+    .process-inner{
+      min-height:94px;
+      display:grid;
+      grid-template-columns:230px repeat(3,minmax(0,1fr));
+      align-items:center;
+    }
+
+    .process-title{
+      padding-right:25px;
+    }
+
+    .process-title small{
+      display:block;
+      color:var(--gold2);
+      font-size:8px;
       font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-
-    /* Process */
-    .process-list{
-      display:grid;
-      gap:9px;
-      margin-top:13px;
+    .process-title strong{
+      display:block;
+      margin-top:4px;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:18px;
+      line-height:1.2;
     }
 
-    .process-row{
+    .process-item{
+      min-height:54px;
+      padding:0 20px;
       display:grid;
-      grid-template-columns:29px minmax(0,1fr);
+      grid-template-columns:33px minmax(0,1fr);
       gap:9px;
-      align-items:start;
+      align-items:center;
+      border-left:1px solid rgba(255,255,255,.07);
     }
 
     .process-no{
-      width:28px;
-      height:28px;
+      width:31px;
+      height:31px;
       display:grid;
       place-items:center;
       border-radius:50%;
-      color:#251903;
-      background:linear-gradient(180deg,#f2d17c,#d8b254);
+      border:1px solid rgba(224,187,99,.42);
+      color:var(--gold2);
       font-size:9px;
       font-weight:800;
     }
 
-    .process-row strong{
+    .process-item b{
       display:block;
-      font-size:9.5px;
+      font-size:9px;
     }
 
-    .process-row span{
+    .process-item span{
       display:block;
       margin-top:2px;
-      color:var(--muted-2);
-      font-size:7.5px;
+      color:var(--muted2);
+      font-size:6.8px;
       line-height:1.4;
     }
 
 
-    /* Knowledge */
-    .knowledge-list{
-      display:grid;
-      gap:7px;
-      margin-top:12px;
-    }
-
-    .knowledge-item{
-      display:grid;
-      grid-template-columns:58px minmax(0,1fr);
-      gap:9px;
-      align-items:center;
-      min-height:56px;
-    }
-
-    .knowledge-thumb{
-      height:49px;
-      overflow:hidden;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,.07);
-      background:#071725;
-    }
-
-    .knowledge-thumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .knowledge-item strong{
-      display:block;
-      font-size:8.9px;
-      line-height:1.35;
-    }
-
-    .knowledge-item span{
-      display:block;
-      margin-top:2px;
-      color:var(--muted-2);
-      font-size:7px;
-      line-height:1.35;
-    }
-
-
     /* =========================================================
-       FINAL CTA
-    ========================================================= */
-    .final-cta{
-      position:relative;
-      min-height:155px;
-      overflow:hidden;
-      display:grid;
-      grid-template-columns:minmax(240px,.62fr) minmax(0,1fr) auto;
-      align-items:center;
-      gap:22px;
-      padding:22px 24px;
-      border-top:1px solid rgba(224,187,99,.18);
-      border-bottom:1px solid rgba(224,187,99,.18);
-      background:
-        radial-gradient(circle at 16% 70%,rgba(224,187,99,.11),transparent 27%),
-        linear-gradient(90deg,#081a2a 0%,#07192b 48%,#061421 100%);
-    }
-
-    .cta-art{
-      position:relative;
-      height:110px;
-      overflow:hidden;
-      border-radius:12px;
-      background:
-        linear-gradient(180deg,rgba(7,22,38,.05),rgba(7,22,38,.86)),
-        url("hero-market.webp") center/cover no-repeat;
-      border:1px solid rgba(255,255,255,.06);
-    }
-
-    .cta-copy small{
-      display:block;
-      color:var(--gold-2);
-      font-size:8px;
-      font-weight:800;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .cta-copy h2{
-      margin:6px 0 0;
-      font-size:25px;
-      line-height:1.25;
-      letter-spacing:-.025em;
-    }
-
-    .cta-copy p{
-      margin:6px 0 0;
-      color:var(--muted-2);
-      font-size:9px;
-      line-height:1.5;
-      max-width:560px;
-    }
-
-    .cta-side{
-      text-align:center;
-    }
-
-    .cta-side .btn-primary{
-      min-width:210px;
-    }
-
-    .cta-side small{
-      display:block;
-      margin-top:7px;
-      color:var(--muted-2);
-      font-size:7px;
-    }
-
-
-    /* =========================================================
-       FOOTER — GIỮ NGUYÊN HỆ HIỆN TẠI
+       FOOTER — GIỮ NGUYÊN HỆ INDEX HIỆN TẠI
     ========================================================= */
     .social{
       display:inline-flex;
@@ -1221,7 +1050,7 @@
       font-weight:800;
       letter-spacing:.08em;
       text-transform:uppercase;
-      color:var(--gold-2);
+      color:var(--gold2);
     }
 
     .footer .footer-links a{
@@ -1320,19 +1149,18 @@
     ========================================================= */
     @media(max-width:1080px){
       .hero-inner{
-        grid-template-columns:minmax(0,1fr) minmax(390px,.82fr);
+        grid-template-columns:minmax(0,1fr) minmax(420px,.88fr);
       }
 
-      .hero-copy h1{font-size:45px}
-      .hero-quote{right:8px;width:165px}
-      .system-grid{grid-template-columns:1.5fr .82fr}
-      .vh6-list{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:14px}
-      .lower-grid{grid-template-columns:1fr 1fr}
-      .lower-grid > article:last-child{grid-column:1/-1}
-      .knowledge-list{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .knowledge-item{grid-template-columns:54px minmax(0,1fr)}
-      .final-cta{grid-template-columns:220px minmax(0,1fr)}
-      .cta-side{grid-column:2}
+      .hero-title{font-size:46px}
+      .tool-card-grid{gap:9px}
+      .about-inner{
+        grid-template-columns:minmax(300px,.84fr) minmax(220px,.52fr) minmax(300px,.74fr);
+      }
+
+      .process-inner{
+        grid-template-columns:190px repeat(3,minmax(0,1fr));
+      }
     }
 
 
@@ -1353,81 +1181,118 @@
       .brand-text strong{font-size:14px}
       .brand-text span{font-size:10px}
 
-      .hero-premium{min-height:0}
-
       .hero-inner{
         min-height:0;
         grid-template-columns:1fr;
       }
 
       .hero-copy{
-        padding:34px 0 16px;
+        padding:34px 0 12px;
+        align-items:center;
+        text-align:center;
+      }
+
+      .hero-title{
+        max-width:720px;
+        font-size:41px;
+      }
+
+      .hero-lead{max-width:660px}
+      .hero-visual{min-height:315px}
+
+      .hero-visual::before{
+        inset:0 -20px 0 -20px;
+        background:
+          linear-gradient(180deg,#061521 0%,rgba(6,21,33,.20) 20%,rgba(6,21,33,0) 45%),
+          url("home-hero-steps.webp") center center / cover no-repeat;
+      }
+
+      .benefit-grid{
+        min-height:96px;
+      }
+
+      .benefit-item{
+        padding:0 14px;
+        grid-template-columns:42px minmax(0,1fr);
+        gap:9px;
+      }
+
+      .benefit-icon{
+        width:42px;height:42px;
+      }
+
+      .benefit-item h3{font-size:14px}
+      .benefit-item p{font-size:8px}
+
+      .tool-card-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .tool-card:nth-child(5){
+        grid-column:1/-1;
+        min-height:160px;
+      }
+
+      .journey-compact{
+        grid-template-columns:repeat(4,1fr);
+      }
+
+      .journey-label{
+        grid-column:1/-1;
+        text-align:center;
+      }
+
+      .vh6-inner{
+        grid-template-columns:1fr;
+        gap:10px;
+        padding:26px 0;
+      }
+
+      .vh6-copy{text-align:center}
+      .vh6-copy h2,.vh6-copy p{margin-left:auto;margin-right:auto}
+      .vh6-copy .hero-btn{margin-left:auto;margin-right:auto}
+
+      .decision-map{
+        border-left:0;
+        border-top:1px solid rgba(255,255,255,.06);
+      }
+
+      .about-inner{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .about-copy{
+        grid-column:1/-1;
+        padding:27px 0 18px;
         text-align:center;
         align-items:center;
       }
 
-      .hero-copy h1{
-        max-width:700px;
-        font-size:39px;
+      .about-copy p{margin-left:auto;margin-right:auto}
+
+      .about-photo,.about-quote{
+        min-height:290px;
       }
 
-      .hero-copy > p{
-        max-width:650px;
+      .process-inner{
+        grid-template-columns:1fr 1fr 1fr;
+        padding:12px 0;
       }
 
-      .hero-stats{
-        max-width:650px;
-      }
-
-      .hero-visual{
-        min-height:360px;
-      }
-
-      .hero-visual picture{
-        width:min(100%,380px);
-      }
-
-      .hero-visual img{
-        max-height:380px;
-      }
-
-      .hero-quote{
-        left:18px;
-        right:auto;
-        top:18px;
-        width:180px;
-      }
-
-      .hero-words{
-        right:16px;
-        bottom:34px;
-      }
-
-      .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .journey-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .journey-note{
-        position:static;
-        max-width:none;
-        margin:-4px 0 9px;
+      .process-title{
+        grid-column:1/-1;
+        padding:0 0 11px;
         text-align:center;
-        transform:none;
       }
-      .trust-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .trust-item:nth-child(2){border-right:0}
-      .trust-item:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.06)}
-      .system-grid{grid-template-columns:1fr}
-      .lower-grid{grid-template-columns:1fr}
-      .lower-grid > article:last-child{grid-column:auto}
-      .knowledge-list{grid-template-columns:1fr}
-      .final-cta{grid-template-columns:1fr;text-align:center}
-      .cta-art{height:100px}
-      .cta-side{grid-column:auto}
+
+      .process-item:first-of-type{
+        border-left:0;
+      }
     }
 
 
     @media(max-width:680px){
-      .wrap,
-      .hero-inner{
+      .wrap,.hero-inner{
         width:min(calc(100% - 20px),var(--max));
       }
 
@@ -1455,240 +1320,257 @@
       }
 
       .hero-copy{
-        padding:27px 0 10px;
+        padding:26px 0 10px;
       }
 
-      .hero-copy .eyebrow{
-        font-size:7.8px;
+      .hero-eyebrow{
+        font-size:8px;
+        margin-bottom:8px;
       }
 
-      .hero-copy h1{
+      .hero-title{
         font-size:31px;
         line-height:1.08;
       }
 
-      .hero-copy > p{
-        font-size:10.5px;
-        line-height:1.58;
+      .hero-lead{
+        margin-top:10px;
+        font-size:10px;
+        line-height:1.55;
       }
 
       .hero-actions{
         width:100%;
-        margin-top:15px;
         display:grid;
         grid-template-columns:1fr 1fr;
         gap:7px;
+        margin-top:14px;
       }
 
-      .btn-primary,.btn-secondary{
+      .hero-btn{
         min-height:39px;
-        padding:0 9px;
-        font-size:8px;
+        padding:0 8px;
+        font-size:7.8px;
         text-align:center;
       }
-
-      .hero-stats{
-        margin-top:15px;
-        padding-top:10px;
-      }
-
-      .hero-stat{
-        padding:0 5px;
-        min-height:50px;
-        text-align:center;
-      }
-
-      .hero-stat strong{font-size:15px}
-      .hero-stat span{font-size:6.3px}
 
       .hero-visual{
-        min-height:310px;
-        margin-top:0;
+        min-height:230px;
       }
 
-      .hero-visual picture{
-        width:min(100%,320px);
+      .benefit-grid{
+        min-height:79px;
+        grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
-      .hero-visual img{
-        max-height:320px;
-      }
-
-      .hero-quote{
-        top:10px;
-        left:5px;
-        width:145px;
-      }
-
-      .hero-quote blockquote{
-        font-size:15px;
-      }
-
-      .hero-quote .sig{font-size:18px}
-
-      .hero-words{
-        right:5px;
-        bottom:20px;
-        font-size:7px;
+      .benefit-item{
+        min-height:54px;
+        padding:0 5px!important;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
         gap:4px;
-      }
-
-      .home-section{margin-top:8px}
-      .section-pad{padding:13px 10px 12px}
-      .section-top{margin-bottom:10px}
-      .section-title{font-size:17px}
-      .section-sub{font-size:8.5px}
-
-      .quick-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:6px;
-      }
-
-      .quick-card{
-        min-height:142px;
-        padding:10px 8px;
-        align-items:center;
         text-align:center;
       }
 
-      .quick-icon{
+      .benefit-icon{
         width:30px;
         height:30px;
       }
 
-      .quick-icon svg{
-        width:15px;
-        height:15px;
+      .benefit-icon svg{
+        width:17px;height:17px;
       }
 
-      .quick-card h3{
-        font-size:10px;
+      .benefit-item h3{
+        font-family:"Be Vietnam Pro",sans-serif;
+        font-size:7.5px;
+        line-height:1.25;
       }
 
-      .quick-card p{
-        font-size:7.3px;
+      .benefit-item p{
+        margin-top:2px;
+        font-size:5.7px;
+        line-height:1.3;
       }
 
-      .quick-card b{
-        font-size:7px;
+      .tools-inner{
+        padding:19px 0 17px;
       }
 
-      .journey-note{
-        font-size:14px;
+      .light-head{
+        margin-bottom:11px;
       }
 
-      .journey-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:6px;
-      }
+      .light-kicker{font-size:7px}
+      .light-head h2{font-size:21px}
+      .light-more{font-size:7px}
 
-      .journey-card{
-        min-height:112px;
-        padding:9px 7px;
-        grid-template-columns:29px minmax(0,1fr);
+      .tool-card-grid{
         gap:7px;
       }
 
-      .journey-symbol{
-        width:28px;
-        height:28px;
-        font-size:12px;
+      .tool-card{
+        min-height:170px;
+        padding:12px 10px 10px;
       }
 
-      .journey-card h3{font-size:8.8px}
-      .journey-card p{font-size:6.7px}
-      .journey-card a{min-height:24px;padding:0 7px;font-size:6.5px}
+      .tool-card:nth-child(5){
+        min-height:135px;
+      }
 
-      .trust-item{
-        min-height:42px;
-        padding:0 6px;
-        gap:5px;
+      .tool-icon{
+        width:31px;height:31px;
+      }
+
+      .tool-icon svg{
+        width:29px;height:29px;
+      }
+
+      .tool-card h3{
+        margin-top:10px;
+        font-size:13px;
+      }
+
+      .tool-card p{
+        margin-top:6px;
+        font-size:7px;
+        line-height:1.45;
+      }
+
+      .tool-arrow{
+        width:27px;height:27px;
+        font-size:13px;
+      }
+
+      .journey-compact{
+        margin-top:12px;
+        padding-top:10px;
+        grid-template-columns:repeat(2,1fr);
+        gap:6px 0;
+      }
+
+      .journey-label{
         font-size:7px;
       }
 
-      .trust-icon{
-        width:20px;
-        height:20px;
-        flex-basis:20px;
+      .journey-link{
+        min-height:28px;
+        font-size:7px;
+      }
+
+      .journey-link:nth-of-type(odd){
+        border-left:0;
+      }
+
+      .vh6-inner{
+        min-height:0;
+        padding:19px 0;
+      }
+
+      .dark-kicker{font-size:7px}
+      .vh6-copy h2{
+        font-size:23px;
+        line-height:1.18;
+      }
+
+      .vh6-copy p{
         font-size:8px;
       }
 
-      .system-grid{gap:8px}
-
-      .vh6-list{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-        gap:10px 5px;
+      .decision-map{
+        min-height:210px;
+        padding:18px 2px 12px;
       }
 
-      .vh6-orb{
-        width:56px;
-        height:56px;
+      .decision-points{
+        height:170px;
+        gap:0;
       }
 
-      .vh6-orb svg{
-        width:24px;
-        height:24px;
+      .decision-orb{
+        width:40px;height:40px;
+        font-size:12px;
       }
 
-      .vh6-item h3{font-size:7.5px}
-      .vh6-item span{font-size:6px}
+      .decision-point strong{font-size:5.8px}
+      .decision-point span{font-size:4.8px}
 
-      .tool-row{
-        min-height:42px;
-        grid-template-columns:26px minmax(0,1fr) auto;
+      .about-inner{
+        grid-template-columns:1fr 1fr;
       }
 
-      .tool-row-icon{
-        width:25px;
-        height:25px;
+      .about-copy{
+        padding:20px 0 14px;
       }
 
-      .tool-row strong{font-size:8.2px}
-      .tool-row span{font-size:6.5px}
-
-      .lower-card{
-        min-height:0;
-        padding:12px 10px;
+      .about-copy h2{
+        font-size:23px;
       }
 
-      .lower-card h2{
-        text-align:center;
+      .about-copy p{
+        font-size:8px;
+      }
+
+      .about-photo,.about-quote{
+        min-height:235px;
+      }
+
+      .about-photo img{
+        min-height:235px;
+        object-position:center top;
+      }
+
+      .about-quote{
+        padding:18px 13px 14px;
+      }
+
+      .quote-text{
         font-size:15px;
       }
 
-      .lower-sub{
-        text-align:center;
-        font-size:7.3px;
+      .quote-sign{
+        font-size:20px;
       }
 
-      .about-mini{
-        grid-template-columns:82px minmax(0,1fr);
-        gap:9px;
+      .principle-grid{
+        margin-top:11px;
+        padding-top:10px;
       }
 
-      .about-line{font-size:7px}
-      .process-row strong{font-size:8.2px}
-      .process-row span{font-size:6.8px}
-
-      .knowledge-item{
-        grid-template-columns:52px minmax(0,1fr);
+      .principle{
+        font-size:5px;
       }
 
-      .knowledge-item strong{font-size:7.8px}
-      .knowledge-item span{font-size:6.4px}
-
-      .final-cta{
-        padding:14px 10px;
-        gap:10px;
+      .principle b{
+        width:22px;height:22px;
+        font-size:10px;
       }
 
-      .cta-art{height:78px}
-      .cta-copy h2{font-size:20px}
-      .cta-copy p{font-size:7.7px}
-      .cta-side .btn-primary{min-width:0;width:100%}
+      .process-inner{
+        min-height:0;
+        padding:11px 0 13px;
+      }
+
+      .process-title strong{font-size:15px}
+      .process-title small{font-size:6.5px}
+
+      .process-item{
+        padding:0 7px;
+        grid-template-columns:26px minmax(0,1fr);
+        gap:5px;
+      }
+
+      .process-no{
+        width:25px;height:25px;
+        font-size:7px;
+      }
+
+      .process-item b{font-size:6.7px}
+      .process-item span{font-size:5px}
 
 
-      /* FOOTER MOBILE GIỮ HỆ HIỆN TẠI */
+      /* FOOTER MOBILE — GIỮ NGUYÊN HỆ HIỆN TẠI */
       .footer .footer-main{
         padding:26px 0 19px;
         grid-template-columns:1fr;
@@ -1794,9 +1676,16 @@
 
 
     @media(max-width:430px){
-      .hero-copy h1{font-size:29px}
-      .quick-card{min-height:138px}
-      .journey-card{min-height:108px}
+      .hero-title{font-size:29px}
+      .light-head{
+        align-items:flex-start;
+      }
+      .light-more{
+        padding-top:4px;
+      }
+      .tool-card h3{font-size:12px}
+      .decision-orb{width:37px;height:37px}
+      .quote-text{font-size:14px}
 
       .footer .footer-nav-all .quick-links{
         gap:7px 9px;
@@ -1812,7 +1701,7 @@
 <body>
 
   <!-- =======================================================
-       HEADER — GIỮ NGUYÊN HỆ TRANG CHỦ HIỆN TẠI
+       HEADER — GIỮ NGUYÊN
   ======================================================== -->
   <header class="topbar">
 
@@ -1890,120 +1779,333 @@
   </header>
 
 
-  <!-- =======================================================
-       PHẦN GIỮA — THIẾT KẾ BÁM HÌNH MẪU
-  ======================================================== -->
-  <main class="home-main">
-
+  <main>
 
     <!-- HERO -->
-    <section class="hero-premium">
+    <section class="home-hero">
 
       <div class="hero-inner">
 
         <div class="hero-copy">
 
-          <div class="eyebrow">
-            ✦ VÕ HOÀNG · ĐẦU TƯ CHUẨN HỆ THỐNG
+          <div class="hero-eyebrow">
+            ĐẦU TƯ CHUẨN HỆ THỐNG
           </div>
 
-          <h1>
+          <h1 class="hero-title">
             Đầu tư có hệ thống.
-            <span>Ra quyết định có kế hoạch.</span>
+            <span>Gia tăng tài sản có kế hoạch.</span>
           </h1>
 
-          <p>
-            Không chạy theo phím hàng. Không ra quyết định chỉ vì cảm xúc.
-            Bắt đầu từ bối cảnh thị trường, quản trị vốn, mức rủi ro
-            và kế hoạch phù hợp với chính tài khoản của bạn.
+          <p class="hero-lead">
+            Quản lý vốn, kiểm soát rủi ro và xây dựng danh mục phù hợp
+            với mục tiêu tài chính của bạn. Không chạy theo phím hàng,
+            không ra quyết định chỉ vì cảm xúc.
           </p>
-
 
           <div class="hero-actions">
 
-            <a
-              class="btn-primary"
-              href="kiem-tra-nhanh-tai-khoan.html"
-            >
-              ◈ Kiểm tra nhanh tài khoản →
+            <a class="hero-btn primary" href="kiem-tra-nhanh-tai-khoan.html">
+              Kiểm tra nhanh tài khoản →
             </a>
 
-            <a
-              class="btn-secondary"
-              href="sang-nay-can-nhin-gi.html"
-            >
-              Sáng nay cần nhìn gì? →
+            <a class="hero-btn secondary" href="thi-truong-hom-nay.html">
+              Xem thị trường hôm nay →
             </a>
-
-          </div>
-
-
-          <div class="hero-stats">
-
-            <div class="hero-stat">
-              <strong>17</strong>
-              <span>Câu sàng lọc<br>nhà đầu tư</span>
-            </div>
-
-            <div class="hero-stat">
-              <strong>6</strong>
-              <span>Lớp quyết định<br>VH6</span>
-            </div>
-
-            <div class="hero-stat">
-              <strong>3</strong>
-              <span>Nhịp đồng hành<br>cùng NĐT</span>
-            </div>
-
-            <div class="hero-stat">
-              <strong>1</strong>
-              <span>Hệ thống xuyên suốt<br>từ nhìn đến review</span>
-            </div>
 
           </div>
 
         </div>
 
 
-        <div class="hero-visual">
+        <div class="hero-visual" aria-label="Hành trình đầu tư có hệ thống"></div>
 
-          <div class="hero-market-glow" aria-hidden="true"></div>
+      </div>
 
-          <i class="hero-candle c1" aria-hidden="true"></i>
-          <i class="hero-candle c2" aria-hidden="true"></i>
-          <i class="hero-candle c3" aria-hidden="true"></i>
-          <i class="hero-candle c4" aria-hidden="true"></i>
-          <i class="hero-candle c5" aria-hidden="true"></i>
+    </section>
 
 
-          <picture>
-            <source media="(max-width:680px)" srcset="AVATAR2-mobile.webp">
-            <img
-              src="AVATAR2.webp"
-              alt="Võ Hoàng"
-              width="800"
-              height="800"
-              fetchpriority="high"
-              decoding="async"
-            >
-          </picture>
+    <!-- 3 BENEFITS -->
+    <section class="hero-benefits">
+
+      <div class="wrap benefit-grid">
+
+        <article class="benefit-item">
+
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3 5 6v5c0 4.5 2.8 7.5 7 10 4.2-2.5 7-5.5 7-10V6z"></path>
+              <path d="m9.5 12 1.7 1.7 3.5-4"></path>
+            </svg>
+          </div>
+
+          <div>
+            <h3>Quản trị vốn</h3>
+            <p>Bảo vệ tài khoản là ưu tiên số 1.</p>
+          </div>
+
+        </article>
 
 
-          <aside class="hero-quote">
-            <blockquote>
-              “Không cần đúng mọi lần.
-              Cần sai nhỏ và đúng đủ lớn.”
-            </blockquote>
+        <article class="benefit-item">
 
-            <span class="sig">— Võ Hoàng</span>
-          </aside>
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 19V12h4v7M10 19V8h4v11M16 19V4h4v15"></path>
+            </svg>
+          </div>
+
+          <div>
+            <h3>Danh mục có kế hoạch</h3>
+            <p>Phân bổ hợp lý, phù hợp mục tiêu.</p>
+          </div>
+
+        </article>
 
 
-          <div class="hero-words" aria-hidden="true">
-            <span>Kỷ luật</span>
-            <span>Hệ thống</span>
-            <span>Bảo toàn vốn</span>
-            <span>Tăng trưởng bền vững</span>
+        <article class="benefit-item">
+
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 18 9 13l3 3 7-9"></path>
+              <path d="M14 7h5v5"></path>
+            </svg>
+          </div>
+
+          <div>
+            <h3>Hiệu quả theo thời gian</h3>
+            <p>Nhìn cả hành trình, không chỉ một lệnh.</p>
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- TOOLS LIGHT BAND -->
+    <section class="tools-band">
+
+      <div class="wrap tools-inner">
+
+        <div class="light-head">
+
+          <div>
+            <div class="light-kicker">BẠN MUỐN LÀM GÌ HÔM NAY?</div>
+            <h2>Các công cụ dành cho nhà đầu tư</h2>
+          </div>
+
+          <a class="light-more" href="investor-calculator.html">
+            Khám phá tất cả công cụ →
+          </a>
+
+        </div>
+
+
+        <div class="tool-card-grid">
+
+          <a class="tool-card" href="sang-nay-can-nhin-gi.html">
+
+            <div class="tool-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                <path d="M8 8h8M8 12h8M8 16h5"></path>
+              </svg>
+            </div>
+
+            <h3>Sáng nay<br>cần nhìn gì?</h3>
+
+            <p>
+              Tóm tắt bối cảnh, cơ hội, rủi ro và điều kiện đáng chú ý.
+            </p>
+
+            <span class="tool-arrow">→</span>
+
+          </a>
+
+
+          <a class="tool-card" href="kiem-tra-nhanh-tai-khoan.html">
+
+            <div class="tool-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 15a8 8 0 1 1 16 0"></path>
+                <path d="m12 15 4-5"></path>
+                <circle cx="12" cy="15" r="1"></circle>
+              </svg>
+            </div>
+
+            <h3>Kiểm tra nhanh<br>tài khoản</h3>
+
+            <p>
+              Tài khoản của bạn đang mạnh, yếu hay hở ở đâu?
+            </p>
+
+            <span class="tool-arrow">→</span>
+
+          </a>
+
+
+          <a class="tool-card" href="investor-calculator.html">
+
+            <div class="tool-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="m7 7 10 10M17 7 7 17"></path>
+                <circle cx="7" cy="7" r="3"></circle>
+                <circle cx="17" cy="17" r="3"></circle>
+              </svg>
+            </div>
+
+            <h3>Công cụ<br>nhà đầu tư</h3>
+
+            <p>
+              Máy tính vốn, margin, hòa vốn, cổ tức và hỗ trợ ra quyết định.
+            </p>
+
+            <span class="tool-arrow">→</span>
+
+          </a>
+
+
+          <a class="tool-card" href="watchlist.html">
+
+            <div class="tool-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3v9h9"></path>
+                <path d="M12 3a9 9 0 1 0 9 9"></path>
+              </svg>
+            </div>
+
+            <h3>Watchlist<br>có lý do</h3>
+
+            <p>
+              Lưu mã cùng điều kiện kích hoạt, điều kiện sai và lý do theo dõi.
+            </p>
+
+            <span class="tool-arrow">→</span>
+
+          </a>
+
+
+          <a class="tool-card" href="lien-he.html">
+
+            <div class="tool-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 5h14v10H9l-4 4z"></path>
+                <path d="M9 9h6M9 12h4"></path>
+              </svg>
+            </div>
+
+            <h3>Làm việc<br>với Võ Hoàng</h3>
+
+            <p>
+              Sàng lọc, mổ xẻ tài khoản và đồng hành theo quy trình rõ ràng.
+            </p>
+
+            <span class="tool-arrow">→</span>
+
+          </a>
+
+        </div>
+
+
+        <div class="journey-compact">
+
+          <div class="journey-label">Bạn đang ở đâu?</div>
+
+          <a class="journey-link" href="kien-thuc.html">
+            Mới tìm hiểu
+          </a>
+
+          <a class="journey-link" href="thi-truong-hom-nay.html">
+            Đang giao dịch
+          </a>
+
+          <a class="journey-link" href="kiem-tra-nhanh-tai-khoan.html">
+            Đang thua lỗ
+          </a>
+
+          <a class="journey-link" href="he-thong.html">
+            Muốn xây hệ thống
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- VH6 -->
+    <section class="vh6-band">
+
+      <div class="wrap vh6-inner">
+
+        <div class="vh6-copy">
+
+          <div class="dark-kicker">
+            HỆ THỐNG ĐẦU TƯ VH6
+          </div>
+
+          <h2>
+            Một quyết định tốt không đến từ một tín hiệu.
+          </h2>
+
+          <p>
+            Mỗi quyết định được đi qua 6 lớp:
+            chọn cổ phiếu, thời điểm, quản trị rủi ro,
+            phân bổ vốn, quản lý vốn và kỷ luật hệ thống.
+            Mục tiêu không phải đúng mọi lần, mà là giữ sai lầm nhỏ
+            và để quyết định đúng có đủ không gian phát huy.
+          </p>
+
+          <a class="hero-btn primary" href="he-thong.html">
+            Khám phá VH6 →
+          </a>
+
+        </div>
+
+
+        <div class="decision-map">
+
+          <div class="decision-points">
+
+            <div class="decision-point">
+              <div class="decision-orb">01</div>
+              <strong>Chọn cổ phiếu</strong>
+              <span>Stock Picking</span>
+            </div>
+
+            <div class="decision-point">
+              <div class="decision-orb">02</div>
+              <strong>Thời điểm</strong>
+              <span>Timing</span>
+            </div>
+
+            <div class="decision-point">
+              <div class="decision-orb">03</div>
+              <strong>Quản trị rủi ro</strong>
+              <span>Risk</span>
+            </div>
+
+            <div class="decision-point">
+              <div class="decision-orb">04</div>
+              <strong>Phân bổ vốn</strong>
+              <span>Allocation</span>
+            </div>
+
+            <div class="decision-point">
+              <div class="decision-orb">05</div>
+              <strong>Quản lý vốn</strong>
+              <span>Money</span>
+            </div>
+
+            <div class="decision-point">
+              <div class="decision-orb">06</div>
+              <strong>Kỷ luật hệ thống</strong>
+              <span>Discipline</span>
+            </div>
+
           </div>
 
         </div>
@@ -2013,578 +2115,131 @@
     </section>
 
 
-    <div class="wrap">
+    <!-- ABOUT -->
+    <section class="about-band">
 
+      <div class="wrap about-inner">
 
-      <!-- HÔM NAY CẦN GÌ -->
-      <section class="home-section premium-shell section-pad">
+        <div class="about-copy">
 
-        <div class="section-top">
-          <div>
-            <h2 class="section-title">
-              Hôm nay bạn cần giải quyết việc gì?
-            </h2>
-
-            <p class="section-sub">
-              Chọn nhanh để đi đến nội dung phù hợp nhất với việc bạn đang cần xử lý.
-            </p>
+          <div class="light-kicker">
+            VỀ VÕ HOÀNG
           </div>
-        </div>
 
+          <h2>
+            Đồng hành cùng bạn<br>
+            trên hành trình tài chính dài hạn.
+          </h2>
 
-        <div class="quick-grid">
+          <p>
+            Tôi tin rằng đầu tư không phải là dự đoán thị trường,
+            mà là quản trị rủi ro, xây dựng danh mục và kiên trì với kế hoạch.
+            Mục tiêu là giúp bạn đầu tư tốt hơn và sống chủ động hơn.
+          </p>
 
-          <a class="quick-card" href="sang-nay-can-nhin-gi.html">
-
-            <div class="quick-icon">
-              <svg viewBox="0 0 24 24"><path d="M4 5h16v2H4zm0 6h10v2H4zm0 6h13v2H4zm13-7l4 3l-4 3z"/></svg>
-            </div>
-
-            <div>
-              <h3>Sáng nay cần nhìn gì?</h3>
-              <p>Tổng quan thị trường, vùng cần quan sát và điều kiện có thể làm thay đổi quyết định.</p>
-            </div>
-
-            <b>Xem ngay →</b>
-          </a>
-
-
-          <a class="quick-card" href="thi-truong-hom-nay.html">
-
-            <div class="quick-icon">
-              <svg viewBox="0 0 24 24"><path d="M3 18h2V8H3zm5 0h2V4H8zm5 0h2v-6h-2zm5 0h2V7h-2z"/></svg>
-            </div>
-
-            <div>
-              <h3>Thị trường hôm nay</h3>
-              <p>Cập nhật diễn biến, dòng tiền, nhóm ngành và góc nhìn hệ thống trong phiên.</p>
-            </div>
-
-            <b>Xem thị trường →</b>
-          </a>
-
-
-          <a class="quick-card" href="sau-phien-cua-toi.html">
-
-            <div class="quick-icon">
-              <svg viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5zm2 2v14h10V7h-3V5zm2 5h6v2H9zm0 4h6v2H9z"/></svg>
-            </div>
-
-            <div>
-              <h3>Sau phiên của tôi</h3>
-              <p>Tóm tắt, đánh giá, tách kết quả khỏi cảm xúc và chuẩn bị cho phiên tiếp theo.</p>
-            </div>
-
-            <b>Review phiên →</b>
-          </a>
-
-
-          <a class="quick-card" href="watchlist.html">
-
-            <div class="quick-icon">
-              <svg viewBox="0 0 24 24"><path d="m12 2 2.3 5.3L20 8l-4.3 3.7L17 18l-5-3l-5 3l1.3-6.3L4 8l5.7-.7z"/></svg>
-            </div>
-
-            <div>
-              <h3>Watchlist</h3>
-              <p>Danh sách cổ phiếu đang theo dõi cùng lý do, điều kiện kích hoạt và điều kiện sai.</p>
-            </div>
-
-            <b>Mở Watchlist →</b>
+          <a class="hero-btn primary" href="lien-he.html">
+            Trao đổi với Võ Hoàng →
           </a>
 
         </div>
 
-      </section>
+
+        <div class="about-photo">
+
+          <picture>
+            <source media="(max-width:680px)" srcset="AVATAR2-mobile.webp">
+            <img
+              src="AVATAR2.webp"
+              alt="Võ Hoàng"
+              loading="lazy"
+              decoding="async"
+            >
+          </picture>
+
+        </div>
 
 
-      <!-- BẠN ĐANG Ở ĐÂU -->
-      <section class="home-section premium-shell section-pad journey-shell">
+        <aside class="about-quote">
 
-        <div class="section-top">
-          <div>
-            <h2 class="section-title">
-              Bạn đang ở đâu trên hành trình đầu tư?
-            </h2>
-
-            <p class="section-sub">
-              Chọn trạng thái gần với mình nhất để hệ thống đưa bạn đến đúng điểm bắt đầu.
-            </p>
+          <div class="quote-text">
+            “Không cần đúng mọi lần.<br>
+            Cần sai nhỏ và đúng đủ lớn.”
           </div>
-        </div>
 
+          <div class="quote-rule"></div>
 
-        <div class="journey-note">
-          “Hiểu đúng mình đang ở đâu<br>là bước đầu để đi đúng hướng.”
-        </div>
-
-
-        <div class="journey-grid">
-
-          <article class="journey-card">
-            <div class="journey-symbol">✦</div>
-
-            <div>
-              <h3>Mới tìm hiểu</h3>
-              <p>Học kiến thức nền tảng, hiểu các khái niệm quan trọng.</p>
-              <a href="kien-thuc.html">Đến Kiến thức →</a>
-            </div>
-          </article>
-
-
-          <article class="journey-card">
-            <div class="journey-symbol">↗</div>
-
-            <div>
-              <h3>Đang giao dịch</h3>
-              <p>Cập nhật thị trường, dùng công cụ và hỗ trợ quyết định.</p>
-              <a href="thi-truong-hom-nay.html">Xem thị trường →</a>
-            </div>
-          </article>
-
-
-          <article class="journey-card">
-            <div class="journey-symbol">!</div>
-
-            <div>
-              <h3>Đang thua lỗ</h3>
-              <p>Kiểm tra nhanh tài khoản để xác định nguyên nhân ưu tiên.</p>
-              <a href="kiem-tra-nhanh-tai-khoan.html">Kiểm tra tài khoản →</a>
-            </div>
-          </article>
-
-
-          <article class="journey-card">
-            <div class="journey-symbol">◎</div>
-
-            <div>
-              <h3>Muốn xây hệ thống</h3>
-              <p>Tìm hiểu VH6 và cách một quyết định được chuẩn hóa thành quy trình.</p>
-              <a href="he-thong.html">Xem hệ thống →</a>
-            </div>
-          </article>
-
-        </div>
-
-      </section>
-
-
-      <!-- TRUST -->
-      <section class="home-section trust-strip">
-
-        <div class="trust-item">
-          <span class="trust-icon">↯</span>
-          <span>Không phím hàng</span>
-        </div>
-
-        <div class="trust-item">
-          <span class="trust-icon">↔</span>
-          <span>Không hứa lợi nhuận</span>
-        </div>
-
-        <div class="trust-item">
-          <span class="trust-icon">♢</span>
-          <span>Ưu tiên bảo toàn vốn</span>
-        </div>
-
-        <div class="trust-item">
-          <span class="trust-icon">⊙</span>
-          <span>Mỗi quyết định đều có điều kiện sai</span>
-        </div>
-
-      </section>
-
-
-      <!-- VH6 + TOOLS -->
-      <section class="home-section system-grid">
-
-        <article class="premium-shell section-pad">
-
-          <div class="section-top">
-            <div>
-              <h2 class="section-title">
-                Hệ thống đầu tư VH6
-              </h2>
-
-              <p class="section-sub">
-                Sáu lớp giúp một quyết định trở nên có hệ thống hơn.
-              </p>
-            </div>
-
-            <a class="section-link" href="he-thong.html">
-              Tìm hiểu chi tiết →
-            </a>
+          <div class="quote-sign">
+            Võ Hoàng
           </div>
 
 
-          <div class="vh6-list">
+          <div class="principle-grid">
 
-            <div class="vh6-item">
-
-              <div class="vh6-orb">
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="8"></circle>
-                  <circle cx="12" cy="12" r="4"></circle>
-                  <path d="M12 2v3M22 12h-3M12 22v-3M2 12h3"></path>
-                </svg>
-              </div>
-
-              <h3>Chọn cổ phiếu</h3>
-              <span>Stock Picking</span>
+            <div class="principle">
+              <b>✓</b>
+              Kỷ luật
             </div>
 
-
-            <div class="vh6-item">
-
-              <div class="vh6-orb">
-                <svg viewBox="0 0 24 24">
-                  <path d="M4 18V9M9 18V6M14 18v-8M19 18V4"></path>
-                  <path d="M3 20h18"></path>
-                </svg>
-              </div>
-
-              <h3>Thời điểm</h3>
-              <span>Timing</span>
+            <div class="principle">
+              <b>◌</b>
+              Thực tế
             </div>
 
-
-            <div class="vh6-item">
-
-              <div class="vh6-orb">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 3 5 6v5c0 4.5 2.8 7.5 7 10 4.2-2.5 7-5.5 7-10V6z"></path>
-                  <path d="m9.5 12 1.7 1.7 3.5-4"></path>
-                </svg>
-              </div>
-
-              <h3>Quản trị rủi ro</h3>
-              <span>Risk</span>
+            <div class="principle">
+              <b>+</b>
+              Dài hạn
             </div>
 
-
-            <div class="vh6-item">
-
-              <div class="vh6-orb">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 3v9h9"></path>
-                  <path d="M12 3a9 9 0 1 0 9 9"></path>
-                </svg>
-              </div>
-
-              <h3>Phân bổ vốn</h3>
-              <span>Allocation</span>
+            <div class="principle">
+              <b>∞</b>
+              Đồng hành
             </div>
-
-
-            <div class="vh6-item">
-
-              <div class="vh6-orb">
-                <svg viewBox="0 0 24 24">
-                  <ellipse cx="12" cy="6" rx="7" ry="3"></ellipse>
-                  <path d="M5 6v5c0 1.7 3.1 3 7 3s7-1.3 7-3V6"></path>
-                  <path d="M5 11v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"></path>
-                </svg>
-              </div>
-
-              <h3>Quản lý vốn</h3>
-              <span>Money</span>
-            </div>
-
-
-            <div class="vh6-item">
-
-              <div class="vh6-orb">
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"></path>
-                </svg>
-              </div>
-
-              <h3>Kỷ luật & hệ thống</h3>
-              <span>Discipline & System</span>
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <aside class="premium-shell section-pad">
-
-          <div class="section-top">
-            <div>
-              <h2 class="section-title">
-                Bộ công cụ đầu tư
-              </h2>
-
-              <p class="section-sub">
-                Công cụ tính toán thật cho những quyết định thật.
-              </p>
-            </div>
-
-            <a class="section-link" href="investor-calculator.html">
-              Xem tất cả →
-            </a>
-          </div>
-
-
-          <div class="tool-list">
-
-            <a class="tool-row" href="investor-calculator.html">
-              <div class="tool-row-icon">
-                <svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zm3 3v3h8V6zm0 6h2v2H8zm3 0h2v2h-2zm3 0h2v2h-2zm-6 3h2v2H8zm3 0h2v2h-2zm3 0h2v2h-2z"/></svg>
-              </div>
-              <div>
-                <strong>Máy tính quy mô lệnh</strong>
-                <span>Tính khối lượng theo vốn và rủi ro</span>
-              </div>
-              <span class="go">→</span>
-            </a>
-
-
-            <a class="tool-row" href="investor-calculator.html">
-              <div class="tool-row-icon">
-                <svg viewBox="0 0 24 24"><path d="M4 18h16v2H4zM7 15l3-4l3 2l4-6l2 1l-5 8l-3-2l-2 3z"/></svg>
-              </div>
-              <div>
-                <strong>Hòa vốn thật</strong>
-                <span>Tính giá hòa vốn sau phí, thuế, lãi vay</span>
-              </div>
-              <span class="go">→</span>
-            </a>
-
-
-            <a class="tool-row" href="investor-calculator.html">
-              <div class="tool-row-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2 4 7v5c0 5 3 8 8 10c5-2 8-5 8-10V7zm-1 5h2v3h3v2h-3v5h-2v-5H8v-2h3z"/></svg>
-              </div>
-              <div>
-                <strong>Tính cổ tức</strong>
-                <span>Lợi suất, giá sau chia và quyền mua</span>
-              </div>
-              <span class="go">→</span>
-            </a>
-
-
-            <a class="tool-row" href="investor-calculator.html">
-              <div class="tool-row-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 3c4.4 0 8 3.6 8 8s-3.6 8-8 8s-8-3.6-8-8s3.6-8 8-8zm-1 4v5l4 2l1-2l-3-1.5V7z"/></svg>
-              </div>
-              <div>
-                <strong>Stress test margin</strong>
-                <span>Xem sức chịu đựng khi thị trường xấu</span>
-              </div>
-              <span class="go">→</span>
-            </a>
 
           </div>
 
         </aside>
 
-      </section>
-
-
-      <!-- ABOUT / PROCESS / KNOWLEDGE -->
-      <section class="home-section lower-grid">
-
-        <article class="premium-shell lower-card">
-
-          <h2>Về Võ Hoàng</h2>
-          <p class="lower-sub">
-            Người đồng hành cùng nhà đầu tư cá nhân theo một quy trình rõ ràng.
-          </p>
-
-
-          <div class="about-mini">
-
-            <div class="about-photo">
-              <img src="AVATAR2.webp" alt="Võ Hoàng" loading="lazy" decoding="async">
-            </div>
-
-
-            <div>
-
-              <div class="about-list">
-
-                <div class="about-line">
-                  <b>✓</b>
-                  <span>Định vị đầu tư có hệ thống, quản trị rủi ro.</span>
-                </div>
-
-                <div class="about-line">
-                  <b>✓</b>
-                  <span>Không phím hàng, không hứa lợi nhuận.</span>
-                </div>
-
-                <div class="about-line">
-                  <b>✓</b>
-                  <span>Ưu tiên bảo toàn vốn và khả năng đi đường dài.</span>
-                </div>
-
-                <div class="about-line">
-                  <b>✓</b>
-                  <span>Đồng hành bằng công cụ, quy trình và review.</span>
-                </div>
-
-              </div>
-
-              <a class="mini-button" href="ve-toi.html">
-                Tìm hiểu thêm →
-              </a>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <article class="premium-shell lower-card">
-
-          <h2>3 nhịp làm việc với khách</h2>
-          <p class="lower-sub">
-            Từ sàng lọc đến đồng hành lâu dài.
-          </p>
-
-
-          <div class="process-list">
-
-            <div class="process-row">
-              <div class="process-no">1</div>
-              <div>
-                <strong>Sàng lọc online</strong>
-                <span>17 câu hỏi nhanh để hiểu bạn đang ở đâu.</span>
-              </div>
-            </div>
-
-
-            <div class="process-row">
-              <div class="process-no">2</div>
-              <div>
-                <strong>Gặp trực tiếp</strong>
-                <span>Phân tích chi tiết tài khoản, vốn, kỳ vọng và rủi ro.</span>
-              </div>
-            </div>
-
-
-            <div class="process-row">
-              <div class="process-no">3</div>
-              <div>
-                <strong>Đồng hành lâu dài</strong>
-                <span>Review định kỳ và điều chỉnh theo thực tế.</span>
-              </div>
-            </div>
-
-          </div>
-
-
-          <a class="mini-button" href="kiem-tra-nhanh-tai-khoan.html">
-            Bắt đầu từ sàng lọc →
-          </a>
-
-        </article>
-
-
-        <article class="premium-shell lower-card">
-
-          <div class="section-top" style="margin-bottom:0">
-            <div>
-              <h2>Kiến thức nổi bật</h2>
-              <p class="lower-sub">
-                Nội dung giải quyết đúng những lỗi hay gặp của NĐT cá nhân.
-              </p>
-            </div>
-
-            <a class="section-link" href="kien-thuc.html">
-              Xem tất cả →
-            </a>
-          </div>
-
-
-          <div class="knowledge-list">
-
-            <a class="knowledge-item" href="kien-thuc.html">
-
-              <div class="knowledge-thumb">
-                <img src="hero-market.webp" alt="" loading="lazy" decoding="async">
-              </div>
-
-              <div>
-                <strong>Vì sao NĐT cá nhân thường thua lỗ?</strong>
-                <span>Từ duy · cách nhìn thị trường</span>
-              </div>
-
-            </a>
-
-
-            <a class="knowledge-item" href="investor-calculator.html">
-
-              <div class="knowledge-thumb">
-                <img src="hero-thi-truong-hom-nay.webp" alt="" loading="lazy" decoding="async">
-              </div>
-
-              <div>
-                <strong>Quản trị rủi ro: sống sót trước khi kiếm tiền</strong>
-                <span>Rủi ro · công cụ tính toán</span>
-              </div>
-
-            </a>
-
-
-            <a class="knowledge-item" href="watchlist.html">
-
-              <div class="knowledge-thumb">
-                <img src="hero-sang-nay-can-nhin-gi-desktop.webp" alt="" loading="lazy" decoding="async">
-              </div>
-
-              <div>
-                <strong>Cách xây Watchlist có lý do</strong>
-                <span>Quy trình · điều kiện hành động</span>
-              </div>
-
-            </a>
-
-          </div>
-
-        </article>
-
-      </section>
-
-    </div>
-
-
-    <!-- CTA CUỐI -->
-    <section class="home-section final-cta">
-
-      <div class="cta-art" aria-hidden="true"></div>
-
-
-      <div class="cta-copy">
-
-        <small>BẮT ĐẦU TỪ HÔM NAY</small>
-
-        <h2>
-          Hiểu mình hơn. Đầu tư tốt hơn.
-        </h2>
-
-        <p>
-          Dành vài phút kiểm tra nhanh tài khoản để biết mình đang mạnh ở đâu,
-          còn hở chỗ nào và nên làm gì tiếp theo.
-        </p>
-
       </div>
 
+    </section>
 
-      <div class="cta-side">
 
-        <a
-          class="btn-primary"
-          href="kiem-tra-nhanh-tai-khoan.html"
-        >
-          Kiểm tra nhanh tài khoản →
-        </a>
+    <!-- 3 NHỊP -->
+    <section class="process-strip">
 
-        <small>Miễn phí · Nhanh · Tập trung vào vấn đề cần ưu tiên</small>
+      <div class="wrap process-inner">
+
+        <div class="process-title">
+          <small>NẾU MUỐN ĐI SÂU HƠN</small>
+          <strong>3 nhịp làm việc</strong>
+        </div>
+
+
+        <div class="process-item">
+          <div class="process-no">01</div>
+          <div>
+            <b>Sàng lọc online</b>
+            <span>17 câu hỏi để biết điểm cần ưu tiên.</span>
+          </div>
+        </div>
+
+
+        <div class="process-item">
+          <div class="process-no">02</div>
+          <div>
+            <b>Gặp & mổ xẻ tài khoản</b>
+            <span>Phân tích vốn, rủi ro, hành vi và kế hoạch.</span>
+          </div>
+        </div>
+
+
+        <div class="process-item">
+          <div class="process-no">03</div>
+          <div>
+            <b>Đồng hành định kỳ</b>
+            <span>Review và điều chỉnh khi bối cảnh thay đổi.</span>
+          </div>
+        </div>
 
       </div>
 
@@ -2594,7 +2249,7 @@
 
 
   <!-- =======================================================
-       FOOTER — GIỮ NGUYÊN HỆ TRANG CHỦ HIỆN TẠI
+       FOOTER — GIỮ NGUYÊN
   ======================================================== -->
   <footer class="footer">
 
@@ -2763,7 +2418,6 @@
   </footer>
 
 
-  <!-- MENU MOBILE -->
   <script>
     (function(){
       const menuBtn = document.getElementById("menuBtn");
@@ -2778,8 +2432,6 @@
     })();
   </script>
 
-
-  <!-- GIỮ TICKER HIỆN TẠI -->
   <script src="assets/js/market-ticker.js?v=20260911-2" defer></script>
 
 </body>
