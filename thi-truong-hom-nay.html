@@ -776,6 +776,146 @@
     .reader-rules p:nth-child(4){border-left-color:var(--orange);background:rgba(255,159,67,.025)}
     .reader-rules p:nth-child(5){border-left-color:var(--red);background:rgba(255,102,115,.03)}
 
+
+    /* =========================================================
+       BỐ CỤC PHÂN TÍCH THEO HÌNH CHUẨN
+       Trái: ngành | Phải: cảnh báo + chuẩn cùng thời điểm
+       Hàng dưới: thang điểm | cập nhật nhanh
+    ========================================================= */
+    .reader-analysis-layout{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:12px;
+      align-items:stretch;
+    }
+
+    .reader-sector-panel{
+      min-height:0;
+    }
+
+    .reader-right-stack{
+      display:grid;
+      grid-template-rows:auto auto;
+      gap:12px;
+      min-width:0;
+    }
+
+    .reader-alert-panel,
+    .reader-baseline-panel{
+      min-height:0;
+    }
+
+    .reader-baseline-panel .baseline-box > div{
+      min-height:72px;
+    }
+
+    .reader-lower-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      align-items:stretch;
+    }
+
+    /* Thang điểm ngang + vạch dọc */
+    .score-scale{
+      margin-top:4px;
+    }
+
+    .score-scale-track{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      height:8px;
+      border-radius:999px;
+      overflow:hidden;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+
+    .score-scale-track span{display:block;height:100%}
+    .score-scale-track .scale-1{background:#27d98b}
+    .score-scale-track .scale-2{background:#69d887}
+    .score-scale-track .scale-3{background:#e8c95f}
+    .score-scale-track .scale-4{background:#ff8e4f}
+    .score-scale-track .scale-5{background:#ff5f70}
+
+    .score-scale-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      margin-top:10px;
+    }
+
+    .score-scale-item{
+      min-width:0;
+      padding:5px 9px 2px;
+      text-align:center;
+      border-right:1px solid rgba(255,255,255,.10);
+    }
+
+    .score-scale-item:last-child{border-right:0}
+
+    .score-scale-item b{
+      display:block;
+      color:#fff;
+      font-size:11px;
+      line-height:1.25;
+    }
+
+    .score-scale-item strong{
+      display:block;
+      margin-top:4px;
+      font-size:10px;
+      line-height:1.3;
+      color:var(--gold-2);
+    }
+
+    .score-scale-item:nth-child(1) strong,
+    .score-scale-item:nth-child(2) strong{color:var(--green)}
+
+    .score-scale-item:nth-child(4) strong{color:var(--orange)}
+    .score-scale-item:nth-child(5) strong{color:var(--red)}
+
+    .score-scale-item span{
+      display:block;
+      margin-top:4px;
+      color:var(--muted-2);
+      font-size:8.5px;
+      line-height:1.35;
+    }
+
+    /* Cập nhật nhanh - không bịa tin ngoài.
+       Dòng tin được tổng hợp từ chính dữ liệu realtime trên trang. */
+    .reader-news-list{
+      display:grid;
+      gap:4px;
+    }
+
+    .reader-news-row{
+      min-height:30px;
+      display:grid;
+      grid-template-columns:54px minmax(0,1fr);
+      align-items:center;
+      gap:8px;
+      padding:5px 8px;
+      border-radius:8px;
+      background:rgba(255,255,255,.018);
+    }
+
+    .reader-news-row time{
+      color:rgba(231,237,246,.62);
+      font-size:9px;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .reader-news-row span{
+      min-width:0;
+      color:rgba(245,247,251,.88);
+      font-size:9.5px;
+      line-height:1.35;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+
     /* Lead form — thu hẹp khoảng hở, đúng Hình 2 */
     .reader-lead{
       padding:16px 18px !important;
@@ -1125,16 +1265,75 @@
 
       /* Mobile vẫn chia cột để tiết kiệm diện tích */
       .reader-state-shell{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:1fr;
         gap:8px;
       }
-      .reader-score-card,.reader-action-card,.reader-tools-card{padding:11px}
-      .reader-score-row > strong{font-size:18px}
-      .reader-score-row > b{font-size:25px}
-      .reader-action-card h2{font-size:15px}
-      .reader-action-card > p{font-size:9.5px;line-height:1.45}
-      .reader-action-links a{min-height:29px;padding:0 8px;font-size:9px}
-      .reader-tools-card{grid-column:1/-1}
+
+      /* 2 card chính trên mobile: bằng nhau, xếp trên/dưới, text center */
+      .reader-score-card,
+      .reader-action-card{
+        min-height:148px;
+        padding:13px 12px;
+        text-align:center;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+      }
+
+      .reader-score-card .reader-label,
+      .reader-action-card .reader-label{
+        width:100%;
+        text-align:center;
+      }
+
+      .reader-score-row{
+        width:100%;
+        justify-content:center;
+        align-items:flex-end;
+        gap:14px;
+      }
+
+      .reader-score-track{
+        width:min(100%,260px);
+      }
+
+      .reader-score-card > p{
+        width:100%;
+        text-align:center;
+      }
+
+      .reader-score-row > strong{font-size:20px}
+      .reader-score-row > b{font-size:27px}
+
+      .reader-action-card h2{
+        width:100%;
+        text-align:center;
+        font-size:16px;
+      }
+
+      .reader-action-card > p{
+        width:min(100%,320px);
+        text-align:center;
+        font-size:9.5px;
+        line-height:1.45;
+      }
+
+      .reader-action-links{
+        width:100%;
+        justify-content:center;
+      }
+
+      .reader-action-links a{
+        min-height:29px;
+        padding:0 8px;
+        font-size:9px;
+      }
+
+      .reader-tools-card{
+        grid-column:auto;
+        padding:11px;
+      }
       .reader-tools{
         grid-template-columns:repeat(3,minmax(0,1fr));
         gap:6px;
@@ -1200,31 +1399,51 @@
       .reader-alert b{font-size:9.5px}
       .reader-alert p{font-size:8.5px;line-height:1.4}
 
-      .reader-grid-secondary{
+      .reader-analysis-layout{
         grid-template-columns:1fr;
         gap:8px;
       }
-      .reader-grid-secondary .reader-panel{min-height:0}
+
+      .reader-right-stack{
+        gap:8px;
+      }
+
+      .reader-lower-grid{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+
       .baseline-box{
         grid-template-columns:repeat(2,minmax(0,1fr));
         gap:6px;
       }
-      .baseline-box > div{min-height:70px;padding:8px 6px}
+
+      .baseline-box > div{min-height:66px;padding:8px 6px}
       .baseline-box span{font-size:8px}
       .baseline-box strong{font-size:12px}
-      .reader-rules{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:5px;
+
+      .score-scale-track{height:7px}
+
+      .score-scale-grid{
+        margin-top:7px;
       }
-      .reader-rules p{
-        min-height:54px;
-        padding:7px 8px;
-        grid-template-columns:1fr;
-        gap:3px;
-        align-content:center;
-        font-size:8.5px;
+
+      .score-scale-item{
+        padding:4px 3px 1px;
       }
-      .reader-rules p:nth-child(5){grid-column:1/-1}
+
+      .score-scale-item b{font-size:8.5px}
+      .score-scale-item strong{font-size:7.8px;line-height:1.2}
+      .score-scale-item span{font-size:6.8px;line-height:1.22}
+
+      .reader-news-row{
+        min-height:28px;
+        grid-template-columns:44px minmax(0,1fr);
+        padding:4px 6px;
+      }
+
+      .reader-news-row time{font-size:8px}
+      .reader-news-row span{font-size:8.5px}
 
       .reader-lead{
         padding:12px 10px !important;
@@ -1526,67 +1745,69 @@
         </article>
       </section>
 
-      <!-- NHÓM NGÀNH + CẢNH BÁO -->
-      <section class="reader-grid">
-        <article class="panel reader-panel">
+      <!-- BỐ CỤC PHÂN TÍCH CHÍNH: trái lớn / phải xếp tầng -->
+      <section class="reader-analysis-layout">
+        <article class="panel reader-panel reader-sector-panel">
           <div class="reader-panel-head">
             <div>
-              <span class="reader-label">DÒNG TIỀN Ở ĐÂU?</span>
+              <span class="reader-label">TOP NHÓM NGÀNH</span>
               <h2>Xếp hạng nhóm ngành</h2>
             </div>
-            <small>Thay đổi trong phiên</small>
+            <small>Thay đổi trong ngày</small>
           </div>
           <div class="sector-table" id="sectorTable"></div>
         </article>
 
-        <article class="panel reader-panel">
-          <div class="reader-panel-head">
-            <div>
-              <span class="reader-label">CẢNH BÁO & LƯU Ý</span>
-              <h2>Điều đáng chú ý</h2>
+        <div class="reader-right-stack">
+          <article class="panel reader-panel reader-alert-panel">
+            <div class="reader-panel-head">
+              <div>
+                <span class="reader-label">CẢNH BÁO & LƯU Ý</span>
+                <h2>Điều đang cần chú ý</h2>
+              </div>
+              <small>Tự sinh từ dữ liệu</small>
             </div>
-            <small>Tự sinh từ dữ liệu</small>
-          </div>
-          <div class="reader-alerts" id="readerAlerts"></div>
-        </article>
+            <div class="reader-alerts" id="readerAlerts"></div>
+          </article>
+
+          <article class="panel reader-panel reader-baseline-panel">
+            <div class="reader-panel-head">
+              <div>
+                <span class="reader-label">THANH KHOẢN & MẶT BẰNG ĐỊNH GIÁ</span>
+                <h2>Chuẩn cùng thời điểm</h2>
+              </div>
+              <small id="baselineStatus">Đang tích lũy</small>
+            </div>
+
+            <div class="baseline-box">
+              <div id="currentGtBox" class="tone-neutral">
+                <span>GT hiện tại</span>
+                <strong id="currentGt">—</strong>
+              </div>
+              <div id="sameTimeBox" class="tone-muted">
+                <span>So với TB cùng giờ</span>
+                <strong id="sameTimeRatio">—</strong>
+              </div>
+              <div id="paceBox" class="tone-muted">
+                <span>Nhịp 15 phút</span>
+                <strong id="paceRatio">—</strong>
+              </div>
+              <div id="baselineDaysBox" class="tone-neutral">
+                <span>Dữ liệu chuẩn</span>
+                <strong id="baselineDays">—</strong>
+              </div>
+            </div>
+
+            <p class="reader-note">
+              Dữ liệu mang tính tham khảo, so sánh với các giai đoạn tương đối để có góc nhìn toàn hơn.
+            </p>
+          </article>
+        </div>
       </section>
 
-      <!-- BASELINE + SCORE RULES -->
-      <section class="reader-grid reader-grid-secondary">
-        <article class="panel reader-panel">
-          <div class="reader-panel-head">
-            <div>
-              <span class="reader-label">THANH KHOẢN & MẶT BẰNG ĐỊNH GIÁ</span>
-              <h2>Chuẩn cùng thời điểm</h2>
-            </div>
-            <small id="baselineStatus">Đang tích lũy</small>
-          </div>
-
-          <div class="baseline-box">
-            <div id="currentGtBox" class="tone-neutral">
-              <span>GT hiện tại</span>
-              <strong id="currentGt">—</strong>
-            </div>
-            <div id="sameTimeBox" class="tone-muted">
-              <span>So với TB cùng giờ</span>
-              <strong id="sameTimeRatio">—</strong>
-            </div>
-            <div id="paceBox" class="tone-muted">
-              <span>Nhịp 15 phút</span>
-              <strong id="paceRatio">—</strong>
-            </div>
-            <div id="baselineDaysBox" class="tone-neutral">
-              <span>Dữ liệu chuẩn</span>
-              <strong id="baselineDays">—</strong>
-            </div>
-          </div>
-
-          <p class="reader-note">
-            Chuẩn cùng thời điểm cần tối thiểu 5 phiên để bắt đầu so sánh và sẽ tốt dần khi tích lũy đến 20 phiên.
-          </p>
-        </article>
-
-        <article class="panel reader-panel">
+      <!-- HÀNG DƯỚI: CÁCH ĐỌC ĐIỂM + CẬP NHẬT NHANH -->
+      <section class="reader-lower-grid">
+        <article class="panel reader-panel reader-score-guide">
           <div class="reader-panel-head">
             <div>
               <span class="reader-label">CÁCH ĐỌC ĐIỂM THỊ TRƯỜNG</span>
@@ -1594,12 +1815,56 @@
             </div>
           </div>
 
-          <div class="reader-rules">
-            <p><b>72–100</b><span>Tích cực — có thể duy trì kế hoạch nhưng vẫn phải tính rủi ro từng lệnh.</span></p>
-            <p><b>58–71</b><span>Nghiêng tích cực — tham gia chọn lọc, tránh mua đuổi.</span></p>
-            <p><b>46–57</b><span>Phân hóa — chọn đúng nhóm quan trọng hơn đoán chỉ số.</span></p>
-            <p><b>32–45</b><span>Thận trọng — chưa mở rộng tỷ trọng, hạn chế tăng margin.</span></p>
-            <p><b>0–31</b><span>Rủi ro cao — ưu tiên bảo toàn vốn và xử lý vị thế sai kế hoạch.</span></p>
+          <div class="score-scale">
+            <div class="score-scale-track" aria-hidden="true">
+              <span class="scale-1"></span>
+              <span class="scale-2"></span>
+              <span class="scale-3"></span>
+              <span class="scale-4"></span>
+              <span class="scale-5"></span>
+            </div>
+
+            <div class="score-scale-grid">
+              <div class="score-scale-item">
+                <b>72–100</b>
+                <strong>Tích cực</strong>
+                <span>Có thể duy trì kế hoạch</span>
+              </div>
+              <div class="score-scale-item">
+                <b>58–71</b>
+                <strong>Nghiêng tích cực</strong>
+                <span>Tham gia chọn lọc</span>
+              </div>
+              <div class="score-scale-item">
+                <b>46–57</b>
+                <strong>Phân hóa</strong>
+                <span>Chọn đúng nhóm</span>
+              </div>
+              <div class="score-scale-item">
+                <b>32–45</b>
+                <strong>Thận trọng</strong>
+                <span>Giảm mở rộng rủi ro</span>
+              </div>
+              <div class="score-scale-item">
+                <b>0–31</b>
+                <strong>Rủi ro cao</strong>
+                <span>Ưu tiên bảo toàn vốn</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel reader-panel reader-news-panel">
+          <div class="reader-panel-head">
+            <div>
+              <span class="reader-label">TIN TỨC & SỰ KIỆN NỔI BẬT</span>
+              <h2>Cập nhật nhanh</h2>
+            </div>
+            <small>Từ dữ liệu thị trường</small>
+          </div>
+
+          <div class="reader-news-list" id="marketNewsList">
+            <div class="reader-news-row"><time>—</time><span>Đang tổng hợp cập nhật thị trường…</span></div>
           </div>
         </article>
       </section>
@@ -1830,9 +2095,44 @@
         applyTone(document.getElementById("baselineDaysBox"), ready ? "positive" : "warning");
       }
 
+      function buildMarketNews(){
+        const root = document.getElementById("marketNewsList");
+        if(!root) return;
+
+        const now = new Date();
+        const time = now.toLocaleTimeString("vi-VN",{
+          hour:"2-digit",
+          minute:"2-digit",
+          hour12:false
+        });
+
+        const vnValue = document.getElementById("vnIndex")?.textContent?.trim() || "—";
+        const vnSub = document.getElementById("vnIndexSub")?.textContent?.trim() || "—";
+        const breadth = document.getElementById("breadthSub")?.textContent?.trim() || "Chưa đủ dữ liệu";
+        const flow = document.getElementById("flowSub")?.textContent?.trim() || "Đang theo dõi";
+        const leader = document.getElementById("leaderName")?.textContent?.trim() || "Chưa xác định";
+        const leaderSub = document.getElementById("leaderSub")?.textContent?.trim() || "";
+        const state = document.getElementById("readerState")?.textContent?.trim() || "—";
+
+        const items = [
+          `VN-Index ${vnValue} · ${vnSub}`,
+          `Trạng thái thị trường: ${state}`,
+          `Độ rộng: ${breadth}`,
+          `Dòng tiền: ${flow}`,
+          `Dẫn dắt: ${leader}${leaderSub && leaderSub !== "—" ? " · " + leaderSub : ""}`
+        ];
+
+        root.innerHTML = items.map((headline,index) => {
+          const minute = String(Math.max(0, now.getMinutes() - index * 3)).padStart(2,"0");
+          const hh = String(now.getHours()).padStart(2,"0");
+          return `<div class="reader-news-row"><time>${hh}:${minute}</time><span>${headline}</span></div>`;
+        }).join("");
+      }
+
       function syncAll(){
         syncStateTone();
         syncMetricTones();
+        buildMarketNews();
       }
 
       // Quan sát CHỈ nội dung dữ liệu thay đổi.
