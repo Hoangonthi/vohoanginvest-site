@@ -2454,19 +2454,27 @@
     </div>
   </main>
 
-  <footer class="footer footer-v3">
-    <div class="wrap">
-      <div class="footer-main">
-        <div class="footer-brand footer-brand-v3">
-          <a class="brand" href="./">
-            <img src="LOGO.webp" alt="Võ Hoàng logo">
-            <div class="brand-text">
-              <strong>VÕ HOÀNG</strong>
-              <span>Đầu tư chuẩn hệ thống</span>
-            </div>
-          </a>
-          <p>Kiến thức tạo nền tảng. Hệ thống tạo khác biệt. Tài sản tạo tự do.</p>
-        </div>
+   <div class="footer-brand">
+    <a class="brand" href="./">
+      <img src="LOGO.webp" alt="Võ Hoàng logo">
+  
+      <div class="brand-text">
+        <strong>VÕ HOÀNG</strong>
+        <span>Đầu tư chuẩn hệ thống</span>
+      </div>
+    </a>
+  
+    <p class="footer-slogan">
+      Kiến thức tạo nền tảng. Hệ thống tạo khác biệt. Tài sản tạo tự do.
+    </p>
+  
+    <div class="footer-gold-line"></div>
+  
+    <p class="footer-risk">
+      Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ
+      không đảm bảo kết quả trong tương lai.
+    </p>
+  </div>
 
         <div class="footer-col footer-nav-col">
           <h4>Đi nhanh</h4>
@@ -2511,25 +2519,200 @@
         </div>
       </div>
 
-      <div class="footer-legal-bar">
+    <div class="footer-bottom">
+
+  <div class="footer-bottom-row">
+
+      <div class="footer-copyright">
+        © 2026 <strong>VÕ HOÀNG</strong>. All rights reserved.
+      </div>
+  
+      <div class="footer-legal">
         <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
-        <span aria-hidden="true">•</span>
+        <span>•</span>
+  
         <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
-        <span aria-hidden="true">•</span>
+        <span>•</span>
+  
         <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
-        <span aria-hidden="true">•</span>
+        <span>•</span>
+  
         <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
-        <span aria-hidden="true">•</span>
+        <span>•</span>
+  
         <a href="lien-he.html">Liên hệ</a>
       </div>
-
-      <div class="footer-final">
-        <div class="footer-copyright">© 2026 <strong>VÕ HOÀNG</strong>. All rights reserved.</div>
-        <div class="footer-risk">Đầu tư chứng khoán rủi ro thường trực. Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.</div>
-      </div>
+  
     </div>
+  
+  </div>
   </footer>
+  /* =========================================================
+   FOOTER - TINH CHỈNH CUỐI
+========================================================= */
 
+.footer-brand .footer-slogan{
+  margin:12px 0 0;
+  max-width:340px;
+  font-size:13px;
+  line-height:1.65;
+  color:rgba(231,237,246,.82);
+}
+
+
+/* Line vàng kim ngăn giữa slogan và cảnh báo */
+.footer-gold-line{
+  width:100%;
+  max-width:340px;
+  height:1px;
+  margin:12px 0 9px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(224,187,99,.82),
+      rgba(224,187,99,.28),
+      transparent
+    );
+}
+
+
+/* Cảnh báo rủi ro nhỏ hơn 2 bậc */
+.footer-brand .footer-risk{
+  margin:0;
+  max-width:340px;
+  font-size:10px;
+  line-height:1.6;
+  color:rgba(231,237,246,.46);
+}
+
+
+/* Dòng cuối */
+.footer-bottom{
+  padding:14px 0 18px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+
+.footer-bottom-row{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:24px;
+  flex-wrap:wrap;
+}
+
+
+/* Copyright nằm đầu hàng */
+.footer-copyright{
+  flex:0 0 auto;
+  font-size:11px;
+  line-height:1.4;
+  color:rgba(231,237,246,.62);
+  white-space:nowrap;
+}
+
+
+.footer-copyright strong{
+  color:rgba(255,255,255,.88);
+  font-weight:700;
+}
+
+
+/* Legal nằm cùng hàng copyright */
+.footer-legal{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex-wrap:wrap;
+  gap:6px 10px;
+}
+
+
+.footer-legal a{
+  font-size:11px;
+  line-height:1.4;
+  color:rgba(231,237,246,.68);
+  white-space:nowrap;
+  transition:.2s ease;
+}
+
+
+.footer-legal a:hover{
+  color:#f1cf78;
+}
+
+
+.footer-legal span{
+  font-size:8px;
+  color:rgba(224,187,99,.68);
+}
+
+
+/* Footer-copy cũ không còn dùng */
+.footer-copy{
+  display:none;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:680px){
+
+  .footer-brand .footer-slogan{
+    margin-left:auto;
+    margin-right:auto;
+    max-width:320px;
+    text-align:center;
+  }
+
+
+  .footer-gold-line{
+    width:160px;
+    margin:12px auto 9px;
+  }
+
+
+  .footer-brand .footer-risk{
+    max-width:300px;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+    font-size:9px;
+    line-height:1.55;
+  }
+
+
+  .footer-bottom-row{
+    justify-content:center;
+    gap:9px 14px;
+    text-align:center;
+  }
+
+
+  .footer-copyright{
+    width:100%;
+    text-align:center;
+    font-size:10px;
+  }
+
+
+  .footer-legal{
+    width:100%;
+    justify-content:center;
+    gap:6px 8px;
+  }
+
+
+  .footer-legal a{
+    font-size:10px;
+  }
+
+}
+
+  
   <script>
     (function(){
       const menuBtn = document.getElementById("menuBtn");
