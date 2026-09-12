@@ -1472,6 +1472,103 @@
       .footer .footer-copyright{font-size:10.5px}
       .footer .footer-legal a{font-size:10.5px}
     }
+
+    /* =========================================================
+   ĐỒNG BỘ TOÀN BỘ CARD VỀ VÀNG KIM
+========================================================= */
+
+/* 4 card lối đi nhanh nếu muốn giữ nhiều màu thì KHÔNG đụng */
+.principle,
+.vh6-item{
+  --accent:#e0bb63;
+  --accent-rgb:224,187,99;
+}
+
+
+/* ===== TƯ DUY CỐT LÕI ===== */
+
+.principle{
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(224,187,99,.055),
+      transparent 45%
+    ),
+    rgba(255,255,255,.015);
+
+  border-color:rgba(224,187,99,.14);
+}
+
+.principle::before{
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(224,187,99,.75),
+      transparent
+    );
+}
+
+.principle .no{
+  color:#f6d784;
+  border-color:rgba(224,187,99,.30);
+  background:rgba(224,187,99,.075);
+}
+
+.principle::after{
+  color:#e0bb63;
+}
+
+
+/* ===== VH6 ===== */
+
+.vh6-item{
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(224,187,99,.055),
+      transparent 44%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.025),
+      rgba(255,255,255,.012)
+    );
+
+  border-color:rgba(224,187,99,.14);
+}
+
+.vh6-item::before{
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #e0bb63,
+      transparent
+    );
+}
+
+.vh6-item .tag{
+  color:#f6d784;
+  border-color:rgba(224,187,99,.30);
+  background:rgba(224,187,99,.075);
+}
+
+.vh6-item::after{
+  color:#e0bb63;
+}
+
+
+/* Hover cũng cùng vàng */
+@media (hover:hover){
+
+  .principle:hover,
+  .vh6-item:hover{
+    border-color:rgba(224,187,99,.28);
+    box-shadow:0 12px 26px rgba(0,0,0,.16);
+  }
+
+}
   </style>
 </head>
 <body>
