@@ -2710,6 +2710,20 @@
       color:#ffd4d7;
     }
 
+    .auth-turnstile-wrap{
+      display:grid;
+      justify-items:center;
+      gap:5px;
+      min-height:72px;
+      margin:12px 0 2px;
+    }
+    .auth-turnstile-wrap span{
+      color:rgba(231,237,246,.42);
+      font-size:9px;
+      line-height:1.4;
+      text-align:center;
+    }
+
     .auth-security-note{
       margin-top:14px;
       text-align:center;
@@ -3061,6 +3075,11 @@
                 <button class="auth-tab" type="button" data-auth-mode="forgot">Quên mật khẩu</button>
               </div>
 
+              <div class="auth-turnstile-wrap">
+                <div id="authTurnstile"></div>
+                <span>Xác minh bảo mật trước khi gửi yêu cầu.</span>
+              </div>
+
 
               <!-- ĐĂNG NHẬP -->
               <div class="auth-pane" data-pane="login">
@@ -3354,6 +3373,66 @@
       pendingClaimTokenKey
     } from "./assets/js/supabase-client.js";
 
+    const TURNSTILE_SITE_KEY = "0x4AAAAAAEYKnha19nmpaSeM";
+    const TURNSTILE_SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    let authTurnstileId = null;
+    let authCaptchaToken = "";
+    let authTurnstileLoader = null;
+
+    function loadAuthTurnstile() {
+      if(window.turnstile?.render) return Promise.resolve(window.turnstile);
+      if(authTurnstileLoader) return authTurnstileLoader;
+      authTurnstileLoader = new Promise((resolve, reject) => {
+        const existing = document.querySelector('script[data-auth-turnstile]');
+        if(existing) {
+          existing.addEventListener('load', () => resolve(window.turnstile), { once:true });
+          existing.addEventListener('error', () => reject(new Error('TURNSTILE_LOAD_FAILED')), { once:true });
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = TURNSTILE_SCRIPT;
+        script.async = true;
+        script.defer = true;
+        script.dataset.authTurnstile = '';
+        script.onload = () => resolve(window.turnstile);
+        script.onerror = () => reject(new Error('TURNSTILE_LOAD_FAILED'));
+        document.head.appendChild(script);
+      });
+      return authTurnstileLoader;
+    }
+
+    async function initAuthTurnstile() {
+      try {
+        const api = await loadAuthTurnstile();
+        const box = document.getElementById('authTurnstile');
+        if(authTurnstileId !== null || !box || !api?.render) return;
+        authTurnstileId = api.render(box, {
+          sitekey: TURNSTILE_SITE_KEY,
+          theme: 'dark',
+          size: 'flexible',
+          callback: (token) => { authCaptchaToken = token || ''; },
+          'expired-callback': () => { authCaptchaToken = ''; },
+          'error-callback': () => { authCaptchaToken = ''; },
+        });
+      } catch(error) {
+        console.warn('Không tải được Turnstile.', error);
+      }
+    }
+
+    function resetAuthTurnstile() {
+      authCaptchaToken = '';
+      if(authTurnstileId !== null && window.turnstile?.reset) {
+        try { window.turnstile.reset(authTurnstileId); } catch(_) {}
+      }
+    }
+
+    function requireAuthCaptcha() {
+      if(authCaptchaToken) return true;
+      showMessage('Vui lòng hoàn tất bước xác minh bảo mật.', 'error');
+      initAuthTurnstile();
+      return false;
+    }
+
     const formsWrap = document.getElementById("authForms");
     const signedBox = document.getElementById("signedInBox");
     const signedEmail = document.getElementById("signedEmail");
@@ -3423,6 +3502,7 @@
       authTitle.textContent = titles[mode].title;
       authSubtitle.textContent = titles[mode].subtitle;
       showMessage("");
+      resetAuthTurnstile();
     }
 
     tabs.forEach(tab => {
@@ -3530,14 +3610,17 @@
         showMessage("Vui lòng nhập mật khẩu.", "error");
         return;
       }
+      if(!requireAuthCaptcha()) return;
 
       showMessage("");
       setLoading(button, true, "Đăng nhập", "Đang đăng nhập...");
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
-        password
+        password,
+        options: { captchaToken: authCaptchaToken }
       });
+      resetAuthTurnstile();
 
       setLoading(button, false, "Đăng nhập", "Đang đăng nhập...");
 
@@ -3558,6 +3641,7 @@
         showMessage("Vui lòng nhập email hợp lệ trước khi gửi OTP.", "error");
         return;
       }
+      if(!requireAuthCaptcha()) return;
 
       showMessage("");
       setLoading(otpSendBtn, true, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
@@ -3565,9 +3649,11 @@
         email,
         options: {
           shouldCreateUser: false,
-          emailRedirectTo: `${window.location.origin}${window.location.pathname}`
+          emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+          captchaToken: authCaptchaToken
         }
       });
+      resetAuthTurnstile();
 
       if(error){
         setLoading(otpSendBtn, false, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
@@ -3642,6 +3728,7 @@
         showMessage("Bạn cần đồng ý Điều khoản sử dụng và Chính sách bảo mật.", "error");
         return;
       }
+      if(!requireAuthCaptcha()) return;
 
       showMessage("");
       setLoading(button, true, "Tạo tài khoản", "Đang tạo tài khoản...");
@@ -3653,9 +3740,11 @@
           data: {
             full_name: fullName
           },
-          emailRedirectTo: `${window.location.origin}${window.location.pathname}`
+          emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+          captchaToken: authCaptchaToken
         }
       });
+      resetAuthTurnstile();
 
       setLoading(button, false, "Tạo tài khoản", "Đang tạo tài khoản...");
 
@@ -3698,6 +3787,8 @@
         return;
       }
 
+      if(!requireAuthCaptcha()) return;
+
       showMessage("");
       setLoading(
         button,
@@ -3707,8 +3798,10 @@
       );
 
       const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}${window.location.pathname}`
+        redirectTo: `${window.location.origin}${window.location.pathname}`,
+        captchaToken: authCaptchaToken
       });
+      resetAuthTurnstile();
 
       setLoading(
         button,
@@ -3809,6 +3902,8 @@
 
 
     // PHÁT HIỆN LINK RECOVERY + TRẠNG THÁI AUTH
+    initAuthTurnstile();
+
     supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if(event === "PASSWORD_RECOVERY"){
         enterRecoveryMode();
@@ -3849,6 +3944,6 @@
   </script>
 
 
-  <script type="module" src="assets/js/site-header.js?v=20260913-5"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260913-6"></script>
 </body>
 </html>

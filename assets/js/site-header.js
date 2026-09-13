@@ -2,6 +2,8 @@ import { pendingAssessmentKey, pendingClaimTokenKey, supabaseClient } from "./su
 
 const HEADER_HOST_ID = "siteHeader";
 const FOOTER_HOST_ID = "siteFooter";
+const TURNSTILE_SITE_KEY = "0x4AAAAAAEYKnha19nmpaSeM";
+const TURNSTILE_SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 const navItems = [
   ["thi-truong-hom-nay.html", "Thị trường"],
@@ -32,6 +34,32 @@ const normalize = (value = "") =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+
+let turnstileLoaderPromise = null;
+
+function loadTurnstile() {
+  if (window.turnstile?.render) return Promise.resolve(window.turnstile);
+  if (turnstileLoaderPromise) return turnstileLoaderPromise;
+
+  turnstileLoaderPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-vh-turnstile]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(window.turnstile), { once: true });
+      existing.addEventListener('error', () => reject(new Error('TURNSTILE_LOAD_FAILED')), { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = TURNSTILE_SCRIPT;
+    script.async = true;
+    script.defer = true;
+    script.dataset.vhTurnstile = '';
+    script.onload = () => resolve(window.turnstile);
+    script.onerror = () => reject(new Error('TURNSTILE_LOAD_FAILED'));
+    document.head.appendChild(script);
+  });
+
+  return turnstileLoaderPromise;
+}
 
 function currentPage() {
   const page = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
@@ -409,6 +437,7 @@ function injectSupportStyles() {
     .vh-auth-otp-box{display:grid;gap:9px;padding:10px;border:1px solid rgba(224,187,99,.13);border-radius:12px;background:rgba(224,187,99,.025)}
     .vh-auth-otp-box[hidden]{display:none!important}
     .vh-auth-mini{margin:0!important;font-size:9px!important;line-height:1.45;color:rgba(231,237,246,.46)!important}
+    .vh-turnstile{min-height:65px;display:flex;justify-content:center;align-items:center;overflow:hidden}
     .vh-auth-divider{display:flex;align-items:center;gap:9px;color:rgba(231,237,246,.35);font-size:9px;text-transform:uppercase}
     .vh-auth-divider::before,.vh-auth-divider::after{content:"";height:1px;flex:1;background:rgba(255,255,255,.08)}
     .vh-auth-message{min-height:16px;font-size:10px;line-height:1.45;color:#f3cf74}
@@ -863,6 +892,7 @@ function createAccountDialogs() {
             <label>Mật khẩu</label>
             <input name="password" type="password" autocomplete="current-password" required placeholder="Nhập mật khẩu">
           </div>
+          <div class="vh-turnstile" data-popup-turnstile></div>
           <div class="vh-auth-message" data-popup-login-message aria-live="polite"></div>
           <button class="vh-auth-submit" type="submit" data-popup-login-submit>Đăng nhập</button>
 
@@ -917,7 +947,41 @@ function createAccountDialogs() {
   const otpVerifyButton = host.querySelector("[data-popup-otp-verify]");
   const otpBox = host.querySelector("[data-popup-otp-box]");
   const otpInput = host.querySelector('[data-popup-otp-box] input[name="otp"]');
+  const turnstileBox = host.querySelector("[data-popup-turnstile]");
   const passwordForm = host.querySelector("[data-password-form]");
+  let popupTurnstileId = null;
+  let popupCaptchaToken = "";
+
+  const ensurePopupTurnstile = async () => {
+    try {
+      const api = await loadTurnstile();
+      if (popupTurnstileId !== null || !turnstileBox || !api?.render) return;
+      popupTurnstileId = api.render(turnstileBox, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme: "dark",
+        size: "flexible",
+        callback: (token) => { popupCaptchaToken = token || ""; },
+        "expired-callback": () => { popupCaptchaToken = ""; },
+        "error-callback": () => { popupCaptchaToken = ""; },
+      });
+    } catch (error) {
+      console.warn("Không tải được Turnstile.", error);
+    }
+  };
+
+  const resetPopupTurnstile = () => {
+    popupCaptchaToken = "";
+    if (popupTurnstileId !== null && window.turnstile?.reset) {
+      try { window.turnstile.reset(popupTurnstileId); } catch (_) {}
+    }
+  };
+
+  const requirePopupCaptcha = () => {
+    if (popupCaptchaToken) return true;
+    setMessage(loginMessage, "Vui lòng hoàn tất bước xác minh bảo mật.", "error");
+    ensurePopupTurnstile();
+    return false;
+  };
   const passwordMessage = host.querySelector("[data-password-message]");
   const passwordSubmit = host.querySelector("[data-password-submit]");
 
@@ -965,10 +1029,16 @@ function createAccountDialogs() {
       setMessage(loginMessage, "Vui lòng nhập đầy đủ email và mật khẩu.", "error");
       return;
     }
+    if (!requirePopupCaptcha()) return;
 
     loginSubmit.disabled = true;
     loginSubmit.textContent = "Đang đăng nhập...";
-    const result = await supabaseClient.auth.signInWithPassword({ email, password });
+    const result = await supabaseClient.auth.signInWithPassword({
+      email,
+      password,
+      options: { captchaToken: popupCaptchaToken },
+    });
+    resetPopupTurnstile();
     loginSubmit.disabled = false;
     loginSubmit.textContent = "Đăng nhập";
 
@@ -990,6 +1060,7 @@ function createAccountDialogs() {
       setMessage(loginMessage, "Vui lòng nhập email hợp lệ trước khi gửi OTP.", "error");
       return;
     }
+    if (!requirePopupCaptcha()) return;
 
     otpSendButton.disabled = true;
     otpSendButton.textContent = "Đang gửi mã...";
@@ -998,8 +1069,10 @@ function createAccountDialogs() {
       options: {
         shouldCreateUser: false,
         emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+        captchaToken: popupCaptchaToken,
       },
     });
+    resetPopupTurnstile();
 
     if (error) {
       otpSendButton.disabled = false;
@@ -1121,6 +1194,7 @@ function createAccountDialogs() {
     openLogin(email = "") {
       setMessage(loginMessage);
       openDialog(loginDialog);
+      ensurePopupTurnstile();
       const input = loginDialog.querySelector('input[name="email"]');
       if (email && input) input.value = email;
       requestAnimationFrame(() => input?.focus());
