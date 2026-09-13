@@ -1,6 +1,7 @@
 import { supabaseClient } from "./supabase-client.js";
 
 const HEADER_HOST_ID = "siteHeader";
+const FOOTER_HOST_ID = "siteFooter";
 
 const navItems = [
   ["thi-truong-hom-nay.html", "Thị trường"],
@@ -125,12 +126,206 @@ function headerHtml() {
   </header>`;
 }
 
+function iconYouTube() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M23 12s0-3.5-.4-5.2a2.8 2.8 0 0 0-2-2C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.6.4a2.8 2.8 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.4 5.2a2.8 2.8 0 0 0 2 2c1.7.4 8.6.4 8.6.4s6.9 0 8.6-.4a2.8 2.8 0 0 0 2-2C23 15.5 23 12 23 12ZM10 15.5v-7l6 3.5z"/>
+    </svg>`;
+}
+
+function iconFacebook() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.4V11H7v3h2.8v8z"/>
+    </svg>`;
+}
+
+function iconWebsite() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.9 9h-3.1a15.5 15.5 0 0 0-1.3-5A8 8 0 0 1 18.9 11ZM12 4.1c.9 1.1 1.8 3.4 2 6.9h-4c.2-3.5 1.1-5.8 2-6.9ZM9.5 6A15.5 15.5 0 0 0 8.2 11H5.1A8 8 0 0 1 9.5 6Zm-4.4 7h3.1a15.6 15.6 0 0 0 1.3 5A8 8 0 0 1 5.1 13Zm4.9 0h4a13.6 13.6 0 0 1-1.1 4.9a13.6 13.6 0 0 1-1.8 0A13.6 13.6 0 0 1 10 13Zm4.5 5A15.6 15.6 0 0 0 15.8 13h3.1a8 8 0 0 1-4.4 5Z"/>
+    </svg>`;
+}
+
+function iconDocument() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 3h9l5 5v13H6zM14 4.5V9h4.5"/>
+    </svg>`;
+}
+
+function footerNavHtml() {
+  return navItems
+    .map(([href, label]) => `<a href="${href}">${label}</a>`)
+    .join("");
+}
+
+function footerHtml() {
+  return `
+  <footer class="footer" data-shared-footer>
+    <div class="wrap">
+      <div class="footer-main">
+
+        <div class="footer-brand-block">
+          <a class="brand footer-brand-link" href="./">
+            <img src="LOGO.webp" alt="Võ Hoàng logo">
+            <div class="brand-text">
+              <strong>VÕ HOÀNG</strong>
+              <span>Đầu tư chuẩn hệ thống</span>
+            </div>
+          </a>
+
+          <p class="footer-slogan">
+            Kiến thức tạo nền tảng.
+            Hệ thống tạo khác biệt.
+            Tài sản tạo tự do.
+          </p>
+
+          <div class="footer-gold-line" aria-hidden="true"></div>
+
+          <p class="footer-risk">
+            Đầu tư chứng khoán rủi ro thường trực.
+            Kết quả trong quá khứ không đảm bảo kết quả trong tương lai.
+          </p>
+        </div>
+
+        <div class="footer-col footer-nav-col footer-nav-all">
+          <h4>Đi nhanh</h4>
+          <div class="footer-links quick-links">
+            ${footerNavHtml()}
+          </div>
+        </div>
+
+        <div class="footer-col footer-connect">
+          <h4>Kết nối với Võ Hoàng</h4>
+          <div class="footer-socials">
+
+            <a class="social"
+               href="https://www.youtube.com/@vohoanginvest"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="YouTube">
+              ${iconYouTube()}
+              YouTube
+            </a>
+
+            <a class="social"
+               href="https://www.facebook.com/vohoanginvest"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Facebook">
+              ${iconFacebook()}
+              Facebook
+            </a>
+
+            <a class="social"
+               href="./"
+               aria-label="Website">
+              ${iconWebsite()}
+              Website
+            </a>
+
+            <a class="social"
+               href="https://onthiplus.com"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Ôn Thi Plus">
+              ${iconDocument()}
+              Ôn Thi Plus
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-row">
+
+          <div class="footer-copyright">
+            © 2026 <strong>VÕ HOÀNG</strong>.
+            All rights reserved.
+          </div>
+
+          <div class="footer-legal">
+            <a href="mien-tru-trach-nhiem.html">Miễn trừ trách nhiệm</a>
+            <span aria-hidden="true">•</span>
+            <a href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+            <span aria-hidden="true">•</span>
+            <a href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+            <span aria-hidden="true">•</span>
+            <a href="du-lieu-bai-danh-gia.html">Dữ liệu bài đánh giá</a>
+            <span aria-hidden="true">•</span>
+            <a href="lien-he.html">Liên hệ</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>`;
+}
+
 function injectSupportStyles() {
   if (document.getElementById("vhSharedHeaderSupport")) return;
 
   const style = document.createElement("style");
   style.id = "vhSharedHeaderSupport";
   style.textContent = `
+    /* HEADER DÙNG CHUNG */
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      backdrop-filter:blur(10px);
+      background:rgba(3,11,20,.88);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{
+      width:min(calc(100% - 24px),1340px);margin:0 auto;min-height:78px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+    }
+    .brand{min-width:0;display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none}
+    .brand img{width:46px;height:46px;object-fit:contain;flex:0 0 auto}
+    .brand-text{min-width:0;line-height:normal;overflow:visible;padding:1px 0 2px}
+    .brand-text strong{
+      display:block;font-size:17px;line-height:1.35;font-weight:800;color:#f3cf74;
+      letter-spacing:.035em;white-space:nowrap;
+    }
+    .brand-text span{
+      display:block;margin-top:1px;font-size:9.5px;line-height:1.45;color:#e8cf8f;
+      letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+    }
+    .nav{display:flex;align-items:center;justify-content:center;gap:26px;flex:1 1 auto;min-width:0}
+    .nav a{
+      position:relative;padding:28px 0 24px;font-size:14px;color:rgba(255,255,255,.82);
+      white-space:nowrap;text-decoration:none;transition:.2s ease;
+    }
+    .nav a:hover{color:#fff}
+    .nav a.active{color:#fff;font-weight:700}
+    .nav a.active::after{
+      content:"";position:absolute;left:0;right:0;bottom:-1px;margin:auto;width:100%;height:3px;
+      border-radius:999px;background:linear-gradient(90deg,#e0bb63,#f3cf74);
+    }
+    .topbar-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+    .search-btn,.menu-btn{
+      width:42px;height:42px;padding:0;border-radius:12px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.02);color:#fff;display:grid;place-items:center;cursor:pointer;
+    }
+    .menu-btn{display:none}
+    .login-btn{
+      height:42px;padding:0 18px;border-radius:12px;border:1px solid rgba(224,187,99,.44);
+      background:linear-gradient(180deg,#f0cf79,#d8b254);color:#1f1604;font-size:14px;font-weight:800;
+      display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;text-decoration:none;
+      box-shadow:0 10px 24px rgba(224,187,99,.16);
+    }
+    .mobile-drawer{display:none;border-top:1px solid rgba(255,255,255,.06);background:#071423}
+    .mobile-drawer.open{display:block}
+    .mobile-drawer .wrap{width:min(calc(100% - 32px),1240px);margin:0 auto;padding:14px 0 18px;display:grid;gap:12px}
+    .mobile-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .mobile-links a{
+      padding:12px 14px;border:1px solid rgba(255,255,255,.08);border-radius:14px;
+      background:rgba(255,255,255,.02);color:#f6f8fc;font-size:14px;font-weight:600;
+      text-align:center;text-decoration:none;
+    }
+
     .vh-account{position:relative;display:flex;align-items:center}
     .vh-account-menu{
       position:absolute;
@@ -208,6 +403,187 @@ function injectSupportStyles() {
     .vh-search-item span{display:block;margin-top:3px;font-size:10px;line-height:1.45;color:rgba(231,237,246,.55)}
     .vh-search-empty{padding:24px 14px;text-align:center;color:rgba(231,237,246,.48);font-size:11px}
 
+    /* FOOTER DÙNG CHUNG */
+    .footer{
+      margin-top:30px;
+      border-top:1px solid rgba(255,255,255,.07);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(224,187,99,.045),transparent 28%),
+        linear-gradient(180deg,rgba(3,12,22,.88),rgba(2,8,15,.98));
+    }
+    .footer .wrap{
+      width:min(calc(100% - 32px),1240px);
+      margin:0 auto;
+    }
+    .footer .footer-main{
+      padding:34px 0 24px;
+      display:grid;
+      grid-template-columns:minmax(280px,1.25fr) minmax(300px,1fr) minmax(270px,1fr);
+      gap:28px 44px;
+      align-items:start;
+    }
+    .footer-brand-block{min-width:0}
+    .footer-brand-link{
+      width:max-content;
+      max-width:100%;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .footer-brand-link img{
+      width:46px;
+      height:46px;
+      object-fit:contain;
+      flex:0 0 auto;
+    }
+    .footer-brand-link .brand-text{
+      min-width:0;
+      line-height:normal;
+      padding:1px 0 2px;
+    }
+    .footer-brand-link .brand-text strong{
+      display:block;
+      font-size:17px;
+      line-height:1.35;
+      font-weight:800;
+      color:#f3cf74;
+      letter-spacing:.035em;
+      white-space:nowrap;
+    }
+    .footer-brand-link .brand-text span{
+      display:block;
+      margin-top:1px;
+      font-size:9.5px;
+      line-height:1.45;
+      color:#e8cf8f;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .footer .footer-slogan{
+      margin:13px 0 0;
+      max-width:340px;
+      font-size:13px;
+      line-height:1.65;
+      color:rgba(231,237,246,.80);
+    }
+    .footer .footer-gold-line{
+      width:100%;
+      max-width:340px;
+      height:1px;
+      margin:11px 0 8px;
+      background:linear-gradient(90deg,rgba(224,187,99,.88) 0%,rgba(224,187,99,.34) 58%,rgba(224,187,99,0) 100%);
+    }
+    .footer .footer-risk{
+      margin:0;
+      max-width:340px;
+      font-size:10px;
+      line-height:1.55;
+      color:rgba(231,237,246,.44);
+    }
+    .footer .footer-col h4{
+      margin:2px 0 13px;
+      color:#f3cf74;
+      font-size:13px;
+      line-height:1.2;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .footer a{
+      color:inherit;
+      text-decoration:none;
+    }
+    .footer .footer-links a{
+      color:rgba(255,255,255,.82);
+      transition:color .2s ease;
+    }
+    .footer .footer-links a:hover{color:#fff}
+    .footer .footer-nav-all .quick-links{
+      display:grid;
+      grid-template-columns:repeat(2,max-content);
+      gap:9px 28px;
+      justify-content:start;
+    }
+    .footer .footer-nav-all .quick-links a{
+      width:auto;
+      padding:0;
+      border:0;
+      background:none;
+      font-size:13px;
+      line-height:1.45;
+    }
+    .footer .footer-socials{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+    .footer .footer-socials .social{
+      min-width:0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:9px 11px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      color:#fff;
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .footer .footer-socials .social svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+      flex:0 0 auto;
+    }
+    .footer .footer-bottom{
+      width:100%;
+      padding:13px 0 17px;
+      border-top:1px solid rgba(224,187,99,.15);
+    }
+    .footer .footer-bottom-row{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px 18px;
+      flex-wrap:wrap;
+      text-align:center;
+    }
+    .footer .footer-copyright{
+      flex:0 0 auto;
+      color:rgba(231,237,246,.68);
+      font-size:13px;
+      line-height:1.5;
+      white-space:nowrap;
+    }
+    .footer .footer-copyright strong{
+      color:rgba(255,255,255,.86);
+      font-weight:700;
+    }
+    .footer .footer-legal{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:6px 10px;
+      min-width:0;
+    }
+    .footer .footer-legal a{
+      color:rgba(231,237,246,.68);
+      font-size:13px;
+      line-height:1.45;
+      white-space:nowrap;
+    }
+    .footer .footer-legal a:hover{color:#f1cf78}
+    .footer .footer-legal span{
+      color:rgba(224,187,99,.66);
+      font-size:8px;
+    }
+
     @media(min-width:681px){
       .footer .footer-nav-all h4,
       .footer .footer-connect h4{
@@ -219,12 +595,109 @@ function injectSupportStyles() {
       }
     }
 
+    @media(max-width:860px){
+      .topbar-inner{width:min(calc(100% - 20px),100%);min-height:74px}
+      .nav,.topbar-actions .search-btn{display:none}
+      .menu-btn{display:grid}
+      .brand img{width:42px;height:42px}
+      .brand-text strong{font-size:14px}
+      .brand-text span{font-size:10px}
+    }
+
     @media(max-width:680px){
+      .brand{flex:1 1 auto;min-width:0}
+      .brand-text{overflow:hidden}
+      .brand-text strong,.brand-text span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .topbar-inner{gap:10px}
+      .topbar-actions{gap:8px}
+      .login-btn{height:40px;padding:0 13px;font-size:12px}
+      .mobile-drawer .wrap{width:min(calc(100% - 20px),1240px)}
       .vh-account-menu{position:fixed;left:10px;right:10px;top:74px;width:auto}
       .login-btn .vh-login-label{max-width:84px}
       .vh-search-backdrop{padding:0}
       .vh-search-panel{width:100%;height:100%;border:0;border-radius:0}
       .vh-search-results{max-height:calc(100vh - 64px)}
+
+      .footer .wrap{
+        width:min(calc(100% - 20px),1240px);
+      }
+      .footer .footer-main{
+        padding:26px 0 19px;
+        grid-template-columns:1fr;
+        gap:18px;
+        text-align:center;
+      }
+      .footer .footer-brand-link{
+        margin:0 auto;
+        justify-content:center;
+      }
+      .footer .footer-slogan{
+        max-width:320px;
+        margin-left:auto;
+        margin-right:auto;
+        text-align:center;
+      }
+      .footer .footer-gold-line{
+        width:170px;
+        margin:11px auto 8px;
+      }
+      .footer .footer-risk{
+        max-width:300px;
+        margin-left:auto;
+        margin-right:auto;
+        font-size:9px;
+        line-height:1.5;
+        text-align:center;
+      }
+      .footer .footer-col h4{
+        margin-bottom:9px;
+      }
+      .footer .footer-nav-all .quick-links{
+        width:100%;
+        grid-template-columns:repeat(4,max-content);
+        justify-content:center;
+        align-items:center;
+        gap:8px 12px;
+      }
+      .footer .footer-nav-all .quick-links a{
+        font-size:11px;
+        line-height:1.35;
+        text-align:center;
+        white-space:nowrap;
+      }
+      .footer .footer-socials{
+        width:min(100%,360px);
+        margin:0 auto;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+      .footer .footer-bottom{
+        padding:12px 0 15px;
+      }
+      .footer .footer-bottom-row{
+        flex-direction:column;
+        gap:7px;
+        text-align:center;
+      }
+      .footer .footer-copyright{
+        width:100%;
+        font-size:10px;
+        line-height:1.45;
+        text-align:center;
+        white-space:normal;
+      }
+      .footer .footer-legal{
+        width:100%;
+        column-gap:7px;
+        row-gap:5px;
+      }
+      .footer .footer-legal a{
+        font-size:10px;
+        line-height:1.4;
+      }
+      .footer .footer-legal span{
+        font-size:7px;
+      }
     }
   `;
   document.head.appendChild(style);
@@ -355,7 +828,7 @@ function bindHeaderEvents() {
     const { data } = await supabaseClient.auth.getSession();
     const user = data.session?.user || null;
 
-    if (!user) return; // giữ href="dang-nhap.html" làm fallback
+    if (!user) return;
 
     event.preventDefault();
     if (accountMenu) accountMenu.hidden = !accountMenu.hidden;
@@ -380,21 +853,30 @@ async function refreshAuth() {
 }
 
 export async function initSiteHeader() {
-  const host = document.getElementById(HEADER_HOST_ID);
-  if (!host) {
-    console.warn(`[site-header] Không tìm thấy #${HEADER_HOST_ID}.`);
+  const headerHost = document.getElementById(HEADER_HOST_ID);
+  const footerHost = document.getElementById(FOOTER_HOST_ID);
+
+  if (!headerHost && !footerHost) {
+    console.warn(`[site-header] Không tìm thấy #${HEADER_HOST_ID} hoặc #${FOOTER_HOST_ID}.`);
     return;
   }
 
   injectSupportStyles();
-  host.innerHTML = headerHtml();
-  createSearchOverlay();
-  bindHeaderEvents();
-  await refreshAuth();
 
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    renderAccount(session?.user || null);
-  });
+  if (headerHost) {
+    headerHost.innerHTML = headerHtml();
+    createSearchOverlay();
+    bindHeaderEvents();
+    await refreshAuth();
+
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+      renderAccount(session?.user || null);
+    });
+  }
+
+  if (footerHost) {
+    footerHost.innerHTML = footerHtml();
+  }
 }
 
 if (document.readyState === "loading") {
