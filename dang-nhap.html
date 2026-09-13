@@ -3412,7 +3412,17 @@
           size: 'flexible',
           callback: (token) => { authCaptchaToken = token || ''; },
           'expired-callback': () => { authCaptchaToken = ''; },
-          'error-callback': () => { authCaptchaToken = ''; },
+          'error-callback': (errorCode) => {
+            authCaptchaToken = '';
+            const code = String(errorCode || 'unknown');
+            console.warn('Turnstile page error:', code);
+            showMessage(`Xác minh bảo mật gặp lỗi Cloudflare (mã ${code}). Vui lòng tải lại trang hoặc thử trình duyệt/mạng khác.`, 'error');
+            return true;
+          },
+          'timeout-callback': () => {
+            authCaptchaToken = '';
+            showMessage('Xác minh bảo mật đã hết thời gian. Vui lòng thử lại.', 'error');
+          },
         });
       } catch(error) {
         console.warn('Không tải được Turnstile.', error);
@@ -3944,6 +3954,6 @@
   </script>
 
 
-  <script type="module" src="assets/js/site-header.js?v=20260913-6"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260913-7"></script>
 </body>
 </html>

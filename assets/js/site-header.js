@@ -962,7 +962,17 @@ function createAccountDialogs() {
         size: "flexible",
         callback: (token) => { popupCaptchaToken = token || ""; },
         "expired-callback": () => { popupCaptchaToken = ""; },
-        "error-callback": () => { popupCaptchaToken = ""; },
+        "error-callback": (errorCode) => {
+          popupCaptchaToken = "";
+          const code = String(errorCode || "unknown");
+          console.warn("Turnstile popup error:", code);
+          setMessage(loginMessage, `Xác minh bảo mật gặp lỗi Cloudflare (mã ${code}). Vui lòng tải lại trang hoặc thử trình duyệt/mạng khác.`, "error");
+          return true;
+        },
+        "timeout-callback": () => {
+          popupCaptchaToken = "";
+          setMessage(loginMessage, "Xác minh bảo mật đã hết thời gian. Vui lòng thử lại.", "error");
+        },
       });
     } catch (error) {
       console.warn("Không tải được Turnstile.", error);
