@@ -4,20 +4,29 @@
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#04111f;padding:28px 12px;">
       <tr><td align="center">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#07192b;border:1px solid #4f4329;border-radius:18px;overflow:hidden;">
-          <tr><td style="padding:28px 30px 18px;text-align:center;border-bottom:1px solid #273044;">
+          <tr><td style="padding:30px 30px 20px;text-align:center;border-bottom:1px solid #273044;">
             <div style="font-size:12px;letter-spacing:1.8px;color:#e0bb63;font-weight:700;">VÕ HOÀNG · ĐẦU TƯ CHUẨN HỆ THỐNG</div>
-            <h1 style="margin:14px 0 0;font-size:25px;line-height:1.3;color:#ffffff;">Xác nhận tài khoản của ACE</h1>
+            <h1 style="margin:14px 0 0;font-size:25px;line-height:1.3;color:#ffffff;">Xác nhận tài khoản</h1>
+            <p style="margin:8px 0 0;font-size:13px;line-height:1.6;color:#98a7b9;">Hoàn tất bước cuối để bắt đầu sử dụng hệ thống</p>
           </td></tr>
-          <tr><td style="padding:26px 30px 30px;">
+          <tr><td style="padding:28px 30px 30px;">
             <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#e7edf6;">Chào ACE,</p>
-            <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#cbd5e1;">ACE vừa đăng ký tài khoản trên hệ thống Võ Hoàng. Bấm nút bên dưới để xác nhận email và hoàn tất đăng ký.</p>
-            <div style="text-align:center;margin:26px 0;">
-              <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 24px;border-radius:10px;background:#e0bb63;color:#201703;text-decoration:none;font-size:15px;font-weight:700;">XÁC NHẬN TÀI KHOẢN</a>
+            <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#cbd5e1;">ACE vừa đăng ký tài khoản bằng email <strong style="color:#ffffff;">{{ .Email }}</strong> trên hệ thống Võ Hoàng.</p>
+            <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#cbd5e1;">Bấm nút bên dưới để xác nhận email và kích hoạt tài khoản.</p>
+            <div style="text-align:center;margin:28px 0;">
+              <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 26px;border-radius:10px;background:#e0bb63;color:#201703;text-decoration:none;font-size:15px;font-weight:700;">XÁC NHẬN TÀI KHOẢN</a>
             </div>
-            <p style="margin:0 0 12px;font-size:13px;line-height:1.65;color:#9eacbd;">Nếu ACE không thực hiện đăng ký này, có thể bỏ qua email và không cần bấm liên kết.</p>
-            <p style="margin:0;font-size:12px;line-height:1.6;color:#78879a;">Vì lý do bảo mật, không chia sẻ liên kết xác nhận này cho người khác.</p>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 18px;background:#0a2035;border:1px solid #26394c;border-radius:12px;">
+              <tr><td style="padding:14px 16px;font-size:12px;line-height:1.65;color:#9fb0c2;">Sau khi xác nhận, ACE có thể đăng nhập và sử dụng các công cụ trong hệ sinh thái VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG.</td></tr>
+            </table>
+            <p style="margin:0 0 10px;font-size:13px;line-height:1.65;color:#9eacbd;">Nếu ACE không thực hiện đăng ký này, chỉ cần bỏ qua email.</p>
+            <p style="margin:0;font-size:12px;line-height:1.6;color:#78879a;">Vì lý do bảo mật, không chuyển tiếp email hoặc chia sẻ liên kết xác nhận cho người khác.</p>
           </td></tr>
-          <tr><td style="padding:17px 30px;background:#051423;text-align:center;font-size:11px;line-height:1.6;color:#7f8da0;">VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG<br>Thông tin hệ thống hỗ trợ kỷ luật đầu tư, không phải tín hiệu mua/bán.</td></tr>
+          <tr><td style="padding:18px 30px;background:#051423;text-align:center;font-size:11px;line-height:1.65;color:#7f8da0;">
+            <strong style="color:#c9ac64;">VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG</strong><br>
+            Đầu tư theo dữ liệu · Quản trị rủi ro · Kỷ luật hành động<br>
+            <span style="color:#647487;">Thông tin trên hệ thống mang tính hỗ trợ ra quyết định, không phải tín hiệu mua/bán.</span>
+          </td></tr>
         </table>
       </td></tr>
     </table>
