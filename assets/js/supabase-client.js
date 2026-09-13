@@ -29,21 +29,3 @@ export function getCooldownInfo(row){const dateValue=getAssessmentDate(row);if(!
 export const dimensionLabels={MONEY:"Nền tảng tài chính",RISK:"Quản trị rủi ro",PORTFOLIO:"Cấu trúc danh mục",STRATEGY:"Chiến lược",BEHAVIOUR:"Kỷ luật & hành vi",SYSTEM:"Hệ thống đầu tư"};
 export const levelLabels={GOOD:"Tốt",WATCH:"Cần theo dõi",GAP:"Cần cải thiện",HIGH_GAP:"Cần ưu tiên"};
 export const severityLabels={LOW:"Cần theo dõi",MEDIUM:"Cần cải thiện",HIGH:"Cần ưu tiên",CRITICAL:"Ưu tiên xử lý"};
-
-// Tự dùng layout chung ở các trang đã dùng Supabase nhưng chưa gắn site-header.js trực tiếp.
-// Chỉ chạy khi trang thật sự có header/footer chuẩn; không đụng nội dung giữa trang.
-if (typeof document !== "undefined" && !document.querySelector('script[src*="site-header.js"]')) {
-  queueMicrotask(() => {
-    const hasSharedLayoutTarget =
-      document.getElementById("siteHeader") ||
-      document.getElementById("siteFooter") ||
-      document.querySelector("header.topbar") ||
-      document.querySelector("footer.footer");
-
-    if (!hasSharedLayoutTarget) return;
-
-    import("./site-header.js?v=20260913-3").catch((error) => {
-      console.warn("[shared-layout] Không thể tải site-header.js", error);
-    });
-  });
-}
