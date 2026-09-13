@@ -1,0 +1,47 @@
+name: Fix knowledge roadmap card height
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-knowledge-flow-height.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Stop roadmap cards stretching to row height
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('kien-thuc.html')
+          s = p.read_text(encoding='utf-8')
+          old = '''    .flow-grid{\n      display:grid;\n\n      grid-template-columns:\n        repeat(4,minmax(0,1fr));\n\n      gap:9px;\n    }'''
+          new = '''    .flow-grid{\n      display:grid;\n\n      grid-template-columns:\n        repeat(4,minmax(0,1fr));\n\n      gap:9px;\n      align-items:start;\n      grid-auto-rows:max-content;\n    }'''
+          if old not in s:
+              raise SystemExit('flow-grid block not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Verify
+        shell: bash
+        run: |
+          grep -q 'align-items:start;' kien-thuc.html
+          grep -q 'grid-auto-rows:max-content;' kien-thuc.html
+
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'VÕ VŨ HOÀNG'
+          git config user.email 'vvhoangvn@gmail.com'
+          git add kien-thuc.html
+          git commit -m 'Prevent knowledge roadmap cards from stretching' || exit 0
+          git push
