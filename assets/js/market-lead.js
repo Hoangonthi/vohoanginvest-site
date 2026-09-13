@@ -114,7 +114,7 @@ export function mountMarketLeadForm(container, options = {}) {
       form.innerHTML = `<div class="market-lead-success">
         <span>ĐÃ GHI NHẬN</span>
         <strong>Cảm ơn ${esc(fullName)}.</strong>
-        <p>Thông tin đã vào hệ thống. Nội dung gửi đi sẽ ưu tiên: trạng thái thị trường, dòng tiền, rủi ro và việc nên làm tiếp theo.</p>
+        <p>Đã ghi nhận thông tin của Anh/Chị. Các nội dung tiếp theo sẽ tập trung vào trạng thái thị trường, dòng tiền, rủi ro và hành động phù hợp.</p>
         <div class="market-lead-success-actions">
           <a href="https://zalo.me/0928007302" target="_blank" rel="noopener">Kết nối Zalo Võ Hoàng →</a>
           <a href="./?start=assessment&utm_source=market_brief">Làm đánh giá 17 câu →</a>
