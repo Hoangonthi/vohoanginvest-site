@@ -1,0 +1,26 @@
+name: temp-test-morning-decision
+on:
+  push:
+    paths:
+      - '.github/workflows/_temp-test-morning-decision.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call test endpoint
+        run: |
+          set -e
+          curl -fsSL --max-time 30 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test' | tee /tmp/out.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/out.json'))
+          print('ok=', d.get('ok'))
+          print('version=', d.get('version'))
+          print('decision=', d.get('evaluation',{}).get('decision'))
+          print('variables=', len(d.get('variables',[])))
+          print('sources=')
+          for s in d.get('sources',[]): print(' -',s.get('name'),s.get('status'))
+          print('global=')
+          for x in d.get('global_markets',[]): print(' -',x.get('symbol'),x.get('ok'),x.get('price'),x.get('change_pct'),x.get('error') or x.get('status'))
+          print('events=', d.get('upcoming_events'))
+          PY
