@@ -85,50 +85,50 @@ export function getAdaptiveMarketBrief(data) {
   const stretched = score >= 72 && vnPct !== null && vnPct >= 1.5 && strongBreadth;
 
   let key = "neutral";
-  let headline = "Tôi ưu tiên đọc dữ liệu trước khi tăng mức độ chủ động.";
+  let headline = "Ad ưu tiên đọc dữ liệu trước khi cùng ACE tăng mức độ chủ động.";
   let detail = "Trạng thái hiện tại chưa cần một dự báo mạnh; điều quan trọng là theo dõi độ rộng, dòng tiền và độ bền của nhóm dẫn dắt.";
-  let action = "Giữ tỷ trọng phù hợp với mức xác nhận hiện tại và chỉ hành động khi điều kiện của từng vị thế đủ rõ.";
+  let action = "ACE nên giữ tỷ trọng phù hợp với mức xác nhận hiện tại và chỉ hành động khi điều kiện của từng vị thế đủ rõ.";
   let transition = "Nếu độ rộng, dòng tiền và nhóm dẫn dắt đồng thuận rõ hơn, mức độ chủ động có thể nâng dần; nếu các tín hiệu suy yếu, rủi ro nên được hạ xuống.";
   let watch = "độ rộng thị trường, chất lượng dòng tiền, độ bền của nhóm dẫn dắt và biến động điểm trạng thái";
 
   if (risk >= 4 || score < 32 || weakBreadth) {
     key = rebound && score >= 24 ? "rebound" : "defensive";
-    headline = "Ở trạng thái hiện tại, tôi ưu tiên bảo toàn vốn hơn dự đoán đáy.";
+    headline = "Ở trạng thái hiện tại, Ad ưu tiên cùng ACE bảo toàn vốn hơn là cố dự đoán đáy.";
     detail = rebound
       ? "Nhịp hồi đang đáng chú ý, nhưng chỉ nên làm quan điểm tích cực hơn khi độ rộng, dòng tiền và nhóm dẫn dắt cùng cải thiện đủ rõ."
       : "Dữ liệu hiện tại chưa ủng hộ việc mở rộng rủi ro. Một nhịp hồi nếu xuất hiện nên được xem là tín hiệu để kiểm chứng thêm, không phải lý do tự động tăng tỷ trọng.";
-    action = "Ưu tiên kiểm soát đòn bẩy, xử lý vị thế vi phạm kế hoạch và hạn chế bình quân giá xuống chỉ vì giá đã giảm.";
+    action = "ACE ưu tiên kiểm soát đòn bẩy, xử lý các vị thế đã vi phạm kế hoạch và hạn chế bình quân giá xuống chỉ vì giá đã giảm.";
     transition = "Nếu độ rộng cải thiện, dòng tiền xác nhận và nhóm dẫn dắt duy trì sức mạnh, có thể chuyển dần từ phòng thủ sang theo dõi cơ hội. Nếu các điều kiện đó chưa xuất hiện, tiếp tục ưu tiên kiểm soát rủi ro.";
     watch = "độ rộng có thu hẹp chênh lệch hay không, dòng tiền có xác nhận nhịp hồi hay không và nhóm dẫn dắt có giữ được sức mạnh hay không";
   } else if (score < 46 || flowWeak) {
     key = rebound ? "rebound" : "neutral";
     headline = "Thị trường đang có tín hiệu để quan sát, nhưng mức xác nhận vẫn chưa đủ mạnh.";
-    detail = "Tôi không phủ nhận khả năng cải thiện, nhưng muốn thấy độ rộng và dòng tiền đi cùng trước khi tăng đáng kể mức rủi ro.";
-    action = "Giữ tỷ trọng vừa phải, ưu tiên mã có sức mạnh riêng và tránh mở rộng vị thế chỉ vì chỉ số hồi.";
+    detail = "Ad không phủ nhận khả năng cải thiện, nhưng muốn cùng ACE thấy độ rộng và dòng tiền đi cùng trước khi tăng đáng kể mức rủi ro.";
+    action = "ACE nên giữ tỷ trọng vừa phải, ưu tiên mã có sức mạnh riêng và tránh mở rộng vị thế chỉ vì chỉ số hồi.";
     transition = "Nếu điểm trạng thái, độ rộng và dòng tiền cùng cải thiện, có thể nâng dần mức chủ động. Nếu tín hiệu hồi suy yếu, quay lại ưu tiên phòng thủ.";
   } else if (score < 58) {
     key = "neutral";
     headline = "Thị trường đang ở vùng cần chờ thêm xác nhận hơn là vội kết luận.";
     detail = "Cơ hội có thể xuất hiện từng phần, nhưng mức độ chủ động nên đi cùng chất lượng của độ rộng, dòng tiền và nhóm dẫn dắt.";
-    action = "Theo dõi cơ hội có sức mạnh rõ, giữ điểm sai cụ thể và chưa cần tăng tỷ trọng đồng loạt.";
+    action = "ACE ưu tiên theo dõi cơ hội có sức mạnh rõ, giữ điểm sai cụ thể và chưa cần tăng tỷ trọng đồng loạt.";
     transition = "Nếu dữ liệu lan tỏa tích cực hơn, có thể tăng mức chủ động; nếu độ rộng hoặc dòng tiền suy yếu, giảm rủi ro trở lại.";
   } else if (score < 72 || !strongBreadth) {
     key = "constructive";
     headline = "Thị trường đang cải thiện và có thể chủ động hơn, nhưng vẫn cần chọn lọc.";
-    detail = "Tôi ưu tiên những cơ hội có sức mạnh tương đối, dòng tiền hỗ trợ và điểm sai rõ ràng thay vì mở rộng rủi ro trên toàn bộ danh mục.";
-    action = "Có thể tăng dần mức chủ động ở các cơ hội đạt điều kiện, đồng thời giữ tỷ trọng và điểm sai trong giới hạn kế hoạch.";
+    detail = "Ad ưu tiên cùng ACE chọn những cơ hội có sức mạnh tương đối, dòng tiền hỗ trợ và điểm sai rõ ràng thay vì mở rộng rủi ro trên toàn bộ danh mục.";
+    action = "ACE có thể tăng dần mức chủ động ở các cơ hội đạt điều kiện, đồng thời giữ tỷ trọng và điểm sai trong giới hạn kế hoạch.";
     transition = "Nếu độ rộng tiếp tục lan tỏa và dòng tiền duy trì, mức độ chủ động có thể tăng thêm. Nếu sự cải thiện mất độ bền, quay về quản trị vị thế.";
   } else if (stretched) {
     key = "stretched";
     headline = "Thị trường tích cực, nhưng càng hưng phấn càng cần kiểm soát giá mua và tỷ trọng.";
-    detail = "Sức mạnh hiện tại đáng ghi nhận; điều tôi không muốn là biến một trạng thái tốt thành một giao dịch kém vì mua đuổi hoặc dùng tỷ trọng quá lớn.";
-    action = "Ưu tiên đi cùng nhóm mạnh nhưng tránh mua bằng mọi giá; chỉ tăng tỷ trọng khi điểm vào và mức rủi ro vẫn hợp lý.";
+    detail = "Sức mạnh hiện tại đáng ghi nhận; điều Ad không muốn ACE gặp phải là biến một trạng thái tốt thành một giao dịch kém vì mua đuổi hoặc dùng tỷ trọng quá lớn.";
+    action = "ACE có thể ưu tiên đi cùng nhóm mạnh nhưng tránh mua bằng mọi giá; chỉ tăng tỷ trọng khi điểm vào và mức rủi ro vẫn hợp lý.";
     transition = "Nếu sức mạnh tiếp tục được xác nhận, có thể duy trì mức chủ động. Nếu độ rộng co lại hoặc dòng tiền hụt, cần hạ tốc độ giải ngân.";
   } else {
     key = "positive";
     headline = "Thị trường đang thuận hơn và cho phép mức độ chủ động cao hơn.";
-    detail = "Khi độ rộng, dòng tiền và nhóm dẫn dắt cùng ủng hộ, tôi ưu tiên đi cùng sức mạnh nhưng vẫn giữ kỷ luật từng vị thế.";
-    action = "Có thể chủ động với các cơ hội đạt điều kiện, nhưng không bỏ qua điểm sai, tỷ trọng và tổng rủi ro danh mục.";
+    detail = "Khi độ rộng, dòng tiền và nhóm dẫn dắt cùng ủng hộ, Ad ưu tiên cùng ACE đi theo sức mạnh nhưng vẫn giữ kỷ luật từng vị thế.";
+    action = "ACE có thể chủ động với các cơ hội đạt điều kiện, nhưng không bỏ qua điểm sai, tỷ trọng và tổng rủi ro danh mục.";
     transition = "Nếu các tín hiệu tích cực được duy trì, tiếp tục theo kế hoạch; nếu độ rộng và dòng tiền suy yếu, giảm dần mức rủi ro thay vì cố giữ quan điểm cũ.";
   }
 
