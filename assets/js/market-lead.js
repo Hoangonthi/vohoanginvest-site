@@ -28,7 +28,7 @@ function phoneClean(value) {
 
 function friendlyError(message) {
   const raw = String(message || "");
-  if (raw.includes("CONSENT_REQUIRED")) return "Anh/chị cần đồng ý để nhận bản tin.";
+  if (raw.includes("CONSENT_REQUIRED")) return "Vui lòng xác nhận đồng ý để tiếp tục nhận bản tin.";
   if (raw.includes("INVALID_NAME")) return "Vui lòng nhập họ tên từ 2 ký tự trở lên.";
   if (raw.includes("INVALID_PHONE")) return "Số điện thoại/Zalo chưa đúng.";
   if (raw.includes("INVALID_EMAIL")) return "Email chưa đúng định dạng.";
@@ -55,10 +55,10 @@ export function marketLeadFormHtml({ compact = false, source = "MARKET_BRIEF" } 
       <label class="market-lead-email"><span>Email <small>(không bắt buộc)</small></span><input name="email" type="email" autocomplete="email" maxlength="254" placeholder="email@example.com"></label>
       <label><span>Muốn nhận qua</span><select name="channel"><option value="ZALO">Zalo</option><option value="PHONE">Điện thoại</option><option value="EMAIL">Email</option></select></label>
     </div>
-    <label class="market-lead-consent"><input name="consent" type="checkbox" required><span>Tôi đồng ý để Võ Hoàng liên hệ/gửi nội dung thị trường theo thông tin trên. Có thể yêu cầu dừng bất cứ lúc nào.</span></label>
+    <label class="market-lead-consent"><input name="consent" type="checkbox" required><span>Tôi đồng ý nhận thông tin và nội dung thị trường từ Võ Hoàng. Có thể ngừng nhận bất cứ lúc nào..</span></label>
     <div class="market-lead-submit-row">
       <button type="submit">NHẬN BẢN ĐỒ THỊ TRƯỜNG</button>
-      <small>Không phím hàng · Không spam · Nội dung tập trung vào trạng thái, rủi ro và hành động.</small>
+      <small>Ít nhiễu hơn · Kiểm soát rủi ro tốt hơn · Biết mình cần làm gì tiếp theo.</small>
     </div>
     <p class="market-lead-message" data-market-lead-message aria-live="polite"></p>
   </form>`;
