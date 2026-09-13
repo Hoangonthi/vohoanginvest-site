@@ -228,6 +228,138 @@
     .market-main{margin-top:6px;font-size:24px;font-weight:800;line-height:1.15}
     .market-sub{margin-top:6px;font-size:9px;color:#8695a2;line-height:1.5}
     .up{color:var(--green)} .down{color:var(--red)}
+
+    /* =====================================================
+       MARKET STRIP — HỆ MÀU ĐỒNG BỘ THEO TRẠNG THÁI
+    ===================================================== */
+    .market-card{
+      position:relative;
+      transition:border-color .25s ease, background .25s ease, box-shadow .25s ease;
+    }
+
+    .market-card::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:14px;
+      bottom:14px;
+      width:3px;
+      border-radius:0 999px 999px 0;
+      background:rgba(255,255,255,.10);
+      transition:background .25s ease, box-shadow .25s ease;
+    }
+
+    .market-card.is-positive{
+      border-color:rgba(43,216,142,.28);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(43,216,142,.07),transparent 42%),
+        linear-gradient(145deg,rgba(12,38,43,.98),rgba(7,25,31,.98));
+    }
+    .market-card.is-positive::before{
+      background:var(--green);
+      box-shadow:0 0 12px rgba(43,216,142,.32);
+    }
+
+    .market-card.is-warning{
+      border-color:rgba(245,188,79,.30);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(245,188,79,.07),transparent 42%),
+        linear-gradient(145deg,rgba(42,34,24,.98),rgba(25,25,25,.98));
+    }
+    .market-card.is-warning::before{
+      background:var(--amber);
+      box-shadow:0 0 12px rgba(245,188,79,.28);
+    }
+
+    .market-card.is-danger{
+      border-color:rgba(255,93,98,.30);
+      background:
+        radial-gradient(circle at 100% 0%,rgba(255,93,98,.07),transparent 42%),
+        linear-gradient(145deg,rgba(42,27,34,.98),rgba(28,20,27,.98));
+    }
+    .market-card.is-danger::before{
+      background:var(--red);
+      box-shadow:0 0 12px rgba(255,93,98,.28);
+    }
+
+    .market-card.is-neutral{
+      border-color:rgba(242,207,124,.20);
+    }
+    .market-card.is-neutral::before{
+      background:rgba(242,207,124,.72);
+    }
+
+    .market-card.is-positive .market-main{color:var(--green)}
+    .market-card.is-warning .market-main{color:var(--amber)}
+    .market-card.is-danger .market-main{color:var(--red)}
+
+    .market-card.is-positive .market-label{color:rgba(130,235,184,.82)}
+    .market-card.is-warning .market-label{color:rgba(246,205,125,.86)}
+    .market-card.is-danger .market-label{color:rgba(255,148,152,.84)}
+
+    /* VN-Index: đường spark đổi màu theo trạng thái */
+    .market-card.is-positive .spark polyline{stroke:var(--green)}
+    .market-card.is-warning .spark polyline{stroke:var(--amber)}
+    .market-card.is-danger .spark polyline{stroke:var(--red)}
+
+    /* Độ rộng: toàn bộ dải cột cùng tone trạng thái */
+    .market-card.is-positive .breadth-bars i{background:var(--green)}
+    .market-card.is-warning .breadth-bars i{background:var(--amber)}
+    .market-card.is-danger .breadth-bars i{background:var(--red)}
+
+    /* Market Score: các cột điểm đồng bộ tone */
+    .market-card.is-positive .score-bars i{
+      background:linear-gradient(180deg,#4be5a0,#188f60);
+    }
+    .market-card.is-warning .score-bars i{
+      background:linear-gradient(180deg,#ffd570,#a97816);
+    }
+    .market-card.is-danger .score-bars i{
+      background:linear-gradient(180deg,#ff7b80,#a92e3a);
+    }
+
+    /* Nhóm dẫn dắt: ngôi sao xanh bên phải */
+    .leader-badge{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      flex:0 0 auto;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(43,216,142,.34);
+      background:linear-gradient(180deg,rgba(18,66,47,.90),rgba(8,34,26,.90));
+      box-shadow:
+        0 10px 22px rgba(0,0,0,.16),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+      opacity:0;
+      transform:translateY(4px) scale(.96);
+      transition:opacity .25s ease,transform .25s ease;
+    }
+
+    .leader-badge.is-visible{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+
+    .leader-badge svg{
+      width:23px;
+      height:23px;
+      display:block;
+      fill:var(--green);
+      filter:drop-shadow(0 0 8px rgba(43,216,142,.28));
+    }
+
+    @media(max-width:680px){
+      .leader-badge{
+        width:42px;
+        height:42px;
+        border-radius:13px;
+      }
+      .leader-badge svg{
+        width:19px;
+        height:19px;
+      }
+    }
     .score-bars{width:64px;height:46px;display:flex;align-items:flex-end;gap:4px;flex:none}
     .score-bars i{width:7px;display:block;background:linear-gradient(180deg,#f6d47c,#9b6817);border-radius:2px 2px 0 0}
     .score-bars i:nth-child(1){height:12px}.score-bars i:nth-child(2){height:18px}.score-bars i:nth-child(3){height:26px}.score-bars i:nth-child(4){height:34px}.score-bars i:nth-child(5){height:44px}
@@ -1425,7 +1557,7 @@
 
 <section class="market-area">
   <div class="wrap market-grid">
-    <div class="market-card">
+    <div class="market-card is-neutral" id="marketScoreCard">
       <div>
         <div class="market-label">Market Score</div>
         <div class="market-main" id="marketScore">—</div>
@@ -1434,7 +1566,7 @@
       <div class="score-bars"><i></i><i></i><i></i><i></i><i></i></div>
     </div>
 
-    <div class="market-card">
+    <div class="market-card is-neutral" id="vniCard">
       <div>
         <div class="market-label">VN-Index</div>
         <div class="market-main" id="vniValue">—</div>
@@ -1443,7 +1575,7 @@
       <svg class="spark" viewBox="0 0 120 44"><polyline points="2,36 10,31 18,34 27,24 35,28 44,19 52,23 61,15 70,19 79,10 88,14 98,8 108,11 118,3"></polyline></svg>
     </div>
 
-    <div class="market-card">
+    <div class="market-card is-neutral" id="breadthCard">
       <div>
         <div class="market-label">Độ rộng thị trường</div>
         <div class="market-main" id="breadthValue">—</div>
@@ -1451,11 +1583,16 @@
       <div class="breadth-bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </div>
 
-    <div class="market-card">
+    <div class="market-card is-neutral" id="leadersCard">
       <div>
         <div class="market-label">Nhóm dẫn dắt</div>
         <div class="market-main" style="font-size:20px" id="leadersValue">Theo dõi</div>
         <div class="market-sub">Dòng tiền tập trung, hút thanh khoản</div>
+      </div>
+      <div class="leader-badge" id="leadersBadge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2.6l2.8 5.67 6.26.91-4.53 4.42 1.07 6.24L12 16.9l-5.6 2.94 1.07-6.24L2.94 9.18l6.26-.91L12 2.6z"></path>
+        </svg>
       </div>
     </div>
 
@@ -1817,6 +1954,13 @@
     return null;
   };
 
+  const setCardTone = (id, tone="neutral") => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.remove("is-positive","is-warning","is-danger","is-neutral");
+    el.classList.add(`is-${tone}`);
+  };
+
   async function loadMarket(){
     try{
       const r = await fetch(MARKET_URL,{cache:"no-store"});
@@ -1831,16 +1975,41 @@
       const adv = num(first(breadth,["adv","advance","up"]));
       const dec = num(first(breadth,["dec","decline","down"]));
 
-      document.getElementById("vniValue").textContent = value===null ? "—" : fmt2.format(value);
+      const vniValueEl = document.getElementById("vniValue");
+      vniValueEl.textContent = value===null ? "—" : fmt2.format(value);
+
       const ch = document.getElementById("vniChange");
       if(pct !== null){
+        const vniTone = pct>0 ? "positive" : pct<0 ? "danger" : "warning";
         ch.textContent = `${pct>0?"+":""}${fmt2.format(pct)}%`;
         ch.className = "market-sub " + (pct>0?"up":pct<0?"down":"");
+        vniValueEl.className = "market-main " + (pct>0?"up":pct<0?"down":"");
+        setCardTone("vniCard",vniTone);
+      }else{
+        setCardTone("vniCard","neutral");
       }
 
       if(adv !== null || dec !== null){
-        document.getElementById("breadthValue").innerHTML =
+        const breadthEl = document.getElementById("breadthValue");
+        breadthEl.innerHTML =
           `<span class="up">${adv??"—"} Tăng</span> <span style="color:#627381">|</span> <span class="down">${dec??"—"} Giảm</span>`;
+
+        if(adv !== null && dec !== null && adv + dec > 0){
+          const balance = (adv - dec) / (adv + dec);
+
+          // > +15%: độ rộng mạnh | -15% đến +15%: giằng co | < -15%: độ rộng yếu
+          if(balance > 0.15){
+            setCardTone("breadthCard","positive");
+          }else if(balance < -0.15){
+            setCardTone("breadthCard","danger");
+          }else{
+            setCardTone("breadthCard","warning");
+          }
+        }else{
+          setCardTone("breadthCard","warning");
+        }
+      }else{
+        setCardTone("breadthCard","neutral");
       }
 
       // Đồng bộ logic "Nhóm dẫn dắt" với Sáng nay / Investor Hub:
@@ -1852,7 +2021,22 @@
           : first(intel,["leaders.label","leaders.text","leading.label","leading.text","leaders"]);
 
       if(typeof leaders === "string" && leaders.trim()){
-        document.getElementById("leadersValue").textContent = leaders.trim();
+        const leadersEl = document.getElementById("leadersValue");
+        const leadersBadge = document.getElementById("leadersBadge");
+        const leaderName = leaders.trim();
+
+        leadersEl.textContent = leaderName;
+
+        if(leaderName.toLowerCase() !== "theo dõi"){
+          setCardTone("leadersCard","positive");
+          leadersBadge?.classList.add("is-visible");
+        }else{
+          setCardTone("leadersCard","neutral");
+          leadersBadge?.classList.remove("is-visible");
+        }
+      }else{
+        setCardTone("leadersCard","neutral");
+        document.getElementById("leadersBadge")?.classList.remove("is-visible");
       }
 
       let score = 70;
@@ -1866,6 +2050,13 @@
         score>=75 ? "Tâm lý thị trường tích cực" :
         score>=55 ? "Thị trường trung tính" :
         "Rủi ro thị trường đang cao";
+
+      setCardTone(
+        "marketScoreCard",
+        score>=75 ? "positive" :
+        score>=55 ? "warning" :
+        "danger"
+      );
     }catch(e){
       document.getElementById("marketScoreNote").textContent = "Chưa lấy được dữ liệu thị trường.";
     }
