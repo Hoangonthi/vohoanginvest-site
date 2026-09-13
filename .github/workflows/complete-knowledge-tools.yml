@@ -1,0 +1,195 @@
+name: Complete knowledge routes and shared tool layout
+
+on:
+  push:
+    paths:
+      - '.github/workflows/complete-knowledge-tools.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Complete pages
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          margin = '''<!doctype html>
+          <html lang="vi">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title>Bán bao nhiêu cổ phiếu để hạ margin? | Võ Hoàng</title>
+            <meta name="description" content="Tính số tiền và số cổ phiếu tối thiểu cần bán để đưa tỷ lệ nợ margin về mức mục tiêu. Tránh bán quá ít hoặc quá nhiều khi cần giảm đòn bẩy.">
+            <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/tinh-ban-bao-nhieu-de-ha-margin.html">
+            <meta property="og:title" content="Bán bao nhiêu để hạ margin? | Võ Hoàng">
+            <meta property="og:description" content="Tính lượng bán tối thiểu để đưa margin về mức an toàn.">
+            <meta property="og:type" content="website">
+            <link rel="stylesheet" href="assets/css/seo-tool.css">
+            <style>
+              body{background:linear-gradient(180deg,#071523 0,#f4f7fb 210px,#f4f7fb 100%)}
+              #siteHeader{min-height:78px}
+              .hero{padding-top:8px}
+              .decision-grid{margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+              .decision-card{background:#fff;border:1px solid #dce5ef;border-radius:14px;padding:17px}
+              .decision-card b{display:block;color:#17658f;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+              .decision-card h3{margin:8px 0 6px;color:#142033;font-size:1rem}
+              .decision-card p{margin:0;color:#536276;line-height:1.6;font-size:.92rem}
+              .warning{margin-top:18px;padding:15px 16px;border-radius:13px;background:#fff8e8;border:1px solid #ecd79c;color:#69511d;line-height:1.6}
+              @media(max-width:760px){.decision-grid{grid-template-columns:1fr}.hero{padding-top:0}}
+            </style>
+            <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Máy tính hạ margin chứng khoán","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"VND"},"creator":{"@type":"Person","name":"Võ Hoàng"}}</script>
+          </head>
+          <body>
+            <div id="siteHeader"></div>
+            <main class="wrap">
+              <section class="hero">
+                <div>
+                  <div class="eyebrow">KHI MARGIN CAO</div>
+                  <h1>Bán bao nhiêu để hạ margin?</h1>
+                  <p class="lead">Khi cần giảm đòn bẩy, bán theo cảm giác có thể vẫn chưa đủ để hạ nợ hoặc lại làm mất quá nhiều vị thế. Công cụ giúp tính lượng bán tối thiểu theo mục tiêu nợ/vốn trước khi bạn ra quyết định.</p>
+                  <a class="cta" href="investor-calculator.html#deleverage">Mở máy tính hạ margin</a>
+                </div>
+                <aside class="side">
+                  <strong>Tool cho biết</strong>
+                  <div class="mini"><div>Vốn tự có hiện tại</div><div>Nợ mục tiêu</div><div>Giá trị cần bán</div><div>Số cổ phiếu cần bán</div></div>
+                </aside>
+              </section>
+
+              <section class="decision-grid" aria-label="Cách dùng kết quả">
+                <article class="decision-card"><b>01 · Xác định</b><h3>Đặt tỷ lệ mục tiêu trước</h3><p>Chọn mức nợ hoặc đòn bẩy bạn muốn đưa tài khoản về, thay vì bán ngẫu nhiên theo cảm xúc trong phiên.</p></article>
+                <article class="decision-card"><b>02 · Tính đủ</b><h3>Biết lượng bán tối thiểu</h3><p>Dùng kết quả để tránh bán thiếu khiến margin vẫn cao, hoặc bán quá nhiều làm mất cấu trúc danh mục không cần thiết.</p></article>
+                <article class="decision-card"><b>03 · Chọn vị thế</b><h3>Bán mã yếu trước</h3><p>Con số chỉ trả lời “bán bao nhiêu”; mã nào nên bán vẫn phải dựa trên sức mạnh, luận điểm và rủi ro từng vị thế.</p></article>
+              </section>
+
+              <section class="content">
+                <article class="card"><h2>Điểm quan trọng</h2><p>Hạ margin là quyết định quản trị rủi ro. Nên nhìn đồng thời tỷ lệ nợ, sức chịu giảm của danh mục và khả năng xử lý nếu thị trường tiếp tục đi ngược kỳ vọng.</p><div class="example"><strong>Nguyên tắc:</strong> ưu tiên đưa tài khoản về mức có thể kiểm soát trước, rồi mới nghĩ đến việc tối ưu lợi nhuận.</div></article>
+                <aside class="card"><h2>Công cụ liên quan</h2><div class="related"><a href="tinh-margin-chung-khoan.html">Sức chịu margin</a><a href="tinh-lai-margin-chung-khoan.html">Chi phí margin</a><a href="tinh-rui-ro-danh-muc.html">Rủi ro danh mục</a><a href="investor-calculator.html">Bộ công cụ đầu tư</a></div></aside>
+              </section>
+
+              <div class="warning"><strong>Lưu ý:</strong> công cụ hỗ trợ tính toán, không phải khuyến nghị mua/bán. Hãy kiểm tra lại dữ liệu đầu vào và quy định margin thực tế tại công ty chứng khoán của bạn.</div>
+            </main>
+            <div id="siteFooter"></div>
+            <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            <script type="module" src="assets/js/site-header.js?v=20260913-8"></script>
+          </body>
+          </html>'''
+
+          recovery = '''<!doctype html>
+          <html lang="vi">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title>Tính mức tăng cần để hồi vốn sau thua lỗ | Võ Hoàng</title>
+            <meta name="description" content="Tính mức sụt giảm tài khoản và phần trăm phải tăng trở lại để hòa vốn. Hiểu vì sao lỗ 50% cần tăng 100% mới về điểm xuất phát.">
+            <link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/tinh-hoi-phuc-sau-thua-lo.html">
+            <meta property="og:title" content="Tính mức hồi phục sau thua lỗ | Võ Hoàng">
+            <meta property="og:description" content="Biết cần tăng bao nhiêu phần trăm để quay lại vốn ban đầu.">
+            <meta property="og:type" content="website">
+            <link rel="stylesheet" href="assets/css/seo-tool.css">
+            <style>
+              body{background:linear-gradient(180deg,#071523 0,#f4f7fb 210px,#f4f7fb 100%)}
+              #siteHeader{min-height:78px}
+              .hero{padding-top:8px}
+              .recovery-table{width:100%;margin-top:14px;border-collapse:collapse;font-size:.92rem}
+              .recovery-table th,.recovery-table td{padding:11px 12px;border-bottom:1px solid #e1e8f0;text-align:left}
+              .recovery-table th{color:#21364c;background:#f5f8fb}.recovery-table td:last-child{font-weight:800;color:#a04a32}
+              .decision-grid{margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+              .decision-card{background:#fff;border:1px solid #dce5ef;border-radius:14px;padding:17px}
+              .decision-card b{display:block;color:#17658f;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+              .decision-card h3{margin:8px 0 6px;color:#142033;font-size:1rem}.decision-card p{margin:0;color:#536276;line-height:1.6;font-size:.92rem}
+              @media(max-width:760px){.decision-grid{grid-template-columns:1fr}.hero{padding-top:0}}
+            </style>
+            <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Máy tính hồi phục sau thua lỗ","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"VND"},"creator":{"@type":"Person","name":"Võ Hoàng"}}</script>
+          </head>
+          <body>
+            <div id="siteHeader"></div>
+            <main class="wrap">
+              <section class="hero">
+                <div><div class="eyebrow">SAU KHI THUA LỖ</div><h1>Tính mức hồi phục sau thua lỗ</h1><p class="lead">Lỗ và mức tăng cần để hồi vốn không đối xứng. Càng lỗ sâu, mức tăng cần để quay lại điểm xuất phát càng lớn. Công cụ giúp nhìn con số thật trước khi bạn nghĩ đến chuyện “gỡ”.</p><a class="cta" href="investor-calculator.html#drawdown">Mở máy tính hồi phục</a></div>
+                <aside class="side"><strong>Tool cho biết</strong><div class="mini"><div>Mức sụt giảm đã xảy ra</div><div>Số tiền cần kiếm lại</div><div>% cần tăng để hòa vốn</div><div>Kịch bản nếu lỗ sâu thêm</div></div></aside>
+              </section>
+
+              <section class="decision-grid" aria-label="Cách đọc kết quả">
+                <article class="decision-card"><b>01 · Nhìn đúng</b><h3>Lỗ 20% không chỉ cần tăng 20%</h3><p>Sau khi tài khoản giảm, nền vốn nhỏ đi nên tỷ lệ tăng cần thiết để quay về điểm xuất phát luôn cao hơn tỷ lệ đã mất.</p></article>
+                <article class="decision-card"><b>02 · Dừng gỡ</b><h3>Càng lỗ sâu càng khó hồi</h3><p>Khi drawdown lớn, áp lực kiếm lại vốn tăng nhanh. Đây là lý do giới hạn thua lỗ quan trọng hơn việc cố tìm một lệnh thắng lớn.</p></article>
+                <article class="decision-card"><b>03 · Lập lại</b><h3>Quay về quy trình</h3><p>Sau chuỗi thua nên giảm nhịp, rà lại lỗi và quy mô lệnh trước khi nghĩ đến việc tăng vốn hoặc dùng thêm margin.</p></article>
+              </section>
+
+              <section class="content">
+                <article class="card"><h2>Ví dụ dễ nhớ</h2><table class="recovery-table"><thead><tr><th>Mức lỗ</th><th>Mức tăng cần để hòa vốn</th></tr></thead><tbody><tr><td>-10%</td><td>+11,1%</td></tr><tr><td>-20%</td><td>+25%</td></tr><tr><td>-30%</td><td>+42,9%</td></tr><tr><td>-50%</td><td>+100%</td></tr></tbody></table><div class="example">Quản trị drawdown không phải để tránh mọi lệnh thua, mà để không cho một chuỗi sai làm tài khoản rơi vào vùng rất khó phục hồi.</div></article>
+                <aside class="card"><h2>Công cụ liên quan</h2><div class="related"><a href="tinh-rui-ro-danh-muc.html">Rủi ro danh mục</a><a href="tinh-quy-mo-lenh-co-phieu.html">Quy mô lệnh</a><a href="tinh-ban-bao-nhieu-de-ha-margin.html">Hạ margin</a><a href="investor-calculator.html">Bộ công cụ đầu tư</a></div></aside>
+              </section>
+            </main>
+            <div id="siteFooter"></div>
+            <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            <script type="module" src="assets/js/site-header.js?v=20260913-8"></script>
+          </body>
+          </html>'''
+
+          Path('tinh-ban-bao-nhieu-de-ha-margin.html').write_text(margin, encoding='utf-8')
+          Path('tinh-hoi-phuc-sau-thua-lo.html').write_text(recovery, encoding='utf-8')
+
+          p = Path('kien-thuc.html')
+          s = p.read_text(encoding='utf-8')
+
+          # The hero map remains a map; the real #lo-trinh destination becomes the action roadmap below.
+          s = s.replace('''        <aside\n          class="knowledge-map"\n          id="lo-trinh"\n        >''', '''        <aside\n          class="knowledge-map"\n        >''', 1)
+
+          # Make the six map links explicit and easy to understand.
+          labels = [
+              ('href="#boi-canh">→</a>', 'href="#boi-canh" aria-label="Xem Bối cảnh thị trường">Xem →</a>'),
+              ('href="#chon-co-phieu">→</a>', 'href="#chon-co-phieu" aria-label="Xem Chọn cổ phiếu">Xem →</a>'),
+              ('href="#thoi-diem">→</a>', 'href="#thoi-diem" aria-label="Xem Thời điểm">Xem →</a>'),
+              ('href="#rui-ro">→</a>', 'href="#rui-ro" aria-label="Xem Quản trị rủi ro">Xem →</a>'),
+              ('href="#phan-bo">→</a>', 'href="#phan-bo" aria-label="Xem Phân bổ vốn">Xem →</a>'),
+              ('href="#ky-luat">→</a>', 'href="#ky-luat" aria-label="Xem Kỷ luật và Review">Xem →</a>'),
+          ]
+          for old, new in labels:
+              if old not in s:
+                  raise SystemExit(f'Missing knowledge map link: {old}')
+              s = s.replace(old, new, 1)
+
+          old_flow = '''      <!-- KNOWLEDGE -> ACTION -->\n      <section class="panel section">\n\n        <div class="section-head">\n\n          <div>\n\n            <div class="section-kicker">\n              HỌC XONG PHẢI CÓ HÀNH ĐỘNG\n            </div>\n\n            <h2>\n              Biến kiến thức thành một quy trình sử dụng hằng ngày.\n            </h2>\n\n          </div>\n\n        </div>\n\n\n        <div class="flow-grid">\n\n          <article class="flow-card">\n\n            <b>BƯỚC 01</b>\n\n            <h3>\n              Đọc bối cảnh\n            </h3>\n\n            <p>\n              Xem thị trường đang thuận, phân hóa hay rủi ro.\n            </p>\n\n            <a href="thi-truong-hom-nay.html">\n              Mở thị trường →\n            </a>\n\n          </article>\n\n\n          <article class="flow-card">\n\n            <b>BƯỚC 02</b>\n\n            <h3>\n              Lọc cơ hội\n            </h3>\n\n            <p>\n              Chỉ giữ các mã có lý do và điều kiện rõ ràng.\n            </p>\n\n            <a href="watchlist.html">\n              Mở Watchlist →\n            </a>\n\n          </article>\n\n\n          <article class="flow-card">\n\n            <b>BƯỚC 03</b>\n\n            <h3>\n              Kiểm tra vốn & rủi ro\n            </h3>\n\n            <p>\n              Biết trước mình có thể mất bao nhiêu nếu giả định sai.\n            </p>\n\n            <a href="investor-calculator.html">\n              Mở công cụ →\n            </a>\n\n          </article>\n\n\n          <article class="flow-card">\n\n            <b>BƯỚC 04</b>\n\n            <h3>\n              Review cuối ngày\n            </h3>\n\n            <p>\n              Nhìn lại quyết định và lỗi hành vi để hệ thống tốt dần.\n            </p>\n\n            <a href="sau-phien-cua-toi.html">\n              Review phiên →\n            </a>\n\n          </article>\n\n        </div>\n\n      </section>'''
+
+          new_flow = '''      <!-- KNOWLEDGE -> ACTION / LỘ TRÌNH -->\n      <section class="panel section" id="lo-trinh">\n\n        <div class="section-head">\n          <div>\n            <div class="section-kicker">LỘ TRÌNH 6 BƯỚC</div>\n            <h2>Biến kiến thức thành một quy trình sử dụng hằng ngày.</h2>\n            <p>Đi theo đúng thứ tự: đọc bối cảnh → chọn cơ hội → chờ thời điểm → tính rủi ro → phân bổ vốn → review. Mỗi bước đều dẫn sang đúng công cụ hoặc trang đang dùng trong hệ thống.</p>\n          </div>\n        </div>\n\n        <div class="flow-grid">\n          <article class="flow-card"><b>BƯỚC 01</b><h3>Đọc bối cảnh</h3><p>Xem thị trường đang thuận, phân hóa hay rủi ro trước khi nhìn từng mã.</p><a href="thi-truong-hom-nay.html">Mở Thị trường hôm nay →</a></article>\n          <article class="flow-card"><b>BƯỚC 02</b><h3>Chọn cổ phiếu</h3><p>Chỉ giữ các mã có lý do, sức mạnh và điều kiện theo dõi đủ rõ.</p><a href="watchlist.html">Mở Watchlist →</a></article>\n          <article class="flow-card"><b>BƯỚC 03</b><h3>Chờ đúng thời điểm</h3><p>Phân biệt “đáng quan tâm” với “đủ điều kiện hành động”, tránh mua vì FOMO.</p><a href="#thoi-diem">Xem nguyên tắc thời điểm →</a></article>\n          <article class="flow-card"><b>BƯỚC 04</b><h3>Kiểm tra rủi ro</h3><p>Biết trước điểm sai và số tiền tối đa chấp nhận mất nếu giả định không đúng.</p><a href="investor-calculator.html">Mở Bộ công cụ →</a></article>\n          <article class="flow-card"><b>BƯỚC 05</b><h3>Phân bổ vốn</h3><p>Chọn tỷ trọng phù hợp với chất lượng cơ hội và tổng rủi ro của danh mục.</p><a href="#phan-bo">Xem nguyên tắc phân bổ →</a></article>\n          <article class="flow-card"><b>BƯỚC 06</b><h3>Kỷ luật & Review</h3><p>Sau phiên, tách kết quả khỏi chất lượng quyết định để biết lỗi nào đang lặp lại.</p><a href="sau-phien-cua-toi.html">Review phiên →</a></article>\n        </div>\n\n      </section>'''
+
+          if old_flow not in s:
+              raise SystemExit('Knowledge action flow block not found')
+          s = s.replace(old_flow, new_flow, 1)
+
+          css_patch = '''\n    /* Lộ trình + liên kết bản đồ kiến thức */\n    #lo-trinh,\n    #boi-canh,\n    #chon-co-phieu,\n    #thoi-diem,\n    #rui-ro,\n    #phan-bo,\n    #ky-luat{scroll-margin-top:96px}\n\n    .knowledge-step a{\n      min-width:48px;\n      padding:6px 7px;\n      border:1px solid rgba(224,187,99,.22);\n      border-radius:8px;\n      text-align:center;\n      font-size:9px;\n      transition:.2s ease;\n    }\n    .knowledge-step a:hover{\n      background:rgba(224,187,99,.08);\n      border-color:rgba(224,187,99,.42);\n    }\n    #lo-trinh{\n      border-color:rgba(224,187,99,.28);\n      background:\n        radial-gradient(circle at 88% 0%,rgba(224,187,99,.08),transparent 28%),\n        linear-gradient(180deg,rgba(8,26,45,.97),rgba(7,22,38,.95));\n    }\n    #lo-trinh .flow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}\n    #lo-trinh .flow-card{min-height:170px}\n    @media(max-width:860px){#lo-trinh .flow-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}\n    @media(max-width:520px){#lo-trinh .flow-grid{grid-template-columns:1fr}.knowledge-step a{min-width:44px;font-size:8px}}\n'''
+          if '</style>' not in s:
+              raise SystemExit('style end not found')
+          s = s.replace('</style>', css_patch + '\n  </style>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate targeted changes
+        shell: bash
+        run: |
+          grep -q '<div id="siteHeader"></div>' tinh-ban-bao-nhieu-de-ha-margin.html
+          grep -q '<div id="siteFooter"></div>' tinh-ban-bao-nhieu-de-ha-margin.html
+          grep -q '<div id="siteHeader"></div>' tinh-hoi-phuc-sau-thua-lo.html
+          grep -q '<div id="siteFooter"></div>' tinh-hoi-phuc-sau-thua-lo.html
+          grep -q 'section class="panel section" id="lo-trinh"' kien-thuc.html
+          grep -q 'LỘ TRÌNH 6 BƯỚC' kien-thuc.html
+          grep -q 'aria-label="Xem Bối cảnh thị trường"' kien-thuc.html
+          grep -q 'BƯỚC 06' kien-thuc.html
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name 'VÕ VŨ HOÀNG'
+          git config user.email 'vvhoangvn@gmail.com'
+          git add tinh-ban-bao-nhieu-de-ha-margin.html tinh-hoi-phuc-sau-thua-lo.html kien-thuc.html
+          git commit -m 'Complete knowledge roadmap and shared tool pages' || exit 0
+          git push
