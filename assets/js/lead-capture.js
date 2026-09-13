@@ -11,81 +11,81 @@
   ).toLowerCase();
 
   const config = {
-    "index.html": {
-      eyebrow: "NHẬN BẢN TIN & HỖ TRỢ",
-      title: "Để Võ Hoàng theo dõi cùng bạn",
-      text:
-        "Nhận bản tin thị trường và để lại thông tin nếu bạn muốn được trao đổi sát hơn theo tài khoản.",
-      button: "Nhận cập nhật",
-      intent: "HOME_CONTACT"
-    },
-
-    "sang-nay-can-nhin-gi.html": {
-      eyebrow: "NHẬN BẢN TIN ĐẦU NGÀY",
-      title: "Muốn nhận bản tin và góc nhìn khi có thay đổi?",
-      text:
-        "Để lại thông tin. Khi thị trường có điểm đáng chú ý, Võ Hoàng có thể chủ động cập nhật và trao đổi thêm với bạn.",
-      button: "Nhận bản tin",
-      intent: "MORNING_BRIEF"
-    },
-
-    "thi-truong-hom-nay.html": {
-      eyebrow: "THEO DÕI THỊ TRƯỜNG",
-      title: "Cần được báo khi trạng thái thị trường thay đổi?",
-      text:
-        "Để lại thông tin để nhận cập nhật quan trọng thay vì phải tự canh màn hình liên tục.",
-      button: "Nhận cập nhật",
-      intent: "MARKET_ALERT"
-    },
-
-    "watchlist.html": {
-      eyebrow: "WATCHLIST CÁ NHÂN",
-      title:
-        "Muốn được trao đổi kỹ hơn về mã bạn đang theo dõi?",
-      text:
-        "Gửi thông tin để Võ Hoàng nắm nhu cầu và trao đổi sát hơn theo danh mục hoặc nhóm cổ phiếu bạn quan tâm.",
-      button: "Trao đổi thêm",
-      intent: "WATCHLIST_HELP"
-    },
-
-    "investor-calculator.html": {
-      eyebrow: "TRƯỚC KHI BẤM LỆNH",
-      title:
-        "Muốn kiểm tra lại kế hoạch lệnh trước khi vào tiền?",
-      text:
-        "Để lại thông tin nếu bạn muốn Võ Hoàng hỗ trợ rà lại mức vốn, rủi ro và kịch bản trước khi giao dịch.",
-      button: "Nhờ rà lại",
-      intent: "ORDER_PLAN_REVIEW"
-    },
-
-    "kiem-tra-nhanh-tai-khoan.html": {
-      eyebrow: "KIỂM TRA TÀI KHOẢN",
-      title:
-        "Muốn được xem sát hơn theo tình trạng tài khoản?",
-      text:
-        "Để lại thông tin để Võ Hoàng nắm đúng nhu cầu và trao đổi theo vấn đề thực tế của tài khoản.",
-      button: "Đăng ký trao đổi",
-      intent: "ACCOUNT_REVIEW"
-    },
-
-    "sau-phien-cua-toi.html": {
-      eyebrow: "SAU PHIÊN",
-      title:
-        "Muốn nhận phần tổng kết và việc cần làm cho phiên tới?",
-      text:
-        "Để lại thông tin để nhận cập nhật và trao đổi khi có điểm cần lưu ý.",
-      button: "Nhận cập nhật",
-      intent: "AFTER_MARKET"
-    }
-  }[page] || {
-    eyebrow: "VÕ HOÀNG · ĐẦU TƯ CHUẨN HỆ THỐNG",
-    title:
-      "Cần trao đổi sát hơn theo tài khoản của bạn?",
+  "index.html": {
+    eyebrow: "NHẬN BẢN TIN & HỖ TRỢ",
+    title: "Để Võ Hoàng đồng hành cùng bạn",
     text:
-      "Để lại thông tin để Võ Hoàng nắm nhu cầu và chủ động liên hệ khi phù hợp.",
-    button: "Để lại thông tin",
-    intent: "GENERAL_CONTACT"
-  };
+      "Nhận các cập nhật thị trường quan trọng và đăng ký trao đổi thêm khi bạn cần hỗ trợ theo tài khoản.",
+    button: "Nhận cập nhật",
+    intent: "HOME_CONTACT"
+  },
+
+  "sang-nay-can-nhin-gi.html": {
+    eyebrow: "NHẬN BẢN TIN ĐẦU NGÀY",
+    title: "Muốn nhận góc nhìn khi thị trường có thay đổi đáng chú ý?",
+    text:
+      "Đăng ký nhận bản tin và các cập nhật quan trọng khi trạng thái thị trường thay đổi.",
+    button: "Nhận bản tin",
+    intent: "MORNING_BRIEF"
+  },
+
+  "thi-truong-hom-nay.html": {
+    eyebrow: "THEO DÕI THỊ TRƯỜNG",
+    title: "Muốn được cập nhật khi trạng thái thị trường thay đổi?",
+    text:
+      "Nhận các thay đổi đáng chú ý về xu hướng, dòng tiền và rủi ro mà không cần theo dõi màn hình liên tục.",
+    button: "Nhận cập nhật",
+    intent: "MARKET_ALERT"
+  },
+
+  "watchlist.html": {
+    eyebrow: "DANH SÁCH THEO DÕI",
+    title:
+      "Muốn trao đổi kỹ hơn về những mã bạn đang quan tâm?",
+    text:
+      "Đăng ký để Võ Hoàng nắm nhóm cổ phiếu bạn đang theo dõi và trao đổi thêm khi cần.",
+    button: "Trao đổi thêm",
+    intent: "WATCHLIST_HELP"
+  },
+
+  "investor-calculator.html": {
+    eyebrow: "TRƯỚC KHI BẤM LỆNH",
+    title:
+      "Muốn rà lại kế hoạch trước khi vào tiền?",
+    text:
+      "Kiểm tra lại mức vốn, rủi ro và kịch bản giao dịch trước khi đưa ra quyết định.",
+    button: "Nhờ rà kế hoạch",
+    intent: "ORDER_PLAN_REVIEW"
+  },
+
+  "kiem-tra-nhanh-tai-khoan.html": {
+    eyebrow: "KIỂM TRA TÀI KHOẢN",
+    title:
+      "Muốn nhìn rõ hơn vấn đề của tài khoản hiện tại?",
+    text:
+      "Đăng ký trao đổi để xác định vấn đề chính, mức rủi ro và hướng xử lý phù hợp với tài khoản.",
+    button: "Đăng ký trao đổi",
+    intent: "ACCOUNT_REVIEW"
+  },
+
+  "sau-phien-cua-toi.html": {
+    eyebrow: "SAU PHIÊN",
+    title:
+      "Muốn biết điều gì cần chú ý cho phiên tiếp theo?",
+    text:
+      "Nhận phần tổng kết sau phiên, các thay đổi đáng chú ý và những điểm cần theo dõi tiếp.",
+    button: "Nhận tổng kết",
+    intent: "AFTER_MARKET"
+  }
+}[page] || {
+  eyebrow: "VÕ HOÀNG · ĐẦU TƯ CHUẨN HỆ THỐNG",
+  title:
+    "Cần trao đổi thêm về tài khoản của bạn?",
+  text:
+    "Đăng ký thông tin để Võ Hoàng nắm nhu cầu và trao đổi khi bạn cần hỗ trợ.",
+  button: "Đăng ký trao đổi",
+  intent: "GENERAL_CONTACT"
+};
 
   function getSessionId() {
     const key = "vh_session_id";
