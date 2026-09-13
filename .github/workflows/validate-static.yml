@@ -6,51 +6,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   javascript-syntax:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Patch signup quota UX
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('dang-nhap.html')
-          s=p.read_text(encoding='utf-8')
-          old='''        }else if(isRateLimitError(error)){
-          const wait = rateLimitSeconds(error);
-          startCooldownButton(button, "signup", email, "Tạo tài khoản", wait);
-          showMessage(`Hệ thống đang giới hạn gửi email đăng ký liên tiếp. ACE vui lòng chờ khoảng ${wait} giây rồi thử lại.`, "info");
-        }else{
-'''
-          new='''        }else if(isRateLimitError(error)){
-          const raw = String(error?.message || error || "").toLowerCase();
-          const isProjectEmailQuota = raw.includes("email rate limit") || raw.includes("rate limit exceeded");
-          localStorage.removeItem(cooldownKey("signup", email));
-          if(isProjectEmailQuota){
-            button.disabled = false;
-            button.textContent = "Tạo tài khoản";
-            showMessage("Hệ thống đã chạm giới hạn gửi email xác nhận của dịch vụ hiện tại. Đây không phải lỗi email của ACE. ACE có thể đăng ký bằng Google ngay, hoặc thử lại sau khoảng 1 giờ.", "info");
-          }else{
-            const wait = rateLimitSeconds(error);
-            startCooldownButton(button, "signup", email, "Tạo tài khoản", wait);
-            showMessage(`Để bảo vệ tài khoản, ACE vui lòng chờ khoảng ${wait} giây rồi gửi lại yêu cầu đăng ký.`, "info");
-          }
-        }else{
-'''
-          if old not in s:
-            raise SystemExit('signup rate block not found')
-          s=s.replace(old,new,1)
-          p.write_text(s,encoding='utf-8')
-          PY
       - name: Check JavaScript syntax
         shell: bash
         run: |
@@ -59,20 +24,3 @@ jobs:
             echo "Checking $file"
             node --check "$file"
           done < <(find . -type f -name '*.js' -not -path './node_modules/*' -print0)
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          s=Path('dang-nhap.html').read_text(encoding='utf-8')
-          scripts=re.findall(r'<script type="module">([\s\S]*?)</script>',s)
-          Path('/tmp/auth-module.mjs').write_text(scripts[-1],encoding='utf-8')
-          PY
-          node --check /tmp/auth-module.mjs
-      - name: Commit auth page
-        shell: bash
-        run: |
-          if git diff --quiet -- dang-nhap.html; then exit 0; fi
-          git config user.name 'VÕ VŨ HOÀNG'
-          git config user.email 'vvhoangvn@gmail.com'
-          git add dang-nhap.html
-          git commit -m 'Distinguish signup email quota from cooldown'
-          git push
