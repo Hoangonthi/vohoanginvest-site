@@ -3297,6 +3297,7 @@
               <div class="auth-signed-actions">
                 <a class="auth-small-btn primary" href="./">Về trang chủ →</a>
                 <a class="auth-small-btn" href="kiem-tra-nhanh-tai-khoan.html">Mở hồ sơ đánh giá →</a>
+                <button class="auth-small-btn" id="changePasswordBtn" type="button">Đổi mật khẩu</button>
                 <button class="auth-small-btn" id="signOutBtn" type="button">Đăng xuất</button>
               </div>
 
@@ -3330,6 +3331,7 @@
     const signedEmail = document.getElementById("signedEmail");
     const signedAvatar = document.getElementById("signedAvatar");
     const signOutBtn = document.getElementById("signOutBtn");
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
 
     const authTitle = document.getElementById("authTitle");
     const authSubtitle = document.getElementById("authSubtitle");
@@ -3704,6 +3706,11 @@
     });
 
 
+    changePasswordBtn?.addEventListener("click", () => {
+      window.VHAccount?.openPasswordChange();
+    });
+
+
     // ĐĂNG XUẤT
     signOutBtn.addEventListener("click", async () => {
       await supabaseClient.auth.signOut();
@@ -3754,6 +3761,6 @@
   </script>
 
 
-  <script type="module" src="assets/js/site-header.js?v=20260913-3"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260913-4"></script>
 </body>
 </html>
