@@ -1,0 +1,68 @@
+name: add social preview meta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-social-preview-meta.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch homepage social metadata
+        shell: python
+        run: |
+          from pathlib import Path
+
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+
+          old_canonical = '<link rel="canonical" href="https://hoangonthi.github.io/vohoanginvest-site/">'
+          new_canonical = '<link rel="canonical" href="https://www.vohoanginvest.com/">'
+          s = s.replace(old_canonical, new_canonical)
+
+          description = '<meta name="description" content="Võ Hoàng – đầu tư chuẩn hệ thống: nhìn đúng bối cảnh, quản trị rủi ro, sử dụng công cụ và ra quyết định có kế hoạch.">'
+          social = '''<meta name="description" content="Võ Hoàng – đầu tư chuẩn hệ thống: nhìn đúng bối cảnh, quản trị rủi ro, sử dụng công cụ và ra quyết định có kế hoạch.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:site_name" content="VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG">
+  <meta property="og:title" content="Võ Hoàng – Đầu tư chuẩn hệ thống">
+  <meta property="og:description" content="Nhìn đúng bối cảnh, quản trị rủi ro và ra quyết định có kế hoạch.">
+  <meta property="og:url" content="https://www.vohoanginvest.com/">
+  <meta property="og:image" content="https://www.vohoanginvest.com/assets/images/vohoang-social-preview.jpg">
+  <meta property="og:image:secure_url" content="https://www.vohoanginvest.com/assets/images/vohoang-social-preview.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="640">
+  <meta property="og:image:height" content="336">
+  <meta property="og:image:alt" content="Võ Hoàng – Đầu tư chuẩn hệ thống">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Võ Hoàng – Đầu tư chuẩn hệ thống">
+  <meta name="twitter:description" content="Nhìn đúng bối cảnh, quản trị rủi ro và ra quyết định có kế hoạch.">
+  <meta name="twitter:image" content="https://www.vohoanginvest.com/assets/images/vohoang-social-preview.jpg">'''
+
+          if 'property="og:title"' not in s:
+              if description not in s:
+                  raise SystemExit("Homepage description marker not found")
+              s = s.replace(description, social, 1)
+
+          if new_canonical not in s:
+              raise SystemExit("Custom-domain canonical was not applied")
+
+          p.write_text(s, encoding="utf-8")
+
+      - name: Remove one-time workflow and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/add-social-preview-meta.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/add-social-preview-meta.yml
+          git commit -m "Add homepage social sharing metadata"
+          git push
