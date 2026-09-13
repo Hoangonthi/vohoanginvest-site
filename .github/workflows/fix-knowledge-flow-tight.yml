@@ -1,0 +1,45 @@
+name: Fix knowledge roadmap tight height
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-knowledge-flow-tight.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Force roadmap cards to hug content
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('kien-thuc.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '</style>'
+          override = '''\n    /* FINAL OVERRIDE — 6-step roadmap cards hug their own content */\n    #lo-trinh .flow-grid{align-items:start!important;grid-auto-rows:max-content!important;}\n    #lo-trinh .flow-card{height:auto!important;min-height:0!important;align-self:start!important;padding-top:11px!important;padding-bottom:9px!important;}\n    #lo-trinh .flow-card a{margin-top:7px!important;}\n    @media(max-width:760px){\n      #lo-trinh .flow-card{height:auto!important;min-height:0!important;align-self:start!important;padding-top:9px!important;padding-bottom:7px!important;}\n      #lo-trinh .flow-card a{margin-top:6px!important;}\n    }\n'''
+          if override.strip() not in s:
+              s = s.replace(marker, override + marker, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Verify
+        shell: bash
+        run: |
+          grep -q '#lo-trinh .flow-card{height:auto!important;min-height:0!important;align-self:start!important' kien-thuc.html
+
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'VÕ VŨ HOÀNG'
+          git config user.email 'vvhoangvn@gmail.com'
+          git add kien-thuc.html
+          git commit -m 'Tighten six-step roadmap cards vertically' || exit 0
+          git push
