@@ -3539,6 +3539,64 @@
       button.textContent = loading ? loadingText : normalText;
     }
 
+    const AUTH_EMAIL_COOLDOWN_SECONDS = 65;
+    const authCooldownTimers = new Map();
+
+    function cooldownKey(action,email){
+      return `vh_auth_cooldown_${action}_${normalizeEmail(email)}`;
+    }
+
+    function getCooldownRemaining(action,email){
+      const until = Number(localStorage.getItem(cooldownKey(action,email)) || 0);
+      return Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    }
+
+    function setAuthEmailCooldown(action,email,seconds = AUTH_EMAIL_COOLDOWN_SECONDS){
+      const until = Date.now() + Math.max(1, Number(seconds || AUTH_EMAIL_COOLDOWN_SECONDS)) * 1000;
+      localStorage.setItem(cooldownKey(action,email), String(until));
+      return until;
+    }
+
+    function startCooldownButton(button, action, email, normalText, seconds = AUTH_EMAIL_COOLDOWN_SECONDS){
+      if(!button) return;
+      setAuthEmailCooldown(action,email,seconds);
+      const timerId = `${action}:${normalizeEmail(email)}:${button.id || normalText}`;
+      if(authCooldownTimers.has(timerId)) clearInterval(authCooldownTimers.get(timerId));
+      const render = () => {
+        const remaining = getCooldownRemaining(action,email);
+        if(remaining <= 0){
+          button.disabled = false;
+          button.textContent = normalText;
+          if(authCooldownTimers.has(timerId)) clearInterval(authCooldownTimers.get(timerId));
+          authCooldownTimers.delete(timerId);
+          return;
+        }
+        button.disabled = true;
+        button.textContent = `Gửi lại sau ${remaining}s`;
+      };
+      render();
+      authCooldownTimers.set(timerId, setInterval(render, 1000));
+    }
+
+    function guardCooldown(action,email,button,normalText){
+      const remaining = getCooldownRemaining(action,email);
+      if(remaining <= 0) return false;
+      startCooldownButton(button,action,email,normalText,remaining);
+      showMessage(`Email xác thực vừa được yêu cầu. ACE vui lòng chờ khoảng ${remaining} giây rồi gửi lại.`, "info");
+      return true;
+    }
+
+    function rateLimitSeconds(error, fallback = AUTH_EMAIL_COOLDOWN_SECONDS){
+      const text = String(error?.message || error || "").toLowerCase();
+      const match = text.match(/(?:after|in|wait)\s+(\d+)\s*(?:seconds?|secs?|s)/i);
+      return match ? Math.max(1, Number(match[1])) : fallback;
+    }
+
+    function isRateLimitError(error){
+      const text = String(error?.message || error || "").toLowerCase();
+      return text.includes("rate") || text.includes("too many") || text.includes("security purposes") || text.includes("wait") || text.includes("seconds");
+    }
+
     const COMMON_EMAIL_DOMAINS = ["gmail.com","outlook.com","hotmail.com","yahoo.com","icloud.com"];
 
     function normalizeEmail(value){
@@ -3797,6 +3855,7 @@
         showMessage(emailCheck.message, "error");
         return;
       }
+      if(guardCooldown("otp", email, otpSendBtn, "Đăng nhập bằng mã OTP email")) return;
       if(!requireAuthCaptcha()) return;
 
       showMessage("");
@@ -3813,18 +3872,20 @@
 
       if(error){
         setLoading(otpSendBtn, false, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
-        showMessage("Chưa thể gửi mã xác thực. Vui lòng thử lại sau.", "error");
+        if(isRateLimitError(error)){
+          const wait = rateLimitSeconds(error);
+          startCooldownButton(otpSendBtn, "otp", email, "Gửi lại mã OTP", wait);
+          showMessage(`Hệ thống đang giới hạn gửi email liên tiếp để bảo vệ tài khoản. ACE vui lòng chờ khoảng ${wait} giây rồi thử lại.`, "info");
+        }else{
+          showMessage("Chưa thể gửi mã xác thực. Vui lòng thử lại sau.", "error");
+        }
         return;
       }
 
       otpBox.hidden = false;
-      otpSendBtn.textContent = "Đã gửi mã / liên kết xác thực";
-      showMessage("Hãy kiểm tra email. Nếu email có mã OTP, nhập mã bên dưới; nếu có liên kết xác thực, bạn có thể bấm trực tiếp liên kết đó.", "success");
+      showMessage("Đã gửi email xác thực. ACE hãy kiểm tra hộp thư đến và thư rác; có thể nhập mã OTP bên dưới hoặc bấm liên kết trong email.", "success");
       otpCode?.focus();
-      window.setTimeout(() => {
-        otpSendBtn.disabled = false;
-        otpSendBtn.textContent = "Gửi lại mã OTP";
-      }, 60000);
+      startCooldownButton(otpSendBtn, "otp", email, "Gửi lại mã OTP");
     });
 
     otpVerifyBtn?.addEventListener("click", async () => {
@@ -3885,6 +3946,7 @@
         showMessage("Bạn cần đồng ý Điều khoản sử dụng và Chính sách bảo mật.", "error");
         return;
       }
+      if(guardCooldown("signup", email, button, "Tạo tài khoản")) return;
       if(!requireAuthCaptcha()) return;
 
       showMessage("");
@@ -3910,8 +3972,10 @@
 
         if(message.includes("already") || message.includes("registered")){
           showMessage("Email này đã có tài khoản. Bạn hãy chuyển sang Đăng nhập.", "error");
-        }else if(message.includes("rate")){
-          showMessage("Bạn thao tác quá nhanh. Vui lòng đợi một chút rồi thử lại.", "error");
+        }else if(isRateLimitError(error)){
+          const wait = rateLimitSeconds(error);
+          startCooldownButton(button, "signup", email, "Tạo tài khoản", wait);
+          showMessage(`Hệ thống đang giới hạn gửi email đăng ký liên tiếp. ACE vui lòng chờ khoảng ${wait} giây rồi thử lại.`, "info");
         }else{
           showMessage("Chưa thể tạo tài khoản. Vui lòng kiểm tra thông tin và thử lại.", "error");
         }
@@ -3932,8 +3996,9 @@
         showMessage("Tạo tài khoản thành công.", "success");
         renderSignedIn(data.session.user);
       }else{
+        startCooldownButton(button, "signup", email, "Tạo tài khoản");
         showMessage(
-          "Đã tạo yêu cầu đăng ký. Vui lòng mở email và bấm liên kết xác nhận trước khi đăng nhập.",
+          "Đã gửi email xác nhận đăng ký. ACE vui lòng mở email và bấm liên kết xác nhận trước khi đăng nhập; nếu chưa thấy hãy kiểm tra thư rác.",
           "success"
         );
       }
@@ -3953,6 +4018,7 @@
         return;
       }
 
+      if(guardCooldown("recovery", email, button, "Gửi email đặt lại mật khẩu")) return;
       if(!requireAuthCaptcha()) return;
 
       showMessage("");
@@ -3977,19 +4043,20 @@
       );
 
       if(error){
-        const message = String(error.message || "").toLowerCase();
-
-        if(message.includes("rate")){
-          showMessage("Bạn thao tác quá nhanh. Vui lòng đợi một chút rồi thử lại.", "error");
+        if(isRateLimitError(error)){
+          const wait = rateLimitSeconds(error);
+          startCooldownButton(button, "recovery", email, "Gửi email đặt lại mật khẩu", wait);
+          showMessage(`Hệ thống đang giới hạn gửi email khôi phục liên tiếp để bảo vệ tài khoản. ACE vui lòng chờ khoảng ${wait} giây rồi thử lại.`, "info");
         }else{
           showMessage("Chưa thể gửi email đặt lại mật khẩu. Vui lòng thử lại.", "error");
         }
         return;
       }
 
+      startCooldownButton(button, "recovery", email, "Gửi email đặt lại mật khẩu");
       // Không tiết lộ email có tồn tại hay không.
       showMessage(
-        "Nếu email này có tài khoản, bạn sẽ nhận được liên kết đặt lại mật khẩu. Hãy kiểm tra cả thư rác.",
+        "Yêu cầu đã được gửi. Nếu email này có tài khoản, ACE sẽ nhận được liên kết đặt lại mật khẩu. Hãy kiểm tra cả hộp thư đến và thư rác.",
         "success"
       );
     });
