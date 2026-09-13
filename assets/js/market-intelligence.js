@@ -112,10 +112,10 @@ function renderIntelligence(data) {
   const freshnessBlocksAction = ["delayed", "stale"].includes(String(fresh.status || ""));
   const displayAction = freshnessBlocksAction
     ? {
-        headline: fresh.status === "stale" ? "Tạm dừng quyết định mới từ dữ liệu này." : "Chờ dữ liệu bắt kịp trước khi mở vị thế mới.",
+        headline: fresh.status === "stale" ? "Tạm thời chưa mở vị thế mới." : "Chờ dữ liệu đầy đủ hơn trước khi ra quyết định.",
         detail: fresh.status === "stale"
-          ? "Nguồn realtime đã quá cũ. Hệ thống vẫn hiển thị snapshot gần nhất để tham khảo nhưng không coi đây là trạng thái đang diễn ra."
-          : "Dữ liệu đang chậm hơn nhịp bình thường. Ưu tiên kiểm tra lại nguồn realtime trước khi dùng Market Score để hành động.",
+          ? "Dữ liệu thị trường chưa được cập nhật kịp thời. Thông tin gần nhất vẫn được hiển thị để tham khảo, không đại diện cho trạng thái hiện tại."
+          : "Dữ liệu đang cập nhật chậm hơn bình thường. Nên chờ dữ liệu mới trước khi sử dụng Điểm Thị Trường để ra quyết định.",
         links: []
       }
     : (mi.action || {});
@@ -125,7 +125,7 @@ function renderIntelligence(data) {
   const links = Array.isArray(displayAction?.links) ? displayAction.links : [];
   const score = Math.max(0, Math.min(100, Number(state.score) || 0));
   const breadthNet = breadth.balance === null || breadth.balance === undefined
-    ? "Chưa đủ dữ liệu"
+    ? "Đang chờ thêm dữ liệu"
     : `${breadth.adv ?? "—"} tăng · ${breadth.flat ?? "—"} TC · ${breadth.dec ?? "—"} giảm`;
   const flowSub = flow.same_time_ratio !== null && flow.same_time_ratio !== undefined && (flow.baseline_days || 0) >= 5
     ? `${Math.round(Number(flow.same_time_ratio) * 100)}% TB cùng thời điểm · ${flow.baseline_days} phiên`
@@ -184,11 +184,11 @@ function renderIntelligence(data) {
           <ol class="mi-sector-list">${leaders.map((item, i) => sectorItem(item, i + 1)).join("") || "<li>Chưa có dữ liệu ngành.</li>"}</ol>
         </div>
         <div class="mi-detail-card">
-          <div class="mi-detail-head"><b>Nhóm yếu</b><small>Ưu tiên tránh nhầm sức mạnh</small></div>
+          <div class="mi-detail-head"><b>Nhóm yếu</b><small>Chờ xác nhận sức mạnh</small></div>
           <ol class="mi-sector-list">${laggards.map((item, i) => sectorItem(item, i + 1)).join("") || "<li>Chưa có dữ liệu ngành.</li>"}</ol>
         </div>
         <div class="mi-detail-card">
-          <div class="mi-detail-head"><b>Cảnh báo hệ thống</b><small>Chỉ hiển thị khi có điều đáng chú ý</small></div>
+          <div class="mi-detail-head"><b>Cảnh báo hệ thống</b><small>Chỉ cảnh báo khi cần chú ý</small></div>
           <ul class="mi-alert-list">${alerts.length ? alerts.map(alertItem).join("") : '<li class="mi-alert is-neutral"><b>Chưa có cảnh báo lớn</b><span>Tiếp tục theo dõi sự thay đổi của độ rộng, dòng tiền và nhóm dẫn dắt.</span></li>'}</ul>
         </div>
       </div>
