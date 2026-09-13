@@ -2257,6 +2257,40 @@
         font-size:10px;
       }
     }
+  
+    /* Lộ trình + liên kết bản đồ kiến thức */
+    #lo-trinh,
+    #boi-canh,
+    #chon-co-phieu,
+    #thoi-diem,
+    #rui-ro,
+    #phan-bo,
+    #ky-luat{scroll-margin-top:96px}
+
+    .knowledge-step a{
+      min-width:48px;
+      padding:6px 7px;
+      border:1px solid rgba(224,187,99,.22);
+      border-radius:8px;
+      text-align:center;
+      font-size:9px;
+      transition:.2s ease;
+    }
+    .knowledge-step a:hover{
+      background:rgba(224,187,99,.08);
+      border-color:rgba(224,187,99,.42);
+    }
+    #lo-trinh{
+      border-color:rgba(224,187,99,.28);
+      background:
+        radial-gradient(circle at 88% 0%,rgba(224,187,99,.08),transparent 28%),
+        linear-gradient(180deg,rgba(8,26,45,.97),rgba(7,22,38,.95));
+    }
+    #lo-trinh .flow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #lo-trinh .flow-card{min-height:170px}
+    @media(max-width:860px){#lo-trinh .flow-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:520px){#lo-trinh .flow-grid{grid-template-columns:1fr}.knowledge-step a{min-width:44px;font-size:8px}}
+
   </style>
 </head>
 
@@ -2323,7 +2357,6 @@
 
         <aside
           class="knowledge-map"
-          id="lo-trinh"
         >
 
           <div class="knowledge-map-inner">
@@ -2347,7 +2380,7 @@
                   <span>Thị trường đang thuận hay nghịch?</span>
                 </div>
 
-                <a href="#boi-canh">→</a>
+                <a href="#boi-canh" aria-label="Xem Bối cảnh thị trường">Xem →</a>
               </div>
 
 
@@ -2359,7 +2392,7 @@
                   <span>Mã nào thật sự đáng theo dõi?</span>
                 </div>
 
-                <a href="#chon-co-phieu">→</a>
+                <a href="#chon-co-phieu" aria-label="Xem Chọn cổ phiếu">Xem →</a>
               </div>
 
 
@@ -2371,7 +2404,7 @@
                   <span>Khi nào điều kiện đủ để hành động?</span>
                 </div>
 
-                <a href="#thoi-diem">→</a>
+                <a href="#thoi-diem" aria-label="Xem Thời điểm">Xem →</a>
               </div>
 
 
@@ -2383,7 +2416,7 @@
                   <span>Nếu sai, mất bao nhiêu là chấp nhận được?</span>
                 </div>
 
-                <a href="#rui-ro">→</a>
+                <a href="#rui-ro" aria-label="Xem Quản trị rủi ro">Xem →</a>
               </div>
 
 
@@ -2395,7 +2428,7 @@
                   <span>Một cơ hội được dùng bao nhiêu vốn?</span>
                 </div>
 
-                <a href="#phan-bo">→</a>
+                <a href="#phan-bo" aria-label="Xem Phân bổ vốn">Xem →</a>
               </div>
 
 
@@ -2407,7 +2440,7 @@
                   <span>Sau phiên, mình học được gì?</span>
                 </div>
 
-                <a href="#ky-luat">→</a>
+                <a href="#ky-luat" aria-label="Xem Kỷ luật và Review">Xem →</a>
               </div>
 
             </div>
@@ -2966,103 +2999,24 @@
       </section>
 
 
-      <!-- KNOWLEDGE -> ACTION -->
-      <section class="panel section">
+      <!-- KNOWLEDGE -> ACTION / LỘ TRÌNH -->
+      <section class="panel section" id="lo-trinh">
 
         <div class="section-head">
-
           <div>
-
-            <div class="section-kicker">
-              HỌC XONG PHẢI CÓ HÀNH ĐỘNG
-            </div>
-
-            <h2>
-              Biến kiến thức thành một quy trình sử dụng hằng ngày.
-            </h2>
-
+            <div class="section-kicker">LỘ TRÌNH 6 BƯỚC</div>
+            <h2>Biến kiến thức thành một quy trình sử dụng hằng ngày.</h2>
+            <p>Đi theo đúng thứ tự: đọc bối cảnh → chọn cơ hội → chờ thời điểm → tính rủi ro → phân bổ vốn → review. Mỗi bước đều dẫn sang đúng công cụ hoặc trang đang dùng trong hệ thống.</p>
           </div>
-
         </div>
 
-
         <div class="flow-grid">
-
-          <article class="flow-card">
-
-            <b>BƯỚC 01</b>
-
-            <h3>
-              Đọc bối cảnh
-            </h3>
-
-            <p>
-              Xem thị trường đang thuận, phân hóa hay rủi ro.
-            </p>
-
-            <a href="thi-truong-hom-nay.html">
-              Mở thị trường →
-            </a>
-
-          </article>
-
-
-          <article class="flow-card">
-
-            <b>BƯỚC 02</b>
-
-            <h3>
-              Lọc cơ hội
-            </h3>
-
-            <p>
-              Chỉ giữ các mã có lý do và điều kiện rõ ràng.
-            </p>
-
-            <a href="watchlist.html">
-              Mở Watchlist →
-            </a>
-
-          </article>
-
-
-          <article class="flow-card">
-
-            <b>BƯỚC 03</b>
-
-            <h3>
-              Kiểm tra vốn & rủi ro
-            </h3>
-
-            <p>
-              Biết trước mình có thể mất bao nhiêu nếu giả định sai.
-            </p>
-
-            <a href="investor-calculator.html">
-              Mở công cụ →
-            </a>
-
-          </article>
-
-
-          <article class="flow-card">
-
-            <b>BƯỚC 04</b>
-
-            <h3>
-              Review cuối ngày
-            </h3>
-
-            <p>
-              Nhìn lại quyết định và lỗi hành vi để hệ thống tốt dần.
-            </p>
-
-            <a href="sau-phien-cua-toi.html">
-              Review phiên →
-            </a>
-
-          </article>
-
+          <article class="flow-card"><b>BƯỚC 01</b><h3>Đọc bối cảnh</h3><p>Xem thị trường đang thuận, phân hóa hay rủi ro trước khi nhìn từng mã.</p><a href="thi-truong-hom-nay.html">Mở Thị trường hôm nay →</a></article>
+          <article class="flow-card"><b>BƯỚC 02</b><h3>Chọn cổ phiếu</h3><p>Chỉ giữ các mã có lý do, sức mạnh và điều kiện theo dõi đủ rõ.</p><a href="watchlist.html">Mở Watchlist →</a></article>
+          <article class="flow-card"><b>BƯỚC 03</b><h3>Chờ đúng thời điểm</h3><p>Phân biệt “đáng quan tâm” với “đủ điều kiện hành động”, tránh mua vì FOMO.</p><a href="#thoi-diem">Xem nguyên tắc thời điểm →</a></article>
+          <article class="flow-card"><b>BƯỚC 04</b><h3>Kiểm tra rủi ro</h3><p>Biết trước điểm sai và số tiền tối đa chấp nhận mất nếu giả định không đúng.</p><a href="investor-calculator.html">Mở Bộ công cụ →</a></article>
+          <article class="flow-card"><b>BƯỚC 05</b><h3>Phân bổ vốn</h3><p>Chọn tỷ trọng phù hợp với chất lượng cơ hội và tổng rủi ro của danh mục.</p><a href="#phan-bo">Xem nguyên tắc phân bổ →</a></article>
+          <article class="flow-card"><b>BƯỚC 06</b><h3>Kỷ luật & Review</h3><p>Sau phiên, tách kết quả khỏi chất lượng quyết định để biết lỗi nào đang lặp lại.</p><a href="sau-phien-cua-toi.html">Review phiên →</a></article>
         </div>
 
       </section>
