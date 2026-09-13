@@ -2,7 +2,7 @@ import { pendingAssessmentKey, pendingClaimTokenKey, supabaseClient } from "./su
 
 const HEADER_HOST_ID = "siteHeader";
 const FOOTER_HOST_ID = "siteFooter";
-const TURNSTILE_SITE_KEY = "0x4AAAAAAEYKnha19nmpaSeM";
+const TURNSTILE_SITE_KEY = "0x4AAAAAAEyKnha19nmpaSeM";
 const TURNSTILE_SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 const navItems = [
