@@ -4089,6 +4089,12 @@
         return;
       }
 
+      const { data: recoverySessionData } = await supabaseClient.auth.getSession();
+      if(!recoverySessionData.session){
+        showMessage("Phiên khôi phục chưa được xác nhận. ACE vui lòng mở lại liên kết mới nhất trong email đặt lại mật khẩu.", "error");
+        return;
+      }
+
       setLoading(button, true, "Cập nhật mật khẩu", "Đang cập nhật...");
 
       const { error } = await supabaseClient.auth.updateUser({
@@ -4098,7 +4104,19 @@
       setLoading(button, false, "Cập nhật mật khẩu", "Đang cập nhật...");
 
       if(error){
-        showMessage("Chưa thể cập nhật mật khẩu. Liên kết có thể đã hết hạn.", "error");
+        const message = String(error.message || "").toLowerCase();
+        const code = String(error.code || "").toLowerCase();
+
+        if(message.includes("different") || message.includes("same password")){
+          showMessage("Mật khẩu mới phải khác mật khẩu đang sử dụng. ACE hãy chọn một mật khẩu khác rồi thử lại.", "error");
+        }else if(code.includes("weak_password") || message.includes("weak password") || message.includes("password should be")){
+          showMessage("Mật khẩu mới chưa đáp ứng yêu cầu bảo mật. ACE hãy dùng ít nhất 8 ký tự và nên kết hợp chữ hoa, chữ thường, số và ký tự đặc biệt.", "error");
+        }else if(message.includes("session") || message.includes("jwt") || message.includes("expired")){
+          showMessage("Phiên khôi phục không còn hợp lệ. ACE vui lòng yêu cầu một email đặt lại mật khẩu mới.", "error");
+        }else{
+          showMessage("Chưa thể cập nhật mật khẩu. ACE vui lòng thử một mật khẩu khác; nếu vẫn lỗi hãy yêu cầu lại email khôi phục mới.", "error");
+        }
+        console.warn("Password recovery update failed:", error);
         return;
       }
 
