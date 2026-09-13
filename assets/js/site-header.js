@@ -853,11 +853,30 @@ async function refreshAuth() {
 }
 
 export async function initSiteHeader() {
-  const headerHost = document.getElementById(HEADER_HOST_ID);
-  const footerHost = document.getElementById(FOOTER_HOST_ID);
+  let headerHost = document.getElementById(HEADER_HOST_ID);
+  let footerHost = document.getElementById(FOOTER_HOST_ID);
+
+  // Tương thích các trang cũ: nếu còn header/footer HTML tĩnh,
+  // tự thay bằng host dùng chung mà không đụng phần nội dung giữa trang.
+  if (!headerHost) {
+    const legacyHeader = document.querySelector("header.topbar");
+    if (legacyHeader) {
+      headerHost = document.createElement("div");
+      headerHost.id = HEADER_HOST_ID;
+      legacyHeader.replaceWith(headerHost);
+    }
+  }
+
+  if (!footerHost) {
+    const legacyFooter = document.querySelector("footer.footer");
+    if (legacyFooter) {
+      footerHost = document.createElement("div");
+      footerHost.id = FOOTER_HOST_ID;
+      legacyFooter.replaceWith(footerHost);
+    }
+  }
 
   if (!headerHost && !footerHost) {
-    console.warn(`[site-header] Không tìm thấy #${HEADER_HOST_ID} hoặc #${FOOTER_HOST_ID}.`);
     return;
   }
 
