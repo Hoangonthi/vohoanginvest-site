@@ -6,20 +6,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   javascript-syntax:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Apply one-time auth patch
-        run: python .github/scripts/patch_auth_cooldown.py
       - name: Check JavaScript syntax
         shell: bash
         run: |
@@ -28,25 +24,3 @@ jobs:
             echo "Checking $file"
             node --check "$file"
           done < <(find . -type f -name '*.js' -not -path './node_modules/*' -print0)
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          s=Path('dang-nhap.html').read_text(encoding='utf-8')
-          scripts=re.findall(r'<script type="module">([\s\S]*?)</script>',s)
-          if not scripts:
-              raise SystemExit('module script not found')
-          Path('/tmp/auth-module.mjs').write_text(scripts[-1],encoding='utf-8')
-          PY
-          node --check /tmp/auth-module.mjs
-      - name: Commit auth page
-        shell: bash
-        run: |
-          if git diff --quiet -- dang-nhap.html; then
-            echo "No changes"
-            exit 0
-          fi
-          git config user.name 'VÕ VŨ HOÀNG'
-          git config user.email 'vvhoangvn@gmail.com'
-          git add dang-nhap.html
-          git commit -m 'Add auth email cooldown and clearer rate-limit UX'
-          git push
