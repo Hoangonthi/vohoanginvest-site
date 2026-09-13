@@ -1,0 +1,35 @@
+name: Refresh market reader asset
+
+on:
+  push:
+    paths:
+      - '.github/workflows/bust-market-reader-cache.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bust market reader cache
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('thi-truong-hom-nay.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('src="assets/js/market-reader.js"','src="assets/js/market-reader.js?v=20260913-2"',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'VÕ VŨ HOÀNG'
+          git config user.email 'vvhoangvn@gmail.com'
+          git add thi-truong-hom-nay.html
+          git commit -m 'Refresh market reader client asset' || exit 0
+          git push
