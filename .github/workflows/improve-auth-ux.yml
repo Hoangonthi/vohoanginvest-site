@@ -1,0 +1,339 @@
+name: Improve auth UX
+
+on:
+  push:
+    paths:
+      - '.github/workflows/improve-auth-ux.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch login signup forgot UX
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('dang-nhap.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = '''    function isValidEmail(value){
+      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String(value || "").trim());
+    }
+'''
+          new = '''    const COMMON_EMAIL_DOMAINS = ["gmail.com","outlook.com","hotmail.com","yahoo.com","icloud.com"];
+
+    function normalizeEmail(value){
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function isValidEmail(value){
+      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(normalizeEmail(value));
+    }
+
+    function emailDomainDistance(a,b){
+      a = String(a || "").toLowerCase();
+      b = String(b || "").toLowerCase();
+      const dp = Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+      for(let i=0;i<=a.length;i++) dp[i][0]=i;
+      for(let j=0;j<=b.length;j++) dp[0][j]=j;
+      for(let i=1;i<=a.length;i++){
+        for(let j=1;j<=b.length;j++){
+          dp[i][j]=Math.min(
+            dp[i-1][j]+1,
+            dp[i][j-1]+1,
+            dp[i-1][j-1]+(a[i-1]===b[j-1]?0:1)
+          );
+        }
+      }
+      return dp[a.length][b.length];
+    }
+
+    function likelyEmailCorrection(value){
+      const email = normalizeEmail(value);
+      const at = email.lastIndexOf("@");
+      if(at <= 0) return null;
+      const local = email.slice(0,at);
+      const domain = email.slice(at+1);
+      if(!domain || COMMON_EMAIL_DOMAINS.includes(domain)) return null;
+      const target = COMMON_EMAIL_DOMAINS.find(item => emailDomainDistance(domain,item) <= 1);
+      return target ? `${local}@${target}` : null;
+    }
+
+    function validateEmailForAction(value){
+      const email = normalizeEmail(value);
+      if(!isValidEmail(email)){
+        return { ok:false, email, message:"Vui lòng nhập đúng định dạng email, ví dụ: ten@gmail.com." };
+      }
+      const corrected = likelyEmailCorrection(email);
+      if(corrected){
+        return { ok:false, email, corrected, message:`Email có thể bị gõ nhầm. Có phải ACE muốn dùng ${corrected}?` };
+      }
+      return { ok:true, email };
+    }
+
+    function setupEmailSuggestions(input){
+      if(!input || input.dataset.emailSuggestionsReady) return;
+      input.dataset.emailSuggestionsReady = "1";
+      const box = document.createElement("div");
+      box.className = "auth-email-suggestions";
+      box.hidden = true;
+      input.insertAdjacentElement("afterend", box);
+
+      const render = () => {
+        const value = String(input.value || "").trim();
+        const at = value.lastIndexOf("@");
+        if(at <= 0){ box.hidden = true; box.innerHTML = ""; return; }
+        const local = value.slice(0,at);
+        const typedDomain = value.slice(at+1).toLowerCase();
+        const typo = likelyEmailCorrection(value);
+        let options = [];
+        if(typo){
+          options = [typo];
+        }else{
+          options = COMMON_EMAIL_DOMAINS
+            .filter(domain => !typedDomain || domain.startsWith(typedDomain))
+            .slice(0,4)
+            .map(domain => `${local}@${domain}`);
+        }
+        if(!options.length){ box.hidden = true; box.innerHTML = ""; return; }
+        box.innerHTML = options.map(email => `<button type="button" data-email-choice="${email.replaceAll('"','&quot;')}">${email}</button>`).join("");
+        box.hidden = false;
+      };
+
+      input.addEventListener("input", render);
+      input.addEventListener("focus", render);
+      input.addEventListener("blur", () => window.setTimeout(() => { box.hidden = true; }, 160));
+      box.addEventListener("mousedown", event => event.preventDefault());
+      box.addEventListener("click", event => {
+        const button = event.target.closest("[data-email-choice]");
+        if(!button) return;
+        input.value = button.dataset.emailChoice || "";
+        box.hidden = true;
+        input.focus({preventScroll:true});
+      });
+    }
+
+    ["loginEmail","signupEmail","forgotEmail"].forEach(id => setupEmailSuggestions(document.getElementById(id)));
+'''
+          if old not in s: raise SystemExit('email validator block not found')
+          s = s.replace(old,new,1)
+
+          old = '''    function switchMode(mode){
+      if(recoveryMode) return;
+
+      tabs.forEach(tab => {
+        tab.classList.toggle("is-active", tab.dataset.authMode === mode);
+      });
+
+      panes.forEach(pane => {
+        pane.hidden = pane.dataset.pane !== mode;
+      });
+
+      authTitle.textContent = titles[mode].title;
+      authSubtitle.textContent = titles[mode].subtitle;
+      showMessage("");
+      resetAuthTurnstile();
+    }
+'''
+          new = '''    function bringAuthFormIntoView(){
+      if(window.innerWidth > 980) return;
+      const target = document.querySelector(".auth-form-panel");
+      if(!target) return;
+      window.setTimeout(() => target.scrollIntoView({ behavior:"smooth", block:"start" }), 80);
+    }
+
+    function switchMode(mode){
+      if(recoveryMode) return;
+
+      tabs.forEach(tab => {
+        tab.classList.toggle("is-active", tab.dataset.authMode === mode);
+      });
+
+      panes.forEach(pane => {
+        pane.hidden = pane.dataset.pane !== mode;
+      });
+
+      authTitle.textContent = titles[mode].title;
+      authSubtitle.textContent = titles[mode].subtitle;
+      showMessage("");
+      resetAuthTurnstile();
+      bringAuthFormIntoView();
+    }
+'''
+          if old not in s: raise SystemExit('switchMode block not found')
+          s = s.replace(old,new,1)
+
+          replacements = {
+'''      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const button = document.getElementById("loginSubmit");
+
+      if(!isValidEmail(email)){
+        showMessage("Vui lòng nhập email hợp lệ.", "error");
+        return;
+      }
+''':'''      const emailCheck = validateEmailForAction(document.getElementById("loginEmail").value);
+      const email = emailCheck.email;
+      const password = document.getElementById("loginPassword").value;
+      const button = document.getElementById("loginSubmit");
+
+      if(!emailCheck.ok){
+        showMessage(emailCheck.message, "error");
+        return;
+      }
+''',
+'''      const email = document.getElementById("loginEmail").value.trim();
+      if(!isValidEmail(email)){
+        showMessage("Vui lòng nhập email hợp lệ trước khi gửi OTP.", "error");
+        return;
+      }
+''':'''      const emailCheck = validateEmailForAction(document.getElementById("loginEmail").value);
+      const email = emailCheck.email;
+      if(!emailCheck.ok){
+        showMessage(emailCheck.message, "error");
+        return;
+      }
+''',
+'''      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+''':'''      const emailCheck = validateEmailForAction(document.getElementById("signupEmail").value);
+      const email = emailCheck.email;
+      const password = document.getElementById("signupPassword").value;
+''',
+'''      if(!isValidEmail(email)){
+        showMessage("Vui lòng nhập email hợp lệ.", "error");
+        return;
+      }
+
+      if(password.length < 8){
+''':'''      if(!emailCheck.ok){
+        showMessage(emailCheck.message, "error");
+        return;
+      }
+
+      if(password.length < 8){
+''',
+'''      const email = document.getElementById("forgotEmail").value.trim();
+      const button = document.getElementById("forgotSubmit");
+
+      if(!isValidEmail(email)){
+        showMessage("Vui lòng nhập email hợp lệ.", "error");
+        return;
+      }
+''':'''      const emailCheck = validateEmailForAction(document.getElementById("forgotEmail").value);
+      const email = emailCheck.email;
+      const button = document.getElementById("forgotSubmit");
+
+      if(!emailCheck.ok){
+        showMessage(emailCheck.message, "error");
+        return;
+      }
+'''
+          }
+          for a,b in replacements.items():
+            if a not in s: raise SystemExit('missing auth replacement')
+            s=s.replace(a,b,1)
+
+          old = '''      document.getElementById("signupForm").reset();
+
+      if(data.session?.user){
+'''
+          new = '''      const identities = data?.user?.identities;
+      if(data?.user && Array.isArray(identities) && identities.length === 0){
+        document.getElementById("loginEmail").value = email;
+        switchMode("login");
+        showMessage("Email này đã được đăng ký. ACE hãy đăng nhập hoặc dùng Quên mật khẩu nếu không nhớ mật khẩu.", "info");
+        return;
+      }
+
+      document.getElementById("signupForm").reset();
+
+      if(data.session?.user){
+'''
+          if old not in s: raise SystemExit('signup success block not found')
+          s=s.replace(old,new,1)
+
+          css = '''
+
+    /* AUTH UX 2026-09-13: email suggestions + mobile readability */
+    .auth-form-panel{scroll-margin-top:88px}
+    .auth-email-suggestions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:7px;
+    }
+    .auth-email-suggestions[hidden]{display:none!important}
+    .auth-email-suggestions button{
+      min-height:30px;
+      padding:0 9px;
+      border:1px solid rgba(224,187,99,.24);
+      border-radius:999px;
+      background:rgba(224,187,99,.055);
+      color:#f3d98e;
+      font:inherit;
+      font-size:10px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    @media(max-width:680px){
+      html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+      .auth-form-panel{padding:22px 14px 30px;align-items:flex-start}
+      .auth-card-head{margin-bottom:18px}
+      .auth-card-head .auth-kicker{font-size:12px}
+      .auth-card-head h2{font-size:27px}
+      .auth-card-head p{font-size:14px;line-height:1.6}
+      .auth-tabs{gap:5px;margin-bottom:16px}
+      .auth-tab{min-height:44px;font-size:13px;padding:0 7px}
+      .auth-form{gap:14px}
+      .auth-field label{font-size:14px;margin-bottom:7px}
+      .auth-field input{min-height:50px;font-size:16px;padding:0 14px}
+      .auth-show-pass{font-size:12px;min-height:32px}
+      .auth-submit,.auth-otp-send,.auth-google-btn{min-height:50px;font-size:15px}
+      .auth-helper,.auth-check{font-size:13px;line-height:1.55}
+      .auth-message{font-size:13px;line-height:1.55;padding:12px 13px}
+      .auth-turnstile-wrap span,.auth-security-note{font-size:11.5px;line-height:1.5}
+      .auth-divider{font-size:11px}
+      .auth-email-suggestions button{min-height:34px;font-size:12px}
+      .auth-otp-box{gap:12px;padding:12px}
+    }
+'''
+          marker = '\n  </style>\n</head>'
+          if marker not in s: raise SystemExit('style end marker not found')
+          s=s.replace(marker, css + marker, 1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Validate page script syntax
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('dang-nhap.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script type="module">([\s\S]*?)</script>',s)
+          if not scripts:
+              raise SystemExit('module script not found')
+          Path('/tmp/auth-module.mjs').write_text(scripts[-1],encoding='utf-8')
+          PY
+          node --check /tmp/auth-module.mjs
+
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'VÕ VŨ HOÀNG'
+          git config user.email 'vvhoangvn@gmail.com'
+          git add dang-nhap.html
+          git commit -m 'Improve auth email validation and mobile UX' || exit 0
+          git push
