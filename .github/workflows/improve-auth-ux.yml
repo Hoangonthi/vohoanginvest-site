@@ -16,11 +16,186 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Patch login signup forgot UX
+      - name: Patch auth email cooldown messages
         shell: bash
         run: |
-          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKcCA9IFBhdGgoJ2RhbmctbmhhcC5odG1sJykKcyA9IHAucmVhZF90ZXh0KGVuY29kaW5nPSd1dGYtOCcpCgpvbGQgPSAiIiIgICAgZnVuY3Rpb24gaXNWYWxpZEVtYWlsKHZhbHVlKXsKICAgICAgcmV0dXJuIC9eW15cc0BdK0BbXlxzQF0rXC5bXlxzQF0rJC8udGVzdChTdHJpbmcodmFsdWUgfHwgIiIpLnRyaW0oKSk7CiAgICB9CiIiIgpuZXcgPSAiIiIgICAgY29uc3QgQ09NTU9OX0VNQUlMX0RPTUFJTlMgPSBbImdtYWlsLmNvbSIsIm91dGxvb2suY29tIiwiaG90bWFpbC5jb20iLCJ5YWhvby5jb20iLCJpY2xvdWQuY29tIl07CgogICAgZnVuY3Rpb24gbm9ybWFsaXplRW1haWwodmFsdWUpewogICAgICByZXR1cm4gU3RyaW5nKHZhbHVlIHx8ICIiKS50cmltKCkudG9Mb3dlckNhc2UoKTsKICAgIH0KCiAgICBmdW5jdGlvbiBpc1ZhbGlkRW1haWwodmFsdWUpewogICAgICByZXR1cm4gL15bXlxzQF0rQFteXHNAXStcLlteXHNAXXsyLH0kLy50ZXN0KG5vcm1hbGl6ZUVtYWlsKHZhbHVlKSk7CiAgICB9CgogICAgZnVuY3Rpb24gZW1haWxEb21haW5EaXN0YW5jZShhLGIpewogICAgICBhID0gU3RyaW5nKGEgfHwgIiIpLnRvTG93ZXJDYXNlKCk7CiAgICAgIGIgPSBTdHJpbmcoYiB8fCAiIikudG9Mb3dlckNhc2UoKTsKICAgICAgY29uc3QgZHAgPSBBcnJheS5mcm9tKHtsZW5ndGg6YS5sZW5ndGgrMX0sKCk9PkFycmF5KGIubGVuZ3RoKzEpLmZpbGwoMCkpOwogICAgICBmb3IobGV0IGk9MDtpPD1hLmxlbmd0aDtpKyspIGRwW2ldWzBdPWk7CiAgICAgIGZvcihsZXQgaj0wO2o8PWIubGVuZ3RoO2orKykgZHBbMF1bal09ajsKICAgICAgZm9yKGxldCBpPTE7aTw9YS5sZW5ndGg7aSsrKXsKICAgICAgICBmb3IobGV0IGo9MTtqPD1iLmxlbmd0aDtqKyspewogICAgICAgICAgZHBbaV1bal09TWF0aC5taW4oCiAgICAgICAgICAgIGRwW2ktMV1bal0rMSwKICAgICAgICAgICAgZHBbaV1bai0xXSsxLAogICAgICAgICAgICBkcFtpLTFdW2otMV0rKGFbaS0xXT09PWJbai0xXT8wOjEpCiAgICAgICAgICApOwogICAgICAgIH0KICAgICAgfQogICAgICByZXR1cm4gZHBbYS5sZW5ndGhdW2IubGVuZ3RoXTsKICAgIH0KCiAgICBmdW5jdGlvbiBsaWtlbHlFbWFpbENvcnJlY3Rpb24odmFsdWUpewogICAgICBjb25zdCBlbWFpbCA9IG5vcm1hbGl6ZUVtYWlsKHZhbHVlKTsKICAgICAgY29uc3QgYXQgPSBlbWFpbC5sYXN0SW5kZXhPZigiQCIpOwogICAgICBpZihhdCA8PSAwKSByZXR1cm4gbnVsbDsKICAgICAgY29uc3QgbG9jYWwgPSBlbWFpbC5zbGljZSgwLGF0KTsKICAgICAgY29uc3QgZG9tYWluID0gZW1haWwuc2xpY2UoYXQrMSk7CiAgICAgIGlmKCFkb21haW4gfHwgQ09NTU9OX0VNQUlMX0RPTUFJTlMuaW5jbHVkZXMoZG9tYWluKSkgcmV0dXJuIG51bGw7CiAgICAgIGNvbnN0IHRhcmdldCA9IENPTU1PTl9FTUFJTF9ET01BSU5TLmZpbmQoaXRlbSA9PiBlbWFpbERvbWFpbkRpc3RhbmNlKGRvbWFpbixpdGVtKSA8PSAxKTsKICAgICAgcmV0dXJuIHRhcmdldCA/IGAke2xvY2FsfUAke3RhcmdldH1gIDogbnVsbDsKICAgIH0KCiAgICBmdW5jdGlvbiB2YWxpZGF0ZUVtYWlsRm9yQWN0aW9uKHZhbHVlKXsKICAgICAgY29uc3QgZW1haWwgPSBub3JtYWxpemVFbWFpbCh2YWx1ZSk7CiAgICAgIGlmKCFpc1ZhbGlkRW1haWwoZW1haWwpKXsKICAgICAgICByZXR1cm4geyBvazpmYWxzZSwgZW1haWwsIG1lc3NhZ2U6IlZ1aSBsw7JuZyBuaOG6rXAgxJHDum5nIMSR4buLbmggZOG6oW5nIGVtYWlsLCB2w60gZOG7pTogdGVuQGdtYWlsLmNvbS4iIH07CiAgICAgIH0KICAgICAgY29uc3QgY29ycmVjdGVkID0gbGlrZWx5RW1haWxDb3JyZWN0aW9uKGVtYWlsKTsKICAgICAgaWYoY29ycmVjdGVkKXsKICAgICAgICByZXR1cm4geyBvazpmYWxzZSwgZW1haWwsIGNvcnJlY3RlZCwgbWVzc2FnZTpgRW1haWwgY8OzIHRo4buDIGLhu4sgZ8O1IG5o4bqnbS4gQ8OzIHBo4bqjaSBBQ0UgbXXhu5FuIGTDuW5nICR7Y29ycmVjdGVkfT9gIH07CiAgICAgIH0KICAgICAgcmV0dXJuIHsgb2s6dHJ1ZSwgZW1haWwgfTsKICAgIH0KCiAgICBmdW5jdGlvbiBzZXR1cEVtYWlsU3VnZ2VzdGlvbnMoaW5wdXQpewogICAgICBpZighaW5wdXQgfHwgaW5wdXQuZGF0YXNldC5lbWFpbFN1Z2dlc3Rpb25zUmVhZHkpIHJldHVybjsKICAgICAgaW5wdXQuZGF0YXNldC5lbWFpbFN1Z2dlc3Rpb25zUmVhZHkgPSAiMSI7CiAgICAgIGNvbnN0IGJveCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpOwogICAgICBib3guY2xhc3NOYW1lID0gImF1dGgtZW1haWwtc3VnZ2VzdGlvbnMiOwogICAgICBib3guaGlkZGVuID0gdHJ1ZTsKICAgICAgaW5wdXQuaW5zZXJ0QWRqYWNlbnRFbGVtZW50KCJhZnRlcmVuZCIsIGJveCk7CgogICAgICBjb25zdCByZW5kZXIgPSAoKSA9PiB7CiAgICAgICAgY29uc3QgdmFsdWUgPSBTdHJpbmcoaW5wdXQudmFsdWUgfHwgIiIpLnRyaW0oKTsKICAgICAgICBjb25zdCBhdCA9IHZhbHVlLmxhc3RJbmRleE9mKCJAIik7CiAgICAgICAgaWYoYXQgPD0gMCl7IGJveC5oaWRkZW4gPSB0cnVlOyBib3guaW5uZXJIVE1MID0gIiI7IHJldHVybjsgfQogICAgICAgIGNvbnN0IGxvY2FsID0gdmFsdWUuc2xpY2UoMCxhdCk7CiAgICAgICAgY29uc3QgdHlwZWREb21haW4gPSB2YWx1ZS5zbGljZShhdCsxKS50b0xvd2VyQ2FzZSgpOwogICAgICAgIGNvbnN0IHR5cG8gPSBsaWtlbHlFbWFpbENvcnJlY3Rpb24odmFsdWUpOwogICAgICAgIGxldCBvcHRpb25zID0gW107CiAgICAgICAgaWYodHlwbyl7CiAgICAgICAgICBvcHRpb25zID0gW3R5cG9dOwogICAgICAgIH1lbHNlewogICAgICAgICAgb3B0aW9ucyA9IENPTU1PTl9FTUFJTF9ET01BSU5TCiAgICAgICAgICAgIC5maWx0ZXIoZG9tYWluID0+ICF0eXBlZERvbWFpbiB8fCBkb21haW4uc3RhcnRzV2l0aCh0eXBlZERvbWFpbikpCiAgICAgICAgICAgIC5zbGljZSgwLDQpCiAgICAgICAgICAgIC5tYXAoZG9tYWluID0+IGAke2xvY2FsfUAke2RvbWFpbn1gKTsKICAgICAgICB9CiAgICAgICAgaWYoIW9wdGlvbnMubGVuZ3RoKXsgYm94LmhpZGRlbiA9IHRydWU7IGJveC5pbm5lckhUTUwgPSAiIjsgcmV0dXJuOyB9CiAgICAgICAgYm94LmlubmVySFRNTCA9IG9wdGlvbnMubWFwKGVtYWlsID0+IGA8YnV0dG9uIHR5cGU9ImJ1dHRvbiIgZGF0YS1lbWFpbC1jaG9pY2U9IiR7ZW1haWwucmVwbGFjZUFsbCgnIicsJyZxdW90OycpfSI+JHtlbWFpbH08L2J1dHRvbj5gKS5qb2luKCIiKTsKICAgICAgICBib3guaGlkZGVuID0gZmFsc2U7CiAgICAgIH07CgogICAgICBpbnB1dC5hZGRFdmVudExpc3RlbmVyKCJpbnB1dCIsIHJlbmRlcik7CiAgICAgIGlucHV0LmFkZEV2ZW50TGlzdGVuZXIoImZvY3VzIiwgcmVuZGVyKTsKICAgICAgaW5wdXQuYWRkRXZlbnRMaXN0ZW5lcigiYmx1ciIsICgpID0+IHdpbmRvdy5zZXRUaW1lb3V0KCgpID0+IHsgYm94LmhpZGRlbiA9IHRydWU7IH0sIDE2MCkpOwogICAgICBib3guYWRkRXZlbnRMaXN0ZW5lcigibW91c2Vkb3duIiwgZXZlbnQgPT4gZXZlbnQucHJldmVudERlZmF1bHQoKSk7CiAgICAgIGJveC5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsIGV2ZW50ID0+IHsKICAgICAgICBjb25zdCBidXR0b24gPSBldmVudC50YXJnZXQuY2xvc2VzdCgiW2RhdGEtZW1haWwtY2hvaWNlXSIpOwogICAgICAgIGlmKCFidXR0b24pIHJldHVybjsKICAgICAgICBpbnB1dC52YWx1ZSA9IGJ1dHRvbi5kYXRhc2V0LmVtYWlsQ2hvaWNlIHx8ICIiOwogICAgICAgIGJveC5oaWRkZW4gPSB0cnVlOwogICAgICAgIGlucHV0LmZvY3VzKHtwcmV2ZW50U2Nyb2xsOnRydWV9KTsKICAgICAgfSk7CiAgICB9CgogICAgWyJsb2dpbkVtYWlsIiwic2lnbnVwRW1haWwiLCJmb3Jnb3RFbWFpbCJdLmZvckVhY2goaWQgPT4gc2V0dXBFbWFpbFN1Z2dlc3Rpb25zKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKSkpOwoiIiIKaWYgb2xkIG5vdCBpbiBzOiByYWlzZSBTeXN0ZW1FeGl0KCdlbWFpbCB2YWxpZGF0b3IgYmxvY2sgbm90IGZvdW5kJykKcyA9IHMucmVwbGFjZShvbGQsbmV3LDEpCgpvbGQgPSAiIiIgICAgZnVuY3Rpb24gc3dpdGNoTW9kZShtb2RlKXsKICAgICAgaWYocmVjb3ZlcnlNb2RlKSByZXR1cm47CgogICAgICB0YWJzLmZvckVhY2godGFiID0+IHsKICAgICAgICB0YWIuY2xhc3NMaXN0LnRvZ2dsZSgiaXMtYWN0aXZlIiwgdGFiLmRhdGFzZXQuYXV0aE1vZGUgPT09IG1vZGUpOwogICAgICB9KTsKCiAgICAgIHBhbmVzLmZvckVhY2gocGFuZSA9PiB7CiAgICAgICAgcGFuZS5oaWRkZW4gPSBwYW5lLmRhdGFzZXQucGFuZSAhPT0gbW9kZTsKICAgICAgfSk7CgogICAgICBhdXRoVGl0bGUudGV4dENvbnRlbnQgPSB0aXRsZXNbbW9kZV0udGl0bGU7CiAgICAgIGF1dGhTdWJ0aXRsZS50ZXh0Q29udGVudCA9IHRpdGxlc1ttb2RlXS5zdWJ0aXRsZTsKICAgICAgc2hvd01lc3NhZ2UoIiIpOwogICAgICByZXNldEF1dGhUdXJuc3RpbGUoKTsKICAgIH0KIiIiCm5ldyA9ICIiIiAgICBmdW5jdGlvbiBicmluZ0F1dGhGb3JtSW50b1ZpZXcoKXsKICAgICAgaWYod2luZG93LmlubmVyV2lkdGggPiA5ODApIHJldHVybjsKICAgICAgY29uc3QgdGFyZ2V0ID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiLmF1dGgtZm9ybS1wYW5lbCIpOwogICAgICBpZighdGFyZ2V0KSByZXR1cm47CiAgICAgIHdpbmRvdy5zZXRUaW1lb3V0KCgpID0+IHRhcmdldC5zY3JvbGxJbnRvVmlldyh7IGJlaGF2aW9yOiJzbW9vdGgiLCBibG9jazoic3RhcnQiIH0pLCA4MCk7CiAgICB9CgogICAgZnVuY3Rpb24gc3dpdGNoTW9kZShtb2RlKXsKICAgICAgaWYocmVjb3ZlcnlNb2RlKSByZXR1cm47CgogICAgICB0YWJzLmZvckVhY2godGFiID0+IHsKICAgICAgICB0YWIuY2xhc3NMaXN0LnRvZ2dsZSgiaXMtYWN0aXZlIiwgdGFiLmRhdGFzZXQuYXV0aE1vZGUgPT09IG1vZGUpOwogICAgICB9KTsKCiAgICAgIHBhbmVzLmZvckVhY2gocGFuZSA9PiB7CiAgICAgICAgcGFuZS5oaWRkZW4gPSBwYW5lLmRhdGFzZXQucGFuZSAhPT0gbW9kZTsKICAgICAgfSk7CgogICAgICBhdXRoVGl0bGUudGV4dENvbnRlbnQgPSB0aXRsZXNbbW9kZV0udGl0bGU7CiAgICAgIGF1dGhTdWJ0aXRsZS50ZXh0Q29udGVudCA9IHRpdGxlc1ttb2RlXS5zdWJ0aXRsZTsKICAgICAgc2hvd01lc3NhZ2UoIiIpOwogICAgICByZXNldEF1dGhUdXJuc3RpbGUoKTsKICAgICAgYnJpbmdBdXRoRm9ybUludG9WaWV3KCk7CiAgICB9CiIiIgppZiBvbGQgbm90IGluIHM6IHJhaXNlIFN5c3RlbUV4aXQoJ3N3aXRjaE1vZGUgYmxvY2sgbm90IGZvdW5kJykKcyA9IHMucmVwbGFjZShvbGQsbmV3LDEpCgpyZXBsYWNlbWVudHMgPSB7CiIiIiAgICAgIGNvbnN0IGVtYWlsID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luRW1haWwiKS52YWx1ZS50cmltKCk7CiAgICAgIGNvbnN0IHBhc3N3b3JkID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luUGFzc3dvcmQiKS52YWx1ZTsKICAgICAgY29uc3QgYnV0dG9uID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luU3VibWl0Iik7CgogICAgICBpZighaXNWYWxpZEVtYWlsKGVtYWlsKSl7CiAgICAgICAgc2hvd01lc3NhZ2UoIlZ1aSBsw7JuZyBuaOG6rXAgZW1haWwgaOG7o3AgbOG7hy4iLCAiZXJyb3IiKTsKICAgICAgICByZXR1cm47CiAgICAgIH0KIiIiOiIiIiAgICAgIGNvbnN0IGVtYWlsQ2hlY2sgPSB2YWxpZGF0ZUVtYWlsRm9yQWN0aW9uKGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJsb2dpbkVtYWlsIikudmFsdWUpOwogICAgICBjb25zdCBlbWFpbCA9IGVtYWlsQ2hlY2suZW1haWw7CiAgICAgIGNvbnN0IHBhc3N3b3JkID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luUGFzc3dvcmQiKS52YWx1ZTsKICAgICAgY29uc3QgYnV0dG9uID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luU3VibWl0Iik7CgogICAgICBpZighZW1haWxDaGVjay5vayl7CiAgICAgICAgc2hvd01lc3NhZ2UoZW1haWxDaGVjay5tZXNzYWdlLCAiZXJyb3IiKTsKICAgICAgICByZXR1cm47CiAgICAgIH0KIiIiLAoiIiIgICAgICBjb25zdCBlbWFpbCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJsb2dpbkVtYWlsIikudmFsdWUudHJpbSgpOwogICAgICBpZighaXNWYWxpZEVtYWlsKGVtYWlsKSl7CiAgICAgICAgc2hvd01lc3NhZ2UoIlZ1aSBsw7JuZyBuaOG6rXAgZW1haWwgaOG7o3AgbOG7hyB0csaw4bubYyBraGkgZ+G7rWkgT1RQLiIsICJlcnJvciIpOwogICAgICAgIHJldHVybjsKICAgICAgfQoiIiI6IiIiICAgICAgY29uc3QgZW1haWxDaGVjayA9IHZhbGlkYXRlRW1haWxGb3JBY3Rpb24oZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luRW1haWwiKS52YWx1ZSk7CiAgICAgIGNvbnN0IGVtYWlsID0gZW1haWxDaGVjay5lbWFpbDsKICAgICAgaWYoIWVtYWlsQ2hlY2sub2spewogICAgICAgIHNob3dNZXNzYWdlKGVtYWlsQ2hlY2subWVzc2FnZSwgImVycm9yIik7CiAgICAgICAgcmV0dXJuOwogICAgICB9CiIiIiwKIiIiICAgICAgY29uc3QgZW1haWwgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgic2lnbnVwRW1haWwiKS52YWx1ZS50cmltKCk7CiAgICAgIGNvbnN0IHBhc3N3b3JkID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInNpZ251cFBhc3N3b3JkIikudmFsdWU7CiIiIjoiIiIgICAgICBjb25zdCBlbWFpbENoZWNrID0gdmFsaWRhdGVFbWFpbEZvckFjdGlvbihkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgic2lnbnVwRW1haWwiKS52YWx1ZSk7CiAgICAgIGNvbnN0IGVtYWlsID0gZW1haWxDaGVjay5lbWFpbDsKICAgICAgY29uc3QgcGFzc3dvcmQgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgic2lnbnVwUGFzc3dvcmQiKS52YWx1ZTsKIiIiLAoiIiIgICAgICBpZighaXNWYWxpZEVtYWlsKGVtYWlsKSl7CiAgICAgICAgc2hvd01lc3NhZ2UoIlZ1aSBsw7JuZyBuaOG6rXAgZW1haWwgaOG7o3AgbOG7hy4iLCAiZXJyb3IiKTsKICAgICAgICByZXR1cm47CiAgICAgIH0KCiAgICAgIGlmKHBhc3N3b3JkLmxlbmd0aCA8IDgpewoiIiI6IiIiICAgICAgaWYoIWVtYWlsQ2hlY2sub2spewogICAgICAgIHNob3dNZXNzYWdlKGVtYWlsQ2hlY2subWVzc2FnZSwgImVycm9yIik7CiAgICAgICAgcmV0dXJuOwogICAgICB9CgogICAgICBpZihwYXNzd29yZC5sZW5ndGggPCA4KXsKIiIiLAoiIiIgICAgICBjb25zdCBlbWFpbCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJmb3Jnb3RFbWFpbCIpLnZhbHVlLnRyaW0oKTsKICAgICAgY29uc3QgYnV0dG9uID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImZvcmdvdFN1Ym1pdCIpOwoKICAgICAgaWYoIWlzVmFsaWRFbWFpbChlbWFpbCkpewogICAgICAgIHNob3dNZXNzYWdlKCJWdWkgbMOybmcgbmjhuq1wIGVtYWlsIGjhu6NwIGzhu4cuIiwgImVycm9yIik7CiAgICAgICAgcmV0dXJuOwogICAgICB9CiIiIjoiIiIgICAgICBjb25zdCBlbWFpbENoZWNrID0gdmFsaWRhdGVFbWFpbEZvckFjdGlvbihkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiZm9yZ290RW1haWwiKS52YWx1ZSk7CiAgICAgIGNvbnN0IGVtYWlsID0gZW1haWxDaGVjay5lbWFpbDsKICAgICAgY29uc3QgYnV0dG9uID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImZvcmdvdFN1Ym1pdCIpOwoKICAgICAgaWYoIWVtYWlsQ2hlY2sub2spewogICAgICAgIHNob3dNZXNzYWdlKGVtYWlsQ2hlY2subWVzc2FnZSwgImVycm9yIik7CiAgICAgICAgcmV0dXJuOwogICAgICB9CiIiIgp9CmZvciBhLGIgaW4gcmVwbGFjZW1lbnRzLml0ZW1zKCk6CiAgICBpZiBhIG5vdCBpbiBzOiByYWlzZSBTeXN0ZW1FeGl0KCdtaXNzaW5nIGF1dGggcmVwbGFjZW1lbnQnKQogICAgcz1zLnJlcGxhY2UoYSxiLDEpCgpvbGQgPSAiIiIgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgic2lnbnVwRm9ybSIpLnJlc2V0KCk7CgogICAgICBpZihkYXRhLnNlc3Npb24/LnVzZXIpewoiIiIKbmV3ID0gIiIiICAgICAgY29uc3QgaWRlbnRpdGllcyA9IGRhdGE/LnVzZXI/LmlkZW50aXRpZXM7CiAgICAgIGlmKGRhdGE/LnVzZXIgJiYgQXJyYXkuaXNBcnJheShpZGVudGl0aWVzKSAmJiBpZGVudGl0aWVzLmxlbmd0aCA9PT0gMCl7CiAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImxvZ2luRW1haWwiKS52YWx1ZSA9IGVtYWlsOwogICAgICAgIHN3aXRjaE1vZGUoImxvZ2luIik7CiAgICAgICAgc2hvd01lc3NhZ2UoIkVtYWlsIG7DoHkgxJHDoyDEkcaw4bujYyDEkcSDbmcga8O9LiBBQ0UgaMOjeSDEkcSDbmcgbmjhuq1wIGhv4bq3YyBkw7luZyBRdcOqbiBt4bqtdCBraOG6qXUgbuG6v3Uga2jDtG5nIG5o4bubIG3huq10IGto4bqpdS4iLCAiaW5mbyIpOwogICAgICAgIHJldHVybjsKICAgICAgfQoKICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInNpZ251cEZvcm0iKS5yZXNldCgpOwoKICAgICAgaWYoZGF0YS5zZXNzaW9uPy51c2VyKXsKIiIiCmlmIG9sZCBub3QgaW4gczogcmFpc2UgU3lzdGVtRXhpdCgnc2lnbnVwIHN1Y2Nlc3MgYmxvY2sgbm90IGZvdW5kJykKcz1zLnJlcGxhY2Uob2xkLG5ldywxKQoKY3NzID0gIiIiCgogICAgLyogQVVUSCBVWCAyMDI2LTA5LTEzOiBlbWFpbCBzdWdnZXN0aW9ucyArIG1vYmlsZSByZWFkYWJpbGl0eSAqLwogICAgLmF1dGgtZm9ybS1wYW5lbHtzY3JvbGwtbWFyZ2luLXRvcDo4OHB4fQogICAgLmF1dGgtZW1haWwtc3VnZ2VzdGlvbnN7CiAgICAgIGRpc3BsYXk6ZmxleDsKICAgICAgZmxleC13cmFwOndyYXA7CiAgICAgIGdhcDo2cHg7CiAgICAgIG1hcmdpbi10b3A6N3B4OwogICAgfQogICAgLmF1dGgtZW1haWwtc3VnZ2VzdGlvbnNbaGlkZGVuXXtkaXNwbGF5Om5vbmUhaW1wb3J0YW50fQogICAgLmF1dGgtZW1haWwtc3VnZ2VzdGlvbnMgYnV0dG9uewogICAgICBtaW4taGVpZ2h0OjMwcHg7CiAgICAgIHBhZGRpbmc6MCA5cHg7CiAgICAgIGJvcmRlcjoxcHggc29saWQgcmdiYSgyMjQsMTg3LDk5LC4yNCk7CiAgICAgIGJvcmRlci1yYWRpdXM6OTk5cHg7CiAgICAgIGJhY2tncm91bmQ6cmdiYSgyMjQsMTg3LDk5LC4wNTUpOwogICAgICBjb2xvcjojZjNkOThlOwogICAgICBmb250OmluaGVyaXQ7CiAgICAgIGZvbnQtc2l6ZToxMHB4OwogICAgICBmb250LXdlaWdodDo3MDA7CiAgICAgIGN1cnNvcjpwb2ludGVyOwogICAgfQoKICAgIEBtZWRpYShtYXgtd2lkdGg6NjgwcHgpewogICAgICBodG1sey13ZWJraXQtdGV4dC1zaXplLWFkanVzdDoxMDAlO3RleHQtc2l6ZS1hZGp1c3Q6MTAwJX0KICAgICAgLmF1dGgtZm9ybS1wYW5lbHtwYWRkaW5nOjIycHggMTRweCAzMHB4O2FsaWduLWl0ZW1zOmZsZXgtc3RhcnR9CiAgICAgIC5hdXRoLWNhcmQtaGVhZHttYXJnaW4tYm90dG9tOjE4cHh9CiAgICAgIC5hdXRoLWNhcmQtaGVhZCAuYXV0aC1raWNrZXJ7Zm9udC1zaXplOjEycHh9CiAgICAgIC5hdXRoLWNhcmQtaGVhZCBoMntmb250LXNpemU6MjdweH0KICAgICAgLmF1dGgtY2FyZC1oZWFkIHB7Zm9udC1zaXplOjE0cHg7bGluZS1oZWlnaHQ6MS42fQogICAgICAuYXV0aC10YWJze2dhcDo1cHg7bWFyZ2luLWJvdHRvbToxNnB4fQogICAgICAuYXV0aC10YWJ7bWluLWhlaWdodDo0NHB4O2ZvbnQtc2l6ZToxM3B4O3BhZGRpbmc6MCA3cHh9CiAgICAgIC5hdXRoLWZvcm17Z2FwOjE0cHh9CiAgICAgIC5hdXRoLWZpZWxkIGxhYmVse2ZvbnQtc2l6ZToxNHB4O21hcmdpbi1ib3R0b206N3B4fQogICAgICAuYXV0aC1maWVsZCBpbnB1dHttaW4taGVpZ2h0OjUwcHg7Zm9udC1zaXplOjE2cHg7cGFkZGluZzowIDE0cHh9CiAgICAgIC5hdXRoLXNob3ctcGFzc3tmb250LXNpemU6MTJweDttaW4taGVpZ2h0OjMycHh9CiAgICAgIC5hdXRoLXN1Ym1pdCwuYXV0aC1vdHAtc2VuZCwuYXV0aC1nb29nbGUtYnRue21pbi1oZWlnaHQ6NTBweDtmb250LXNpemU6MTVweH0KICAgICAgLmF1dGgtaGVscGVyLC5hdXRoLWNoZWNre2ZvbnQtc2l6ZToxM3B4O2xpbmUtaGVpZ2h0OjEuNTV9CiAgICAgIC5hdXRoLW1lc3NhZ2V7Zm9udC1zaXplOjEzcHg7bGluZS1oZWlnaHQ6MS41NTtwYWRkaW5nOjEycHggMTNweH0KICAgICAgLmF1dGgtdHVybnN0aWxlLXdyYXAgc3BhbiwuYXV0aC1zZWN1cml0eS1ub3Rle2ZvbnQtc2l6ZToxMS41cHg7bGluZS1oZWlnaHQ6MS41fQogICAgICAuYXV0aC1kaXZpZGVye2ZvbnQtc2l6ZToxMXB4fQogICAgICAuYXV0aC1lbWFpbC1zdWdnZXN0aW9ucyBidXR0b257bWluLWhlaWdodDozNHB4O2ZvbnQtc2l6ZToxMnB4fQogICAgICAuYXV0aC1vdHAtYm94e2dhcDoxMnB4O3BhZGRpbmc6MTJweH0KICAgIH0KIiIiCm1hcmtlciA9ICdcbiAgPC9zdHlsZT5cbjwvaGVhZD4nCmlmIG1hcmtlciBub3QgaW4gczogcmFpc2UgU3lzdGVtRXhpdCgnc3R5bGUgZW5kIG1hcmtlciBub3QgZm91bmQnKQpzPXMucmVwbGFjZShtYXJrZXIsIGNzcyArIG1hcmtlciwgMSkKCnAud3JpdGVfdGV4dChzLGVuY29kaW5nPSd1dGYtOCcpCg==' | base64 -d >/tmp/patch_auth.py
-          python /tmp/patch_auth.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('dang-nhap.html')
+          s=p.read_text(encoding='utf-8')
+
+          marker='''    function setLoading(button, loading, normalText, loadingText){
+      if(!button) return;
+      button.disabled = loading;
+      button.textContent = loading ? loadingText : normalText;
+    }
+'''
+          addition='''    function setLoading(button, loading, normalText, loadingText){
+      if(!button) return;
+      button.disabled = loading;
+      button.textContent = loading ? loadingText : normalText;
+    }
+
+    const AUTH_EMAIL_COOLDOWN_MS = 65000;
+    const authEmailCooldowns = new Map();
+
+    function authEmailCooldownKey(email){
+      return normalizeEmail(email);
+    }
+
+    function getAuthEmailCooldownRemaining(email){
+      const until = authEmailCooldowns.get(authEmailCooldownKey(email)) || 0;
+      return Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    }
+
+    function rememberAuthEmailSent(email){
+      authEmailCooldowns.set(authEmailCooldownKey(email), Date.now() + AUTH_EMAIL_COOLDOWN_MS);
+    }
+
+    function guardAuthEmailCooldown(email){
+      const seconds = getAuthEmailCooldownRemaining(email);
+      if(seconds <= 0) return true;
+      showMessage(`Email xác thực vừa được gửi. ACE vui lòng chờ khoảng ${seconds} giây rồi mới yêu cầu gửi lại.`, "info");
+      return false;
+    }
+
+    function authRateLimitMessage(error){
+      const raw = String(error?.message || "").toLowerCase();
+      const match = raw.match(/(\\d+)\\s*seconds?/);
+      const seconds = match ? Number(match[1]) : 60;
+      if(raw.includes("rate") || raw.includes("security purposes") || raw.includes("seconds")){
+        return `Hệ thống đang giới hạn gửi email liên tiếp để bảo vệ tài khoản. ACE vui lòng chờ khoảng ${seconds} giây rồi thử lại.`;
+      }
+      return null;
+    }
+'''
+          if marker not in s: raise SystemExit('setLoading marker not found')
+          s=s.replace(marker,addition,1)
+
+          old='''      if(!requireAuthCaptcha()) return;
+
+      showMessage("");
+      setLoading(otpSendBtn, true, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
+'''
+          new='''      if(!requireAuthCaptcha()) return;
+      if(!guardAuthEmailCooldown(email)) return;
+
+      showMessage("");
+      setLoading(otpSendBtn, true, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
+'''
+          if old not in s: raise SystemExit('otp pre-send block not found')
+          s=s.replace(old,new,1)
+
+          old='''      if(error){
+        setLoading(otpSendBtn, false, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
+        showMessage("Chưa thể gửi mã xác thực. Vui lòng thử lại sau.", "error");
+        return;
+      }
+
+      otpBox.hidden = false;
+'''
+          new='''      if(error){
+        setLoading(otpSendBtn, false, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
+        const rateMessage = authRateLimitMessage(error);
+        showMessage(rateMessage || "Chưa thể gửi mã xác thực. Vui lòng thử lại sau.", "error");
+        return;
+      }
+
+      rememberAuthEmailSent(email);
+      otpBox.hidden = false;
+'''
+          if old not in s: raise SystemExit('otp error block not found')
+          s=s.replace(old,new,1)
+
+          old='''      if(!termsChecked){
+        showMessage("Bạn cần đồng ý Điều khoản sử dụng và Chính sách bảo mật.", "error");
+        return;
+      }
+      if(!requireAuthCaptcha()) return;
+
+      showMessage("");
+'''
+          new='''      if(!termsChecked){
+        showMessage("Bạn cần đồng ý Điều khoản sử dụng và Chính sách bảo mật.", "error");
+        return;
+      }
+      if(!requireAuthCaptcha()) return;
+      if(!guardAuthEmailCooldown(email)) return;
+
+      showMessage("");
+'''
+          if old not in s: raise SystemExit('signup pre-send block not found')
+          s=s.replace(old,new,1)
+
+          old='''        if(message.includes("already") || message.includes("registered")){
+          showMessage("Email này đã có tài khoản. Bạn hãy chuyển sang Đăng nhập.", "error");
+        }else if(message.includes("rate")){
+          showMessage("Bạn thao tác quá nhanh. Vui lòng đợi một chút rồi thử lại.", "error");
+        }else{
+'''
+          new='''        if(message.includes("already") || message.includes("registered")){
+          showMessage("Email này đã có tài khoản. Bạn hãy chuyển sang Đăng nhập.", "error");
+        }else if(authRateLimitMessage(error)){
+          showMessage(authRateLimitMessage(error), "error");
+        }else{
+'''
+          if old not in s: raise SystemExit('signup rate block not found')
+          s=s.replace(old,new,1)
+
+          old='''      const identities = data?.user?.identities;
+'''
+          new='''      rememberAuthEmailSent(email);
+      const identities = data?.user?.identities;
+'''
+          if old not in s: raise SystemExit('signup identities marker not found')
+          s=s.replace(old,new,1)
+
+          old='''      if(!requireAuthCaptcha()) return;
+
+      showMessage("");
+      setLoading(
+        button,
+'''
+          new='''      if(!requireAuthCaptcha()) return;
+      if(!guardAuthEmailCooldown(email)) return;
+
+      showMessage("");
+      setLoading(
+        button,
+'''
+          idx=s.find('// QUÊN MẬT KHẨU')
+          if idx<0: raise SystemExit('forgot marker not found')
+          before=s[:idx]; after=s[idx:]
+          if old not in after: raise SystemExit('forgot pre-send block not found')
+          after=after.replace(old,new,1)
+          s=before+after
+
+          old='''        if(message.includes("rate")){
+          showMessage("Bạn thao tác quá nhanh. Vui lòng đợi một chút rồi thử lại.", "error");
+        }else{
+'''
+          new='''        if(authRateLimitMessage(error)){
+          showMessage(authRateLimitMessage(error), "error");
+        }else{
+'''
+          idx=s.find('// QUÊN MẬT KHẨU')
+          before=s[:idx]; after=s[idx:]
+          if old not in after: raise SystemExit('forgot rate block not found')
+          after=after.replace(old,new,1)
+          s=before+after
+
+          old='''      // Không tiết lộ email có tồn tại hay không.
+      showMessage(
+'''
+          new='''      rememberAuthEmailSent(email);
+      // Không tiết lộ email có tồn tại hay không.
+      showMessage(
+'''
+          if old not in s: raise SystemExit('forgot success marker not found')
+          s=s.replace(old,new,1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
 
       - name: Validate page script syntax
         shell: bash
@@ -30,8 +205,6 @@ jobs:
           import re
           s=Path('dang-nhap.html').read_text(encoding='utf-8')
           scripts=re.findall(r'<script type="module">([\s\S]*?)</script>',s)
-          if not scripts:
-              raise SystemExit('module script not found')
           Path('/tmp/auth-module.mjs').write_text(scripts[-1],encoding='utf-8')
           PY
           node --check /tmp/auth-module.mjs
@@ -42,5 +215,5 @@ jobs:
           git config user.name 'VÕ VŨ HOÀNG'
           git config user.email 'vvhoangvn@gmail.com'
           git add dang-nhap.html
-          git commit -m 'Improve auth email validation and mobile UX' || exit 0
+          git commit -m 'Clarify auth email rate limits and cooldown' || exit 0
           git push
