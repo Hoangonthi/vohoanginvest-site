@@ -2293,7 +2293,16 @@
     @media(max-width:860px){#lo-trinh .flow-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:520px){#lo-trinh .flow-grid{grid-template-columns:1fr}.knowledge-step a{min-width:44px;font-size:8px}}
 
-  </style>
+  
+    /* FINAL OVERRIDE — 6-step roadmap cards hug their own content */
+    #lo-trinh .flow-grid{align-items:start!important;grid-auto-rows:max-content!important;}
+    #lo-trinh .flow-card{height:auto!important;min-height:0!important;align-self:start!important;padding-top:11px!important;padding-bottom:9px!important;}
+    #lo-trinh .flow-card a{margin-top:7px!important;}
+    @media(max-width:760px){
+      #lo-trinh .flow-card{height:auto!important;min-height:0!important;align-self:start!important;padding-top:9px!important;padding-bottom:7px!important;}
+      #lo-trinh .flow-card a{margin-top:6px!important;}
+    }
+</style>
 </head>
 
 <body>
