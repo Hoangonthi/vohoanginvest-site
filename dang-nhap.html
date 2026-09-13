@@ -2937,6 +2937,22 @@
       background:rgba(255,255,255,.08);
     }
 
+    .auth-otp-send{
+      width:100%;
+      min-height:43px;
+      border:1px solid rgba(224,187,99,.24);
+      border-radius:12px;
+      background:rgba(224,187,99,.055);
+      color:#f3cf74;
+      cursor:pointer;
+      font:inherit;
+      font-size:11px;
+      font-weight:800;
+    }
+    .auth-otp-send:disabled{opacity:.62;cursor:wait}
+    .auth-otp-box{display:grid;gap:10px;margin-top:2px;padding:11px;border:1px solid rgba(224,187,99,.13);border-radius:12px;background:rgba(224,187,99,.025)}
+    .auth-otp-box[hidden]{display:none!important}
+
     .auth-google-btn{
       width:100%;
       min-height:45px;
@@ -3082,6 +3098,18 @@
                     Đăng nhập
                   </button>
 
+                  <button class="auth-otp-send" id="otpSendBtn" type="button">
+                    Đăng nhập bằng mã OTP email
+                  </button>
+
+                  <div class="auth-otp-box" id="otpBox" hidden>
+                    <p class="auth-helper">Mã/link xác thực chỉ dùng một lần. Không chia sẻ cho người khác.</p>
+                    <div class="auth-field">
+                      <label for="otpCode">Mã OTP</label>
+                      <input id="otpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Nhập mã trong email">
+                    </div>
+                    <button class="auth-otp-send" id="otpVerifyBtn" type="button">Xác nhận mã OTP</button>
+                  </div>
 
                   <div class="auth-divider">hoặc</div>
 
@@ -3337,6 +3365,10 @@
     const authSubtitle = document.getElementById("authSubtitle");
     const authMessage = document.getElementById("authMessage");
     const recoveryBox = document.getElementById("recoveryBox");
+    const otpSendBtn = document.getElementById("otpSendBtn");
+    const otpVerifyBtn = document.getElementById("otpVerifyBtn");
+    const otpBox = document.getElementById("otpBox");
+    const otpCode = document.getElementById("otpCode");
 
     const tabs = [...document.querySelectorAll("[data-auth-mode]")];
     const panes = [...document.querySelectorAll("[data-pane]")];
@@ -3511,6 +3543,62 @@
 
       if(error){
         showMessage("Email hoặc mật khẩu chưa đúng. Vui lòng kiểm tra lại.", "error");
+        return;
+      }
+
+      showMessage("Đăng nhập thành công.", "success");
+      renderSignedIn(data.user);
+    });
+
+
+    // ĐĂNG NHẬP BẰNG EMAIL OTP / MAGIC LINK
+    otpSendBtn?.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value.trim();
+      if(!isValidEmail(email)){
+        showMessage("Vui lòng nhập email hợp lệ trước khi gửi OTP.", "error");
+        return;
+      }
+
+      showMessage("");
+      setLoading(otpSendBtn, true, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
+      const { error } = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false,
+          emailRedirectTo: `${window.location.origin}${window.location.pathname}`
+        }
+      });
+
+      if(error){
+        setLoading(otpSendBtn, false, "Đăng nhập bằng mã OTP email", "Đang gửi mã...");
+        showMessage("Chưa thể gửi mã xác thực. Vui lòng thử lại sau.", "error");
+        return;
+      }
+
+      otpBox.hidden = false;
+      otpSendBtn.textContent = "Đã gửi mã / liên kết xác thực";
+      showMessage("Hãy kiểm tra email. Nếu email có mã OTP, nhập mã bên dưới; nếu có liên kết xác thực, bạn có thể bấm trực tiếp liên kết đó.", "success");
+      otpCode?.focus();
+      window.setTimeout(() => {
+        otpSendBtn.disabled = false;
+        otpSendBtn.textContent = "Gửi lại mã OTP";
+      }, 60000);
+    });
+
+    otpVerifyBtn?.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value.trim();
+      const token = String(otpCode?.value || "").trim();
+      if(!isValidEmail(email) || !token){
+        showMessage("Vui lòng nhập email và mã OTP.", "error");
+        return;
+      }
+
+      setLoading(otpVerifyBtn, true, "Xác nhận mã OTP", "Đang xác minh...");
+      const { data, error } = await supabaseClient.auth.verifyOtp({ email, token, type: "email" });
+      setLoading(otpVerifyBtn, false, "Xác nhận mã OTP", "Đang xác minh...");
+
+      if(error || !data.user){
+        showMessage("Mã OTP chưa đúng hoặc đã hết hạn. Vui lòng kiểm tra lại.", "error");
         return;
       }
 
@@ -3761,6 +3849,6 @@
   </script>
 
 
-  <script type="module" src="assets/js/site-header.js?v=20260913-4"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260913-5"></script>
 </body>
 </html>

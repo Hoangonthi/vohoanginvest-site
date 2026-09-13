@@ -399,12 +399,16 @@ function injectSupportStyles() {
       background:rgba(255,255,255,.035);color:#fff;padding:0 12px;outline:0;font:inherit;font-size:12px
     }
     .vh-auth-field input:focus{border-color:rgba(224,187,99,.52);box-shadow:0 0 0 3px rgba(224,187,99,.08)}
-    .vh-auth-submit,.vh-auth-google{
+    .vh-auth-submit,.vh-auth-google,.vh-auth-secondary{
       width:100%;min-height:44px;border-radius:11px;font:inherit;font-size:11.5px;font-weight:800;cursor:pointer
     }
     .vh-auth-submit{border:1px solid rgba(224,187,99,.45);background:linear-gradient(180deg,#f0cf79,#d8b254);color:#201703}
     .vh-auth-google{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.035);color:#fff}
-    .vh-auth-submit:disabled,.vh-auth-google:disabled{opacity:.62;cursor:wait}
+    .vh-auth-secondary{border:1px solid rgba(224,187,99,.24);background:rgba(224,187,99,.055);color:#f3cf74}
+    .vh-auth-submit:disabled,.vh-auth-google:disabled,.vh-auth-secondary:disabled{opacity:.62;cursor:wait}
+    .vh-auth-otp-box{display:grid;gap:9px;padding:10px;border:1px solid rgba(224,187,99,.13);border-radius:12px;background:rgba(224,187,99,.025)}
+    .vh-auth-otp-box[hidden]{display:none!important}
+    .vh-auth-mini{margin:0!important;font-size:9px!important;line-height:1.45;color:rgba(231,237,246,.46)!important}
     .vh-auth-divider{display:flex;align-items:center;gap:9px;color:rgba(231,237,246,.35);font-size:9px;text-transform:uppercase}
     .vh-auth-divider::before,.vh-auth-divider::after{content:"";height:1px;flex:1;background:rgba(255,255,255,.08)}
     .vh-auth-message{min-height:16px;font-size:10px;line-height:1.45;color:#f3cf74}
@@ -861,6 +865,17 @@ function createAccountDialogs() {
           </div>
           <div class="vh-auth-message" data-popup-login-message aria-live="polite"></div>
           <button class="vh-auth-submit" type="submit" data-popup-login-submit>Đăng nhập</button>
+
+          <button class="vh-auth-secondary" type="button" data-popup-otp-send>Đăng nhập bằng mã OTP email</button>
+          <div class="vh-auth-otp-box" data-popup-otp-box hidden>
+            <div class="vh-auth-field">
+              <label>Mã OTP</label>
+              <input name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Nhập mã trong email">
+            </div>
+            <button class="vh-auth-secondary" type="button" data-popup-otp-verify>Xác nhận mã OTP</button>
+            <p class="vh-auth-mini">Mã/link xác thực chỉ dùng một lần. Không chia sẻ cho người khác.</p>
+          </div>
+
           <div class="vh-auth-divider">hoặc</div>
           <button class="vh-auth-google" type="button" data-popup-google>Tiếp tục với Google</button>
           <div class="vh-auth-links">
@@ -898,6 +913,10 @@ function createAccountDialogs() {
   const loginMessage = host.querySelector("[data-popup-login-message]");
   const loginSubmit = host.querySelector("[data-popup-login-submit]");
   const googleButton = host.querySelector("[data-popup-google]");
+  const otpSendButton = host.querySelector("[data-popup-otp-send]");
+  const otpVerifyButton = host.querySelector("[data-popup-otp-verify]");
+  const otpBox = host.querySelector("[data-popup-otp-box]");
+  const otpInput = host.querySelector('[data-popup-otp-box] input[name="otp"]');
   const passwordForm = host.querySelector("[data-password-form]");
   const passwordMessage = host.querySelector("[data-password-message]");
   const passwordSubmit = host.querySelector("[data-password-submit]");
@@ -960,6 +979,67 @@ function createAccountDialogs() {
 
     await claimPendingAssessmentAfterLogin();
     renderAccount(result.data.user);
+    setMessage(loginMessage, "Đăng nhập thành công.", "success");
+    window.setTimeout(() => closeDialog(loginDialog), 300);
+  });
+
+  otpSendButton?.addEventListener("click", async () => {
+    setMessage(loginMessage);
+    const email = String(new FormData(loginForm).get("email") || "").trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMessage(loginMessage, "Vui lòng nhập email hợp lệ trước khi gửi OTP.", "error");
+      return;
+    }
+
+    otpSendButton.disabled = true;
+    otpSendButton.textContent = "Đang gửi mã...";
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+      },
+    });
+
+    if (error) {
+      otpSendButton.disabled = false;
+      otpSendButton.textContent = "Đăng nhập bằng mã OTP email";
+      setMessage(loginMessage, "Chưa thể gửi mã xác thực. Vui lòng thử lại sau.", "error");
+      return;
+    }
+
+    otpBox.hidden = false;
+    otpSendButton.textContent = "Đã gửi mã / liên kết xác thực";
+    setMessage(loginMessage, "Hãy kiểm tra email. Nếu email có mã OTP, nhập mã bên dưới; nếu có liên kết xác thực, bạn có thể bấm trực tiếp liên kết đó.", "success");
+    requestAnimationFrame(() => otpInput?.focus());
+    window.setTimeout(() => {
+      otpSendButton.disabled = false;
+      otpSendButton.textContent = "Gửi lại mã OTP";
+    }, 60000);
+  });
+
+  otpVerifyButton?.addEventListener("click", async () => {
+    setMessage(loginMessage);
+    const email = String(new FormData(loginForm).get("email") || "").trim();
+    const token = String(otpInput?.value || "").trim();
+    if (!email || !token) {
+      setMessage(loginMessage, "Vui lòng nhập email và mã OTP.", "error");
+      return;
+    }
+
+    otpVerifyButton.disabled = true;
+    otpVerifyButton.textContent = "Đang xác minh...";
+    const { data, error } = await supabaseClient.auth.verifyOtp({ email, token, type: "email" });
+    otpVerifyButton.disabled = false;
+    otpVerifyButton.textContent = "Xác nhận mã OTP";
+
+    if (error || !data.user) {
+      setMessage(loginMessage, "Mã OTP chưa đúng hoặc đã hết hạn. Vui lòng kiểm tra lại.", "error");
+      return;
+    }
+
+    await claimPendingAssessmentAfterLogin();
+    renderAccount(data.user);
     setMessage(loginMessage, "Đăng nhập thành công.", "success");
     window.setTimeout(() => closeDialog(loginDialog), 300);
   });
