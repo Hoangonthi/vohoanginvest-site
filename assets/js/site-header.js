@@ -663,52 +663,6 @@ function injectSupportStyles() {
       .vh-account-menu{position:fixed;left:10px;right:10px;top:74px;width:auto}
       .login-btn .vh-login-label{max-width:84px}
   
-    .vh-auth-backdrop{
-      position:fixed;inset:0;z-index:560;display:grid;place-items:center;
-      padding:18px;background:rgba(2,8,15,.78);backdrop-filter:blur(9px)
-    }
-    .vh-auth-backdrop[hidden]{display:none!important}
-    .vh-auth-panel{
-      width:min(430px,100%);border:1px solid rgba(224,187,99,.24);border-radius:20px;
-      background:linear-gradient(180deg,#091c31,#061522);box-shadow:0 26px 80px rgba(0,0,0,.55);
-      padding:22px;position:relative
-    }
-    .vh-auth-close{
-      position:absolute;right:12px;top:12px;width:34px;height:34px;border:0;border-radius:10px;
-      background:rgba(255,255,255,.05);color:#fff;font-size:20px;cursor:pointer
-    }
-    .vh-auth-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#f3cf74}
-    .vh-auth-panel h2{margin:7px 36px 5px 0;font-size:24px;line-height:1.2;color:#fff}
-    .vh-auth-panel>p{margin:0 0 16px;font-size:11px;line-height:1.55;color:rgba(231,237,246,.62)}
-    .vh-auth-form{display:grid;gap:11px}
-    .vh-auth-field{display:grid;gap:5px}
-    .vh-auth-field label{font-size:10px;font-weight:700;color:rgba(255,255,255,.78)}
-    .vh-auth-field input{
-      width:100%;min-height:44px;border:1px solid rgba(255,255,255,.10);border-radius:11px;
-      background:rgba(255,255,255,.035);color:#fff;padding:0 12px;outline:0;font:inherit;font-size:12px
-    }
-    .vh-auth-field input:focus{border-color:rgba(224,187,99,.52);box-shadow:0 0 0 3px rgba(224,187,99,.08)}
-    .vh-auth-submit,.vh-auth-google{
-      width:100%;min-height:44px;border-radius:11px;font:inherit;font-size:11.5px;font-weight:800;cursor:pointer
-    }
-    .vh-auth-submit{border:1px solid rgba(224,187,99,.45);background:linear-gradient(180deg,#f0cf79,#d8b254);color:#201703}
-    .vh-auth-google{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.035);color:#fff}
-    .vh-auth-submit:disabled,.vh-auth-google:disabled{opacity:.62;cursor:wait}
-    .vh-auth-divider{display:flex;align-items:center;gap:9px;color:rgba(231,237,246,.35);font-size:9px;text-transform:uppercase}
-    .vh-auth-divider::before,.vh-auth-divider::after{content:"";height:1px;flex:1;background:rgba(255,255,255,.08)}
-    .vh-auth-message{min-height:16px;font-size:10px;line-height:1.45;color:#f3cf74}
-    .vh-auth-message.is-error{color:#ff8b91}
-    .vh-auth-message.is-success{color:#62dfa0}
-    .vh-auth-links{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:2px}
-    .vh-auth-links a{color:rgba(231,237,246,.68);font-size:10px;text-decoration:none}
-    .vh-auth-links a:hover{color:#f3cf74}
-    .vh-auth-note{margin-top:13px!important;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);font-size:9px!important;color:rgba(231,237,246,.44)!important}
-    @media(max-width:680px){
-      .vh-auth-backdrop{padding:10px;place-items:end center}
-      .vh-auth-panel{width:100%;max-height:calc(100vh - 20px);overflow:auto;border-radius:18px 18px 12px 12px;padding:20px 16px}
-      .vh-auth-panel h2{font-size:21px}
-    }
-
     .vh-search-backdrop{padding:0}
       .vh-search-panel{width:100%;height:100%;border:0;border-radius:0}
       .vh-search-results{max-height:calc(100vh - 64px)}
