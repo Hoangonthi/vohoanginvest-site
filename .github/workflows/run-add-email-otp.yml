@@ -1,0 +1,34 @@
+name: Run add email OTP
+
+on:
+  push:
+    paths:
+      - '.github/workflows/run-add-email-otp.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply OTP patch
+        run: python3 .github/scripts/add_email_otp.py
+      - name: Sanity checks
+        run: |
+          grep -q 'data-popup-otp-send' assets/js/site-header.js
+          grep -q 'signInWithOtp' assets/js/site-header.js
+          grep -q 'verifyOtp' assets/js/site-header.js
+          grep -q 'id="otpSendBtn"' dang-nhap.html
+          grep -q 'id="otpVerifyBtn"' dang-nhap.html
+          grep -q 'site-header.js?v=20260913-5' dang-nhap.html
+      - name: Commit changes
+        run: |
+          git config user.name "VÕ VŨ HOÀNG"
+          git config user.email "vvhoangvn@gmail.com"
+          git add assets/js/site-header.js dang-nhap.html *.html
+          git commit -m "Add email OTP login to shared auth" || exit 0
+          git push
