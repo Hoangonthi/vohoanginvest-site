@@ -4,21 +4,28 @@
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#04111f;padding:28px 12px;">
       <tr><td align="center">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#07192b;border:1px solid #4f4329;border-radius:18px;overflow:hidden;">
-          <tr><td style="padding:28px 30px 18px;text-align:center;border-bottom:1px solid #273044;">
+          <tr><td style="padding:30px 30px 20px;text-align:center;border-bottom:1px solid #273044;">
             <div style="font-size:12px;letter-spacing:1.8px;color:#e0bb63;font-weight:700;">VÕ HOÀNG · ĐẦU TƯ CHUẨN HỆ THỐNG</div>
-            <h1 style="margin:14px 0 0;font-size:25px;line-height:1.3;color:#ffffff;">Mã đăng nhập của ACE</h1>
+            <h1 style="margin:14px 0 0;font-size:25px;line-height:1.3;color:#ffffff;">Xác thực đăng nhập</h1>
+            <p style="margin:8px 0 0;font-size:13px;line-height:1.6;color:#98a7b9;">Dùng mã OTP hoặc liên kết đăng nhập an toàn</p>
           </td></tr>
-          <tr><td style="padding:26px 30px 30px;">
+          <tr><td style="padding:28px 30px 30px;">
             <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#e7edf6;">Chào ACE,</p>
-            <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#cbd5e1;">Dùng mã bên dưới để đăng nhập vào hệ thống Võ Hoàng. Mã chỉ dùng một lần.</p>
-            <div style="margin:22px auto;text-align:center;font-size:30px;letter-spacing:8px;font-weight:800;color:#f3cf74;">{{ .Token }}</div>
-            <div style="text-align:center;margin:24px 0;">
-              <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:13px 22px;border-radius:10px;background:#e0bb63;color:#201703;text-decoration:none;font-size:14px;font-weight:700;">HOẶC BẤM ĐỂ ĐĂNG NHẬP</a>
+            <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:#cbd5e1;">ACE đang yêu cầu đăng nhập tài khoản <strong style="color:#ffffff;">{{ .Email }}</strong>. Có thể nhập mã OTP bên dưới hoặc bấm nút đăng nhập trực tiếp.</p>
+            <div style="margin:24px auto 8px;text-align:center;font-size:32px;letter-spacing:8px;font-weight:800;color:#f3cf74;">{{ .Token }}</div>
+            <div style="text-align:center;font-size:11px;line-height:1.5;color:#748499;">Mã xác thực chỉ dùng cho lần đăng nhập này</div>
+            <div style="text-align:center;margin:26px 0;">
+              <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 24px;border-radius:10px;background:#e0bb63;color:#201703;text-decoration:none;font-size:14px;font-weight:700;">ĐĂNG NHẬP VÀO HỆ THỐNG</a>
             </div>
-            <p style="margin:0 0 12px;font-size:13px;line-height:1.65;color:#9eacbd;">Nếu ACE không yêu cầu đăng nhập, hãy bỏ qua email này.</p>
-            <p style="margin:0;font-size:12px;line-height:1.6;color:#78879a;">Không chia sẻ mã OTP hoặc liên kết đăng nhập cho người khác.</p>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 18px;background:#0a2035;border:1px solid #26394c;border-radius:12px;">
+              <tr><td style="padding:14px 16px;font-size:12px;line-height:1.65;color:#9fb0c2;">Nếu ACE không thực hiện yêu cầu này, hãy bỏ qua email và tuyệt đối không cung cấp mã OTP hoặc liên kết đăng nhập cho người khác.</td></tr>
+            </table>
+            <p style="margin:0;font-size:12px;line-height:1.6;color:#78879a;">VÕ HOÀNG không bao giờ yêu cầu ACE gửi lại mật khẩu hoặc mã OTP qua tin nhắn.</p>
           </td></tr>
-          <tr><td style="padding:17px 30px;background:#051423;text-align:center;font-size:11px;line-height:1.6;color:#7f8da0;">VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG</td></tr>
+          <tr><td style="padding:18px 30px;background:#051423;text-align:center;font-size:11px;line-height:1.65;color:#7f8da0;">
+            <strong style="color:#c9ac64;">VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG</strong><br>
+            Xác thực rõ ràng · Bảo mật chủ động · Trải nghiệm nhất quán
+          </td></tr>
         </table>
       </td></tr>
     </table>
