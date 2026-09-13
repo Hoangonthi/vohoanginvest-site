@@ -15,8 +15,45 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Patch adaptive copied brief
+      - name: Connect adaptive brief engine
         shell: bash
         run: |
-          echo 'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmltcG9ydCByZQpwPVBhdGgoImFzc2V0cy9qcy9tYXJrZXQtcmVhZGVyLmpzIikKcz1wLnJlYWRfdGV4dChlbmNvZGluZz0idXRmLTgiKQpoZWxwZXJzPSdjb25zdCBCUklFRl9QSElMT1NPUEhJRVM9e1xuICBkZWZlbnNpdmU6W1xuICAgICJLaGkgcuG7p2kgcm8gdMSDbmcsIMawdSB0acOqbiDEkeG6p3UgdGnDqm4gbMOgIGdp4buvIHF1eeG7gW4gbOG7sWEgY2jhu41uIGNobyBuaOG7r25nIGPGsCBo4buZaSB04buRdCBoxqFuLiIsXG4gICAgIktow7RuZyBwaOG6o2kgcGjDqm4gbsOgbyBjxaNvIGPhuqduIGtp4bq/bSB0aeG7gW47IGPDsyBwaGnDqm4gY2jhu4kgY+G6p24gdHLDoW5oIG3hu5l0IHF1eeG6v3QgxJHhu4tuaCB04buHLiIsXG4gICAgIktoaSBk4buvIGxp4buHdSBjaMawYSDhu6duZyBo4buZLCBnaeG6o20gcuG7p2kgcm8gbHXDtG4gZOG7hSBz4butYSBoxqFuIHTEg25nIHLhu6d pIHJvIHF1w6Egc+G7mW0uIixcbiAgICAiQuG6o28gdG_DoG4gduG7kW4ga2jDtG5nIGPDsyBuZ2jEqWEgbMOgIGJpIHF1YW47IMSRw7MgbMOgIGdp4buvIGto4bqjIG7Eg25nIGjDoG5oIMSR4buZbmcga2hpIMSRaeG7gXUga2nhu4duIHThu5F0IGzDqm4uIixcbiAgICAiVGjhu4sgdHLGsOG7nW5nIHnhur91IGPDsyB0aOG7gyBo4buTaSwgbmjGsG5nIG3hu6ljIMSR4buZI GNo4bunIMSR4buZbmcgY2jhu4kgbsOqbiB0xINuZyBraGkgY2jhuqV0IGzGsOG7o25nIGjhu5NpIMSRxrDhu6NjIHjDoWMgbmjhuq1uLiJcbiAgXSxcbiAgcmVib3VuZDpbXG4gICAgIk3hu5l0IG5o4buLcCBo4buTaSBjaOG7iSDEkcOhbmcgdGluIGjGoW4ga2hpIMSR4buZIHLhu5luZyw gZM Oy bmcgdGnDqm4gdsOgIG5ow7NtIGThuqt uIGThuqV0IGPDuW5nIHjDoWMgbmjhuq1uLiIsXG4gICAgIkdpw6EgYuG6rXQgbMOqbiBsw6AgdMOtbiBoaeG7h3UgxJHhu4MgcXVhbiBzw6F0OyB4w6FjIG5o4bqtbiBt4bubaSBsw6AgbMO9IGRvIMSR4buDIHTEg25nIG3hu6ljIMSR4buZI GNo4bunIMSR4buZbmc uIixcbiAgICAiS2jDtG5nIHBo4bunIG5o4bqtbiBt4buZdCBuaOG7iXAgaOG7kWksIG5oxrBuZyBjxaFuZyBraMO0bmcgdvG7mWkgZ+G7jWkgbMOgIHh1IGjGsOG7m25nIGtoaSBk4buvIGxp4buHdSBjaMawYSDEkeG7py4iLFxuICAgICJT4buxIGPhuqNpIHRoaeG7h24gxJHhuqd1IHRpw6puIMSRw6FuZyBjaMO6IMO9OyDEkeG7mSBi4buBbiBj4bunYSBj4bqjaSB0aGnDqm4gbWHhu5tpIHF1eeG6v3QgxJHhu4tuaCBt4bupYyBy4bunIG5vIMSRow6puIGTDuW5nLiIsXG4gICAgIlRo4buLIHRyxrDhu51uZyBjw7MgdGjhu4MgxJHhu5VpIHRy4bqhbmcgdGjDoWkgcuG6pXQgbmhhbmg7IGjhu4cgdGjhu5FuZyBj4bqnbiDEkeG7lWkgdGhlbyBk4buvIGxp4buHdSwga2jDtG5nIHRoZW8ga+G7syB24buNbmc uIlxuICBdLFxuICBuZXV0cmFsOltcbiAgICAiS2jDtG5nIGjDoG5oIMSR4buZbmcgY+G7p25nIGzDoCBt4buZdCBxdXnhur90IMSR4buLbmggS2hpIMSRaeG7gXUga2nhu4duIGNoxrBhIMSR4bunIHLDtS4iLFxuICAgICJDaOG7nSDEkcO6bmcgxJHhu4t1IGtp4buHbiB0aMaw4budbmcga2jDsyBo4KqbhbiB0w6xtIG3hu5l0IGzDvSBkbyDEkeG7gyBtdWEuIixcbiAgICAiS2hpIGThu5sgbGnhu4d1IGNoxrBhIMSR4bunLCBraeG6v24gbmjhuqtuIGzDoCBt4buZdCBwaOG6p24gY+G7p2EgaOG7hyB0aOG7kW5nLiIsXG4gICAgIlRo4buLIHRyxrDhu51uZyBraMO0bmcgYuG6rXQgYnXhu5ljIG3DrG5oIHBo4bqjaSBjw7MgcXVhbiDEkWnhu4NtIG3huqFuaCDhu58gbcaw4budIHRo4bud aSDEkWnhu4NtLiIsXG4gICAgIsSQaeG7gXUga2nhu4duIGNoxrBhIHLDoSBraMO0bmcgY8OzIG5naMSpYSBsw6Aga2jDtG5nIGPDsyBjxaEgaOG7mWk7IG7DsyBj zuOG7iSByw7RuZyBiw6xuIG5oxrBuZyB5w6p1IGPhuqdtIG3hu6ljIMSR4buZI GNo4bunIMSR4buZbmcgdGjhuqVwIGjGoW4uIlxuICBdLFxuICBjb25zdHJ1Y3RpdmU6W1xuICAgICJLaGkgeMOhYyBzdWHhuqV0IHRodeG6rW4gbOG7o2kgdMSDbmcsIGPDsyB0aOG7gyBjaOG7pyDEkeG7mW5nIGjGoW4gbmjGsG5nIHbhuqtuIHBo4bqjaSBiaeG6v3QgbcOsbmggc2FpIOG7nyDEkcOhdS4iLFxuICAgICJYdSBoxrDhu5tuZyB04buRdCBjaG8gcGjDqXAgdMSDbmcgbcO9YyBjaOG7pyDEkeG7mW5nLCBraMO0bmcgY2hvIHBow6lwIGLhu48gcXVhIHF14bqjbiB0cuG7iyBy4bunIGxvLiIsXG4gICAgIkTDs25nIHRpw6puIHbDoCDEkeG7mSBy4buZbmcgY+G6o2kgdGjhu4duIGzDoCBsw70gZG8gxJHhu4MgbsOibmcgbcO9YyB0aW4gY-G6rXksIGtow7RuZyBwaOG6o2kgbMO9IGRvIMSR4buDI G11YSBi4bqxbmcgbOG7jWkgZ2nDoS4iLFxuICAgICJLaGkgdGjhu4sgdHLGsOG7nW5nIHRodeG6rW4gaMGo b iw gY2jhuqV0IGzGsOG7o25nIMSRaeG7gW0gbXVhIHbhuqtuIHF1eeG6v3QgY2jhuqV0IGzGsOG7o25nIGdpYW8gZOG7iWNoLiIsXG4gICAgIlPhu7EgY-G6o2kgdGjhu4duIMSRw6FuZyDEkeG7gyB0aGVvIGTDtWkga2hpIG7DsyBsYW4gdOG7j2EgdsOgIGR1eSB0csOsLCBraMO0bmcgY2jhu4kgdHLhuqV0IGjhu4duIOG7nyB2w6BpIG3DoSByacOqbmcgbOG6uy4iXG4gIF0sXG4gIHBvc2l0aXZlOltcbiAgICAiVGjhu4sgdHLGsOG7nW5nIHRodeG6rW4gZ2nDunAgY8ahIGjhu5lpIG5oaeG7gXUgaOG7o24sIG5oxrBuZyBraMO0bmcgbMOgbSDEkeG7gW0gbXVhIGvDqW0gdHLhu58gdGjDoG5oIMSRaeG7gW0gbXVhIHThu5F0LiIsXG4gICAgIlTDreaB
-...TRUNCATED...
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('assets/js/market-reader.js')
+          s=p.read_text(encoding='utf-8')
+          old='import { trackTool } from "./tool-events.js";'
+          new='import { trackTool } from "./tool-events.js";\nimport { getAdaptiveMarketBrief } from "./market-brief-engine.js";'
+          if 'getAdaptiveMarketBrief' not in s:
+              s=s.replace(old,new,1)
+          s=s.replace('alerts=Array.isArray(mi.alerts)?mi.alerts:[],view=getViewpoint(mi);const totalBreadth=', 'alerts=Array.isArray(mi.alerts)?mi.alerts:[],view=getViewpoint(mi),adaptive=getAdaptiveMarketBrief(data);const totalBreadth=',1)
+          old_alert='if(alerts.length){lines.push(``,`5) CẢNH BÁO`);alerts.slice(0,2).forEach(a=>lines.push(`• ${a?.title||"Lưu ý"}${a?.detail?`: ${a.detail}`:""}`))}'
+          new_alert=old_alert+'else{lines.push(``,`5) CẢNH BÁO`,`• Chưa có cảnh báo lớn từ bộ đọc thị trường. Tiếp tục theo dõi sự thay đổi của độ rộng, dòng tiền và nhóm dẫn dắt.`)}'
+          s=s.replace(old_alert,new_alert,1)
+          old_block='lines.push(``,`6) QUAN ĐIỂM HỆ THỐNG`,view.h,view.p);\nif(action.headline||action.detail)lines.push(``,`7) HÀNH ĐỘNG ƯU TIÊN`,`${action.headline||"Theo dõi thêm dữ liệu."}${action.detail?` ${action.detail}`:""}`);\nlines.push(``,`Theo dõi tiếp: độ rộng thị trường, xác nhận dòng tiền và độ bền của nhóm dẫn dắt.`,``,`Xem realtime: ${location.origin}${location.pathname}`,`Dữ liệu được hệ thống cập nhật tự động. Điểm trạng thái là công cụ hỗ trợ kỷ luật, không phải tín hiệu mua/bán.`);'
+          new_block='lines.push(``,`6) QUAN ĐIỂM HỆ THỐNG`,adaptive.headline,adaptive.detail,`Điều kiện thay đổi cách nhìn: ${adaptive.transition}`);\nlines.push(``,`7) HÀNH ĐỘNG ƯU TIÊN`,adaptive.action);\nlines.push(``,`8) NGUYÊN TẮC TRONG NGÀY`,`“${adaptive.philosophy}”`);\nlines.push(``,`Theo dõi tiếp: ${adaptive.watch}.`,``,`Xem realtime: ${location.origin}${location.pathname}`,`Dữ liệu được hệ thống cập nhật tự động. Quan điểm và hành động thay đổi theo dữ liệu mới; Điểm trạng thái là công cụ hỗ trợ kỷ luật, không phải tín hiệu mua/bán.`);'
+          if old_block not in s:
+              raise SystemExit('brief output block not found')
+          s=s.replace(old_block,new_block,1)
+          p.write_text(s,encoding='utf-8')
+          h=Path('thi-truong-hom-nay.html')
+          hs=h.read_text(encoding='utf-8')
+          hs=re.sub(r'src="assets/js/market-reader\.js(?:\?v=[^"]*)?"','src="assets/js/market-reader.js?v=20260913-3"',hs,count=1)
+          h.write_text(hs,encoding='utf-8')
+          PY
+      - name: Verify
+        shell: bash
+        run: |
+          grep -q 'getAdaptiveMarketBrief' assets/js/market-reader.js
+          grep -q '8) NGUYÊN TẮC TRONG NGÀY' assets/js/market-reader.js
+          grep -q 'Điều kiện thay đổi cách nhìn' assets/js/market-reader.js
+          grep -q 'market-reader.js?v=20260913-3' thi-truong-hom-nay.html
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'VÕ VŨ HOÀNG'
+          git config user.email 'vvhoangvn@gmail.com'
+          git add assets/js/market-reader.js thi-truong-hom-nay.html
+          git commit -m 'Make copied market brief adaptive by market state' || exit 0
+          git push
