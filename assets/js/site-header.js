@@ -208,6 +208,17 @@ function injectSupportStyles() {
     .vh-search-item span{display:block;margin-top:3px;font-size:10px;line-height:1.45;color:rgba(231,237,246,.55)}
     .vh-search-empty{padding:24px 14px;text-align:center;color:rgba(231,237,246,.48);font-size:11px}
 
+    @media(min-width:681px){
+      .footer .footer-nav-all h4,
+      .footer .footer-connect h4{
+        text-align:center;
+      }
+
+      .footer .footer-nav-all .quick-links{
+        justify-content:center;
+      }
+    }
+
     @media(max-width:680px){
       .vh-account-menu{position:fixed;left:10px;right:10px;top:74px;width:auto}
       .login-btn .vh-login-label{max-width:84px}
