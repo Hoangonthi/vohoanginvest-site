@@ -1,8 +1,11 @@
 # VO HOANG - extra index enrichment
 # 1) Try public Fiin/SSI market-summary endpoint for traded value and official counters.
 # 2) If breadth is still missing, reconstruct it from matching AmiBroker watchlists.
+# 3) Attach VN30 member moves so the public brief can explain index vs breadth.
 
 $script:ExtraIndexLastStatus = 'not-run'
+$script:Vn30MovesCache = @()
+$script:Vn30MovesLoadedAt = [DateTime]::MinValue
 
 $IndexCodeMap = [ordered]@{
     'VN-INDEX'     = 'VNINDEX'
@@ -153,8 +156,57 @@ function Apply-WatchListBreadthAll($data) {
     return $data
 }
 
+function Get-Vn30StockMoves {
+    try {
+        if ($script:Vn30MovesCache.Count -gt 0 -and ((Get-Date) - $script:Vn30MovesLoadedAt).TotalSeconds -lt 45) {
+            return @($script:Vn30MovesCache)
+        }
+
+        $symbols = Find-WatchListSymbols @('VN30')
+        if ($symbols.Count -lt 1) { return @() }
+
+        $rows = @()
+        foreach ($symbol in $symbols) {
+            try {
+                $p = Invoke-RestMethod -UseBasicParsing -Uri ($StockBaseUrl + '/' + [Uri]::EscapeDataString($symbol)) -Method Get -TimeoutSec 3
+                if (-not $p.ok -or $null -eq $p.quote) { continue }
+                $pct = $null
+                try { $pct = [double]$p.quote.change_pct } catch {}
+                if ($null -eq $pct) { continue }
+                $rows += [pscustomobject]@{
+                    symbol = $symbol
+                    change_pct = [Math]::Round($pct, 2)
+                    change = $p.quote.change
+                    close = $p.quote.close
+                    date = $p.quote.date
+                }
+            } catch {}
+        }
+
+        if ($rows.Count -gt 0) {
+            $script:Vn30MovesCache = @($rows)
+            $script:Vn30MovesLoadedAt = Get-Date
+        }
+        return @($rows)
+    } catch {
+        return @()
+    }
+}
+
+function Apply-Vn30StockMoves($data) {
+    try {
+        $rows = Get-Vn30StockMoves
+        if ($rows.Count -gt 0) {
+            $data | Add-Member -NotePropertyName vn30_stocks -NotePropertyValue @($rows) -Force
+            $data | Add-Member -NotePropertyName vn30_stock_source -NotePropertyValue 'AmiBroker WatchList/VN30 + local DataTick bridge' -Force
+        }
+    } catch {}
+    return $data
+}
+
 function Apply-IndexExtraEnrichment($data) {
     $data = Apply-FiinLatestIndices $data
     $data = Apply-WatchListBreadthAll $data
+    $data = Apply-Vn30StockMoves $data
     return $data
 }
