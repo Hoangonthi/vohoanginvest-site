@@ -1,0 +1,35 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+
+const ALLOWED=new Set(["https://www.vohoanginvest.com","https://vohoanginvest.com","https://hoangonthi.github.io","http://localhost:3000","http://127.0.0.1:5500"]);
+function cors(req:Request){const o=req.headers.get("origin")||"";return{"Access-Control-Allow-Origin":ALLOWED.has(o)?o:"https://www.vohoanginvest.com","Access-Control-Allow-Methods":"GET,OPTIONS","Access-Control-Allow-Headers":"content-type","Cache-Control":"public, max-age=900, s-maxage=900","Vary":"Origin"}}
+function json(req:Request,body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:{...cors(req),"Content-Type":"application/json; charset=utf-8"}})}
+function num(v:any){const x=Number(v);return Number.isFinite(x)?x:null}
+function fmt(v:any,d=1){const x=num(v);return x===null?"—":x.toLocaleString("vi-VN",{minimumFractionDigits:0,maximumFractionDigits:d})}
+function plus(v:any,d=1){const x=num(v);return x===null?"—":`${x>0?"+":""}${fmt(x,d)}%`}
+function card(id:string,title:string,status:string,tone:string,evidence:string[],conclusion:string,mechanism:string,contradiction:string,watch:string,market_implication:string){return{id,title,status,tone,evidence,conclusion,mechanism,contradiction,watch,market_implication}}
+
+Deno.serve(async(req:Request)=>{
+  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(req)});
+  if(req.method!=="GET")return json(req,{ok:false,error:"METHOD_NOT_ALLOWED"},405);
+  try{
+    const url=Deno.env.get("SUPABASE_URL")||"https://elmrbnewlukxscbcfizg.supabase.co";
+    const key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if(!key)throw new Error("SERVICE_ROLE_NOT_AVAILABLE");
+    const r=await fetch(`${url}/rest/v1/vietnam_macro_monthly_snapshots?select=month_key,coverage_end,source_label,payload&order=month_key.desc&limit=1`,{headers:{apikey:key,Authorization:`Bearer ${key}`,Accept:"application/json"}});
+    if(!r.ok)throw new Error(`MACRO_SNAPSHOT_${r.status}`);
+    const rows=await r.json();const row=rows?.[0];if(!row)throw new Error("NO_MACRO_SNAPSHOT");
+    const p=row.payload||{},s=p.latest_summary||{};
+    const gdp=s.gdp_6m_yoy,iip=s.iip_8m_yoy,fdiReal=s.fdi_disbursed_8m_yoy,fdiReg=s.fdi_registered_8m_yoy,publicInv=s.public_investment_8m_yoy,publicPlan=s.public_investment_plan_pct,retailReal=s.retail_real_8m_yoy,cpi=s.cpi_aug_yoy,core=s.core_inflation_8m,trade=s.trade_balance_8m_usd_billion,imports=s.imports_8m_yoy,enterprise=s.enterprises_new_plus_returned_8m_yoy;
+    const importLatest=Array.isArray(p.imports)?p.imports.at(-1):null;const productionShare=importLatest?.production_inputs_share_pct;
+    const enterpriseLatest=Array.isArray(p.enterprises)?p.enterprises.at(-1):null;
+    const creditLatest=Array.isArray(p.credit_money)?p.credit_money.at(-1):null;
+    const cards=[
+      card("growth","Tăng trưởng & sản xuất","LỰC ĐỠ MẠNH","positive",[`GDP 6T: ${plus(gdp,2)} YoY`,`IIP 8T: ${plus(iip,1)} YoY`,`FDI thực hiện 8T: ${plus(fdiReal,1)} YoY`],"Nền kinh tế vẫn ở pha mở rộng mạnh; sản xuất và vốn đầu tư là hai động lực quan trọng, không chỉ dựa vào tiêu dùng.","IIP tăng hai chữ số cùng FDI thực hiện tăng cho thấy công suất sản xuất đang được bổ sung và sử dụng. Điều này hỗ trợ kỳ vọng doanh thu/lợi nhuận của nhiều doanh nghiệp niêm yết trong trung hạn.","Tăng trưởng tổng thể mạnh chưa có nghĩa mọi doanh nghiệp cùng hưởng lợi; mức độ lan tỏa cần được kiểm tra qua lợi nhuận, đơn hàng và dòng tiền từng ngành.","Theo dõi IIP, FDI thực hiện, tăng trưởng tín dụng và lợi nhuận doanh nghiệp để xem đà mở rộng có tiếp tục lan tỏa hay không.","Ủng hộ nền 3–12 tháng cho cổ phiếu nếu điều kiện tiền tệ không xấu đi đáng kể."),
+      card("demand","Đầu tư & cầu nội địa","ĐỘNG LỰC CÒN RỘNG","positive",[`Đầu tư công 8T: ${plus(publicInv,1)} · mới ${fmt(publicPlan,1)}% kế hoạch`,`Bán lẻ thực 8T: ${plus(retailReal,1)} YoY`,`FDI đăng ký 8T: ${plus(fdiReg,1)} YoY`],"Động lực tăng trưởng không chỉ nằm ở một trụ: đầu tư công, tiêu dùng thực và dòng vốn FDI đều đang hỗ trợ hoạt động kinh tế.","Giải ngân đầu tư công tăng trong khi tỷ lệ hoàn thành kế hoạch mới khoảng một nửa hàm ý còn dư địa thực thi nếu mục tiêu năm được theo đuổi. Bán lẻ thực tăng cho thấy cầu nội địa vẫn tăng sau khi loại ảnh hưởng giá.",`Điểm cần lưu ý là số doanh nghiệp thành lập mới + quay lại 8T ${plus(enterprise,1)} YoY${enterpriseLatest?.aug_new_yoy!=null?`; riêng tháng 8 doanh nghiệp mới ${plus(enterpriseLatest.aug_new_yoy,1)}`:""}. Tăng trưởng đang mạnh nhưng có thể phân hóa giữa các doanh nghiệp.`,"Theo dõi tốc độ giải ngân quý IV, bán lẻ thực, đơn hàng và số doanh nghiệp gia nhập/rời thị trường.","Tích cực hơn với các ngành nhận dòng vốn trực tiếp; không nên suy rộng thành toàn bộ thị trường cùng tăng."),
+      card("policy","Lạm phát & điều kiện tiền tệ","CẦN THEO DÕI CHẶT","warning",[`CPI T8: ${plus(cpi,2)} YoY · cơ bản 8T: ${plus(core,2)}`,`Cán cân thương mại 8T: ${fmt(trade,2)} tỷ USD`,`Nhập khẩu 8T: ${plus(imports,1)} · đầu vào sản xuất ${fmt(productionShare,1)}%`],"Rủi ro chính của thị trường trung hạn không nằm ở tăng trưởng hiện tại, mà ở khả năng lạm phát và cân đối ngoại tệ khiến điều kiện tiền tệ bớt thuận lợi.","CPI và lạm phát cơ bản cùng ở vùng cao hơn đầu năm. Nhập siêu tạo áp lực lên cung cầu ngoại tệ; nếu kéo dài có thể truyền sang tỷ giá, lãi suất và thanh khoản hệ thống.",`Nhập siêu không hoàn toàn là tín hiệu xấu: khoảng ${fmt(productionShare,1)}% nhập khẩu là tư liệu sản xuất, phù hợp với IIP/FDI mạnh. Đây có thể là nhập khẩu để mở rộng sản xuất, nhưng vẫn gây áp lực ngoại tệ trong ngắn hạn.`,"Theo dõi USD/VND, lãi suất liên ngân hàng, OMO, tăng trưởng tiền gửi so tín dụng và CPI tháng tới.","Nếu điều kiện tiền tệ thắt chặt trước khi tăng trưởng đạt đỉnh, định giá cổ phiếu có thể chịu áp lực dù GDP/IIP vẫn cao.")
+    ];
+    const thesis="Tăng trưởng vẫn là lực đỡ cho thị trường 3–12 tháng, nhưng môi trường không còn một chiều. Biến số quyết định cần theo dõi là liệu lạm phát và áp lực ngoại tệ có buộc điều kiện tiền tệ trở nên kém hỗ trợ hơn hay không.";
+    const riskLine=`Tín dụng gần nhất ${creditLatest?.credit_growth_ytd_pct!=null?plus(creditLatest.credit_growth_ytd_pct,2):"—"} YTD; cần đọc cùng tiền gửi, tỷ giá và lãi suất thay vì xem tăng trưởng tín dụng riêng lẻ.`;
+    return json(req,{ok:true,version:"1.0",generated_at:new Date().toISOString(),as_of:row.coverage_end||row.month_key,source_label:row.source_label||null,horizon:"3–12 THÁNG",regime:"TÍCH CỰC CÓ ĐIỀU KIỆN",regime_tone:"mixed-positive",thesis,risk_line:riskLine,cards,principles:["Vĩ mô là nền 3–12 tháng, không phải tín hiệu mua bán trong ngày.","Tăng trưởng tốt chỉ hỗ trợ thị trường nếu tiền tệ, tỷ giá và định giá không xấu đi quá mạnh.","Vĩ mô tốt không đồng nghĩa mọi ngành và mọi cổ phiếu đều tốt."]});
+  }catch(e){return json(req,{ok:false,error:"MACRO_ANCHOR_FAILED",detail:String((e as Error)?.message||e).slice(0,300)},500)}
+});
