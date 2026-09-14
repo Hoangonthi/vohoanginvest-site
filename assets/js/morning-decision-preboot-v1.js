@@ -5,32 +5,88 @@
     'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed'
   ]);
 
-  // 1) Dedupe ba nguồn dữ liệu dùng chung. Các engine phía sau nhận cùng một snapshot,
-  // không gọi lại cùng endpoint 3-4 lần trong một lần tải trang.
-  if(!window.__vhMorningFetchDedupeV1){
-    window.__vhMorningFetchDedupeV1=true;
-    const nativeFetch=window.fetch.bind(window);
-    const pool=new Map();
+  const POLICY={
+    'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test':{fresh:45000,stale:180000},
+    'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/macro-anchor-public':{fresh:15*60*1000,stale:6*60*60*1000},
+    'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed':{fresh:15000,stale:45000}
+  };
+  const CACHE_PREFIX='vh_morning_http_v2:';
+  const nativeFetch=window.fetch.bind(window);
+  const pool=new Map();
+  const refreshPool=new Map();
+  window.__vhMorningPerf=window.__vhMorningPerf||{startedAt:performance.now(),cacheHits:0,networkHits:0};
+
+  const responseFrom=x=>new Response(x.body,{status:x.status||200,statusText:x.statusText||'OK',headers:x.headers||{'content-type':'application/json; charset=utf-8'}});
+  const readCache=url=>{
+    try{
+      const x=JSON.parse(localStorage.getItem(CACHE_PREFIX+url)||'null');
+      if(!x?.body||!x?.savedAt)return null;
+      return x;
+    }catch{return null}
+  };
+  const writeCache=(url,x)=>{
+    try{localStorage.setItem(CACHE_PREFIX+url,JSON.stringify({...x,savedAt:Date.now()}))}catch{}
+  };
+  const fetchFresh=async(url,input,init={})=>{
+    if(refreshPool.has(url))return refreshPool.get(url);
+    const p=(async()=>{
+      try{
+        const cleanInit={...init,cache:'no-store'};
+        const r=await nativeFetch(input,cleanInit);
+        const body=await r.text();
+        const x={body,status:r.status,statusText:r.statusText,headers:[...r.headers.entries()]};
+        if(r.ok){writeCache(url,x);window.__vhMorningPerf.networkHits++}
+        return x;
+      }finally{refreshPool.delete(url)}
+    })();
+    refreshPool.set(url,p);
+    return p;
+  };
+
+  // Dùng snapshot vừa có để dựng giao diện ngay; đồng thời cập nhật nền.
+  // Decision chỉ cho phép stale tối đa 3 phút, hot stocks 45 giây, macro 6 giờ.
+  if(!window.__vhMorningFetchDedupeV2){
+    window.__vhMorningFetchDedupeV2=true;
     window.fetch=async function(input,init={}){
-      const url=typeof input==='string'?input:input?.url;
+      const url=String(typeof input==='string'?input:input?.url||'');
       const method=String(init?.method||input?.method||'GET').toUpperCase();
-      if(method!=='GET'||!ENDPOINTS.has(String(url))) return nativeFetch(input,init);
-      const key=String(url);
-      if(!pool.has(key)){
-        pool.set(key,(async()=>{
-          try{
-            const r=await nativeFetch(input,init);
-            const body=await r.text();
-            return {body,status:r.status,statusText:r.statusText,headers:[...r.headers.entries()]};
-          }catch(err){pool.delete(key);throw err}
-        })());
-      }
-      const x=await pool.get(key);
-      return new Response(x.body,{status:x.status,statusText:x.statusText,headers:x.headers});
+      if(method!=='GET'||!ENDPOINTS.has(url))return nativeFetch(input,init);
+      if(pool.has(url))return responseFrom(await pool.get(url));
+
+      const task=(async()=>{
+        const policy=POLICY[url]||{fresh:30000,stale:60000};
+        const cached=readCache(url);
+        const age=cached?Date.now()-Number(cached.savedAt||0):Infinity;
+
+        // Snapshot còn mới: trả ngay, revalidate nền khi đã đi quá nửa TTL.
+        if(cached&&age<=policy.fresh){
+          window.__vhMorningPerf.cacheHits++;
+          if(age>policy.fresh*.5)fetchFresh(url,input,init).catch(()=>{});
+          return cached;
+        }
+
+        // Snapshot hơi cũ nhưng vẫn trong ngưỡng an toàn: cho mạng tối đa 550ms.
+        // Nếu nguồn ngoài chậm, hiển thị snapshot cũ ngay thay vì bắt người dùng chờ 4–5 giây.
+        if(cached&&age<=policy.stale){
+          const freshPromise=fetchFresh(url,input,init);
+          const timeout=new Promise(resolve=>setTimeout(()=>resolve(null),550));
+          const fast=await Promise.race([freshPromise,timeout]);
+          if(fast){window.__vhMorningPerf.networkHits++;return fast}
+          window.__vhMorningPerf.cacheHits++;
+          freshPromise.catch(()=>{});
+          return cached;
+        }
+
+        // Lần đầu hoặc cache quá cũ: phải chờ nguồn thật để tránh hiển thị dữ liệu lỗi thời.
+        return await fetchFresh(url,input,init);
+      })();
+
+      pool.set(url,task);
+      try{return responseFrom(await task)}catch(err){pool.delete(url);throw err}
     };
   }
 
-  // 2) Không cho layout V5 trung gian xuất hiện trước layout cuối.
+  // Không cho layout V5 trung gian xuất hiện trước layout cuối.
   if(!document.getElementById('vhMorningDecisionPrebootStyle')){
     const s=document.createElement('style');
     s.id='vhMorningDecisionPrebootStyle';
@@ -55,10 +111,10 @@
   const findOld=()=>{
     for(const el of document.querySelectorAll('.overline,.section-kicker,.kicker')){
       const t=el.textContent.trim().toLowerCase();
-      if(t==='tại điểm đáng chú ý') return el.closest('.card,.section,.split-card');
+      if(t==='tại điểm đáng chú ý')return el.closest('.card,.section,.split-card');
     }
     for(const el of document.querySelectorAll('h2,h3')){
-      if(el.textContent.trim().toLowerCase().includes('những biến số có thể làm thay đổi quyết định hôm nay')) return el.closest('.card,.section,.split-card');
+      if(el.textContent.trim().toLowerCase().includes('những biến số có thể làm thay đổi quyết định hôm nay'))return el.closest('.card,.section,.split-card');
     }
     return null;
   };
@@ -66,15 +122,15 @@
   const mountLoading=()=>{
     if(document.getElementById('vhMorningDecisionLoading'))return;
     const anchor=findOld();
-    if(anchor) anchor.style.display='none';
+    if(anchor)anchor.style.display='none';
     const loading=document.createElement('section');
     loading.id='vhMorningDecisionLoading';
     loading.setAttribute('aria-label','Đang cập nhật hệ thống ra quyết định');
     loading.innerHTML=`<div class="vh-load-head"><div class="vh-load-kicker"></div><div class="vh-load-title"></div><div class="vh-load-sub"></div></div><div class="vh-load-verdict"><div class="vh-load-box"></div><div class="vh-load-box"></div></div><div class="vh-load-grid"><div class="vh-load-card"></div><div class="vh-load-card"></div><div class="vh-load-card"></div></div>`;
-    if(anchor?.parentNode) anchor.parentNode.insertBefore(loading,anchor);
+    if(anchor?.parentNode)anchor.parentNode.insertBefore(loading,anchor);
     else document.querySelector('main .wrap')?.appendChild(loading);
   };
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mountLoading,{once:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountLoading,{once:true});
   else mountLoading();
 })();
