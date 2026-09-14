@@ -295,15 +295,13 @@ function buildBrief(data){
   const state=mi.state||{};
   const flow=mi.flow||{};
   const adaptive=getAdaptiveMarketBrief(data);
-  const macro=macroSummary();
   const vn30=vn30Narrative(data,mi);
-  const news=newsLines();
 
   const lines=[
-    `BẢN ĐỒ THỊ TRƯỜNG – VÕ HOÀNG`,
+    `RÀ SOÁT THỊ TRƯỜNG – VÕ HOÀNG`,
     `Cập nhật ${formatBriefTime(data)}`,
     ``,
-    `THỊ TRƯỜNG: ${state.label||"—"} · ${state.score??"—"}/100`,
+    `TRẠNG THÁI: ${state.label||"—"} · ${state.score??"—"}/100`,
     breadthNarrative(data,mi)
   ];
 
@@ -311,47 +309,22 @@ function buildBrief(data){
 
   lines.push(
     ``,
-    `DÒNG TIỀN & NHÓM DẪN DẮT`,
+    `DÒNG TIỀN`,
     flowNarrative(flow),
     `Nhóm mạnh: ${formatLeadership(mi?.leadership?.leaders,3)}`,
     `Nhóm yếu: ${formatLeadership(mi?.leadership?.laggards,3)}`,
     ``,
-    `ĐIỀU ĐÁNG CHÚ Ý`,
-    ...alertLines(mi)
-  );
-
-  if(news.length){
-    lines.push(``,`TIN ĐÁNG CHÚ Ý HÔM NAY`,...news,`Xem toàn bộ tin tức 24h: ${NEWS_24H_URL}`);
-  }else{
-    lines.push(``,`TIN ĐÁNG CHÚ Ý HÔM NAY`,`Xem toàn bộ tin tức 24h: ${NEWS_24H_URL}`);
-  }
-
-  lines.push(
-    ``,
-    `GÓC NHÌN HỆ THỐNG`,
-    `Ngắn hạn (1–5 phiên): ${state.label||"—"}`,
+    `QUAN ĐIỂM`,
+    humanize(adaptive.headline),
     humanize(adaptive.detail),
-    `Điều cần thấy để tích cực hơn: ${humanize(adaptive.transition)}`
-  );
-
-  if(macro){
-    lines.push(
-      ``,
-      `Trung – dài hạn (3–12 tháng): ${macro.label}`,
-      macro.thesis
-    );
-    if(macro.watch)lines.push(`Cần theo dõi: ${macro.watch}`);
-  }
-
-  lines.push(
     ``,
     `HÀNH ĐỘNG`,
     humanize(adaptive.action),
+    `Theo dõi: ${humanize(adaptive.watch)}.`,
     ``,
-    `“${humanize(adaptive.philosophy)}”`,
+    `Tin tức 24h: ${NEWS_24H_URL}`,
+    `Xem thị trường realtime: ${SHARE_URL}`,
     ``,
-    `Xem realtime: ${SHARE_URL}`,
-    `Dữ liệu cập nhật realtime · Nội dung hỗ trợ ra quyết định, không phải khuyến nghị mua/bán.`,
     `VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG`
   );
 
@@ -368,14 +341,13 @@ function showCopySuccess(){
 
 async function copyBrief(){
   if(!latestData)return;
-  await refreshBriefContext(false);
   const text=buildBrief(latestData),message=document.getElementById("readerShareMessage");
   try{
     if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);
     else{const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()}
     showCopySuccess();
-    if(message)message.textContent="Đã sao chép bản tin. Có thể dán thẳng vào Zalo/Facebook/Threads.";
-    trackTool("MARKET_READER","COPY_BRIEF",{resultCode:"SUCCESS",metadata:{score:latestData?.market_intelligence?.state?.score??null,news:latestNews.length,macro:Boolean(latestSnapshot?.macro?.ok),vn30:extractVn30Rows(latestData).length}});
+    if(message)message.textContent="Đã sao chép rà soát trong phiên. Có thể dán thẳng vào Zalo/Facebook/Threads.";
+    trackTool("MARKET_READER","COPY_BRIEF",{resultCode:"SUCCESS",metadata:{score:latestData?.market_intelligence?.state?.score??null,vn30:extractVn30Rows(latestData).length}});
   }catch{
     if(message)message.textContent="Chưa sao chép được trên trình duyệt này.";
   }
@@ -383,10 +355,9 @@ async function copyBrief(){
 
 async function shareBrief(){
   if(!latestData)return;
-  await refreshBriefContext(false);
   const text=buildBrief(latestData);
   if(navigator.share){
-    try{await navigator.share({title:"Bản đồ thị trường – Võ Hoàng",text,url:SHARE_URL});trackTool("MARKET_READER","SHARE",{resultCode:"SUCCESS"});return}
+    try{await navigator.share({title:"Rà soát thị trường – Võ Hoàng",text,url:SHARE_URL});trackTool("MARKET_READER","SHARE",{resultCode:"SUCCESS"});return}
     catch(error){if(error?.name==="AbortError")return}
   }
   await copyBrief();
@@ -419,7 +390,5 @@ function initConversion(){
 
 initConversion();
 refresh();
-refreshBriefContext(true);
 setInterval(()=>{if(!document.hidden)refresh()},REFRESH_MS);
-setInterval(()=>{if(!document.hidden)refreshBriefContext(true)},AUX_REFRESH_MS);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){refresh();refreshBriefContext(false)}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
