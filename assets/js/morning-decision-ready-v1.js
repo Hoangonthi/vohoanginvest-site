@@ -19,10 +19,12 @@
     const tick=()=>{
       const host=document.getElementById('vhDecisionBoardV5');
       if(readyEnough(host)){
-        requestAnimationFrame(()=>requestAnimationFrame(()=>reveal(host)));
+        requestAnimationFrame(()=>reveal(host));
         return;
       }
-      if(host&&performance.now()-started>2600){reveal(host);return}
+      // Snapshot đã được tính sẵn trên server. Nếu một lớp diễn giải phụ chậm,
+      // không giữ người dùng ở màn hình chờ quá lâu.
+      if(host&&performance.now()-started>1400){reveal(host);return}
       requestAnimationFrame(tick);
     };
     tick();
