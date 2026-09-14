@@ -1,0 +1,233 @@
+const API = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-live-public";
+const commentsById = new Map();
+let maxCommentId = 0;
+let pollTimer = null;
+
+const $ = (id) => document.getElementById(id);
+const esc = (value = "") => String(value)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#039;");
+const num = (v) => Number.isFinite(Number(v)) ? Number(v) : null;
+const fmt = (v, d = 2) => {
+  const x = num(v);
+  if (x === null) return "—";
+  return new Intl.NumberFormat("vi-VN", { minimumFractionDigits: d, maximumFractionDigits: d }).format(x);
+};
+const signed = (v, d = 2) => {
+  const x = num(v);
+  if (x === null) return "—";
+  return `${x > 0 ? "+" : ""}${fmt(x, d)}`;
+};
+const pct = (v) => {
+  const x = num(v);
+  return x === null ? "—" : `${signed(x, 2)}%`;
+};
+const toneClass = (v) => {
+  const x = num(v);
+  if (x === null || Math.abs(x) < 0.0001) return "flat";
+  return x > 0 ? "up" : "down";
+};
+const timeText = (iso) => {
+  if (!iso) return "—";
+  try {
+    return new Intl.DateTimeFormat("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(new Date(iso));
+  } catch { return "—"; }
+};
+const isVietnamTradingNow = () => {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Ho_Chi_Minh", weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
+  const get = (t) => parts.find((p) => p.type === t)?.value || "";
+  if (["Sat", "Sun"].includes(get("weekday"))) return false;
+  const m = Number(get("hour")) * 60 + Number(get("minute"));
+  return (m >= 8 * 60 + 45 && m <= 11 * 60 + 31) || (m >= 13 * 60 && m <= 15 * 60 + 1);
+};
+
+function setStatus(snapshot) {
+  const root = $("liveStatus");
+  if (!root) return;
+  if (!snapshot?.captured_at) {
+    root.classList.add("off");
+    root.querySelector("span").textContent = "Đang chờ dữ liệu";
+    return;
+  }
+  const age = Math.max(0, (Date.now() - new Date(snapshot.captured_at).getTime()) / 1000);
+  const live = isVietnamTradingNow() && age <= 75;
+  root.classList.toggle("off", !live);
+  root.querySelector("span").textContent = live ? `TRỰC TIẾP · ${timeText(snapshot.captured_at)}` : `Dữ liệu gần nhất · ${timeText(snapshot.captured_at)}`;
+}
+
+function renderStrip(snapshot) {
+  const el = $("liveStrip");
+  if (!el || !snapshot) return;
+  const v = snapshot.vnindex || {};
+  const t = snapshot.technical || {};
+  const breadth = num(v.adv) !== null && num(v.dec) !== null ? `${Math.round(v.adv)} tăng / ${Math.round(v.dec)} giảm` : "—";
+  el.innerHTML = `
+    <div class="stat primary"><span>VN-Index</span><strong class="${toneClass(v.change)}">${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})</strong></div>
+    <div class="stat"><span>Từ đáy phiên</span><strong class="${num(v.rebound_from_low)>0?"up":"flat"}">${num(v.rebound_from_low)!==null?`+${fmt(v.rebound_from_low,1)} điểm`:"—"}</strong></div>
+    <div class="stat"><span>Độ rộng</span><strong>${breadth}</strong></div>
+    <div class="stat"><span>MA10</span><strong>${fmt(t.ma10,1)}</strong></div>
+    <div class="stat"><span>Cản gần</span><strong>${fmt(t.resistance_near,1)}</strong></div>`;
+}
+
+function evidenceHtml(comment) {
+  const e = comment?.evidence || {};
+  const v = e.vnindex || {};
+  const top = e.top_sector || null;
+  const stockNames = Array.isArray(e.vn30_gainers) ? e.vn30_gainers.map((x) => x?.symbol || x?.code).filter(Boolean).slice(0,3).join(", ") : "";
+  return `<details class="evidence">
+    <summary>+ Xem căn cứ</summary>
+    <div class="evidence-grid">
+      <div class="evi"><span>VN-Index</span><b>${fmt(v.value,2)}</b></div>
+      <div class="evi"><span>Từ đáy</span><b>${num(v.rebound)!==null?`+${fmt(v.rebound,1)} điểm`:"—"}</b></div>
+      <div class="evi"><span>Độ rộng</span><b>${num(v.adv)!==null&&num(v.dec)!==null?`${Math.round(v.adv)} tăng / ${Math.round(v.dec)} giảm`:"—"}</b></div>
+      <div class="evi"><span>Nhóm nổi bật</span><b>${top?`${esc(top.name)} ${pct(top.change_pct)}`:"—"}</b></div>
+      ${stockNames?`<div class="evi"><span>VN30 tăng</span><b>${esc(stockNames)}</b></div>`:""}
+      ${num(v.ma10)!==null?`<div class="evi"><span>MA10</span><b>${fmt(v.ma10,1)}</b></div>`:""}
+      ${num(v.vwap)!==null?`<div class="evi"><span>VWAP</span><b>${fmt(v.vwap,1)}</b></div>`:""}
+      ${num(v.resistance)!==null?`<div class="evi"><span>Cản gần</span><b>${fmt(v.resistance,1)}</b></div>`:""}
+    </div>
+  </details>`;
+}
+
+function renderLatest() {
+  const panel = $("latestPanel");
+  if (!panel) return;
+  const comments = [...commentsById.values()].sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
+  const c = comments[0];
+  const head = `<div class="panel-head"><h2>Bình luận mới nhất</h2><span id="latestRefresh">Tự cập nhật</span></div>`;
+  if (!c) {
+    panel.innerHTML = head + `<div class="empty">Chưa có bình luận sự kiện mới. Hệ thống chỉ viết khi diễn biến thay đổi đủ đáng chú ý.</div>`;
+    return;
+  }
+  panel.innerHTML = head + `<article class="latest ${esc(c.tone || "neutral")}">
+    <div class="latest-time">${timeText(c.published_at)}</div>
+    <h2>${esc(c.headline)}</h2>
+    <p class="latest-body">${esc(c.body)}</p>
+    ${c.watch_next ? `<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>` : ""}
+    ${evidenceHtml(c)}
+  </article>`;
+}
+
+function renderTimeline() {
+  const list = $("timelineList");
+  if (!list) return;
+  const comments = [...commentsById.values()].sort((a,b) => new Date(b.published_at) - new Date(a.published_at));
+  if (comments.length <= 1) {
+    list.innerHTML = `<div class="empty">Các thay đổi đáng chú ý tiếp theo sẽ được ghi vào đây.</div>`;
+    return;
+  }
+  list.innerHTML = comments.slice(1,20).map((c) => `<article class="timeline-item ${esc(c.tone || "neutral")}">
+    <div class="timeline-time">${timeText(c.published_at)}</div>
+    <h3>${esc(c.headline)}</h3>
+    <p>${esc(c.body)}</p>
+  </article>`).join("");
+}
+
+function renderMarketNow(snapshot) {
+  const root = $("marketNow");
+  if (!root || !snapshot) return;
+  const v = snapshot.vnindex || {};
+  const t = snapshot.technical || {};
+  const state = snapshot.state || {};
+  const flow = snapshot.flow || {};
+  root.innerHTML = `
+    <div class="section-mini"><h3>Trạng thái hiện tại</h3><div class="side-grid">
+      <div class="side-cell"><span>Trạng thái</span><b>${esc(state.label || "Đang theo dõi")}</b></div>
+      <div class="side-cell"><span>Điểm trạng thái</span><b>${num(state.score)!==null?`${Math.round(state.score)}/100`:"—"}</b></div>
+      <div class="side-cell"><span>Đỉnh phiên</span><b>${fmt(v.high,2)}</b></div>
+      <div class="side-cell"><span>Đáy phiên</span><b>${fmt(v.low,2)}</b></div>
+      <div class="side-cell"><span>Thanh khoản</span><b>${num(v.value_b)!==null?`${fmt(v.value_b,1)} tỷ`:"—"}</b></div>
+      <div class="side-cell"><span>Nhịp tiền</span><b>${esc(flow.label || "—")}</b></div>
+    </div></div>
+    <div class="section-mini"><h3>Kỹ thuật</h3><div class="side-grid">
+      <div class="side-cell"><span>MA10 / MA20</span><b>${fmt(t.ma10,1)} / ${fmt(t.ma20,1)}</b></div>
+      <div class="side-cell"><span>MA50</span><b>${fmt(t.ma50,1)}</b></div>
+      <div class="side-cell"><span>VWAP</span><b>${fmt(t.vwap,1)}</b></div>
+      <div class="side-cell"><span>RSI14</span><b>${fmt(t.rsi14,1)}</b></div>
+      <div class="side-cell"><span>Hỗ trợ gần</span><b>${fmt(t.support_near,1)}</b></div>
+      <div class="side-cell"><span>Cản gần</span><b>${fmt(t.resistance_near,1)}</b></div>
+    </div>${snapshot.technical_available ? "" : `<div style="margin-top:9px;color:var(--muted2);font-size:9px;line-height:1.5">AFL kỹ thuật chưa gửi snapshot mới; các ô kỹ thuật có thể tạm để trống.</div>`}</div>`;
+}
+
+function stockPct(row) {
+  return num(row?.change_pct ?? row?.changePct ?? row?.pct);
+}
+function renderLeaders(snapshot) {
+  const root = $("marketLeaders");
+  if (!root || !snapshot) return;
+  const strong = snapshot?.sectors?.strongest || [];
+  const weak = snapshot?.sectors?.weakest || [];
+  const gain = snapshot?.vn30?.gainers || [];
+  const lose = snapshot?.vn30?.losers || [];
+  const rows = (items, type="sector") => items.length ? items.map((x) => {
+    const name = type === "stock" ? (x.symbol || x.code || "—") : (x.name || x.symbol || "—");
+    const p = type === "stock" ? stockPct(x) : num(x.change_pct);
+    return `<div class="mini-row"><span>${esc(name)}</span><b class="${toneClass(p)}">${pct(p)}</b></div>`;
+  }).join("") : `<div class="mini-row"><span>Chưa đủ dữ liệu</span><b>—</b></div>`;
+  root.innerHTML = `
+    <div class="section-mini"><h3>Nhóm mạnh</h3><div class="row-list">${rows(strong)}</div></div>
+    <div class="section-mini"><h3>Nhóm yếu</h3><div class="row-list">${rows(weak)}</div></div>
+    <div class="section-mini"><h3>VN30 tăng nổi bật</h3><div class="row-list">${rows(gain,"stock")}</div></div>
+    <div class="section-mini"><h3>VN30 giảm nổi bật</h3><div class="row-list">${rows(lose,"stock")}</div></div>`;
+}
+
+function renderSnapshot(snapshot) {
+  setStatus(snapshot);
+  if (!snapshot) return;
+  renderStrip(snapshot);
+  renderMarketNow(snapshot);
+  renderLeaders(snapshot);
+  const st = $("snapshotTime");
+  if (st) st.textContent = timeText(snapshot.captured_at);
+}
+
+function mergeComments(items = []) {
+  for (const c of items) {
+    const id = Number(c?.id);
+    if (!Number.isFinite(id)) continue;
+    commentsById.set(id, c);
+    maxCommentId = Math.max(maxCommentId, id);
+  }
+  renderLatest();
+  renderTimeline();
+}
+
+async function load(initial = false) {
+  try {
+    const url = initial || !maxCommentId ? `${API}?limit=20&_=${Date.now()}` : `${API}?after_id=${maxCommentId}&limit=10&_=${Date.now()}`;
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    if (!data?.ok) throw new Error(data?.error || "NO_DATA");
+    renderSnapshot(data.latest);
+    mergeComments(Array.isArray(data.comments) ? data.comments : []);
+    if (!data.latest) {
+      const now = $("marketNow");
+      if (now) now.innerHTML = `<div class="empty">Chưa có dữ liệu live hôm nay. Hệ thống bắt đầu ghi khi AmiBridge chạy trong giờ giao dịch.</div>`;
+      const leaders = $("marketLeaders");
+      if (leaders) leaders.innerHTML = `<div class="empty">Chưa có dữ liệu nhóm/VN30 hôm nay.</div>`;
+    }
+  } catch (error) {
+    console.warn("Market live load failed", error);
+    const status = $("liveStatus");
+    if (status) {
+      status.classList.add("off");
+      status.querySelector("span").textContent = "Chưa kết nối được dữ liệu";
+    }
+  }
+}
+
+function start() {
+  load(true);
+  pollTimer = window.setInterval(() => {
+    if (document.visibilityState === "visible") load(false);
+  }, 10000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") load(false);
+  });
+}
+
+start();
