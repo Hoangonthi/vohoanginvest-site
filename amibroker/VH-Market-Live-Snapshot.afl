@@ -13,7 +13,7 @@ snapshotFile = ParamStr("Snapshot File", "C:\\Users\\USER\\Desktop\\AMIBRO\\vh_m
 // ---------- Giá hiện tại / diễn biến trong ngày ----------
 dn = DateNum();
 lastBar = BarCount - 1;
-lastValue = C[lastBar];
+lastValueNow = C[lastBar];
 currentDate = dn[lastBar];
 
 sessionHigh = H[lastBar];
@@ -35,7 +35,8 @@ for(i = lastBar; i >= 0; i--)
     cumV = cumV + V[i];
 }
 
-vwapNow = IIf(cumV > 0, cumPV / cumV, lastValue);
+vwapNow = lastValueNow;
+if(cumV > 0) vwapNow = cumPV / cumV;
 
 // ---------- Chỉ báo DAILY: MA / RSI / MACD / mốc quá khứ ----------
 TimeFrameSet(inDaily);
@@ -55,32 +56,33 @@ dLow20     = LastValue(Ref(LLV(L, 20), -1), 1);
 TimeFrameRestore();
 
 reference = dPrevClose;
-changePoint = lastValue - reference;
-changePct = IIf(reference != 0, 100 * changePoint / reference, 0);
-reboundFromLow = lastValue - sessionLow;
-dropFromHigh = sessionHigh - lastValue;
+changePoint = lastValueNow - reference;
+changePct = 0;
+if(reference != 0) changePct = 100 * changePoint / reference;
+reboundFromLow = lastValueNow - sessionLow;
+dropFromHigh = sessionHigh - lastValueNow;
 
 // ---------- Mốc kỹ thuật gần nhất dưới / trên giá ----------
 supportNear = 0;
 resistanceNear = 1e10;
 
-if(dMa10 < lastValue AND dMa10 > supportNear) supportNear = dMa10;
-if(dMa20 < lastValue AND dMa20 > supportNear) supportNear = dMa20;
-if(dMa50 < lastValue AND dMa50 > supportNear) supportNear = dMa50;
-if(vwapNow < lastValue AND vwapNow > supportNear) supportNear = vwapNow;
-if(dPrevHigh < lastValue AND dPrevHigh > supportNear) supportNear = dPrevHigh;
-if(dPrevLow < lastValue AND dPrevLow > supportNear) supportNear = dPrevLow;
-if(dHigh20 < lastValue AND dHigh20 > supportNear) supportNear = dHigh20;
-if(dLow20 < lastValue AND dLow20 > supportNear) supportNear = dLow20;
+if(dMa10 < lastValueNow AND dMa10 > supportNear) supportNear = dMa10;
+if(dMa20 < lastValueNow AND dMa20 > supportNear) supportNear = dMa20;
+if(dMa50 < lastValueNow AND dMa50 > supportNear) supportNear = dMa50;
+if(vwapNow < lastValueNow AND vwapNow > supportNear) supportNear = vwapNow;
+if(dPrevHigh < lastValueNow AND dPrevHigh > supportNear) supportNear = dPrevHigh;
+if(dPrevLow < lastValueNow AND dPrevLow > supportNear) supportNear = dPrevLow;
+if(dHigh20 < lastValueNow AND dHigh20 > supportNear) supportNear = dHigh20;
+if(dLow20 < lastValueNow AND dLow20 > supportNear) supportNear = dLow20;
 
-if(dMa10 > lastValue AND dMa10 < resistanceNear) resistanceNear = dMa10;
-if(dMa20 > lastValue AND dMa20 < resistanceNear) resistanceNear = dMa20;
-if(dMa50 > lastValue AND dMa50 < resistanceNear) resistanceNear = dMa50;
-if(vwapNow > lastValue AND vwapNow < resistanceNear) resistanceNear = vwapNow;
-if(dPrevHigh > lastValue AND dPrevHigh < resistanceNear) resistanceNear = dPrevHigh;
-if(dPrevLow > lastValue AND dPrevLow < resistanceNear) resistanceNear = dPrevLow;
-if(dHigh20 > lastValue AND dHigh20 < resistanceNear) resistanceNear = dHigh20;
-if(dLow20 > lastValue AND dLow20 < resistanceNear) resistanceNear = dLow20;
+if(dMa10 > lastValueNow AND dMa10 < resistanceNear) resistanceNear = dMa10;
+if(dMa20 > lastValueNow AND dMa20 < resistanceNear) resistanceNear = dMa20;
+if(dMa50 > lastValueNow AND dMa50 < resistanceNear) resistanceNear = dMa50;
+if(vwapNow > lastValueNow AND vwapNow < resistanceNear) resistanceNear = vwapNow;
+if(dPrevHigh > lastValueNow AND dPrevHigh < resistanceNear) resistanceNear = dPrevHigh;
+if(dPrevLow > lastValueNow AND dPrevLow < resistanceNear) resistanceNear = dPrevLow;
+if(dHigh20 > lastValueNow AND dHigh20 < resistanceNear) resistanceNear = dHigh20;
+if(dLow20 > lastValueNow AND dLow20 < resistanceNear) resistanceNear = dLow20;
 
 if(resistanceNear == 1e10) resistanceNear = 0;
 
@@ -94,7 +96,7 @@ if(snapshotEnable)
         header = "symbol,value,reference,change,change_pct,open,high,low,rebound_from_low,drop_from_high,ma10,ma20,ma50,vwap,rsi14,macd,macd_signal,prev_high,prev_low,high20,low20,support_near,resistance_near,updated_at\n";
 
         line = Name() + ","
-            + NumToStr(lastValue, 1.4, False) + ","
+            + NumToStr(lastValueNow, 1.4, False) + ","
             + NumToStr(reference, 1.4, False) + ","
             + NumToStr(changePoint, 1.4, False) + ","
             + NumToStr(changePct, 1.4, False) + ","
@@ -126,7 +128,7 @@ if(snapshotEnable)
 
 Title = EncodeColor(colorGold) + "VH MARKET LIVE SNAPSHOT" + EncodeColor(colorWhite)
     + " | " + Name()
-    + " | " + NumToStr(lastValue, 1.2)
+    + " | " + NumToStr(lastValueNow, 1.2)
     + " | " + NumToStr(changePoint, 1.2)
     + " (" + NumToStr(changePct, 1.2) + "%)"
     + " | Low " + NumToStr(sessionLow, 1.2)
