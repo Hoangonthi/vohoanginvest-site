@@ -145,6 +145,7 @@ function render(rows){
 async function load(){try{$('#status').textContent='Đang tải tin 24h gần nhất…';const r=await fetch(API,{cache:'no-store'}),j=await r.json();if(!r.ok||!j.ok)throw new Error(j.detail||j.error||`HTTP ${r.status}`);render(j.events)}catch(e){$('#status').textContent='Không lấy được dữ liệu';$('#grid').innerHTML=`<div class="empty">${esc(e.message||e)}</div>`}}
 $('#refresh').onclick=load;load();
 </script>
-<script type="module" src="assets/js/site-header.js?v=20260914-news24-v2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="assets/js/site-header.js?v=20260914-news24-v3"></script>
 </body>
 </html>
