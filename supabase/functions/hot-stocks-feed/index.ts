@@ -43,6 +43,13 @@ function normalizeSourceUpdatedAt(value: unknown) {
   return Number.isFinite(d.getTime()) ? d.toISOString() : null;
 }
 
+function withOk(parsed: unknown) {
+  if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+    return { ok: true, ...(parsed as Record<string, unknown>) };
+  }
+  return { ok: true, data: parsed };
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req) });
 
@@ -68,7 +75,7 @@ Deno.serve(async (req: Request) => {
 
     const text = await r.text();
     if (!r.ok) return json(req, { ok:false, error:"STORE_FAILED", status:r.status, detail:text }, 500);
-    try { return json(req, JSON.parse(text), 200); }
+    try { return json(req, withOk(JSON.parse(text)), 200); }
     catch { return json(req, { ok:true }, 200); }
   }
 
@@ -80,7 +87,7 @@ Deno.serve(async (req: Request) => {
     });
     const text = await r.text();
     if (!r.ok) return json(req, { ok:false, error:"READ_FAILED", status:r.status, detail:text }, 500);
-    try { return json(req, JSON.parse(text), 200); }
+    try { return json(req, withOk(JSON.parse(text)), 200); }
     catch { return json(req, { ok:false, error:"READ_PARSE_FAILED" }, 500); }
   }
 
