@@ -8,6 +8,7 @@ const SNAPSHOT_ENDPOINT = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1
 const REFRESH_MS = 60_000;
 const AUX_REFRESH_MS = 300_000;
 const SHARE_URL = "https://www.vohoanginvest.com/thi-truong-hom-nay.html";
+const NEWS_24H_URL = "https://www.vohoanginvest.com/tin-tuc-24h.html";
 const SECTORS = {VNFIN:"Tài chính",VNREAL:"Bất động sản",VNIND:"Công nghiệp",VNIT:"Công nghệ thông tin",VNMAT:"Nguyên vật liệu",VNCONS:"Hàng tiêu dùng thiết yếu",VNCOND:"Hàng tiêu dùng không thiết yếu",VNENE:"Năng lượng",VNHEAL:"Y tế",VNUTI:"Tiện ích"};
 
 let latestData = null;
@@ -130,13 +131,23 @@ function renderAlerts(mi){
   setHtml("readerAlerts",alerts.map(a=>`<div class="reader-alert is-${tone(a?.level)}"><b>${esc(a?.title||"Lưu ý")}</b><p>${esc(humanize(a?.detail||""))}</p></div>`).join(""));
 }
 
+function validSameTimeRatio(flow){
+  const same=n(flow?.same_time_ratio);
+  const avg=n(flow?.same_time_avg_b);
+  const days=n(flow?.baseline_days)??0;
+  if(same===null||avg===null||avg<=0||days<5)return null;
+  if(same<=0.1||same>=5)return null;
+  return same;
+}
+
 function renderBaseline(mi){
   const flow=mi?.flow||{};
+  const same=validSameTimeRatio(flow);
   setText("currentGt",flow.value_b===null||flow.value_b===undefined?"—":`${fmtTrim(flow.value_b,1)} tỷ`);
-  setText("sameTimeRatio",flow.same_time_ratio===null||flow.same_time_ratio===undefined?"Chưa đủ chuẩn":`${Math.round(Number(flow.same_time_ratio)*100)}%`);
+  setText("sameTimeRatio",same===null?"Chưa đủ chuẩn":`${Math.round(same*100)}%`);
   setText("paceRatio",flow.pace_ratio_15m===null||flow.pace_ratio_15m===undefined?"Chưa đủ nhịp":`${Math.round(Number(flow.pace_ratio_15m)*100)}%`);
   setText("baselineDays",`${flow.baseline_days||0}/${flow.baseline_target_days||20} phiên`);
-  setText("baselineStatus",mi?.history?.same_time_baseline_ready?"Đã có chuẩn tối thiểu":"Đang tích lũy");
+  setText("baselineStatus",same!==null?"Đã có chuẩn tối thiểu":"Đang tích lũy");
 }
 
 function formatBriefTime(data){
@@ -170,20 +181,20 @@ function breadthNarrative(data,mi){
 
 function flowNarrative(flow){
   const value=flow?.value_b===null||flow?.value_b===undefined?null:n(flow.value_b);
-  const same=n(flow?.same_time_ratio);
+  const same=validSameTimeRatio(flow);
   const pace=n(flow?.pace_ratio_15m);
   const head=value===null?"Thanh khoản chưa đủ dữ liệu.":`Thanh khoản ${fmtTrim(value,1)} tỷ đồng.`;
   if(same!==null){
     const diff=Math.round(Math.abs(same-1)*100);
-    if(same>=1.12)return `${head} Cao hơn khoảng ${diff}% so với mức thường thấy cùng thời điểm.`;
-    if(same<=0.88)return `${head} Thấp hơn khoảng ${diff}% so với mức thường thấy cùng thời điểm.`;
-    return `${head} Đang gần mức thường thấy cùng thời điểm.`;
+    if(same>=1.12)return `${head} Cao hơn khoảng ${diff}% so với bình quân các phiên trước tại cùng thời điểm.`;
+    if(same<=0.88)return `${head} Thấp hơn khoảng ${diff}% so với bình quân các phiên trước tại cùng thời điểm.`;
+    return `${head} Xấp xỉ mức bình quân các phiên trước tại cùng thời điểm.`;
   }
   if(pace!==null){
     if(pace>=1.15)return `${head} Dòng tiền 15 phút gần nhất đang vào nhanh hơn.`;
     if(pace<=0.85)return `${head} Dòng tiền 15 phút gần nhất đang chậm lại.`;
   }
-  return `${head} Hệ thống đang tích lũy thêm dữ liệu để so sánh cùng thời điểm.`;
+  return `${head} Chưa đủ dữ liệu đáng tin cậy để so sánh với các phiên trước tại cùng thời điểm.`;
 }
 
 function normalizeVn30Row(row){
@@ -310,7 +321,9 @@ function buildBrief(data){
   );
 
   if(news.length){
-    lines.push(``,`TIN ĐÁNG CHÚ Ý HÔM NAY`,...news);
+    lines.push(``,`TIN ĐÁNG CHÚ Ý HÔM NAY`,...news,`Xem toàn bộ tin tức 24h: ${NEWS_24H_URL}`);
+  }else{
+    lines.push(``,`TIN ĐÁNG CHÚ Ý HÔM NAY`,`Xem toàn bộ tin tức 24h: ${NEWS_24H_URL}`);
   }
 
   lines.push(
