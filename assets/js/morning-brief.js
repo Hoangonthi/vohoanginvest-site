@@ -1,4 +1,4 @@
 import './morning-brief-core.js';
 import './morning-decision-dashboard-v5.js';
 import './morning-decision-dashboard-v5-anchor.js';
-import './morning-language-advisor-v1.js';
+import './morning-language-advisor-v2.js';
