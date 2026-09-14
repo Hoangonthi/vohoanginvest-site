@@ -67,7 +67,6 @@ function Read-TechnicalSnapshot {
         $age = ([DateTime]::UtcNow - $file.LastWriteTimeUtc).TotalSeconds
         if ($age -gt $TechnicalFreshSeconds) { return $null }
 
-        # Chỉ đọc khi AFL vừa ghi file mới.
         if ($file.LastWriteTimeUtc -le $script:LastCsvWriteUtc) { return '__UNCHANGED__' }
         $before = $file.LastWriteTimeUtc
         Start-Sleep -Milliseconds 250
@@ -111,10 +110,15 @@ function Read-TechnicalSnapshot {
 function Push-LiveSnapshot($technical, [bool]$technicalAvailable) {
     if ($null -eq $script:MarketContext -and -not $technicalAvailable) { return }
 
+    $sourceUpdatedAt = $null
+    if ($technicalAvailable -and $script:LastCsvWriteUtc -gt [DateTime]::MinValue) {
+        $sourceUpdatedAt = ([DateTimeOffset]$script:LastCsvWriteUtc).ToString('o')
+    }
+
     $payload = [ordered]@{
         ok = $true
         captured_at = [DateTimeOffset]::UtcNow.ToString('o')
-        source_updated_at = if ($technicalAvailable) { [DateTimeOffset]$script:LastCsvWriteUtc } else { $null }
+        source_updated_at = $sourceUpdatedAt
         source = if ($technicalAvailable) { 'amibroker-afl+market-feed' } else { 'market-feed-fallback' }
         technical_available = $technicalAvailable
         technical = if ($technicalAvailable) { $technical } else { @{} }
@@ -153,7 +157,6 @@ while ($true) {
     $technical = Read-TechnicalSnapshot
 
     if ($technical -is [string] -and $technical -eq '__UNCHANGED__') {
-        # AFL chưa ghi file mới. Để tránh spam, chỉ fallback mỗi 30 giây.
         if (([DateTime]::UtcNow - $script:LastFallbackPushUtc).TotalSeconds -ge 30) {
             Push-LiveSnapshot $null $false
             $script:LastFallbackPushUtc = [DateTime]::UtcNow
