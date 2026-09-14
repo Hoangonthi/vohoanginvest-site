@@ -7,7 +7,7 @@ const TURNSTILE_SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?
 
 const navItems = [
   ["thi-truong-hom-nay.html", "Thị trường"],
-  ["sang-nay-can-nhin-gi.html", "Sáng nay"],
+  ["sang-nay-can-nhin-gi.html", "Hôm nay"],
   ["sau-phien-cua-toi.html", "Sau phiên"],
   ["watchlist.html", "Watchlist"],
   ["./", "Trang chủ"],
