@@ -6,11 +6,11 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAEyKnha19nmpaSeM";
 const TURNSTILE_SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 const navItems = [
+  ["./", "Trang chủ"],
   ["thi-truong-hom-nay.html", "Thị trường"],
   ["sang-nay-can-nhin-gi.html", "Hôm nay"],
   ["sau-phien-cua-toi.html", "Sau phiên"],
   ["watchlist.html", "Watchlist"],
-  ["./", "Trang chủ"],
   ["kien-thuc.html", "Kiến thức"],
   ["investor-calculator.html", "Công cụ"],
   ["ve-toi.html", "Về tôi"],
