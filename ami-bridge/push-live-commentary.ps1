@@ -24,6 +24,7 @@ $script:LastCsvWriteUtc = [DateTime]::MinValue
 $script:LastContextAtUtc = [DateTime]::MinValue
 $script:LastFallbackPushUtc = [DateTime]::MinValue
 $script:MarketContext = $null
+$script:LastTechnical = $null
 
 function Get-VnNow {
     return [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'SE Asia Standard Time')
@@ -75,7 +76,7 @@ function Read-TechnicalSnapshot {
         if ($after -ne $before -or $null -eq $row) { return '__UNCHANGED__' }
         $script:LastCsvWriteUtc = $after
 
-        return [ordered]@{
+        $technical = [ordered]@{
             symbol = ([string]$row.symbol).Trim()
             value = Convert-LiveNum $row.value
             reference = Convert-LiveNum $row.reference
@@ -101,10 +102,20 @@ function Read-TechnicalSnapshot {
             resistance_near = Convert-LiveNum $row.resistance_near
             updated_at = ([string]$row.updated_at).Trim()
         }
+        $script:LastTechnical = $technical
+        return $technical
     } catch {
         Write-Host ('[{0}] Khong doc duoc AFL snapshot: {1}' -f (Get-Date -Format 'HH:mm:ss'), $_.Exception.Message) -ForegroundColor DarkYellow
         return $null
     }
+}
+
+function Is-TechnicalFresh {
+    if (-not (Test-Path -LiteralPath $SnapshotCsv)) { return $false }
+    try {
+        $age = ([DateTime]::UtcNow - (Get-Item -LiteralPath $SnapshotCsv -ErrorAction Stop).LastWriteTimeUtc).TotalSeconds
+        return ($age -le $TechnicalFreshSeconds)
+    } catch { return $false }
 }
 
 function Push-LiveSnapshot($technical, [bool]$technicalAvailable) {
@@ -158,7 +169,11 @@ while ($true) {
 
     if ($technical -is [string] -and $technical -eq '__UNCHANGED__') {
         if (([DateTime]::UtcNow - $script:LastFallbackPushUtc).TotalSeconds -ge 30) {
-            Push-LiveSnapshot $null $false
+            if ($null -ne $script:LastTechnical -and (Is-TechnicalFresh)) {
+                Push-LiveSnapshot $script:LastTechnical $true
+            } else {
+                Push-LiveSnapshot $null $false
+            }
             $script:LastFallbackPushUtc = [DateTime]::UtcNow
         }
     }
