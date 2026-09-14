@@ -47,8 +47,36 @@ function applyAboutHeroCopy(){
   }
 }
 
-if(document.readyState==="loading"){
-  document.addEventListener("DOMContentLoaded",applyAboutHeroCopy,{once:true});
-}else{
+function applyMarketLiveLink(){
+  const page=(window.location.pathname.split("/").pop()||"").toLowerCase();
+  if(page!=="thi-truong-hom-nay.html") return;
+  const tools=document.querySelector(".reader-tools");
+  if(!tools || tools.querySelector('[data-live-commentary-link]')) return;
+
+  const link=document.createElement("a");
+  link.href="binh-luan-thi-truong-truc-tiep.html";
+  link.setAttribute("data-live-commentary-link","");
+  link.innerHTML=`<span><i class="vh-live-dot"></i>Bình luận trực tiếp</span><span>→</span>`;
+  tools.prepend(link);
+
+  if(!document.getElementById("vh-live-link-style")){
+    const style=document.createElement("style");
+    style.id="vh-live-link-style";
+    style.textContent=`
+      [data-live-commentary-link] span:first-child{display:inline-flex;align-items:center;gap:7px}
+      .vh-live-dot{width:7px;height:7px;border-radius:50%;background:#ff6b72;box-shadow:0 0 0 4px rgba(255,107,114,.10);flex:0 0 auto}
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+function applyPageEnhancements(){
   applyAboutHeroCopy();
+  applyMarketLiveLink();
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",applyPageEnhancements,{once:true});
+}else{
+  applyPageEnhancements();
 }
