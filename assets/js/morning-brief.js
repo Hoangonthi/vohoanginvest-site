@@ -7,3 +7,4 @@ import './morning-verdict-board-v2.js';
 import './morning-macro-action-engine-v2.js';
 import './morning-readable-type-v1.js';
 import './morning-decision-ready-v1.js';
+import './morning-live-patch-v1.js';
