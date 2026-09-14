@@ -9,7 +9,7 @@ if not exist "%PSRUN%" set "PSRUN=powershell.exe"
 echo VO HOANG AmiBridge + Market Sync
 echo.
 echo Dang tai cac script ban moi nhat...
-"%PSRUN%" -NoProfile -ExecutionPolicy Bypass -Command "try { $t=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds(); $base='https://raw.githubusercontent.com/Hoangonthi/vohoanginvest-site/main/ami-bridge/'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'start-bridge.ps1?v='+$t) -OutFile '%~dp0start-bridge.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'push-market.ps1?v='+$t) -OutFile '%~dp0push-market.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'push-live-commentary.ps1?v='+$t) -OutFile '%~dp0push-live-commentary.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vndirect-enrich.ps1?v='+$t) -OutFile '%~dp0vndirect-enrich.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vndirect-market-probe.py?v='+$t) -OutFile '%~dp0vndirect-market-probe.py'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vnstock-enrich.ps1?v='+$t) -OutFile '%~dp0vnstock-enrich.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vnstock-market-summary.py?v='+$t) -OutFile '%~dp0vnstock-market-summary.py'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'index-extra-enrich.ps1?v='+$t) -OutFile '%~dp0index-extra-enrich.ps1'; } catch { Write-Host $_.Exception.Message -ForegroundColor Red; exit 1 }"
+"%PSRUN%" -NoProfile -ExecutionPolicy Bypass -Command "try { $t=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds(); $base='https://raw.githubusercontent.com/Hoangonthi/vohoanginvest-site/main/ami-bridge/'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'start-bridge.ps1?v='+$t) -OutFile '%~dp0start-bridge.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'push-market.ps1?v='+$t) -OutFile '%~dp0push-market.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'push-live-commentary-v3.ps1?v='+$t) -OutFile '%~dp0push-live-commentary-v3.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vndirect-enrich.ps1?v='+$t) -OutFile '%~dp0vndirect-enrich.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vndirect-market-probe.py?v='+$t) -OutFile '%~dp0vndirect-market-probe.py'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vnstock-enrich.ps1?v='+$t) -OutFile '%~dp0vnstock-enrich.ps1'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'vnstock-market-summary.py?v='+$t) -OutFile '%~dp0vnstock-market-summary.py'; Invoke-WebRequest -UseBasicParsing -Uri ($base+'index-extra-enrich.ps1?v='+$t) -OutFile '%~dp0index-extra-enrich.ps1'; } catch { Write-Host $_.Exception.Message -ForegroundColor Red; exit 1 }"
 if errorlevel 1 (
   echo Khong tai duoc script tu GitHub.
   pause
@@ -34,8 +34,8 @@ if errorlevel 1 (
 )
 
 echo AmiBridge da san sang.
-echo ==== BAT LIVE COMMENTARY SYNC ====
-start "VO HOANG - Live Commentary" "%PSRUN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-live-commentary.ps1"
+echo ==== BAT LIVE COMMENTARY V3 ====
+start "VO HOANG - Live Commentary V3" "%PSRUN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-live-commentary-v3.ps1"
 
 echo ==== BAT MARKET SYNC + HOT STOCKS + DERIVATIVES ====
 echo CUA SO NAY SE GIU MARKET SYNC CHAY. KHONG DONG TRONG GIO GIAO DICH.
