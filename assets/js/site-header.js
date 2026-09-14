@@ -31,6 +31,7 @@ function applyAboutHeroCopy(){
     const style=document.createElement("style");
     style.id="vh-about-story-style";
     style.textContent=`
+      .profile-hero h1{font-size:22px;line-height:1.34;letter-spacing:-.012em;max-width:690px}
       .profile-hero-story{max-width:690px;font-size:14.5px;line-height:1.72;text-align:left}
       .profile-hero-story p{margin:0 0 10px}
       .profile-hero-story p:last-child{margin-bottom:0}
@@ -38,6 +39,7 @@ function applyAboutHeroCopy(){
       .profile-hero-story .profile-story-closing strong{color:var(--gold-2,#f3cf74)}
       .profile-hero-copy .profile-actions:has(a:only-child){margin-top:20px}
       @media(max-width:680px){
+        .profile-hero h1{font-size:18px;line-height:1.38}
         .profile-hero-story{font-size:13px;line-height:1.65;text-align:left}
         .profile-hero-story p{margin-bottom:9px}
       }`;
