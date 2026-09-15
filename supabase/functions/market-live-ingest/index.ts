@@ -1,6 +1,8 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const BRIDGE_KEY = Deno.env.get("VH_BRIDGE_KEY") || "";
 const TARGET = `${SUPABASE_URL}/functions/v1/market-live-narrative-v4`;
 const ALLOWED = new Set([
   "https://vohoanginvest.com",
@@ -18,122 +20,60 @@ function cors(req: Request) {
     "Vary": "Origin",
   };
 }
-
-function num(v: unknown): number | null {
-  if (v === null || v === undefined || v === "") return null;
-  const x = Number(v);
-  return Number.isFinite(x) ? x : null;
+function j(req:Request, body:unknown, status=200){return new Response(JSON.stringify(body),{status,headers:{...cors(req),"Content-Type":"application/json; charset=utf-8"}});}
+function sh(extra:Record<string,string>={}){return{apikey:SERVICE_ROLE_KEY,Authorization:`Bearer ${SERVICE_ROLE_KEY}`,...extra};}
+function num(v: unknown): number | null { if(v===null||v===undefined||v==="")return null; const x=Number(v); return Number.isFinite(x)?x:null; }
+function price(v: unknown): number | null { const x=num(v); return x!==null&&x>0?x:null; }
+function first(obj:any,keys:string[]){for(const key of keys){const v=key.split(".").reduce((a,b)=>a?.[b],obj);if(v!==undefined&&v!==null&&v!=="")return v;}return null;}
+function vnDate(v:string|Date){const d=v instanceof Date?v:new Date(v);const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);const g=(t:string)=>p.find(x=>x.type===t)?.value||"";return`${g("year")}-${g("month")}-${g("day")}`;}
+function idxOf(ctx:any){const rows=Array.isArray(ctx?.indexes)?ctx.indexes:[];return rows.find((x:any)=>String(x?.symbol||"").toUpperCase()==="VN-INDEX")||{};}
+function compactStock(x:any){return{symbol:String(x?.symbol||x?.code||"").toUpperCase(),price:price(first(x,["price","close","last"])),change:num(x?.change),change_pct:num(first(x,["change_pct","changePct","pct"])),volume:num(x?.volume)};}
+function normalizeSectors(input:any,mi:any){const raw=Array.isArray(input?.sector_watchlists)&&input.sector_watchlists.length?input.sector_watchlists:(Array.isArray(mi?.sectors)?mi.sectors:[]);return raw.map((x:any)=>({key:String(x?.key||x?.symbol||x?.name||""),name:String(x?.name||x?.symbol||"Nhóm ngành"),change_pct:num(x?.change_pct),adv:num(x?.adv),flat:num(x?.flat),dec:num(x?.dec),member_count:num(x?.member_count),valid_count:num(x?.valid_count),coverage:num(x?.coverage),breadth_balance:num(x?.breadth_balance),top_gainers:Array.isArray(x?.top_gainers)?x.top_gainers.map(compactStock).filter((s:any)=>s.symbol):[],top_losers:Array.isArray(x?.top_losers)?x.top_losers.map(compactStock).filter((s:any)=>s.symbol):[],source:Array.isArray(input?.sector_watchlists)&&input.sector_watchlists.length?"AmiBroker Watch Lists":String(x?.source||"market-feed")})).filter((x:any)=>x.change_pct!==null);}
+function bootstrapPayload(input:any){
+  if(!input||typeof input!=="object")return input;
+  const ctx=input.market_context||{},idx=idxOf(ctx),t=input.technical&&typeof input.technical==="object"?{...input.technical}:{};
+  for(const [key,value] of Object.entries({value:first(idx,["value","close","last"]),reference:first(idx,["reference","ref","prev_close"]),high:first(idx,["high","session_high"]),low:first(idx,["low","session_low"])})){if(price(t[key])===null&&price(value)!==null)t[key]=value;else if(price(t[key])===null)delete t[key];}
+  for(const [key,value] of Object.entries({change:first(idx,["change","change_point"]),change_pct:first(idx,["change_pct","pct"])})){if(num(t[key])===null&&num(value)!==null)t[key]=value;}
+  for(const key of ["reference","high","low","ma10","ma20","ma50","vwap","support_near","resistance_near","prev_high","prev_low","high20","low20"]){if(key in t&&price(t[key])===null)delete t[key];}
+  const memory=input.local_memory&&typeof input.local_memory==="object"?{...input.local_memory}:{};for(const key of ["m5","m15","m30"]){const point=memory[key];if(!point||price(point?.value)===null)memory[key]=null;}
+  return{...input,technical:t,local_memory:memory,ingest_bootstrap:true};
 }
-function price(v: unknown): number | null {
-  const x = num(v);
-  return x !== null && x > 0 ? x : null;
+function fallbackNormalized(input:any,capturedAt:string){
+  const ctx=input?.market_context||{},idx=idxOf(ctx),mi=ctx?.market_intelligence||{},t=input?.technical||{};
+  const value=price(first(t,["value","last","close"]))??price(first(idx,["value","close","last"]));
+  const reference=price(first(t,["reference","ref","prev_close"]))??price(first(idx,["reference","ref","prev_close"]));
+  const change=num(first(t,["change","change_point"]))??num(first(idx,["change","change_point"]));
+  let pct=num(first(t,["change_pct","pct"]))??num(first(idx,["change_pct","pct"]));if(pct===null&&value!==null&&reference!==null&&reference!==0)pct=(value/reference-1)*100;
+  const high=price(first(t,["high","session_high"]))??price(idx?.high),low=price(first(t,["low","session_low"]))??price(idx?.low);
+  const adv=num(idx?.adv)??num(first(mi,["breadth.adv"])),flat=num(idx?.flat)??num(first(mi,["breadth.flat"])),dec=num(idx?.dec)??num(first(mi,["breadth.dec"]));
+  const total=[adv,flat,dec].every(x=>x!==null)?adv!+flat!+dec!:null;const balance=total&&total>0?(adv!-dec!)/total:num(first(mi,["breadth.balance"]));
+  const sectors=normalizeSectors(input,mi).sort((a:any,b:any)=>Number(b.change_pct)-Number(a.change_pct));
+  const strong=sectors.slice(0,4),weak=sectors.slice(-4).reverse();
+  const zones=[{key:"ma10",label:"MA10",value:price(t.ma10)},{key:"ma20",label:"MA20",value:price(t.ma20)},{key:"ma50",label:"MA50",value:price(t.ma50)},{key:"vwap",label:"VWAP",value:price(t.vwap)},{key:"support",label:"hỗ trợ gần",value:price(t.support_near)},{key:"resistance",label:"cản gần",value:price(t.resistance_near)}].filter((x:any)=>x.value!==null);
+  const below=zones.filter((x:any)=>value!==null&&x.value<value).sort((a:any,b:any)=>Math.abs(value!-a.value)-Math.abs(value!-b.value))[0]||null;
+  const above=zones.filter((x:any)=>value!==null&&x.value>value).sort((a:any,b:any)=>Math.abs(value!-a.value)-Math.abs(value!-b.value))[0]||null;
+  const world={ball:{value,change,pct,high,low,rebound_from_low:num(t?.rebound_from_low),drop_from_high:num(t?.drop_from_high),delta_5m:null,delta_15m:null,delta_30m:null},match:{label:"Đang cập nhật thế trận.",breadth:{adv,flat,dec,balance,delta_15m:null},flow:mi?.flow||null},lines:{strongest:strong,weakest:weak},driver:strong[0]?{direction:(change??0)>=0?"up":"down",sector:strong[0],confidence:"THẤP",confidence_score:0,players:(strong[0].top_gainers||[]).slice(0,3)}:null,zones:{nearest_below:below,nearest_above:above,near:[],position:value!==null?{above_ma10:price(t.ma10)===null?null:value>=price(t.ma10)!,above_ma20:price(t.ma20)===null?null:value>=price(t.ma20)!,above_vwap:price(t.vwap)===null?null:value>=price(t.vwap)!}:null},technical:{ma10:price(t.ma10),ma20:price(t.ma20),ma50:price(t.ma50),vwap:price(t.vwap),rsi14:num(t.rsi14),macd:num(t.macd),signal:num(t.macd_signal)},generated_at:capturedAt};
+  return{technical:t,technical_available:Boolean(input?.technical_available),local_first:Boolean(input?.local_first),engine_version:"3.1-fallback",local_memory:input?.local_memory||{},market:{vnindex:{value,reference,change,change_pct:pct,high,low,rebound_from_low:num(t?.rebound_from_low),drop_from_high:num(t?.drop_from_high),adv,flat,dec,breadth_balance:balance,value_b:num(first(idx,["value_b","total_value_b"]))??num(first(mi,["flow.value_b"]))},state:mi?.state||null,breadth:mi?.breadth||null,flow:mi?.flow||null,sectors,alerts:Array.isArray(mi?.alerts)?mi.alerts:[]},watchlist_sectors:sectors,vn30_stocks:(Array.isArray(ctx?.vn30_stocks)?ctx.vn30_stocks:[]).map(compactStock).filter((x:any)=>x.symbol),world_model:world,context_received_at:first(ctx,["relay_received_at","received_at","updated_at"])};
 }
-
-function first(obj: any, keys: string[]) {
-  for (const key of keys) {
-    const value = key.split(".").reduce((a, b) => a?.[b], obj);
-    if (value !== undefined && value !== null && value !== "") return value;
-  }
-  return null;
-}
-
-function vnIndex(context: any) {
-  const indexes = Array.isArray(context?.indexes) ? context.indexes : [];
-  return indexes.find((x: any) => String(x?.symbol || "").toUpperCase() === "VN-INDEX") || null;
-}
-
-function bootstrapPayload(input: any) {
-  if (!input || typeof input !== "object") return input;
-
-  const ctx = input.market_context || {};
-  const idx = vnIndex(ctx) || {};
-  const t = input.technical && typeof input.technical === "object" ? { ...input.technical } : {};
-
-  const priceFallback: Record<string, unknown> = {
-    value: first(idx, ["value", "close", "last"]),
-    reference: first(idx, ["reference", "ref", "prev_close"]),
-    high: first(idx, ["high", "session_high"]),
-    low: first(idx, ["low", "session_low"]),
-  };
-  for (const [key, value] of Object.entries(priceFallback)) {
-    const existing = price(t[key]);
-    const fallback = price(value);
-    if (existing === null && fallback !== null) t[key] = fallback;
-    else if (existing === null) delete t[key];
-  }
-
-  const numericFallback: Record<string, unknown> = {
-    change: first(idx, ["change", "change_point"]),
-    change_pct: first(idx, ["change_pct", "pct"]),
-  };
-  for (const [key, value] of Object.entries(numericFallback)) {
-    if (num(t[key]) === null && num(value) !== null) t[key] = value;
-  }
-
-  for (const key of ["reference","high","low","ma10","ma20","ma50","vwap","support_near","resistance_near","prev_high","prev_low","high20","low20"]) {
-    if (key in t && price(t[key]) === null) delete t[key];
-  }
-
-  const memory = input.local_memory && typeof input.local_memory === "object"
-    ? { ...input.local_memory }
-    : {};
-
-  // Không được giả m5/m15/m30 bằng snapshot hiện tại. Khi local chưa có đủ ký ức
-  // hoặc điểm ký ức không có giá VN-Index, để null để Narrative V3/V4 rơi về
-  // market_live_snapshots trên cloud. Nếu gán current vào quá khứ, delta sẽ luôn 0.
-  for (const key of ["m5", "m15", "m30"]) {
-    const point = memory[key];
-    if (!point || price(point?.value) === null) memory[key] = null;
-  }
-
-  return {
-    ...input,
-    technical: t,
-    local_memory: memory,
-    ingest_bootstrap: true,
-  };
+async function fallbackStore(input:any,upstreamStatus:number,upstreamText:string){
+  const capturedAt=typeof input?.captured_at==="string"&&!Number.isNaN(new Date(input.captured_at).getTime())?new Date(input.captured_at).toISOString():new Date().toISOString();
+  const marketDate=vnDate(capturedAt),payload=fallbackNormalized(input,capturedAt),source=String(input?.source||"amibridge-live-v3");
+  const sourceUpdatedAt=typeof input?.source_updated_at==="string"&&!Number.isNaN(new Date(input.source_updated_at).getTime())?new Date(input.source_updated_at).toISOString():null;
+  const currentResp=await fetch(`${SUPABASE_URL}/rest/v1/market_live_current?on_conflict=id`,{method:"POST",headers:sh({"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify({id:"vietnam",market_date:marketDate,captured_at:capturedAt,source_updated_at:sourceUpdatedAt,source,payload,updated_at:new Date().toISOString()})});
+  let historyStored=false;try{const r=await fetch(`${SUPABASE_URL}/rest/v1/market_live_snapshots?market_date=eq.${marketDate}&select=captured_at&order=captured_at.desc&limit=1`,{headers:sh()});const rows=r.ok?await r.json():[];const last=Array.isArray(rows)&&rows[0]?.captured_at?new Date(rows[0].captured_at).getTime():0;if(!last||new Date(capturedAt).getTime()-last>=55000){const ins=await fetch(`${SUPABASE_URL}/rest/v1/market_live_snapshots`,{method:"POST",headers:sh({"Content-Type":"application/json","Prefer":"return=minimal"}),body:JSON.stringify({market_date:marketDate,captured_at:capturedAt,source_updated_at:sourceUpdatedAt,source,payload})});historyStored=ins.ok;}}catch{}
+  try{await fetch(`${SUPABASE_URL}/rest/v1/market_live_commentary_state?on_conflict=market_date%2Cstate_key`,{method:"POST",headers:sh({"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify({market_date:marketDate,state_key:"ingest_last_upstream_error",value:{status:upstreamStatus,detail:upstreamText.slice(0,1200),captured_at:capturedAt},updated_at:new Date().toISOString()})});}catch{}
+  return{ok:currentResp.ok,engine:"market-live-ingest-fallback-v9",current_stored:currentResp.ok,history_stored:historyStored,history_mode:"fallback-about-1-minute",watchlist_sector_count:payload.watchlist_sectors.length,published_comment:null,event:null,fallback:true,upstream_status:upstreamStatus};
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req) });
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ ok: false, error: "METHOD_NOT_ALLOWED" }), {
-      status: 405,
-      headers: { ...cors(req), "Content-Type": "application/json; charset=utf-8" },
-    });
-  }
-
-  let body: string;
-  try {
-    const input = await req.json();
-    body = JSON.stringify(bootstrapPayload(input));
-  } catch {
-    return new Response(JSON.stringify({ ok: false, error: "INVALID_JSON" }), {
-      status: 400,
-      headers: { ...cors(req), "Content-Type": "application/json; charset=utf-8" },
-    });
-  }
-
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json; charset=utf-8",
-  };
-  const bridgeKey = req.headers.get("x-bridge-key");
-  if (bridgeKey) headers["x-bridge-key"] = bridgeKey;
-
-  try {
-    const upstream = await fetch(TARGET, { method: "POST", headers, body });
-    return new Response(await upstream.text(), {
-      status: upstream.status,
-      headers: { ...cors(req), "Content-Type": "application/json; charset=utf-8" },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({
-      ok: false,
-      error: "NARRATIVE_V4_UNAVAILABLE",
-      detail: String((error as Error)?.message || error).slice(0, 240),
-    }), {
-      status: 502,
-      headers: { ...cors(req), "Content-Type": "application/json; charset=utf-8" },
-    });
-  }
+  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(req)});
+  if(req.method!=="POST")return j(req,{ok:false,error:"METHOD_NOT_ALLOWED"},405);
+  if(!BRIDGE_KEY||req.headers.get("x-bridge-key")!==BRIDGE_KEY)return j(req,{ok:false,error:"UNAUTHORIZED"},401);
+  let input:any;try{input=bootstrapPayload(await req.json());}catch{return j(req,{ok:false,error:"INVALID_JSON"},400);}
+  const headers:Record<string,string>={"Content-Type":"application/json; charset=utf-8","x-bridge-key":req.headers.get("x-bridge-key")||""};
+  try{
+    const upstream=await fetch(TARGET,{method:"POST",headers,body:JSON.stringify(input)});const text=await upstream.text();
+    if(upstream.ok)return new Response(text,{status:upstream.status,headers:{...cors(req),"Content-Type":"application/json; charset=utf-8"}});
+    const fallback=await fallbackStore(input,upstream.status,text);return j(req,fallback,fallback.ok?200:500);
+  }catch(error){const fallback=await fallbackStore(input,502,String((error as Error)?.message||error));return j(req,fallback,fallback.ok?200:502);}
 });
