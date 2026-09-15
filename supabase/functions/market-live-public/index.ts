@@ -52,10 +52,12 @@ function compactSnapshot(row:any){
 async function readJson(url:string,init?:RequestInit){try{const r=await fetch(url,init);if(!r.ok)return null;return await r.json();}catch{return null;}}
 async function derivatives(){
   const data=await readJson(`${SUPABASE_URL}/rest/v1/rpc/derivatives_public_v1`,{method:"POST",headers:headers({"Content-Type":"application/json"}),body:"{}"});
-  if(!data||data.fresh!==true)return null;
+  if(!data)return null;
+  const age=n(data.age_seconds);
+  if(data.fresh!==true&&(age===null||age>45))return null;
   const raw=String(data.trend||"").toUpperCase();
   const direction=raw.includes("TĂNG")||raw==="TANG"?"TANG":raw.includes("GIẢM")||raw==="GIAM"?"GIAM":null;
-  return direction?{symbol:data.symbol||null,direction,label:direction==="TANG"?"Nghiêng tăng":"Nghiêng giảm",last_price:price(data.last_price),system_price:price(data.system_price),reversal_price:price(data.reversal_price),source_updated_at:data.source_updated_at||null,age_seconds:n(data.age_seconds),fresh:true}:null;
+  return direction?{symbol:data.symbol||null,direction,label:direction==="TANG"?"Nghiêng tăng":"Nghiêng giảm",last_price:price(data.last_price),system_price:price(data.system_price),reversal_price:price(data.reversal_price),source_updated_at:data.source_updated_at||null,age_seconds:age,fresh:age!==null&&age<=45}:null;
 }
 async function editorialContext(today:string){
   const data=await readJson(`${SUPABASE_URL}/rest/v1/market_live_admin_notes?market_date=eq.${today}&is_active=eq.true&select=id,note,created_at&order=created_at.desc&limit=1`,{headers:headers()});
