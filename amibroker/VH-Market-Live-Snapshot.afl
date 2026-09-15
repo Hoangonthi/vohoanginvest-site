@@ -6,6 +6,7 @@
 
 _SECTION_BEGIN("VH Market Live Snapshot");
 SetBarsRequired(100000, 0);
+RequestTimedRefresh(5);
 
 snapshotEnable = ParamToggle("VH Live Snapshot CSV", "Off|On", 1);
 snapshotFile = ParamStr("Snapshot File", "C:\\Users\\USER\\Desktop\\AMIBRO\\vh_market_live_snapshot.csv");
