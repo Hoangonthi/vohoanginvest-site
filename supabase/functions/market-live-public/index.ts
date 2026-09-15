@@ -59,14 +59,6 @@ async function derivatives(){
   const direction=raw.includes("TĂNG")||raw==="TANG"?"TANG":raw.includes("GIẢM")||raw==="GIAM"?"GIAM":null;
   return direction?{symbol:data.symbol||null,direction,label:direction==="TANG"?"Nghiêng tăng":"Nghiêng giảm",last_price:price(data.last_price),system_price:price(data.system_price),reversal_price:price(data.reversal_price),source_updated_at:data.source_updated_at||null,age_seconds:age,fresh:age!==null&&age<=45}:null;
 }
-async function editorialContext(today:string){
-  const data=await readJson(`${SUPABASE_URL}/rest/v1/market_live_admin_notes?market_date=eq.${today}&is_active=eq.true&select=id,note,created_at&order=created_at.desc&limit=1`,{headers:headers()});
-  const row=Array.isArray(data)?data[0]:null;
-  if(!row)return null;
-  const age=Math.max(0,(Date.now()-new Date(row.created_at).getTime())/1000);
-  if(!Number.isFinite(age)||age>3*3600)return null;
-  return{id:row.id,text:String(row.note||"").slice(0,1200),created_at:row.created_at,age_seconds:Math.round(age)};
-}
 
 Deno.serve(async(req:Request)=>{
   if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(req)});
@@ -80,12 +72,11 @@ Deno.serve(async(req:Request)=>{
 
   let path=`market_live_comments?market_date=eq.${today}`;
   if(after>0)path+=`&id=gt.${after}&order=id.asc&limit=${limit}`;else path+=`&order=published_at.desc,id.desc&limit=${limit}`;
-  path+=`&select=id,published_at,tone,headline,body,watch_next,evidence,source_mode,event_id,snapshot_id,is_final,admin_edited_at`;
+  path+=`&select=id,published_at,tone,headline,body,watch_next,evidence,event_id,snapshot_id,is_final,admin_edited_at`;
 
-  const [commentsRaw,derivativeState,editorial]=await Promise.all([
+  const [commentsRaw,derivativeState]=await Promise.all([
     readJson(`${SUPABASE_URL}/rest/v1/${path}`,{headers:headers()}),
-    derivatives(),
-    editorialContext(today)
+    derivatives()
   ]);
   const comments=Array.isArray(commentsRaw)?commentsRaw:[];
 
@@ -94,7 +85,6 @@ Deno.serve(async(req:Request)=>{
     market_date:today,
     latest:compactSnapshot(currentRows[0]||null),
     derivatives:derivativeState,
-    editorial_context:editorial,
     comments,
     latest_comment_id:comments.length?Math.max(...comments.map((x:any)=>Number(x.id)||0)):after,
     polling_seconds:10,
