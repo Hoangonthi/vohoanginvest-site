@@ -107,6 +107,12 @@ function applyLiveLayoutCommunity(){
   if(page!=="binh-luan-thi-truong-truc-tiep.html") return;
   if(window.__vhLiveLayoutCommunityLoaded) return;
   window.__vhLiveLayoutCommunityLoaded=true;
+  if(!document.getElementById("vh-live-community-column-style")){
+    const style=document.createElement("style");
+    style.id="vh-live-community-column-style";
+    style.textContent=".community-side{grid-template-columns:1fr!important}.community-panel{min-width:0}";
+    document.head.appendChild(style);
+  }
   import("./market-live-layout-community.js?v=20260915-1").catch(()=>{});
 }
 
