@@ -74,6 +74,8 @@ function currentPulse(snapshot){
   const phase=Math.floor(new Date(snapshot.captured_at||Date.now()).getTime()/20000)%5;
   const extremes=stockExtremes(snapshot);
   const derChanged=derivativeState?.direction&&previousDerivative?.direction&&derivativeState.direction!==previousDerivative.direction;
+  const derNow=num(derivativeState?.last_price),derPrev=num(previousDerivative?.last_price);
+  const derTick=derNow!==null&&derPrev!==null?derNow-derPrev:null;
 
   let headline="Thị trường đang giữ nhịp, nhưng bên trong vẫn có phân hóa";
   if(leaderChanged)headline=`${leader.name} vừa vượt lên dẫn đầu nhóm ngành`;
@@ -82,6 +84,9 @@ function currentPulse(snapshot){
   else if(advDelta!==null&&advDelta>=7)headline="Độ rộng vừa mở thêm về phía tăng";
   else if(decDelta!==null&&decDelta>=7)headline="Số mã giảm đang tăng lên, cần nhìn lại độ lan tỏa";
   else if(derChanged)headline=`Phái sinh vừa chuyển sang trạng thái ${derivativeState.label.toLowerCase()}`;
+  else if(phase===3&&derTick!==null&&Math.abs(derTick)<.20)headline=`Phái sinh gần như đi ngang quanh ${fmt(derNow,1)}`;
+  else if(phase===3&&derTick!==null&&derTick>=.50)headline=`Phái sinh vừa nhích thêm ${fmt(derTick,1)} điểm`;
+  else if(phase===3&&derTick!==null&&derTick<=-.50)headline=`Phái sinh vừa lùi ${fmt(Math.abs(derTick),1)} điểm`;
   else if((extremes.worst?.pct??0)<=-5.5)headline=`${extremes.worst.symbol} đang là biến động bất thường cần chú ý`;
   else if(phase===1&&leader&&laggard)headline=`${leader.name} mạnh nhất, ${laggard.name} đang ở phía yếu nhất`;
   else if(phase===2&&leader)headline=`Bên trong ${leader.name} đang xuất hiện phân hóa rõ hơn`;
@@ -115,7 +120,16 @@ function currentPulse(snapshot){
     const internal=sectorInternalLine(leader);if(internal)bits.push(internal);
   }
 
-  if(derivativeState?.fresh)bits.push(`Phái sinh hiện ${derivativeState.label.toLowerCase()}${num(derivativeState.last_price)!==null?`, giá gần nhất ${fmt(derivativeState.last_price,1)}`:""}; đây là lớp tham chiếu thêm, không dùng để quy kết nguyên nhân cho cơ sở.`);
+  if(derivativeState?.fresh){
+    let derLine=`Phái sinh hiện ${derivativeState.label.toLowerCase()}`;
+    if(derNow!==null){
+      if(derTick!==null&&Math.abs(derTick)<.20)derLine+=`, gần như đi ngang quanh ${fmt(derNow,1)} trong nhịp cập nhật này`;
+      else if(derTick!==null&&derTick>0)derLine+=`, vừa nhích thêm ${fmt(derTick,1)} điểm lên ${fmt(derNow,1)}`;
+      else if(derTick!==null&&derTick<0)derLine+=`, vừa lùi ${fmt(Math.abs(derTick),1)} điểm về ${fmt(derNow,1)}`;
+      else derLine+=`, giá gần nhất ${fmt(derNow,1)}`;
+    }
+    bits.push(`${derLine}; đây là lớp tham chiếu thêm, không dùng để quy kết nguyên nhân cho cơ sở.`);
+  }
   if(editorialContext?.text)bits.push(`Góc nhìn bổ sung từ Võ Hoàng: ${editorialContext.text}`);
 
   let watch="Nhìn tiếp sự thay đổi của độ rộng, nhóm dẫn và nhóm yếu; nếu cả ba cùng cải thiện thì nhịp tăng sẽ có chất lượng hơn.";
@@ -172,9 +186,9 @@ function adminActions(c){
 function renderTimeline(){
   const list=$("timelineList");if(!list)return;
   const raw=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
-  const comments=dedupeTimeline(raw);
+  const comments=isAdmin?raw:dedupeTimeline(raw);
   if(!comments.length){list.innerHTML=`<div class="empty">Các mốc thay đổi đáng chú ý sẽ được ghi vào đây.</div>`;return;}
-  list.innerHTML=comments.slice(0,20).map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
+  list.innerHTML=comments.slice(0,30).map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
 }
 
 function renderMarketNow(snapshot){
