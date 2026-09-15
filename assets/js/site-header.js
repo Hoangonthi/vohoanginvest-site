@@ -124,32 +124,38 @@ function setupLiveCompactOverview(){
       .vh-overview-toggle{pointer-events:auto!important;border:1px solid rgba(224,187,99,.28);border-radius:999px;background:#071a2d;color:var(--gold2);height:21px;padding:0 8px;font-size:7.5px;font-weight:800;cursor:pointer;white-space:nowrap}
       .vh-overview-toggle:hover{border-color:rgba(224,187,99,.55);background:rgba(224,187,99,.08)}
 
+      /* Các ô thị trường tự rộng theo nội dung, không chia đều cột */
       .market-overview-panel .side-body{padding:10px 7px 7px!important}
-      .market-overview-panel #marketNow{grid-template-columns:repeat(10,minmax(0,1fr))!important;gap:4px!important}
-      .market-overview-panel #marketNow .side-cell{padding:5px 6px!important;min-height:40px!important;border-radius:8px!important}
-      .market-overview-panel #marketNow .side-cell span{font-size:6.2px!important;letter-spacing:.035em!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      .market-overview-panel #marketNow .side-cell b{margin-top:3px!important;font-size:8.7px!important;line-height:1.22!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .market-overview-panel #marketNow{display:flex!important;flex-wrap:wrap!important;align-items:stretch!important;justify-content:flex-start!important;gap:4px!important}
+      .market-overview-panel #marketNow>.section-mini{display:contents!important}
+      .market-overview-panel #marketNow>.section-mini>h3,
+      .market-overview-panel #marketNow>.section-mini>div:not(.side-grid){display:none!important}
+      .market-overview-panel #marketNow .side-grid{display:contents!important}
+      .market-overview-panel #marketNow .side-cell{flex:0 0 auto!important;width:max-content!important;min-width:78px!important;max-width:210px!important;padding:5px 7px!important;min-height:40px!important;border-radius:8px!important}
+      .market-overview-panel #marketNow .side-cell span{font-size:6.2px!important;letter-spacing:.035em!important;white-space:nowrap!important}
+      .market-overview-panel #marketNow .side-cell b{margin-top:3px!important;font-size:8.7px!important;line-height:1.22!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
       .market-overview-panel.is-collapsed #marketNow>.section-mini:nth-child(n+3){display:none!important}
 
+      /* Nhóm & cổ phiếu cũng ôm sát nội dung dài/ngắn */
       .leaders-overview-panel .side-body{padding:10px 7px 7px!important}
-      .leaders-overview-panel #marketLeaders{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
-      .leaders-overview-panel #marketLeaders>.section-mini{padding:6px 7px!important;border-radius:8px!important;min-height:0!important}
-      .leaders-overview-panel #marketLeaders>.section-mini h3{font-size:7.2px!important;margin:0 0 4px!important;line-height:1.25!important}
-      .leaders-overview-panel #marketLeaders .row-list{gap:2px!important}
-      .leaders-overview-panel #marketLeaders .mini-row{font-size:8.2px!important;line-height:1.25!important;gap:6px!important}
+      .leaders-overview-panel #marketLeaders{display:flex!important;flex-wrap:wrap!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important}
+      .leaders-overview-panel #marketLeaders>.section-mini{flex:0 0 auto!important;width:max-content!important;min-width:185px!important;max-width:330px!important;margin:0!important;padding:6px 8px!important;border-radius:8px!important;min-height:0!important}
+      .leaders-overview-panel #marketLeaders>.section-mini h3{font-size:7.2px!important;margin:0 0 4px!important;line-height:1.25!important;white-space:nowrap!important}
+      .leaders-overview-panel #marketLeaders .row-list{gap:2px!important;width:max-content!important;min-width:100%!important}
+      .leaders-overview-panel #marketLeaders .mini-row{font-size:8.2px!important;line-height:1.25!important;gap:12px!important;width:max-content!important;min-width:100%!important}
+      .leaders-overview-panel #marketLeaders .mini-row span,
+      .leaders-overview-panel #marketLeaders .mini-row b{white-space:nowrap!important}
       .leaders-overview-panel.is-collapsed #marketLeaders>.section-mini:nth-child(n+5){display:none!important}
 
-      @media(max-width:1100px){
-        .market-overview-panel #marketNow{grid-template-columns:repeat(5,minmax(0,1fr))!important}
-        .leaders-overview-panel #marketLeaders{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-      }
       @media(max-width:680px){
         .live-overview-stack{margin-top:14px!important}
         .live-overview-stack .vh-overview-compact>.panel-head{left:8px!important;right:6px!important}
-        .market-overview-panel #marketNow{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-        .leaders-overview-panel #marketLeaders{grid-template-columns:1fr 1fr!important}
-        .market-overview-panel #marketNow .side-cell{min-height:38px!important}
         .live-overview-stack .vh-overview-compact>.panel-head>span{display:none!important}
+        .market-overview-panel #marketNow .side-cell{flex:1 1 calc(50% - 4px)!important;width:auto!important;min-width:0!important;max-width:none!important;min-height:38px!important}
+        .market-overview-panel #marketNow .side-cell b{overflow:hidden!important;text-overflow:ellipsis!important}
+        .leaders-overview-panel #marketLeaders>.section-mini{flex:1 1 calc(50% - 5px)!important;width:auto!important;min-width:0!important;max-width:none!important}
+        .leaders-overview-panel #marketLeaders .row-list,
+        .leaders-overview-panel #marketLeaders .mini-row{width:100%!important;min-width:0!important}
       }
     `;
     document.head.appendChild(style);
