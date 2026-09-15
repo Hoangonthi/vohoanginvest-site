@@ -35,7 +35,7 @@ if errorlevel 1 (
 
 echo AmiBridge da san sang.
 echo ==== BAT LIVE COMMENTARY V3 ====
-start "VO HOANG - Live Commentary V3" "%PSRUN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-live-commentary-v3.ps1"
+start "VO HOANG - Live Commentary V3" "%PSRUN%" -NoExit -NoProfile -ExecutionPolicy Bypass -File "%~dp0push-live-commentary-v3.ps1"
 
 echo ==== BAT MARKET SYNC + HOT STOCKS + DERIVATIVES ====
 echo CUA SO NAY SE GIU MARKET SYNC CHAY. KHONG DONG TRONG GIO GIAO DICH.
