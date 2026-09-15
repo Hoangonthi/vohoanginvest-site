@@ -122,7 +122,9 @@ function setupLiveCompactOverview(){
       .live-overview-stack .vh-overview-compact>.panel-head h2{margin:0!important;padding:2px 8px!important;background:#06172a!important;border-radius:999px!important;box-shadow:0 0 0 4px #06172a!important;color:#fff!important;font-size:10.5px!important;line-height:17px!important;pointer-events:auto}
       .live-overview-stack .vh-overview-compact>.panel-head>span{margin-left:auto!important;padding:2px 5px!important;background:#06172a!important;color:var(--muted2)!important;font-size:7px!important;line-height:16px!important;pointer-events:none}
       .vh-overview-toggle{pointer-events:auto!important;border:1px solid rgba(224,187,99,.28);border-radius:999px;background:#071a2d;color:var(--gold2);height:21px;padding:0 8px;font-size:7.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+      .vh-overview-toggle[hidden]{display:none!important}
       .vh-overview-toggle:hover{border-color:rgba(224,187,99,.55);background:rgba(224,187,99,.08)}
+      .vh-smart-hidden{display:none!important}
 
       /* Nội dung đến đâu, chiếm diện tích đến đó: không chia đều card. */
       .market-overview-panel .side-body{padding:9px 7px 6px!important}
@@ -134,7 +136,6 @@ function setupLiveCompactOverview(){
       .market-overview-panel #marketNow .side-cell{flex:0 0 auto!important;width:max-content!important;min-width:68px!important;max-width:230px!important;padding:4px 6px!important;min-height:0!important;border-radius:7px!important}
       .market-overview-panel #marketNow .side-cell span{font-size:6.4px!important;letter-spacing:.035em!important;white-space:nowrap!important}
       .market-overview-panel #marketNow .side-cell b{margin-top:2px!important;font-size:8.8px!important;line-height:1.22!important;white-space:normal!important;overflow-wrap:anywhere!important}
-      .market-overview-panel.is-collapsed #marketNow>.section-mini:nth-child(n+3){display:none!important}
 
       .leaders-overview-panel .side-body{padding:9px 7px 6px!important}
       .leaders-overview-panel #marketLeaders{display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;justify-content:flex-start!important;gap:5px!important}
@@ -144,7 +145,6 @@ function setupLiveCompactOverview(){
       .leaders-overview-panel #marketLeaders .mini-row{display:contents!important}
       .leaders-overview-panel #marketLeaders .mini-row span{font-size:8.3px!important;line-height:1.28!important;color:var(--muted)!important;white-space:nowrap!important}
       .leaders-overview-panel #marketLeaders .mini-row b{font-size:8.3px!important;line-height:1.28!important;text-align:right!important;white-space:nowrap!important}
-      .leaders-overview-panel.is-collapsed #marketLeaders>.section-mini:nth-child(n+5){display:none!important}
 
       @media(max-width:900px){
         .market-overview-panel #marketNow .side-cell{max-width:200px!important}
@@ -169,35 +169,104 @@ function setupLiveCompactOverview(){
       section.querySelectorAll('.mini-row span').forEach(span=>{
         const raw=(span.textContent||'').trim();
         const base=raw.split(' · ')[0].replace(/:$/,'').trim();
-        if(base) span.textContent=`${base}:`;
+        const next=base?`${base}:`:raw;
+        if(next&&span.textContent!==next) span.textContent=next;
       });
     });
   };
-  compactLeaderLabels();
-  const leaderObserver=new MutationObserver(()=>compactLeaderLabels());
-  leaderObserver.observe(leadersPanel,{childList:true,subtree:true});
 
-  const prepare=(panel,label)=>{
-    panel.classList.add('vh-overview-compact','is-collapsed');
+  const getItems=(panel)=>panel===marketPanel
+    ? [...panel.querySelectorAll('#marketNow .side-cell')]
+    : [...panel.querySelectorAll('#marketLeaders > .section-mini')];
+
+  const refreshPanel=(panel,label)=>{
     const head=panel.querySelector(':scope > .panel-head');
-    if(!head||head.querySelector('.vh-overview-toggle')) return;
-    const button=document.createElement('button');
-    button.type='button';
-    button.className='vh-overview-toggle';
+    const button=head?.querySelector('.vh-overview-toggle');
+    if(!button) return;
+
+    const items=getItems(panel);
+    items.forEach(item=>item.classList.remove('vh-smart-hidden'));
+    if(!items.length){
+      button.hidden=true;
+      panel.classList.remove('is-collapsed');
+      return;
+    }
+
+    const firstTop=items[0].getBoundingClientRect().top;
+    const isNextRow=(item)=>item.getBoundingClientRect().top>firstTop+3;
+    const wrapped=items.some(isNextRow);
+
+    if(!wrapped){
+      button.hidden=true;
+      panel.dataset.vhExpanded='0';
+      panel.classList.remove('is-collapsed');
+      button.setAttribute('aria-expanded','false');
+      return;
+    }
+
+    button.hidden=false;
+    const expanded=panel.dataset.vhExpanded==='1';
+    if(expanded){
+      panel.classList.remove('is-collapsed');
+      button.setAttribute('aria-expanded','true');
+      button.textContent='Thu gọn ▴';
+      button.title=`Thu gọn ${label}`;
+      return;
+    }
+
+    panel.classList.add('is-collapsed');
+    items.forEach(item=>{if(isNextRow(item)) item.classList.add('vh-smart-hidden');});
     button.setAttribute('aria-expanded','false');
     button.textContent='Mở rộng ▾';
     button.title=`Mở rộng ${label}`;
-    button.addEventListener('click',()=>{
-      const collapsed=panel.classList.toggle('is-collapsed');
-      button.setAttribute('aria-expanded',String(!collapsed));
-      button.textContent=collapsed?'Mở rộng ▾':'Thu gọn ▴';
-      button.title=collapsed?`Mở rộng ${label}`:`Thu gọn ${label}`;
+  };
+
+  let refreshFrame=0;
+  const refreshAll=()=>{
+    window.cancelAnimationFrame(refreshFrame);
+    refreshFrame=window.requestAnimationFrame(()=>{
+      compactLeaderLabels();
+      refreshPanel(marketPanel,'Thị trường lúc này');
+      refreshPanel(leadersPanel,'Nhóm & cổ phiếu');
     });
-    head.appendChild(button);
+  };
+
+  const prepare=(panel,label)=>{
+    panel.classList.add('vh-overview-compact');
+    panel.dataset.vhExpanded='0';
+    const head=panel.querySelector(':scope > .panel-head');
+    if(!head) return;
+    let button=head.querySelector('.vh-overview-toggle');
+    if(!button){
+      button=document.createElement('button');
+      button.type='button';
+      button.className='vh-overview-toggle';
+      button.hidden=true;
+      head.appendChild(button);
+    }
+    button.addEventListener('click',()=>{
+      panel.dataset.vhExpanded=panel.dataset.vhExpanded==='1'?'0':'1';
+      refreshPanel(panel,label);
+    });
   };
 
   prepare(marketPanel,'Thị trường lúc này');
   prepare(leadersPanel,'Nhóm & cổ phiếu');
+  compactLeaderLabels();
+
+  const contentObserver=new MutationObserver(()=>refreshAll());
+  contentObserver.observe(marketPanel,{childList:true,subtree:true,characterData:true});
+  contentObserver.observe(leadersPanel,{childList:true,subtree:true,characterData:true});
+
+  if('ResizeObserver' in window){
+    const resizeObserver=new ResizeObserver(()=>refreshAll());
+    resizeObserver.observe(marketPanel);
+    resizeObserver.observe(leadersPanel);
+  }else{
+    window.addEventListener('resize',refreshAll,{passive:true});
+  }
+
+  refreshAll();
 }
 
 function applyLiveLayoutCommunity(){
