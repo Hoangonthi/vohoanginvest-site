@@ -24,6 +24,10 @@ function num(v: unknown): number | null {
   const x = Number(v);
   return Number.isFinite(x) ? x : null;
 }
+function price(v: unknown): number | null {
+  const x = num(v);
+  return x !== null && x > 0 ? x : null;
+}
 
 function first(obj: any, keys: string[]) {
   for (const key of keys) {
@@ -45,24 +49,36 @@ function bootstrapPayload(input: any) {
   const idx = vnIndex(ctx) || {};
   const t = input.technical && typeof input.technical === "object" ? { ...input.technical } : {};
 
-  // Narrative V3 treats explicit null numeric fields differently from missing values.
-  // When AFL is temporarily unavailable/stale, promote the VN-Index market-feed snapshot
-  // into the technical shell so the engine never sees a synthetic zero index.
-  const fallback: Record<string, unknown> = {
+  const priceFallback: Record<string, unknown> = {
     value: first(idx, ["value", "close", "last"]),
     reference: first(idx, ["reference", "ref", "prev_close"]),
-    change: first(idx, ["change", "change_point"]),
-    change_pct: first(idx, ["change_pct", "pct"]),
     high: first(idx, ["high", "session_high"]),
     low: first(idx, ["low", "session_low"]),
   };
-  for (const [key, value] of Object.entries(fallback)) {
+  for (const [key, value] of Object.entries(priceFallback)) {
+    const existing = price(t[key]);
+    const fallback = price(value);
+    if (existing === null && fallback !== null) t[key] = fallback;
+    else if (existing === null) delete t[key];
+  }
+
+  const numericFallback: Record<string, unknown> = {
+    change: first(idx, ["change", "change_point"]),
+    change_pct: first(idx, ["change_pct", "pct"]),
+  };
+  for (const [key, value] of Object.entries(numericFallback)) {
     if (num(t[key]) === null && num(value) !== null) t[key] = value;
+  }
+
+  // A level of 0 is not a valid VN-Index price. Remove stale AFL placeholders
+  // so Narrative V3 can fall back safely instead of calculating a fake +1,800 point rebound.
+  for (const key of ["reference","high","low","ma10","ma20","ma50","vwap","support_near","resistance_near","prev_high","prev_low","high20","low20"]) {
+    if (key in t && price(t[key]) === null) delete t[key];
   }
 
   const current = {
     captured_at: input.captured_at || new Date().toISOString(),
-    value: num(first(t, ["value", "close", "last"])),
+    value: price(first(t, ["value", "close", "last"])),
     change: num(first(t, ["change", "change_point"])),
     pct: num(first(t, ["change_pct", "pct"])),
     breadth_balance: num(first(ctx, ["market_intelligence.breadth.balance"])),
@@ -89,8 +105,6 @@ function bootstrapPayload(input: any) {
     ? { ...input.local_memory }
     : {};
 
-  // First 5/15/30 minutes have no historical memory yet. Narrative V3 expects an object,
-  // so use the current point as a neutral baseline until true local memory becomes available.
   for (const key of ["m5", "m15", "m30"]) {
     if (!memory[key]) memory[key] = current;
   }
