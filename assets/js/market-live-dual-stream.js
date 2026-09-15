@@ -26,10 +26,10 @@ function renderAdmin(comment){
   rendering=true;
   panel.dataset.liveStream="admin";
   panel.innerHTML=`
-    <div class="panel-head"><h2>Bình luận mới nhất</h2><span>Võ Hoàng vừa cập nhật</span></div>
+    <div class="panel-head"><h2>Bình luận mới nhất</h2><span>Cập nhật trực tiếp</span></div>
     <article class="latest">
-      <div class="latest-time">${timeText(comment.published_at)} · VÕ HOÀNG</div>
-      <h2>${esc(comment.headline||"Võ Hoàng bình luận trực tiếp")}</h2>
+      <div class="latest-time">${timeText(comment.published_at)} · ĐANG THEO DÕI</div>
+      <h2>${esc(comment.headline||"Cập nhật diễn biến thị trường")}</h2>
       <p class="latest-body">${esc(comment.body||"")}</p>
       ${comment.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(comment.watch_next)}</div>`:""}
     </article>`;
