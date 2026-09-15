@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const TARGET = `${SUPABASE_URL}/functions/v1/market-live-narrative-v3`;
+const TARGET = `${SUPABASE_URL}/functions/v1/market-live-narrative-v4`;
 const ALLOWED = new Set([
   "https://vohoanginvest.com",
   "https://www.vohoanginvest.com",
@@ -152,7 +152,7 @@ Deno.serve(async (req: Request) => {
   } catch (error) {
     return new Response(JSON.stringify({
       ok: false,
-      error: "NARRATIVE_V3_UNAVAILABLE",
+      error: "NARRATIVE_V4_UNAVAILABLE",
       detail: String((error as Error)?.message || error).slice(0, 240),
     }), {
       status: 502,
