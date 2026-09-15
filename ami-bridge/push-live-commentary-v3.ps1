@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Continue'
+﻿$ErrorActionPreference = 'Continue'
 
 # VÕ HOÀNG - LIVE MARKET COMMENTARY BRIDGE V3 / LOCAL WORLD MODEL
 # AFL = kỹ thuật VN-Index. Watch Lists AmiBroker = nhóm/cổ phiếu.
