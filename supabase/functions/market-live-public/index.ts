@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const MIN_STOCK_VOLUME = 200000;
 const ALLOWED_ORIGINS = new Set(["https://vohoanginvest.com","https://www.vohoanginvest.com","https://hoangonthi.github.io"]);
 
 function cors(req:Request){
@@ -22,9 +23,10 @@ function vnTimeText(value:any){if(!value)return"";try{return new Intl.DateTimeFo
 function n(v:unknown){if(v===null||v===undefined||v==="")return null;const x=Number(v);return Number.isFinite(x)?x:null;}
 function price(v:unknown){const x=n(v);return x!==null&&x>0?x:null;}
 function first(obj:any,keys:string[]){for(const key of keys){const v=key.split(".").reduce((a,b)=>a?.[b],obj);if(v!==undefined&&v!==null&&v!=="")return v;}return null;}
-function compactStock(x:any){return{symbol:x?.symbol||x?.code||"",price:price(first(x,["price","close","last"])),change_pct:n(first(x,["change_pct","changePct","pct"]))};}
-function compactSector(row:any){return{key:row?.key||row?.symbol||"",name:row?.name||row?.symbol||"Nhóm ngành",role:row?.role||null,change_pct:n(row?.change_pct),adv:n(row?.adv),flat:n(row?.flat),dec:n(row?.dec),breadth_balance:n(row?.breadth_balance),member_count:n(row?.member_count),valid_count:n(row?.valid_count),coverage:n(row?.coverage),top_gainers:Array.isArray(row?.top_gainers)?row.top_gainers.slice(0,3).map(compactStock):[],top_losers:Array.isArray(row?.top_losers)?row.top_losers.slice(0,3).map(compactStock):[]};}
-function compactWorld(w:any){if(!w)return null;const d=w?.driver||null;return{ball:w?.ball||null,match:{label:w?.match?.label||null,breadth:w?.match?.breadth||null,flow:w?.match?.flow||null},driver:d?{direction:d.direction||null,delta_15m:n(d.delta_15m),confidence:d.confidence||null,confidence_score:n(d.confidence_score),sector:d.sector?compactSector(d.sector):null,players:Array.isArray(d.players)?d.players.slice(0,3).map(compactStock):[]}:null,zones:w?.zones||null,lines:{strongest:Array.isArray(w?.lines?.strongest)?w.lines.strongest.slice(0,4).map(compactSector):[],weakest:Array.isArray(w?.lines?.weakest)?w.lines.weakest.slice(0,4).map(compactSector):[]},technical:w?.technical||null};}
+function compactStock(x:any){return{symbol:x?.symbol||x?.code||"",price:price(first(x,["price","close","last"])),change_pct:n(first(x,["change_pct","changePct","pct"])),volume:n(x?.volume)};}
+function liquidStocks(rows:any[]){return rows.filter((x:any)=>{const v=n(x?.volume);return v!==null&&v>=MIN_STOCK_VOLUME;});}
+function compactSector(row:any){return{key:row?.key||row?.symbol||"",name:row?.name||row?.symbol||"Nhóm ngành",role:row?.role||null,change_pct:n(row?.change_pct),adv:n(row?.adv),flat:n(row?.flat),dec:n(row?.dec),breadth_balance:n(row?.breadth_balance),member_count:n(row?.member_count),valid_count:n(row?.valid_count),coverage:n(row?.coverage),top_gainers:Array.isArray(row?.top_gainers)?liquidStocks(row.top_gainers).slice(0,3).map(compactStock):[],top_losers:Array.isArray(row?.top_losers)?liquidStocks(row.top_losers).slice(0,3).map(compactStock):[]};}
+function compactWorld(w:any){if(!w)return null;const d=w?.driver||null;return{ball:w?.ball||null,match:{label:w?.match?.label||null,breadth:w?.match?.breadth||null,flow:w?.match?.flow||null},driver:d?{direction:d.direction||null,delta_15m:n(d.delta_15m),confidence:d.confidence||null,confidence_score:n(d.confidence_score),sector:d.sector?compactSector(d.sector):null,players:Array.isArray(d.players)?liquidStocks(d.players).slice(0,3).map(compactStock):[]}:null,zones:w?.zones||null,lines:{strongest:Array.isArray(w?.lines?.strongest)?w.lines.strongest.slice(0,4).map(compactSector):[],weakest:Array.isArray(w?.lines?.weakest)?w.lines.weakest.slice(0,4).map(compactSector):[]},technical:w?.technical||null};}
 function compactSnapshot(row:any){
   if(!row)return null;
   const p=row.payload||{},v=p?.market?.vnindex||{},t=p?.technical||{};
@@ -85,7 +87,7 @@ Deno.serve(async(req:Request)=>{
     readJson(`${SUPABASE_URL}/rest/v1/${path}`,{headers:headers()}),
     derivatives()
   ]);
-  const comments=Array.isArray(commentsRaw)?commentsRaw:[];
+  const comments=(Array.isArray(commentsRaw)?commentsRaw:[]).map((c:any)=>({...c,engine_event_id:c.event_id||null,event_id:null}));
 
   return json(req,{
     ok:true,
@@ -96,7 +98,8 @@ Deno.serve(async(req:Request)=>{
     latest_comment_id:comments.length?Math.max(...comments.map((x:any)=>Number(x.id)||0)):after,
     polling_seconds:10,
     storage_mode:"local-first",
-    engine:"narrative-world-v4",
-    note:"AmiBroker giữ raw; cloud giữ current + history thưa + event/comment."
+    engine:"narrative-world-v5-focused",
+    min_stock_comment_volume:MIN_STOCK_VOLUME,
+    note:"Mỗi bình luận ưu tiên một câu chuyện chính; cổ phiếu chỉ được đưa vào bình luận tự động khi khối lượng phiên đạt từ 200.000 cp."
   });
 });
