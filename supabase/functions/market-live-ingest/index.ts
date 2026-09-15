@@ -38,6 +38,33 @@ function bootstrapPayload(input:any){
   const memory=input.local_memory&&typeof input.local_memory==="object"?{...input.local_memory}:{};for(const key of ["m5","m15","m30"]){const point=memory[key];if(!point||price(point?.value)===null)memory[key]=null;}
   return{...input,technical:t,local_memory:memory,ingest_bootstrap:true};
 }
+
+function memoryPointFromSnapshot(row:any){
+  const p=row?.payload||{},v=p?.market?.vnindex||{};
+  const value=price(v?.value);if(value===null)return null;
+  const sectors=Array.isArray(p?.market?.sectors)?p.market.sectors.map((s:any)=>({key:s?.key,name:s?.name,change_pct:num(s?.change_pct),breadth_balance:num(s?.breadth_balance)})):[];
+  return{captured_at:row?.captured_at,value,change:num(v?.change),pct:num(v?.change_pct),breadth_balance:num(v?.breadth_balance),sectors};
+}
+async function hydrateCloudMemory(input:any){
+  const memory=input?.local_memory&&typeof input.local_memory==="object"?{...input.local_memory}:{};
+  const needed=[5,15,30].filter(m=>price(memory[`m${m}`]?.value)===null);
+  if(!needed.length)return input;
+  const capturedAt=typeof input?.captured_at==="string"&&!Number.isNaN(new Date(input.captured_at).getTime())?new Date(input.captured_at).toISOString():new Date().toISOString();
+  const marketDate=vnDate(capturedAt);
+  try{
+    const url=`${SUPABASE_URL}/rest/v1/market_live_snapshots?market_date=eq.${marketDate}&select=captured_at,payload&order=captured_at.desc&limit=50`;
+    const r=await fetch(url,{headers:sh()});if(!r.ok)return input;
+    const rows=await r.json();if(!Array.isArray(rows))return input;
+    const nowMs=new Date(capturedAt).getTime();
+    for(const m of needed){
+      const target=nowMs-m*60000;let best:any=null,diff=Infinity;
+      for(const row of rows){const t=new Date(row?.captured_at||0).getTime();const d=Math.abs(t-target);if(Number.isFinite(t)&&d<diff&&d<=180000){best=row;diff=d;}}
+      const point=memoryPointFromSnapshot(best);if(point)memory[`m${m}`]=point;
+    }
+  }catch{}
+  return{...input,local_memory:memory,cloud_memory_hydrated:true};
+}
+
 function fallbackNormalized(input:any,capturedAt:string){
   const ctx=input?.market_context||{},idx=idxOf(ctx),mi=ctx?.market_intelligence||{},t=input?.technical||{};
   const value=price(first(t,["value","last","close"]))??price(first(idx,["value","close","last"]));
@@ -62,14 +89,14 @@ async function fallbackStore(input:any,upstreamStatus:number,upstreamText:string
   const currentResp=await fetch(`${SUPABASE_URL}/rest/v1/market_live_current?on_conflict=id`,{method:"POST",headers:sh({"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify({id:"vietnam",market_date:marketDate,captured_at:capturedAt,source_updated_at:sourceUpdatedAt,source,payload,updated_at:new Date().toISOString()})});
   let historyStored=false;try{const r=await fetch(`${SUPABASE_URL}/rest/v1/market_live_snapshots?market_date=eq.${marketDate}&select=captured_at&order=captured_at.desc&limit=1`,{headers:sh()});const rows=r.ok?await r.json():[];const last=Array.isArray(rows)&&rows[0]?.captured_at?new Date(rows[0].captured_at).getTime():0;if(!last||new Date(capturedAt).getTime()-last>=55000){const ins=await fetch(`${SUPABASE_URL}/rest/v1/market_live_snapshots`,{method:"POST",headers:sh({"Content-Type":"application/json","Prefer":"return=minimal"}),body:JSON.stringify({market_date:marketDate,captured_at:capturedAt,source_updated_at:sourceUpdatedAt,source,payload})});historyStored=ins.ok;}}catch{}
   try{await fetch(`${SUPABASE_URL}/rest/v1/market_live_commentary_state?on_conflict=market_date%2Cstate_key`,{method:"POST",headers:sh({"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify({market_date:marketDate,state_key:"ingest_last_upstream_error",value:{status:upstreamStatus,detail:upstreamText.slice(0,1200),captured_at:capturedAt},updated_at:new Date().toISOString()})});}catch{}
-  return{ok:currentResp.ok,engine:"market-live-ingest-fallback-v9",current_stored:currentResp.ok,history_stored:historyStored,history_mode:"fallback-about-1-minute",watchlist_sector_count:payload.watchlist_sectors.length,published_comment:null,event:null,fallback:true,upstream_status:upstreamStatus};
+  return{ok:currentResp.ok,engine:"market-live-ingest-fallback-v10",current_stored:currentResp.ok,history_stored:historyStored,history_mode:"fallback-about-1-minute",watchlist_sector_count:payload.watchlist_sectors.length,published_comment:null,event:null,fallback:true,upstream_status:upstreamStatus};
 }
 
 Deno.serve(async (req: Request) => {
   if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(req)});
   if(req.method!=="POST")return j(req,{ok:false,error:"METHOD_NOT_ALLOWED"},405);
   if(!BRIDGE_KEY||req.headers.get("x-bridge-key")!==BRIDGE_KEY)return j(req,{ok:false,error:"UNAUTHORIZED"},401);
-  let input:any;try{input=bootstrapPayload(await req.json());}catch{return j(req,{ok:false,error:"INVALID_JSON"},400);}
+  let input:any;try{input=bootstrapPayload(await req.json());input=await hydrateCloudMemory(input);}catch{return j(req,{ok:false,error:"INVALID_JSON"},400);}
   const headers:Record<string,string>={"Content-Type":"application/json; charset=utf-8","x-bridge-key":req.headers.get("x-bridge-key")||""};
   try{
     const upstream=await fetch(TARGET,{method:"POST",headers,body:JSON.stringify(input)});const text=await upstream.text();
