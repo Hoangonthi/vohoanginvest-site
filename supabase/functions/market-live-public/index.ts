@@ -17,6 +17,8 @@ function cors(req:Request){
 function json(req:Request,body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:{...cors(req),"Content-Type":"application/json; charset=utf-8"}});}
 function headers(extra:Record<string,string>={}){return{apikey:SERVICE_ROLE_KEY,Authorization:`Bearer ${SERVICE_ROLE_KEY}`,...extra};}
 function vnDate(value:string|Date){const d=value instanceof Date?value:new Date(value);const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);const get=(t:string)=>p.find(x=>x.type===t)?.value||"";return`${get("year")}-${get("month")}-${get("day")}`;}
+function vnMinute(value:string|Date=new Date()){const d=value instanceof Date?value:new Date(value);const p=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(d);const get=(t:string)=>Number(p.find(x=>x.type===t)?.value||0);return get("hour")*60+get("minute");}
+function vnTimeText(value:any){if(!value)return"";try{return new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(value));}catch{return"";}}
 function n(v:unknown){if(v===null||v===undefined||v==="")return null;const x=Number(v);return Number.isFinite(x)?x:null;}
 function price(v:unknown){const x=n(v);return x!==null&&x>0?x:null;}
 function first(obj:any,keys:string[]){for(const key of keys){const v=key.split(".").reduce((a,b)=>a?.[b],obj);if(v!==undefined&&v!==null&&v!=="")return v;}return null;}
@@ -53,11 +55,16 @@ async function readJson(url:string,init?:RequestInit){try{const r=await fetch(ur
 async function derivatives(){
   const data=await readJson(`${SUPABASE_URL}/rest/v1/rpc/derivatives_public_v1`,{method:"POST",headers:headers({"Content-Type":"application/json"}),body:"{}"});
   if(!data)return null;
-  const age=n(data.age_seconds);
-  if(data.fresh!==true&&(age===null||age>45))return null;
+  const age=n(data.age_seconds),m=vnMinute(),lunchBreak=m>=690&&m<780;
+  const maxAge=lunchBreak?5700:45;
+  if(age===null||age>maxAge)return null;
   const raw=String(data.trend||"").toUpperCase();
   const direction=raw.includes("TĂNG")||raw==="TANG"?"TANG":raw.includes("GIẢM")||raw==="GIAM"?"GIAM":null;
-  return direction?{symbol:data.symbol||null,direction,label:direction==="TANG"?"Nghiêng tăng":"Nghiêng giảm",last_price:price(data.last_price),system_price:price(data.system_price),reversal_price:price(data.reversal_price),source_updated_at:data.source_updated_at||null,age_seconds:age,fresh:age!==null&&age<=45}:null;
+  if(!direction)return null;
+  const baseLabel=direction==="TANG"?"Nghiêng tăng":"Nghiêng giảm";
+  const stale=data.fresh!==true||age>45;
+  const stamp=vnTimeText(data.source_updated_at||data.received_at);
+  return {symbol:data.symbol||null,direction,label:stale&&lunchBreak&&stamp?`${baseLabel} · chốt ${stamp}`:baseLabel,last_price:price(data.last_price),system_price:price(data.system_price),reversal_price:price(data.reversal_price),source_updated_at:data.source_updated_at||null,age_seconds:age,fresh:!stale,session_pause:stale&&lunchBreak};
 }
 
 Deno.serve(async(req:Request)=>{
@@ -89,7 +96,7 @@ Deno.serve(async(req:Request)=>{
     latest_comment_id:comments.length?Math.max(...comments.map((x:any)=>Number(x.id)||0)):after,
     polling_seconds:10,
     storage_mode:"local-first",
-    engine:"narrative-world-v3",
+    engine:"narrative-world-v4",
     note:"AmiBroker giữ raw; cloud giữ current + history thưa + event/comment."
   });
 });
