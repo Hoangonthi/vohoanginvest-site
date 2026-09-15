@@ -70,9 +70,34 @@ function applyMarketLiveLink(){
   }
 }
 
+function applyNewsAutoRefresh(){
+  const page=(window.location.pathname.split("/").pop()||"").toLowerCase();
+  if(page!=="tin-tuc-24h.html") return;
+  if(window.__vhNewsAutoRefreshStarted) return;
+
+  const refresh=document.getElementById("refresh");
+  if(!refresh) return;
+
+  window.__vhNewsAutoRefreshStarted=true;
+  const intervalMs=60_000;
+  refresh.textContent="↻ Cập nhật · tự động 60s";
+  refresh.title="Trang tự kiểm tra tin mới mỗi 60 giây. Bạn vẫn có thể bấm để cập nhật ngay.";
+
+  const refreshIfVisible=()=>{
+    if(document.visibilityState!=="visible") return;
+    refresh.click();
+  };
+
+  window.setInterval(refreshIfVisible,intervalMs);
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible") refreshIfVisible();
+  });
+}
+
 function applyPageEnhancements(){
   applyAboutHeroCopy();
   applyMarketLiveLink();
+  applyNewsAutoRefresh();
 }
 
 if(document.readyState==="loading"){
