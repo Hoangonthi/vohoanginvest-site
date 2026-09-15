@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vohoanginvest.com/schemas/commentary-market-packet-v1.schema.json",
+  "title": "CommentaryMarketPacketV1",
+  "description": "Phase 1A design-only schema. Not connected to production.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "meta",
+    "session",
+    "indexes",
+    "breadth",
+    "liquidity",
+    "sectors",
+    "stocks",
+    "technical",
+    "derivatives",
+    "contributions",
+    "context",
+    "freshness",
+    "provenance"
+  ],
+  "properties": {
+    "contract_version": { "const": "1.0" },
+    "meta": { "$ref": "#/$defs/meta" },
+    "session": { "$ref": "#/$defs/session" },
+    "indexes": { "$ref": "#/$defs/indexes" },
+    "breadth": { "$ref": "#/$defs/breadth" },
+    "liquidity": { "$ref": "#/$defs/liquidity" },
+    "sectors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sector" }
+    },
+    "stocks": { "$ref": "#/$defs/stocks" },
+    "technical": { "$ref": "#/$defs/technical" },
+    "derivatives": { "$ref": "#/$defs/derivatives" },
+    "contributions": { "$ref": "#/$defs/contributions" },
+    "context": { "$ref": "#/$defs/context" },
+    "freshness": { "$ref": "#/$defs/freshnessSummary" },
+    "provenance": { "$ref": "#/$defs/provenanceSummary" }
+  },
+  "$defs": {
+    "quality": {
+      "type": "string",
+      "enum": ["EXACT", "DERIVED_EXACT", "APPROXIMATE", "UNAVAILABLE"]
+    },
+    "freshnessStatus": {
+      "type": "string",
+      "enum": ["FRESH", "AGING", "STALE", "INVALID", "CLOSED_SNAPSHOT"]
+    },
+    "sourceId": {
+      "type": "string",
+      "enum": [
+        "AMI_AFL",
+        "AMI_LOCAL_STOCK",
+        "AMI_WATCHLIST",
+        "MARKET_REALTIME",
+        "MARKET_LIVE_SNAPSHOT",
+        "MARKET_LIVE_CURRENT",
+        "DERIVATIVES_LOCAL",
+        "HOT_STOCKS_AMI",
+        "CALCULATED",
+        "REPLAY_FRAME",
+        "GLOBAL_CONTEXT",
+        "MACRO_CONTEXT",
+        "NEWS_CONTEXT",
+        "FX_CONTEXT",
+        "COMMODITY_CONTEXT",
+        "UNKNOWN"
+      ]
+    },
+    "valueProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "source_path",
+        "source_timestamp",
+        "received_at",
+        "freshness_seconds",
+        "freshness_status",
+        "quality",
+        "derived_from"
+      ],
+      "properties": {
+        "source": { "$ref": "#/$defs/sourceId" },
+        "source_path": { "type": ["string", "null"] },
+        "source_timestamp": { "type": ["string", "null"], "format": "date-time" },
+        "received_at": { "type": ["string", "null"], "format": "date-time" },
+        "freshness_seconds": { "type": ["number", "null"], "minimum": 0 },
+        "freshness_status": { "$ref": "#/$defs/freshnessStatus" },
+        "quality": { "$ref": "#/$defs/quality" },
+        "derived_from": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "metricNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "provenance"],
+      "properties": {
+        "value": { "type": ["number", "null"] },
+        "provenance": { "$ref": "#/$defs/valueProvenance" }
+      }
+    },
+    "metricInteger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "provenance"],
+      "properties": {
+        "value": { "type": ["integer", "null"] },
+        "provenance": { "$ref": "#/$defs/valueProvenance" }
+      }
+    },
+    "metricString": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "provenance"],
+      "properties": {
+        "value": { "type": ["string", "null"] },
+        "provenance": { "$ref": "#/$defs/valueProvenance" }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packet_id", "contract_version", "mode", "market", "session_date", "as_of", "generated_at", "source_frame_id", "replay_run_id"],
+      "properties": {
+        "packet_id": { "type": "string", "minLength": 1 },
+        "contract_version": { "const": "1.0" },
+        "mode": { "type": "string", "enum": ["REALTIME", "REPLAY"] },
+        "market": { "const": "VN" },
+        "session_date": { "type": "string", "format": "date" },
+        "as_of": { "type": "string", "format": "date-time" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "source_frame_id": { "type": ["string", "null"] },
+        "replay_run_id": { "type": ["string", "null"] }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "is_vietnam_market_open", "vietnam_market_status", "close_snapshot_locked"],
+      "properties": {
+        "phase": {
+          "type": "string",
+          "enum": [
+            "PRE_MARKET",
+            "OPENING",
+            "EARLY_CONFIRMATION",
+            "MORNING_STRUCTURE",
+            "MORNING_LATE",
+            "MORNING_CLOSE",
+            "LUNCH_ANALYSIS",
+            "AFTERNOON_PREVIEW",
+            "AFTERNOON_REOPEN",
+            "AFTERNOON_MAIN",
+            "DECISION_PHASE",
+            "ATC_PHASE",
+            "MARKET_CLOSE",
+            "FLASH_RECAP",
+            "POST_MARKET",
+            "AFTER_HOURS"
+          ]
+        },
+        "is_vietnam_market_open": { "type": "boolean" },
+        "vietnam_market_status": { "type": "string", "enum": ["OPEN", "LUNCH", "CLOSED"] },
+        "close_snapshot_locked": { "type": "boolean" }
+      }
+    },
+    "indexBreadth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["advance", "decline", "unchanged"],
+      "properties": {
+        "advance": { "$ref": "#/$defs/metricInteger" },
+        "decline": { "$ref": "#/$defs/metricInteger" },
+        "unchanged": { "$ref": "#/$defs/metricInteger" }
+      }
+    },
+    "indexState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["last", "change", "change_pct", "volume", "value_b", "breadth"],
+      "properties": {
+        "last": { "$ref": "#/$defs/metricNumber" },
+        "change": { "$ref": "#/$defs/metricNumber" },
+        "change_pct": { "$ref": "#/$defs/metricNumber" },
+        "volume": { "$ref": "#/$defs/metricNumber" },
+        "value_b": { "$ref": "#/$defs/metricNumber" },
+        "breadth": { "$ref": "#/$defs/indexBreadth" }
+      }
+    },
+    "vnindexState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "last",
+        "reference",
+        "open",
+        "high",
+        "low",
+        "change",
+        "change_pct",
+        "delta_1m",
+        "delta_5m",
+        "delta_15m",
+        "delta_30m",
+        "rebound_from_low",
+        "drop_from_high",
+        "previous_high",
+        "previous_low",
+        "time_of_high",
+        "time_of_low"
+      ],
+      "properties": {
+        "last": { "$ref": "#/$defs/metricNumber" },
+        "reference": { "$ref": "#/$defs/metricNumber" },
+        "open": { "$ref": "#/$defs/metricNumber" },
+        "high": { "$ref": "#/$defs/metricNumber" },
+        "low": { "$ref": "#/$defs/metricNumber" },
+        "change": { "$ref": "#/$defs/metricNumber" },
+        "change_pct": { "$ref": "#/$defs/metricNumber" },
+        "delta_1m": { "$ref": "#/$defs/metricNumber" },
+        "delta_5m": { "$ref": "#/$defs/metricNumber" },
+        "delta_15m": { "$ref": "#/$defs/metricNumber" },
+        "delta_30m": { "$ref": "#/$defs/metricNumber" },
+        "rebound_from_low": { "$ref": "#/$defs/metricNumber" },
+        "drop_from_high": { "$ref": "#/$defs/metricNumber" },
+        "previous_high": { "$ref": "#/$defs/metricNumber" },
+        "previous_low": { "$ref": "#/$defs/metricNumber" },
+        "time_of_high": { "$ref": "#/$defs/metricString" },
+        "time_of_low": { "$ref": "#/$defs/metricString" }
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vnindex", "vn30", "hnx", "upcom"],
+      "properties": {
+        "vnindex": { "$ref": "#/$defs/vnindexState" },
+        "vn30": { "$ref": "#/$defs/indexState" },
+        "hnx": { "$ref": "#/$defs/indexState" },
+        "upcom": { "$ref": "#/$defs/indexState" }
+      }
+    },
+    "breadth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "advance",
+        "decline",
+        "unchanged",
+        "total",
+        "balance",
+        "delta_5m",
+        "delta_15m",
+        "ceiling_count",
+        "floor_count",
+        "above_ma10_pct",
+        "above_ma20_pct",
+        "above_ma50_pct",
+        "above_ma100_pct",
+        "above_ma200_pct",
+        "new_intraday_highs",
+        "new_intraday_lows",
+        "new20d_highs",
+        "new20d_lows"
+      ],
+      "properties": {
+        "advance": { "$ref": "#/$defs/metricInteger" },
+        "decline": { "$ref": "#/$defs/metricInteger" },
+        "unchanged": { "$ref": "#/$defs/metricInteger" },
+        "total": { "$ref": "#/$defs/metricInteger" },
+        "balance": { "$ref": "#/$defs/metricNumber" },
+        "delta_5m": { "$ref": "#/$defs/metricNumber" },
+        "delta_15m": { "$ref": "#/$defs/metricNumber" },
+        "ceiling_count": { "$ref": "#/$defs/metricInteger" },
+        "floor_count": { "$ref": "#/$defs/metricInteger" },
+        "above_ma10_pct": { "$ref": "#/$defs/metricNumber" },
+        "above_ma20_pct": { "$ref": "#/$defs/metricNumber" },
+        "above_ma50_pct": { "$ref": "#/$defs/metricNumber" },
+        "above_ma100_pct": { "$ref": "#/$defs/metricNumber" },
+        "above_ma200_pct": { "$ref": "#/$defs/metricNumber" },
+        "new_intraday_highs": { "$ref": "#/$defs/metricInteger" },
+        "new_intraday_lows": { "$ref": "#/$defs/metricInteger" },
+        "new20d_highs": { "$ref": "#/$defs/metricInteger" },
+        "new20d_lows": { "$ref": "#/$defs/metricInteger" }
+      }
+    },
+    "historyCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["days_available", "current_session_from", "is_complete_from_open"],
+      "properties": {
+        "days_available": { "type": "integer", "minimum": 0 },
+        "current_session_from": { "type": ["string", "null"], "format": "date-time" },
+        "is_complete_from_open": { "type": "boolean" }
+      }
+    },
+    "liquidity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_volume",
+        "total_value_b",
+        "volume_5m",
+        "volume_15m",
+        "volume_30m",
+        "value_5m_b",
+        "value_15m_b",
+        "value_30m_b",
+        "pace_ratio_15m",
+        "same_time_ratio_5d",
+        "same_time_ratio_20d",
+        "acceleration_state",
+        "history_coverage"
+      ],
+      "properties": {
+        "total_volume": { "$ref": "#/$defs/metricNumber" },
+        "total_value_b": { "$ref": "#/$defs/metricNumber" },
+        "volume_5m": { "$ref": "#/$defs/metricNumber" },
+        "volume_15m": { "$ref": "#/$defs/metricNumber" },
+        "volume_30m": { "$ref": "#/$defs/metricNumber" },
+        "value_5m_b": { "$ref": "#/$defs/metricNumber" },
+        "value_15m_b": { "$ref": "#/$defs/metricNumber" },
+        "value_30m_b": { "$ref": "#/$defs/metricNumber" },
+        "pace_ratio_15m": { "$ref": "#/$defs/metricNumber" },
+        "same_time_ratio_5d": { "$ref": "#/$defs/metricNumber" },
+        "same_time_ratio_20d": { "$ref": "#/$defs/metricNumber" },
+        "acceleration_state": { "type": "string", "enum": ["ACCELERATING", "STABLE", "SLOWING", "UNKNOWN"] },
+        "history_coverage": { "$ref": "#/$defs/historyCoverage" }
+      }
+    },
+    "stockLite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["symbol", "last", "change", "change_pct", "volume", "reference", "ceiling", "floor", "open", "high", "low", "value_b", "reasons"],
+      "properties": {
+        "symbol": { "type": "string", "minLength": 1 },
+        "last": { "$ref": "#/$defs/metricNumber" },
+        "change": { "$ref": "#/$defs/metricNumber" },
+        "change_pct": { "$ref": "#/$defs/metricNumber" },
+        "volume": { "$ref": "#/$defs/metricNumber" },
+        "reference": { "$ref": "#/$defs/metricNumber" },
+        "ceiling": { "$ref": "#/$defs/metricNumber" },
+        "floor": { "$ref": "#/$defs/metricNumber" },
+        "open": { "$ref": "#/$defs/metricNumber" },
+        "high": { "$ref": "#/$defs/metricNumber" },
+        "low": { "$ref": "#/$defs/metricNumber" },
+        "value_b": { "$ref": "#/$defs/metricNumber" },
+        "reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "sector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "name",
+        "member_count",
+        "valid_count",
+        "coverage",
+        "change_pct",
+        "advance",
+        "decline",
+        "unchanged",
+        "breadth_balance",
+        "relative_to_vnindex_pct",
+        "rank",
+        "rank_change_5m",
+        "rank_change_15m",
+        "top_gainers",
+        "top_losers",
+        "volume",
+        "value_b",
+        "ceiling_count",
+        "floor_count"
+      ],
+      "properties": {
+        "key": { "type": "string" },
+        "name": { "type": "string" },
+        "member_count": { "$ref": "#/$defs/metricInteger" },
+        "valid_count": { "$ref": "#/$defs/metricInteger" },
+        "coverage": { "$ref": "#/$defs/metricNumber" },
+        "change_pct": { "$ref": "#/$defs/metricNumber" },
+        "advance": { "$ref": "#/$defs/metricInteger" },
+        "decline": { "$ref": "#/$defs/metricInteger" },
+        "unchanged": { "$ref": "#/$defs/metricInteger" },
+        "breadth_balance": { "$ref": "#/$defs/metricNumber" },
+        "relative_to_vnindex_pct": { "$ref": "#/$defs/metricNumber" },
+        "rank": { "$ref": "#/$defs/metricInteger" },
+        "rank_change_5m": { "$ref": "#/$defs/metricInteger" },
+        "rank_change_15m": { "$ref": "#/$defs/metricInteger" },
+        "top_gainers": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 5 },
+        "top_losers": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 5 },
+        "volume": { "$ref": "#/$defs/metricNumber" },
+        "value_b": { "$ref": "#/$defs/metricNumber" },
+        "ceiling_count": { "$ref": "#/$defs/metricInteger" },
+        "floor_count": { "$ref": "#/$defs/metricInteger" }
+      }
+    },
+    "stocks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leaders", "laggards", "top_liquidity", "unusual_movers", "story_symbols", "raw_universe_ref"],
+      "properties": {
+        "leaders": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 20 },
+        "laggards": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 20 },
+        "top_liquidity": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 20 },
+        "unusual_movers": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 20 },
+        "story_symbols": { "type": "array", "items": { "$ref": "#/$defs/stockLite" }, "maxItems": 30 },
+        "raw_universe_ref": { "type": ["string", "null"] }
+      }
+    },
+    "technical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ma10",
+        "ma20",
+        "ma50",
+        "ma100",
+        "ma200",
+        "vwap",
+        "rsi14",
+        "macd",
+        "macd_signal",
+        "support_near",
+        "resistance_near",
+        "distance_to_support_pct",
+        "distance_to_resistance_pct",
+        "previous_high",
+        "previous_low",
+        "high20",
+        "low20",
+        "high50",
+        "low50",
+        "high52w",
+        "low52w"
+      ],
+      "properties": {
+        "ma10": { "$ref": "#/$defs/metricNumber" },
+        "ma20": { "$ref": "#/$defs/metricNumber" },
+        "ma50": { "$ref": "#/$defs/metricNumber" },
+        "ma100": { "$ref": "#/$defs/metricNumber" },
+        "ma200": { "$ref": "#/$defs/metricNumber" },
+        "vwap": { "$ref": "#/$defs/metricNumber" },
+        "rsi14": { "$ref": "#/$defs/metricNumber" },
+        "macd": { "$ref": "#/$defs/metricNumber" },
+        "macd_signal": { "$ref": "#/$defs/metricNumber" },
+        "support_near": { "$ref": "#/$defs/metricNumber" },
+        "resistance_near": { "$ref": "#/$defs/metricNumber" },
+        "distance_to_support_pct": { "$ref": "#/$defs/metricNumber" },
+        "distance_to_resistance_pct": { "$ref": "#/$defs/metricNumber" },
+        "previous_high": { "$ref": "#/$defs/metricNumber" },
+        "previous_low": { "$ref": "#/$defs/metricNumber" },
+        "high20": { "$ref": "#/$defs/metricNumber" },
+        "low20": { "$ref": "#/$defs/metricNumber" },
+        "high50": { "$ref": "#/$defs/metricNumber" },
+        "low50": { "$ref": "#/$defs/metricNumber" },
+        "high52w": { "$ref": "#/$defs/metricNumber" },
+        "low52w": { "$ref": "#/$defs/metricNumber" }
+      }
+    },
+    "derivativeTargets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t1", "t2", "t3"],
+      "properties": {
+        "t1": { "$ref": "#/$defs/metricNumber" },
+        "t2": { "$ref": "#/$defs/metricNumber" },
+        "t3": { "$ref": "#/$defs/metricNumber" }
+      }
+    },
+    "derivativePrimary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["symbol", "last", "trend", "system_price", "reversal_price", "targets", "basis", "premium_discount_pct", "volume", "open_interest"],
+      "properties": {
+        "symbol": { "type": ["string", "null"] },
+        "last": { "$ref": "#/$defs/metricNumber" },
+        "trend": { "$ref": "#/$defs/metricString" },
+        "system_price": { "$ref": "#/$defs/metricNumber" },
+        "reversal_price": { "$ref": "#/$defs/metricNumber" },
+        "targets": { "$ref": "#/$defs/derivativeTargets" },
+        "basis": { "$ref": "#/$defs/metricNumber" },
+        "premium_discount_pct": { "$ref": "#/$defs/metricNumber" },
+        "volume": { "$ref": "#/$defs/metricNumber" },
+        "open_interest": { "$ref": "#/$defs/metricNumber" }
+      }
+    },
+    "derivatives": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary"],
+      "properties": {
+        "primary": { "$ref": "#/$defs/derivativePrimary" }
+      }
+    },
+    "contributionItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["symbol", "points", "quality", "provenance"],
+      "properties": {
+        "symbol": { "type": "string" },
+        "points": { "type": ["number", "null"] },
+        "quality": { "$ref": "#/$defs/quality" },
+        "provenance": { "$ref": "#/$defs/valueProvenance" }
+      }
+    },
+    "contributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exact_available", "positive", "negative", "qualitative_drivers"],
+      "properties": {
+        "exact_available": { "type": "boolean" },
+        "positive": { "type": "array", "items": { "$ref": "#/$defs/contributionItem" } },
+        "negative": { "type": "array", "items": { "$ref": "#/$defs/contributionItem" } },
+        "qualitative_drivers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "contextItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "value", "provenance"],
+      "properties": {
+        "key": { "type": "string" },
+        "value": {},
+        "provenance": { "$ref": "#/$defs/valueProvenance" }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["valuation", "global", "macro", "news", "commodities", "fx", "rates"],
+      "properties": {
+        "valuation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pe", "pb"],
+          "properties": {
+            "pe": { "$ref": "#/$defs/metricNumber" },
+            "pb": { "$ref": "#/$defs/metricNumber" }
+          }
+        },
+        "global": { "type": "array", "items": { "$ref": "#/$defs/contextItem" } },
+        "macro": { "type": "array", "items": { "$ref": "#/$defs/contextItem" } },
+        "news": { "type": "array", "items": { "$ref": "#/$defs/contextItem" } },
+        "commodities": { "type": "array", "items": { "$ref": "#/$defs/contextItem" } },
+        "fx": { "type": "array", "items": { "$ref": "#/$defs/contextItem" } },
+        "rates": { "type": "array", "items": { "$ref": "#/$defs/contextItem" } }
+      }
+    },
+    "freshnessSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "technical", "sectors", "stocks", "derivatives", "context"],
+      "properties": {
+        "index": { "$ref": "#/$defs/freshnessStatus" },
+        "technical": { "$ref": "#/$defs/freshnessStatus" },
+        "sectors": { "$ref": "#/$defs/freshnessStatus" },
+        "stocks": { "$ref": "#/$defs/freshnessStatus" },
+        "derivatives": { "$ref": "#/$defs/freshnessStatus" },
+        "context": { "$ref": "#/$defs/freshnessStatus" }
+      }
+    },
+    "provenanceSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ids", "warnings"],
+      "properties": {
+        "source_ids": { "type": "array", "items": { "$ref": "#/$defs/sourceId" }, "uniqueItems": true },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
