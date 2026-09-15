@@ -1,0 +1,3 @@
+import { derivedMetric, unavailable } from '../quality/provenance.mjs';
+function balance(frame){const p=frame?.payload||{};return p?.market?.breadth?.balance ?? p?.market?.vnindex?.breadth_balance ?? null;}
+export function deriveBreadthDeltas(current,history){const now=balance(current);const make=(seconds,tol,key)=>{const prev=history.getNearestAtOrBefore(current.timestamp,seconds,tol);const pv=balance(prev);return(now!=null&&pv!=null)?derivedMetric(Number(now)-Number(pv),{source_path:`breadth.${key}`,as_of:current.timestamp,derived_from:[`frame:${current.source_id}:breadth.balance`,`frame:${prev.source_id}:breadth.balance`]}):unavailable(`breadth.${key}`,'CALCULATED');};return{delta_5m:make(300,90,'delta_5m'),delta_15m:make(900,120,'delta_15m')};}
