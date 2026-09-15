@@ -70,43 +70,20 @@ function bootstrapPayload(input: any) {
     if (num(t[key]) === null && num(value) !== null) t[key] = value;
   }
 
-  // A level of 0 is not a valid VN-Index price. Remove stale AFL placeholders
-  // so Narrative V3 can fall back safely instead of calculating a fake +1,800 point rebound.
   for (const key of ["reference","high","low","ma10","ma20","ma50","vwap","support_near","resistance_near","prev_high","prev_low","high20","low20"]) {
     if (key in t && price(t[key]) === null) delete t[key];
-  }
-
-  const current = {
-    captured_at: input.captured_at || new Date().toISOString(),
-    value: price(first(t, ["value", "close", "last"])),
-    change: num(first(t, ["change", "change_point"])),
-    pct: num(first(t, ["change_pct", "pct"])),
-    breadth_balance: num(first(ctx, ["market_intelligence.breadth.balance"])),
-    sectors: Array.isArray(input.sector_watchlists)
-      ? input.sector_watchlists.map((s: any) => ({
-          key: s?.key ?? null,
-          name: s?.name ?? null,
-          change_pct: num(s?.change_pct),
-          breadth_balance: num(s?.breadth_balance),
-        }))
-      : [],
-  };
-
-  if (current.breadth_balance === null) {
-    const adv = num(first(idx, ["adv"]));
-    const flat = num(first(idx, ["flat"]));
-    const dec = num(first(idx, ["dec"]));
-    if (adv !== null && flat !== null && dec !== null && adv + flat + dec > 0) {
-      current.breadth_balance = (adv - dec) / (adv + flat + dec);
-    }
   }
 
   const memory = input.local_memory && typeof input.local_memory === "object"
     ? { ...input.local_memory }
     : {};
 
+  // Không được giả m5/m15/m30 bằng snapshot hiện tại. Khi local chưa có đủ ký ức
+  // hoặc điểm ký ức không có giá VN-Index, để null để Narrative V3/V4 rơi về
+  // market_live_snapshots trên cloud. Nếu gán current vào quá khứ, delta sẽ luôn 0.
   for (const key of ["m5", "m15", "m30"]) {
-    if (!memory[key]) memory[key] = current;
+    const point = memory[key];
+    if (!point || price(point?.value) === null) memory[key] = null;
   }
 
   return {
