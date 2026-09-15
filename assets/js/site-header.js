@@ -94,10 +94,19 @@ function applyNewsAutoRefresh(){
   });
 }
 
+function applyLiveDualStream(){
+  const page=(window.location.pathname.split("/").pop()||"").toLowerCase();
+  if(page!=="binh-luan-thi-truong-truc-tiep.html") return;
+  if(window.__vhLiveDualStreamLoaded) return;
+  window.__vhLiveDualStreamLoaded=true;
+  import("./market-live-dual-stream.js?v=20260915-1").catch(()=>{});
+}
+
 function applyPageEnhancements(){
   applyAboutHeroCopy();
   applyMarketLiveLink();
   applyNewsAutoRefresh();
+  applyLiveDualStream();
 }
 
 if(document.readyState==="loading"){
