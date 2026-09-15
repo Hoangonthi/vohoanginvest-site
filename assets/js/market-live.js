@@ -8,12 +8,11 @@ let latestSnapshot = null;
 let previousSnapshot = null;
 let derivativeState = null;
 let previousDerivative = null;
-let editorialContext = null;
 let isAdmin = false;
 let pollCount = 0;
 
 const $ = (id) => document.getElementById(id);
-const esc = (value = "") => String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+const esc = (value = "") => String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
 const num = (v) => { if(v===null||v===undefined||v==="")return null; const x=Number(v); return Number.isFinite(x)?x:null; };
 const fmt = (v,d=2) => { const x=num(v); return x===null?"—":new Intl.NumberFormat("vi-VN",{minimumFractionDigits:d,maximumFractionDigits:d}).format(x); };
 const signed = (v,d=2) => { const x=num(v); return x===null?"—":`${x>0?"+":""}${fmt(x,d)}`; };
@@ -130,7 +129,6 @@ function currentPulse(snapshot){
     }
     bits.push(`${derLine}; đây là lớp tham chiếu thêm, không dùng để quy kết nguyên nhân cho cơ sở.`);
   }
-  if(editorialContext?.text)bits.push(`Góc nhìn bổ sung từ Võ Hoàng: ${editorialContext.text}`);
 
   let watch="Nhìn tiếp sự thay đổi của độ rộng, nhóm dẫn và nhóm yếu; nếu cả ba cùng cải thiện thì nhịp tăng sẽ có chất lượng hơn.";
   const above=w?.zones?.nearest_above,below=w?.zones?.nearest_below;
@@ -149,6 +147,8 @@ function evidenceHtml(comment){
   const e=comment?.evidence||{},w=e.world_model||{},v=w.ball||e.vnindex||{},d=w.driver||{},out=e.outside_context||{};
   const driver=d?.sector?.name||"",players=Array.isArray(d?.players)?d.players.map(x=>x?.symbol).filter(Boolean).slice(0,3).join(", "):"";
   const der=out?.derivatives?.trend==="TANG"?"Nghiêng tăng":out?.derivatives?.trend==="GIAM"?"Nghiêng giảm":"";
+  const hasEvidence=num(v.value)!==null||driver||players||w?.zones?.nearest_below||w?.zones?.nearest_above||der;
+  if(!hasEvidence)return"";
   return `<details class="evidence"><summary>+ Xem căn cứ</summary><div class="evidence-grid">
     <div class="evi"><span>VN-Index</span><b>${fmt(v.value,2)}</b></div>
     <div class="evi"><span>15 phút</span><b class="${toneClass(v.delta_15m)}">${num(v.delta_15m)!==null?`${signed(v.delta_15m,1)} điểm`:"—"}</b></div>
@@ -163,9 +163,22 @@ function evidenceHtml(comment){
 
 function renderLatest(){
   const panel=$("latestPanel");if(!panel)return;
-  const comments=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at)),c=comments[0],pulse=currentPulse(latestSnapshot);
+  const comments=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
+  const c=comments[0]||null;
+  const pulse=currentPulse(latestSnapshot);
   const head=`<div class="panel-head"><h2>Bình luận mới nhất</h2><span id="latestRefresh">Cập nhật ~10 giây</span></div>`;
-  if(!pulse){panel.innerHTML=head+`<div class="empty">Đang chờ snapshot trực tiếp...</div>`;return;}
+
+  if(c&&c.event_id==null){
+    panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ĐANG THEO DÕI</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;
+    return;
+  }
+
+  if(!pulse){
+    if(c){panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ĐANG THEO DÕI</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;}
+    else panel.innerHTML=head+`<div class="empty">Đang chờ dữ liệu trực tiếp...</div>`;
+    return;
+  }
+
   const lastEvent=c?`<div class="last-event"><b>Mốc lịch sử gần nhất · ${timeText(c.published_at)}:</b> ${esc(c.headline)}</div>`:"";
   panel.innerHTML=head+`<article class="latest"><div class="latest-time">${timeText(latestSnapshot?.captured_at)} · ĐANG THEO DÕI</div><h2>${esc(pulse.headline)}</h2><p class="latest-body">${esc(pulse.body)}</p><div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(pulse.watch)}</div>${lastEvent}${c?evidenceHtml(c):""}</article>`;
 }
@@ -220,7 +233,6 @@ async function load(initial=false){
     if(data.latest&&data.latest.captured_at!==latestSnapshot?.captured_at){previousSnapshot=latestSnapshot;previousDerivative=derivativeState;}
     latestSnapshot=data.latest||latestSnapshot;
     derivativeState=data.derivatives||null;
-    editorialContext=data.editorial_context||null;
     renderSnapshot(latestSnapshot);
     mergeComments(Array.isArray(data.comments)?data.comments:[],full);
     renderLatest();
@@ -234,7 +246,7 @@ async function loadAdminNotes(){
   const {data,error}=await supabaseClient.rpc('admin_market_live_notes_v1',{p_limit:5});
   if(error){if(root)root.textContent="Không tải được ghi chú Admin.";return;}
   const rows=Array.isArray(data)?data:[];
-  if(root)root.innerHTML=rows.length?rows.map(x=>`<div class="admin-note-row"><span>${timeText(x.created_at)}</span><p>${esc(x.note)}</p></div>`).join(""):`<div class="admin-note-empty">Chưa có ghi chú bổ sung hôm nay.</div>`;
+  if(root)root.innerHTML=rows.length?rows.map(x=>`<div class="admin-note-row"><span>${timeText(x.created_at)}</span><p>${esc(x.note)}</p></div>`).join(""):`<div class="admin-note-empty">Chưa có bình luận bổ sung hôm nay.</div>`;
 }
 async function initAdmin(){
   try{
@@ -248,14 +260,20 @@ async function initAdmin(){
 }
 async function publishAdminNote(){
   if(!isAdmin)return;
-  const input=$("adminLiveNote"),msg=$("adminNoteMsg"),btn=$("adminNotePublish");
-  const note=String(input?.value||"").trim();if(note.length<2){if(msg)msg.textContent="Nhập thêm góc nhìn trước khi đăng.";return;}
-  if(btn)btn.disabled=true;if(msg)msg.textContent="Đang đưa vào ngữ cảnh bình luận...";
-  const {error}=await supabaseClient.rpc('admin_market_live_add_note_v1',{p_note:note});
+  const titleInput=$("adminLiveHeadline"),bodyInput=$("adminLiveNote"),msg=$("adminNoteMsg"),btn=$("adminNotePublish");
+  const headline=String(titleInput?.value||"").trim();
+  const body=String(bodyInput?.value||"").trim();
+  if(headline.length<2){if(msg)msg.textContent="Nhập tiêu đề bình luận trước khi đăng.";titleInput?.focus();return;}
+  if(body.length<2){if(msg)msg.textContent="Nhập nội dung bình luận trước khi đăng.";bodyInput?.focus();return;}
+  if(btn)btn.disabled=true;if(msg)msg.textContent="Đang đưa bình luận lên luồng trực tiếp...";
+  const {error}=await supabaseClient.rpc('admin_market_live_publish_comment_v1',{p_headline:headline,p_body:body});
   if(btn)btn.disabled=false;
   if(error){if(msg)msg.textContent="Không đăng được: "+error.message;return;}
-  if(input)input.value="";if(msg)msg.textContent="Đã đưa vào bình luận trực tiếp.";
-  await loadAdminNotes();await load(true);
+  if(titleInput)titleInput.value="";
+  if(bodyInput)bodyInput.value="";
+  if(msg)msg.textContent="Đã đăng. Bình luận này đang tham gia cùng luồng với hệ thống.";
+  await loadAdminNotes();
+  await load(true);
 }
 
 function openCommentEditor(id){
@@ -284,6 +302,7 @@ async function saveCommentEdit(e){
 function bindAdminUi(){
   $("adminNotePublish")?.addEventListener("click",publishAdminNote);
   $("adminLiveNote")?.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();publishAdminNote();}});
+  $("adminLiveHeadline")?.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();publishAdminNote();}});
   $("timelineList")?.addEventListener("click",e=>{const b=e.target.closest("[data-edit-comment]");if(b)openCommentEditor(b.dataset.editComment);});
   $("commentEditorForm")?.addEventListener("submit",saveCommentEdit);
   $("editCancel")?.addEventListener("click",()=>$("commentEditorDialog")?.close());
