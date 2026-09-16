@@ -1,9 +1,7 @@
 import { supabaseClient } from './assets/js/supabase-client.js';
 
 const $ = s => document.querySelector(s);
-const fmtMoney = v => Number(v || 0) > 0
-  ? `${new Intl.NumberFormat('vi-VN',{maximumFractionDigits:0}).format(Number(v))} đ`
-  : '—';
+const fmtMoney = v => Number(v || 0) > 0 ? `${new Intl.NumberFormat('vi-VN',{maximumFractionDigits:0}).format(Number(v))} đ` : '—';
 const fmtPct = v => Number.isFinite(Number(v)) ? `${Number(v).toFixed(1).replace('.0','')}%` : '—';
 const fmtPrice = v => Number(v || 0) > 0 ? new Intl.NumberFormat('vi-VN',{maximumFractionDigits:2}).format(Number(v)) : '—';
 const fmtTime = value => {
@@ -45,6 +43,15 @@ const typeLabels = {
   WEEKLY_PATTERN:'Xem lại tuần'
 };
 
+function escapeHtml(value){
+  return String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#039;');
+}
+
 function fillProfile(p = {}) {
   $('#mCapital').textContent = fmtMoney(p.investable_capital || p.total_capital);
   $('#mRisk').textContent = fmtPct(p.portfolio_risk_budget_pct ?? 8);
@@ -68,12 +75,7 @@ function renderPositions(rows = []) {
   $('#positionCount').textContent = `${count} VỊ THẾ`;
 
   if(!count){
-    list.innerHTML = `
-      <div class="empty-state">
-        <strong>Chưa có vị thế nào được lưu.</strong>
-        Khi anh/chị có một mã cần theo dõi, hãy bắt đầu từ bước kiểm tra trước khi mua hoặc rà soát vị thế đang giữ.
-        <br><a href="tool-truoc-mua.html">Kiểm tra trước khi mua →</a>
-      </div>`;
+    list.innerHTML = `<div class="empty-state"><strong>Chưa có vị thế nào được lưu.</strong>Khi anh/chị có một mã cần theo dõi, hãy bắt đầu từ bước kiểm tra trước khi mua hoặc rà soát vị thế đang giữ.<br><a href="tool-truoc-mua.html">Kiểm tra trước khi mua →</a></div>`;
     return;
   }
 
@@ -83,25 +85,14 @@ function renderPositions(rows = []) {
     const pnl = avg > 0 && cur > 0 ? (cur / avg - 1) * 100 : null;
     const pnlClass = pnl == null ? '' : pnl >= 0 ? 'good' : 'bad';
     const pnlText = pnl == null ? 'Chưa cập nhật' : `${pnl >= 0 ? '+' : ''}${fmtPct(pnl)}`;
-    return `
-      <div class="position-row">
-        <div class="symbol-cell"><small>Mã cổ phiếu</small><strong>${escapeHtml(row.symbol || '—')}</strong></div>
-        <div><small>Giá vốn</small><b>${fmtPrice(avg)}</b></div>
-        <div><small>Giá hiện tại</small><b>${fmtPrice(cur)}</b></div>
-        <div><small>Lãi / lỗ</small><b class="position-pnl ${pnlClass}">${pnlText}</b></div>
-        <a class="position-action" href="tool-dang-giu.html">Rà soát →</a>
-      </div>`;
+    return `<div class="position-row"><div class="symbol-cell"><small>Mã cổ phiếu</small><strong>${escapeHtml(row.symbol || '—')}</strong></div><div><small>Giá vốn</small><b>${fmtPrice(avg)}</b></div><div><small>Giá hiện tại</small><b>${fmtPrice(cur)}</b></div><div><small>Lãi / lỗ</small><b class="position-pnl ${pnlClass}">${pnlText}</b></div><a class="position-action" href="tool-dang-giu.html">Rà soát →</a></div>`;
   }).join('');
 }
 
 function renderHistory(rows = []) {
   const list = $('#historyList');
   if(!Array.isArray(rows) || !rows.length){
-    list.innerHTML = `
-      <div class="empty-state">
-        <strong>Chưa có quyết định nào được ghi lại.</strong>
-        Hãy dùng các công cụ khi anh/chị chuẩn bị mua, đang giữ, gặp biến động hoặc vừa bán xong. Lịch sử sẽ hình thành từ chính những lần sử dụng đó.
-      </div>`;
+    list.innerHTML = `<div class="empty-state"><strong>Chưa có quyết định nào được ghi lại.</strong>Hãy dùng các công cụ khi anh/chị chuẩn bị mua, đang giữ, gặp biến động hoặc vừa bán xong. Lịch sử sẽ hình thành từ chính những lần sử dụng đó.</div>`;
     return;
   }
 
@@ -109,16 +100,11 @@ function renderHistory(rows = []) {
     const stage = stageLabels[row.decision_stage] || 'Quyết định';
     const title = typeLabels[row.decision_type] || stage;
     const next = row.next_best_action || 'Đã lưu lại để xem lại khi cần.';
-    return `
-      <div class="history-row">
-        <div><span class="history-stage">${escapeHtml(stage)}</span></div>
-        <div><strong>${escapeHtml(title)}</strong><p>${escapeHtml(next)}</p></div>
-        <div class="history-time">${escapeHtml(fmtTime(row.created_at))}</div>
-      </div>`;
+    return `<div class="history-row"><div><span class="history-stage">${escapeHtml(stage)}</span></div><div><strong>${escapeHtml(title)}</strong><p>${escapeHtml(next)}</p></div><div class="history-time">${escapeHtml(fmtTime(row.created_at))}</div></div>`;
   }).join('');
 }
 
-function setNextAction(profile, positions = [], history = []) {
+function setNextAction(profile, positions = [], decisions = []) {
   const title = $('#nextTitle');
   const text = $('#nextText');
   const link = $('#nextLink');
@@ -141,7 +127,7 @@ function setNextAction(profile, positions = [], history = []) {
   }
 
   const weekAgo = Date.now() - 7 * 86400000;
-  const recent = Array.isArray(history) ? history.filter(r => new Date(r.created_at).getTime() >= weekAgo) : [];
+  const recent = Array.isArray(decisions) ? decisions.filter(r => new Date(r.created_at).getTime() >= weekAgo) : [];
   const reviewedThisWeek = recent.some(r => r.decision_stage === 'WEEKLY_REVIEW');
   if(recent.length >= 3 && !reviewedThisWeek){
     title.textContent = 'Đã đến lúc xem lại tuần';
@@ -151,7 +137,7 @@ function setNextAction(profile, positions = [], history = []) {
     return;
   }
 
-  if(Array.isArray(history) && history.length){
+  if(Array.isArray(decisions) && decisions.length){
     title.textContent = 'Chuẩn bị cho quyết định tiếp theo';
     text.textContent = 'Nếu sắp mua một mã mới, hãy kiểm tra lý do mua, mức sai và số tiền được phép vào trước khi đặt lệnh.';
     link.textContent = 'Kiểm tra trước khi mua →';
@@ -163,15 +149,6 @@ function setNextAction(profile, positions = [], history = []) {
   text.textContent = 'Khi có mã đang quan tâm, hãy kiểm tra lệnh trước khi mua. Đây sẽ là điểm bắt đầu cho lịch sử quyết định của anh/chị.';
   link.textContent = 'Kiểm tra trước khi mua →';
   link.href = 'tool-truoc-mua.html';
-}
-
-function escapeHtml(value){
-  return String(value ?? '')
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'",'&#039;');
 }
 
 async function load() {
@@ -190,19 +167,19 @@ async function load() {
 
   const profile = profileRes.data || {};
   const positions = positionRes.error ? [] : (positionRes.data || []);
-  const history = historyRes.error ? [] : (historyRes.data || []);
+  const decisions = historyRes.error ? [] : (historyRes.data || []);
 
   fillProfile(profile);
   renderPositions(positions);
-  renderHistory(history);
-  setNextAction(profile, positions, history);
+  renderHistory(decisions);
+  setNextAction(profile, positions, decisions);
 
   loginBox.classList.add('hidden');
   app.classList.remove('hidden');
   loginMsg.textContent = '';
 
   if(nextPage && /^[a-z0-9-]+\.html$/i.test(nextPage) && (profile.investable_capital || profile.total_capital)){
-    history.replaceState({}, '', location.pathname);
+    window.history.replaceState({}, '', location.pathname);
     location.href = nextPage;
   }
 }
@@ -210,21 +187,12 @@ async function load() {
 $('#googleLogin').onclick = async () => {
   loginMsg.textContent = 'Đang chuyển tới Google...';
   const redirectTo = location.origin + location.pathname + (nextPage ? `?next=${encodeURIComponent(nextPage)}` : '');
-  const { error } = await supabaseClient.auth.signInWithOAuth({
-    provider:'google',
-    options:{redirectTo,queryParams:{prompt:'select_account'}}
-  });
+  const { error } = await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'}}});
   if(error) loginMsg.textContent = friendly(error);
 };
 
-$('#editProfile').onclick = () => {
-  location.href = 'investor-profile.html';
-};
-
-$('#logout').onclick = async () => {
-  await supabaseClient.auth.signOut();
-  location.href = 'investor-os.html';
-};
+$('#editProfile').onclick = () => { location.href = 'investor-profile.html'; };
+$('#logout').onclick = async () => { await supabaseClient.auth.signOut(); location.href = 'investor-os.html'; };
 
 const { data } = await supabaseClient.auth.getSession();
 if(data.session) await load();
