@@ -1,11 +1,12 @@
-import { esc, pct, trackTool } from './investor-hub-shared.js';
-
 const ENDPOINT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed';
 let allRows=[];
 let activeFilter='ALL';
 
 const $=s=>document.querySelector(s);
-const fmt=(v,d=2)=>{const n=Number(v);return Number.isFinite(n)?n.toLocaleString('vi-VN',{minimumFractionDigits:0,maximumFractionDigits:d}):'—'};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
+const fmt=(v,d=2)=>{const n=num(v);return n===null?'—':n.toLocaleString('vi-VN',{minimumFractionDigits:0,maximumFractionDigits:d})};
+const pct=v=>{const n=num(v);return n===null?'—':`${n>0?'+':''}${fmt(n,2)}%`};
 const signalText=v=>{const s=String(v||'').toUpperCase();if(s.includes('MANH'))return 'Mạnh';if(s.includes('THAM'))return 'Đang hình thành';return 'Theo dõi'};
 const signalClass=v=>{const s=String(v||'').toUpperCase();if(s.includes('MANH'))return 'strong';if(s.includes('THAM'))return 'forming';return 'neutral'};
 const baseText=v=>{const s=String(v||'').toUpperCase();if(s.includes('TICH'))return 'Tích lũy';if(s.includes('KHONG'))return 'Chưa rõ';return v||'—'};
@@ -33,16 +34,18 @@ function renderSummary(rows=allRows){
   const strong=allRows.filter(r=>String(r.signal_class||'').toUpperCase().includes('MANH')).length;
   const forming=allRows.filter(r=>String(r.signal_class||'').toUpperCase().includes('THAM')).length;
   const scores=rows.map(r=>Number(r.t_score)).filter(Number.isFinite);
-  $('#sumTotal').textContent=allRows.length;
-  $('#sumStrong').textContent=strong;
-  $('#sumForming').textContent=forming;
-  $('#sumScore').textContent=scores.length?fmt(scores.reduce((a,b)=>a+b,0)/scores.length,0):'—';
+  const total=$('#sumTotal'),strongEl=$('#sumStrong'),formingEl=$('#sumForming'),scoreEl=$('#sumScore');
+  if(total)total.textContent=allRows.length;
+  if(strongEl)strongEl.textContent=strong;
+  if(formingEl)formingEl.textContent=forming;
+  if(scoreEl)scoreEl.textContent=scores.length?fmt(scores.reduce((a,b)=>a+b,0)/scores.length,0):'—';
 }
 
 function render(){
   const rows=filteredRows();
   renderSummary(rows);
   const out=$('#stocksBox');
+  if(!out)return;
   if(!rows.length){out.className='empty';out.textContent='Chưa có mã phù hợp với bộ lọc này.';return}
   out.className='';
   out.innerHTML=`<table class="table"><thead><tr><th>Mã</th><th>Tín hiệu</th><th>Nền giá</th><th>Điểm T+</th><th>Giá</th><th>Tăng/giảm</th><th>GTGD (tỷ)</th><th>KL dự kiến</th><th>KL phiên trước</th><th></th></tr></thead><tbody>${rows.map(r=>`<tr>
@@ -60,19 +63,20 @@ function render(){
 }
 
 async function load(){
+  const out=$('#stocksBox');
+  const updated=$('#updatedAt');
   try{
-    const r=await fetch(ENDPOINT,{cache:'no-store'});
+    const r=await fetch(`${ENDPOINT}?t=${Date.now()}`,{cache:'no-store',headers:{Accept:'application/json'}});
     if(!r.ok)throw new Error(`HTTP ${r.status}`);
     const data=await r.json();
     allRows=(Array.isArray(data?.stocks)?data.stocks:[]).filter(validStock);
-    $('#updatedAt').textContent=`Cập nhật ${dateLabel(data?.source_updated_at||data?.received_at)} · ${allRows.length} mã`;
+    if(updated)updated.textContent=`Cập nhật ${dateLabel(data?.source_updated_at||data?.received_at)} · ${allRows.length} mã`;
     render();
-    trackTool('NOTABLE_STOCKS','VIEW',{metadata:{count:allRows.length}});
   }catch(e){
-    console.warn(e);
-    $('#stocksBox').className='empty';
-    $('#stocksBox').textContent='Chưa cập nhật được danh sách. Vui lòng thử lại sau.';
-    $('#updatedAt').textContent='Dữ liệu chưa sẵn sàng';
+    console.error('Không tải được danh sách cổ phiếu đáng chú ý:',e);
+    if(out){out.className='empty';out.textContent='Chưa cập nhật được danh sách. Anh/chị thử tải lại trang sau ít phút.'}
+    if(updated)updated.textContent='Dữ liệu chưa sẵn sàng';
+    renderSummary([]);
   }
 }
 
