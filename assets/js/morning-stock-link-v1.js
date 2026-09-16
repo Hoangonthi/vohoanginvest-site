@@ -1,19 +1,36 @@
-function patchMorningStockLink(){
-  const card=document.querySelector('.vh5-action.watch');
-  if(!card)return false;
-  const title=card.querySelector('h3');
-  const caption=card.querySelector('.vh5-watch-caption');
-  const link=card.querySelector('.vh5-watch-link');
-  if(title)title.textContent='◉ Cổ phiếu đáng chú ý';
-  if(caption)caption.textContent='Một vài mã đang nổi bật theo dữ liệu dòng tiền hôm nay.';
-  if(link){link.href='co-phieu-dang-chu-y.html';link.textContent='Xem toàn bộ →';}
-  return true;
+function patchMorningStockLinks(){
+  let changed=false;
+
+  const staticSection=document.querySelector('#co-phieu-dang-chu-y-hom-nay');
+  if(staticSection){
+    const staticLink=staticSection.querySelector('a.card-action, a[href="watchlist.html"]');
+    if(staticLink){
+      staticLink.href='co-phieu-dang-chu-y.html';
+      staticLink.textContent='Xem thêm →';
+      changed=true;
+    }
+  }
+
+  const actionCard=document.querySelector('.vh5-action.watch');
+  if(actionCard){
+    const title=actionCard.querySelector('h3');
+    const caption=actionCard.querySelector('.vh5-watch-caption');
+    const link=actionCard.querySelector('.vh5-watch-link');
+    if(title)title.textContent='◉ Cổ phiếu đáng chú ý';
+    if(caption)caption.textContent='Một vài mã đang nổi bật theo dữ liệu dòng tiền hôm nay.';
+    if(link){
+      link.href='co-phieu-dang-chu-y.html';
+      link.textContent='Xem toàn bộ →';
+      changed=true;
+    }
+  }
+
+  return changed;
 }
 
-patchMorningStockLink();
-const observer=new MutationObserver(()=>{
-  if(patchMorningStockLink())observer.disconnect();
-});
+patchMorningStockLinks();
+const observer=new MutationObserver(()=>patchMorningStockLinks());
 observer.observe(document.documentElement,{childList:true,subtree:true});
-setTimeout(patchMorningStockLink,700);
-setTimeout(patchMorningStockLink,1800);
+setTimeout(patchMorningStockLinks,300);
+setTimeout(patchMorningStockLinks,900);
+setTimeout(patchMorningStockLinks,1800);
