@@ -1,3 +1,4 @@
+import './assets/js/site-shell-compat.js?v=20260916-1';
 import { supabaseClient } from './assets/js/supabase-client.js';
 
 const $ = s => document.querySelector(s);
