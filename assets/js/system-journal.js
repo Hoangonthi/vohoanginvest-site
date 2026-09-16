@@ -1,3 +1,4 @@
+import './site-shell-compat.js?v=20260916-1';
 import { esc, fmt, pct, fmtDate, minuteLabel, supabaseClient, trackTool } from './investor-hub-shared.js';
 
 function tone(score){const s=Number(score);if(s>=58)return'is-up';if(s<32)return'is-down';return'is-warn'}
