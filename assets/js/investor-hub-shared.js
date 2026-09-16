@@ -19,7 +19,18 @@ export function localGet(key,fallback){try{return JSON.parse(localStorage.getIte
 export function localSet(key,value){localStorage.setItem(key,JSON.stringify(value))}
 
 export async function fetchMarket(){
-  const r=await fetch(MARKET_ENDPOINT,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json();
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),4500);
+  try{
+    const r=await fetch(MARKET_ENDPOINT,{cache:'no-store',signal:controller.signal});
+    if(!r.ok)throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  }catch(error){
+    if(error?.name==='AbortError')throw new Error('MARKET_FEED_TIMEOUT');
+    throw error;
+  }finally{
+    clearTimeout(timer);
+  }
 }
 export function marketContext(data){
   const mi=data?.market_intelligence||{};
