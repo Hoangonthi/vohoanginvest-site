@@ -1,3 +1,4 @@
+import './assets/js/site-shell-compat.js?v=20260916-1';
 import { supabaseClient } from './assets/js/supabase-client.js';
 const $=s=>document.querySelector(s); const stage=document.body.dataset.stage; const fmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:1}).format(Number(v||0));
 async function ensureAuth(){const {data}=await supabaseClient.auth.getSession();if(!data.session){location.href='investor-os.html?next='+encodeURIComponent(location.pathname.split('/').pop());return false}return true}
