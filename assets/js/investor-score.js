@@ -1,3 +1,4 @@
+import './site-shell-compat.js?v=20260916-1';
 import {trackTool,smartBack} from './tool-events.js';
 const app=document.querySelector('#app');document.querySelector('#back').onclick=smartBack;
 const Q=[
