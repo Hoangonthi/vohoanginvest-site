@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hồ sơ Nhà đầu tư | Võ Hoàng – Đầu tư chuẩn hệ thống</title>
+  <meta name="description" content="Hồ sơ Nhà đầu tư lưu các giới hạn vốn và rủi ro dùng chung cho Máy tính đầu tư và Investor Decision OS.">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#04111f;--panel:#081b2e;--panel2:#0b2238;--line:rgba(224,187,99,.18);--soft:rgba(255,255,255,.075);--gold:#e0bb63;--gold2:#f3cf74;--text:#f5f7fb;--muted:rgba(231,237,246,.68);--green:#35e08b;--red:#ff6673;--orange:#ffae5b;--cyan:#4de2d8;--max:1180px;--radius:20px;font-family:"Be Vietnam Pro",system-ui,sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(circle at 95% 0%,rgba(224,187,99,.08),transparent 27%),linear-gradient(180deg,#04111d,#06172a 55%,#04111f)}a{color:inherit;text-decoration:none}button,input{font:inherit}.wrap{width:min(calc(100% - 28px),var(--max));margin:auto;padding:26px 0 54px}
+    .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;padding:28px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,rgba(224,187,99,.055),rgba(255,255,255,.018));box-shadow:0 22px 60px rgba(0,0,0,.22)}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--gold2);text-transform:uppercase}.hero h1{font-size:38px;line-height:1.12;margin:10px 0 10px;letter-spacing:-.035em}.hero p{margin:0;color:var(--muted);line-height:1.65;max-width:720px}.hero-note{padding:18px;border:1px solid var(--soft);border-radius:17px;background:rgba(255,255,255,.025)}.hero-note b{display:block;font-size:15px;margin-bottom:7px}.hero-note span{display:block;color:var(--muted);font-size:12px;line-height:1.55}.hero-note a{display:inline-flex;margin-top:15px;color:var(--gold2);font-weight:700;font-size:12px}
+    .login{max-width:620px;margin:18px auto 0;padding:24px;text-align:center;border:1px solid var(--line);border-radius:20px;background:rgba(8,27,46,.92)}.login h2{margin:7px 0}.login p{color:var(--muted);font-size:13px}.primary,.ghost{border:0;border-radius:11px;min-height:43px;padding:0 18px;font-weight:800;cursor:pointer}.primary{color:#07111d;background:linear-gradient(180deg,var(--gold2),var(--gold))}.ghost{color:#dbe7f3;border:1px solid var(--soft);background:rgba(255,255,255,.035)}.hidden{display:none!important}
+    .profile-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;margin-top:14px}.card{border:1px solid var(--soft);border-radius:19px;background:linear-gradient(180deg,rgba(11,34,56,.94),rgba(7,25,43,.94));overflow:hidden}.card-head{padding:18px 20px 14px;border-bottom:1px solid var(--soft)}.card-head h2{font-size:19px;margin:5px 0 4px}.card-head p{margin:0;color:var(--muted);font-size:11.5px;line-height:1.55}.card-body{padding:18px 20px}.section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.section-title h3{margin:0;font-size:14px}.section-title small{color:var(--muted);font-size:10px;text-align:right}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:block}.field span{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#d9e3ed;font-size:10px;font-weight:650;margin-bottom:5px}.field em{font-style:normal;color:rgba(231,237,246,.42);font-size:8px;font-weight:500}.field input{width:100%;height:42px;padding:0 11px;border:1px solid rgba(255,255,255,.1);border-radius:9px;outline:none;background:#061625;color:#fff}.field input:focus{border-color:rgba(224,187,99,.55);box-shadow:0 0 0 3px rgba(224,187,99,.06)}.hint{margin:7px 0 0;color:rgba(231,237,246,.46);font-size:9px;line-height:1.45}.divider{height:1px;background:var(--soft);margin:18px 0}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.status{min-height:19px;margin:10px 0 0;color:var(--muted);font-size:10px}.status.good{color:var(--green)}.status.bad{color:var(--red)}
+    .summary{position:sticky;top:16px}.completion{display:flex;align-items:center;justify-content:space-between;gap:12px}.completion strong{font-size:30px}.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;margin:10px 0 15px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--green));transition:.2s}.summary-list{display:grid;gap:8px}.summary-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.055)}.summary-row:last-child{border-bottom:0}.summary-row span{color:var(--muted);font-size:9.5px}.summary-row b{font-size:11px;text-align:right}.flag{padding:10px 11px;border-radius:11px;margin-top:9px;font-size:9.5px;line-height:1.5;border:1px solid var(--soft);color:var(--muted);background:rgba(255,255,255,.02)}.flag.warn{border-color:rgba(255,174,91,.3);color:#ffd0a1;background:rgba(255,174,91,.05)}.flag.good{border-color:rgba(53,224,139,.25);color:#aaf3cd;background:rgba(53,224,139,.04)}
+    .uses{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.use{padding:14px;border:1px solid var(--soft);border-radius:15px;background:rgba(255,255,255,.018)}.use b{font-size:11px;display:block;margin-bottom:5px}.use p{font-size:9.5px;color:var(--muted);line-height:1.5;margin:0}.use a{display:inline-block;margin-top:9px;color:var(--gold2);font-size:9.5px;font-weight:700}
+    .footnote{margin-top:14px;padding:12px 14px;border:1px solid var(--soft);border-radius:14px;color:rgba(231,237,246,.5);font-size:9px;line-height:1.6;text-align:center}
+    @media(max-width:900px){.hero,.profile-grid{grid-template-columns:1fr}.summary{position:static}.uses{grid-template-columns:1fr 1fr}}@media(max-width:620px){.wrap{width:min(calc(100% - 18px),var(--max));padding-top:12px}.hero{padding:20px 16px}.hero h1{font-size:29px}.form-grid,.uses{grid-template-columns:1fr}.card-head,.card-body{padding-left:14px;padding-right:14px}.section-title{display:block}.section-title small{display:block;text-align:left;margin-top:4px}.actions button{width:100%}}
+  </style>
+</head>
+<body>
+  <div id="siteHeader"></div>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">HỒ SƠ NHÀ ĐẦU TƯ · DỮ LIỆU GỐC</div>
+        <h1>Một hồ sơ. Dùng cho toàn bộ hệ thống.</h1>
+        <p>Đây là nơi lưu các giới hạn vốn và rủi ro của chính anh/chị. Máy tính đầu tư và Investor Decision OS sẽ đọc lại các dữ liệu này để tránh nhập lặp và tránh mỗi công cụ dùng một nguyên tắc khác nhau.</p>
+      </div>
+      <aside class="hero-note">
+        <b>Profile ≠ tài khoản giao dịch</b>
+        <span>Hồ sơ không thay thế dữ liệu tại công ty chứng khoán. Nó lưu nguyên tắc cá nhân để hệ thống biết giới hạn nào cần tôn trọng trước khi tính toán hoặc đưa cảnh báo.</span>
+        <a href="investor-os.html">Mở Investor Decision OS →</a>
+      </aside>
+    </section>
+
+    <section id="loginBox" class="login">
+      <div class="eyebrow">HỒ SƠ CÁ NHÂN</div>
+      <h2>Đăng nhập để mở hồ sơ của anh/chị</h2>
+      <p>Dữ liệu được gắn với tài khoản đăng nhập và dùng lại trong các công cụ đã kết nối.</p>
+      <button id="googleLogin" class="primary" type="button">Tiếp tục với Google</button>
+      <div id="loginMsg" class="status"></div>
+    </section>
+
+    <section id="app" class="hidden">
+      <div class="profile-grid">
+        <div class="card">
+          <div class="card-head">
+            <div class="eyebrow">HỒ SƠ NỀN TẢNG</div>
+            <h2>Vốn và giới hạn kiểm soát</h2>
+            <p>Nhập các con số anh/chị thực sự muốn hệ thống sử dụng. Đây là rule gốc, không phải dự báo lợi nhuận.</p>
+          </div>
+          <div class="card-body">
+            <div class="section-title"><h3>1. Nền tảng vốn</h3><small>Hệ thống dùng để xác định quy mô và sức chịu đựng</small></div>
+            <div class="form-grid">
+              <label class="field"><span>Tên hiển thị <em>không bắt buộc</em></span><input id="displayName" autocomplete="name" maxlength="80"></label>
+              <label class="field"><span>Tổng tài sản tài chính <em>đồng</em></span><input id="totalCapital" type="number" min="0" step="1000000" inputmode="numeric"></label>
+              <label class="field"><span>Vốn được phép đầu tư <em>đồng</em></span><input id="investableCapital" type="number" min="0" step="1000000" inputmode="numeric"></label>
+              <label class="field"><span>Quỹ tiền mặt dự phòng <em>đồng</em></span><input id="cashBuffer" type="number" min="0" step="1000000" inputmode="numeric"></label>
+            </div>
+            <p class="hint">“Vốn được phép đầu tư” là số vốn anh/chị chấp nhận đưa vào thị trường, không mặc định bằng toàn bộ tài sản tài chính.</p>
+
+            <div class="divider"></div>
+            <div class="section-title"><h3>2. Giới hạn rủi ro</h3><small>Các tool sẽ lấy trực tiếp các giới hạn này</small></div>
+            <div class="form-grid">
+              <label class="field"><span>Margin tối đa <em>% vốn tự có</em></span><input id="marginLimit" type="number" min="0" max="300" step="1"></label>
+              <label class="field"><span>Ngân sách rủi ro danh mục <em>% tài khoản</em></span><input id="riskBudget" type="number" min="0.1" max="100" step="0.1"></label>
+              <label class="field"><span>Tỷ trọng tối đa / mã <em>% tài khoản</em></span><input id="maxPosition" type="number" min="0.1" max="100" step="0.1"></label>
+              <label class="field"><span>Tỷ trọng tối đa / ngành <em>% tài khoản</em></span><input id="maxSector" type="number" min="0.1" max="100" step="0.1"></label>
+              <label class="field"><span>Drawdown tối đa <em>% tài khoản</em></span><input id="maxDrawdown" type="number" min="0.1" max="100" step="0.1"></label>
+            </div>
+            <p class="hint">Các giới hạn này không phải “mức an toàn chung cho mọi người”. Chúng là giới hạn cá nhân để các công cụ so sánh với tình trạng thực tế.</p>
+
+            <div class="actions">
+              <button id="saveProfile" class="primary" type="button">Lưu Hồ sơ Nhà đầu tư</button>
+              <button id="openCalculator" class="ghost" type="button">Mở Máy tính đầu tư</button>
+              <button id="logout" class="ghost" type="button">Đăng xuất</button>
+            </div>
+            <div id="saveMsg" class="status"></div>
+          </div>
+        </div>
+
+        <aside class="summary">
+          <div class="card">
+            <div class="card-head"><div class="eyebrow">TÓM TẮT HỒ SƠ</div><h2>Độ hoàn thiện</h2></div>
+            <div class="card-body">
+              <div class="completion"><span class="status" id="completionLabel">Chưa đủ dữ liệu</span><strong id="completionPct">0%</strong></div>
+              <div class="bar"><i id="completionBar"></i></div>
+              <div class="summary-list">
+                <div class="summary-row"><span>Vốn được phép đầu tư</span><b id="sCapital">—</b></div>
+                <div class="summary-row"><span>Tiền dự phòng / tổng tài sản</span><b id="sBuffer">—</b></div>
+                <div class="summary-row"><span>Risk Budget</span><b id="sRisk">—</b></div>
+                <div class="summary-row"><span>Max / mã</span><b id="sPosition">—</b></div>
+                <div class="summary-row"><span>Max / ngành</span><b id="sSector">—</b></div>
+                <div class="summary-row"><span>Max Drawdown</span><b id="sDrawdown">—</b></div>
+              </div>
+              <div id="consistencyFlag" class="flag">Nhập dữ liệu để hệ thống kiểm tra tính nhất quán.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="uses">
+        <div class="use"><b>Máy tính đầu tư</b><p>Tự điền vốn, Risk Budget, giới hạn tỷ trọng và margin vào các phép tính liên quan.</p><a href="investor-calculator.html">Mở máy tính →</a></div>
+        <div class="use"><b>Investor Decision OS</b><p>Đọc các rule gốc để các phòng Trước mua, Đang giữ và Review dùng cùng một chuẩn.</p><a href="investor-os.html">Mở Decision OS →</a></div>
+        <div class="use"><b>Công cụ sau này</b><p>Risk Budget, cấu trúc vốn, cảnh báo danh mục và review định kỳ sẽ dùng chung hồ sơ này thay vì hỏi lại.</p></div>
+      </div>
+
+      <div class="footnote">Hồ sơ Nhà đầu tư là công cụ tổ chức dữ liệu và giới hạn cá nhân; không phải khuyến nghị mua/bán, không đánh giá mức phù hợp pháp lý của một sản phẩm tài chính và không cam kết lợi nhuận.</div>
+    </section>
+  </main>
+  <div id="siteFooter"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="investor-profile.js"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260916-1"></script>
+</body>
+</html>
