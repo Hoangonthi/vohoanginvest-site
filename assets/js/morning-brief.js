@@ -15,3 +15,5 @@ import './morning-macro-actual-event-v1.js?v=20260917-fed2';
 import './morning-derivatives-source-guard-v1.js?v=20260917-pslock1';
 // The hot-stocks CTA must open the realtime notable-stocks list, not the personal watchlist.
 import './morning-hotstocks-link-v1.js?v=20260917-hotlink1';
+// Fill the hot-stocks card, color by signal strength and send overflow to the full realtime list.
+import './morning-hotstocks-card-v2.js?v=20260917-hotcard2';
