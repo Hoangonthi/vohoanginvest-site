@@ -13,3 +13,5 @@ import './morning-live-patch-v1.js?v=20260917-fed2';
 import './morning-macro-actual-event-v1.js?v=20260917-fed2';
 // The derivatives card is exclusively VN30F1M. Never allow VN-Index/VN30 cash fallback here.
 import './morning-derivatives-source-guard-v1.js?v=20260917-pslock1';
+// The hot-stocks CTA must open the realtime notable-stocks list, not the personal watchlist.
+import './morning-hotstocks-link-v1.js?v=20260917-hotlink1';
