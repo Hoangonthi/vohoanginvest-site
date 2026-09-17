@@ -3,6 +3,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const BRIDGE_KEY = Deno.env.get("VH_BRIDGE_KEY") || "";
+const DERIVATIVES_SYMBOL = "VN30F1M";
 
 const ALLOWED_ORIGINS = new Set([
   "https://hoangonthi.github.io",
@@ -63,7 +64,13 @@ Deno.serve(async (req: Request) => {
 
     const symbol = String(body?.symbol || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0,20);
     const trend = String(body?.trend || "").toUpperCase();
-    if (!symbol || !["TANG","GIAM"].includes(trend)) {
+
+    // This endpoint is dedicated to the VN30F1M derivatives card only.
+    // Never allow VN-Index, VN30 cash or another symbol to overwrite psvn_trend.
+    if (symbol !== DERIVATIVES_SYMBOL) {
+      return json(req, { ok:false, error:"DERIVATIVES_SYMBOL_NOT_ALLOWED", expected_symbol:DERIVATIVES_SYMBOL }, 422);
+    }
+    if (!["TANG","GIAM"].includes(trend)) {
       return json(req, { ok:false, error:"INVALID_PAYLOAD" }, 400);
     }
 
@@ -97,7 +104,26 @@ Deno.serve(async (req: Request) => {
     });
     const text = await r.text();
     if (!r.ok) return json(req, { ok:false, error:"READ_FAILED", status:r.status, detail:text }, 500);
-    try { return json(req, JSON.parse(text), 200); }
+
+    try {
+      const payload = JSON.parse(text);
+      if (String(payload?.symbol || "").toUpperCase() !== DERIVATIVES_SYMBOL) {
+        return json(req, {
+          title:"Xu hướng phái sinh",
+          symbol:null,
+          trend:null,
+          system_price:null,
+          targets:{ t1:null, t2:null, t3:null },
+          reversal_price:null,
+          last_price:null,
+          source_updated_at:null,
+          received_at:null,
+          age_seconds:null,
+          fresh:false
+        }, 200);
+      }
+      return json(req, payload, 200);
+    }
     catch { return json(req, { ok:false, error:"READ_PARSE_FAILED" }, 500); }
   }
 
