@@ -21,6 +21,12 @@ function vhPolicyModel(m){
   return (m?.cards||[]).find(x=>x?.id==='policy')||null;
 }
 
+function vhSetText(el,value){
+  if(!el)return;
+  const next=String(value??'');
+  if(el.textContent!==next)el.textContent=next;
+}
+
 function vhApplyActualMacro(host,m){
   const ev=m?.policy_event;
   if(!host||!ev?.ok)return false;
@@ -38,11 +44,12 @@ function vhApplyActualMacro(host,m){
     const evidence=policy.querySelector('.vh5-evidence');
 
     if(cat){
-      cat.textContent=policyModel.status||'RỦI RO TIỀN TỆ TĂNG';
-      cat.className='vh5-cat vh2-status-negative';
+      vhSetText(cat,policyModel.status||'RỦI RO TIỀN TỆ TĂNG');
+      const cls='vh5-cat vh2-status-negative';
+      if(cat.className!==cls)cat.className=cls;
     }
-    if(title&&policyModel.title)title.textContent=policyModel.title;
-    if(evidence)evidence.textContent=(policyModel.evidence||[]).slice(0,3).join(' · ');
+    if(title&&policyModel.title)vhSetText(title,policyModel.title);
+    if(evidence)vhSetText(evidence,(policyModel.evidence||[]).slice(0,3).join(' · '));
   }
 
   const sum=macroSec.querySelector('.vh5-macro-regime');
@@ -52,8 +59,6 @@ function vhApplyActualMacro(host,m){
     if(sum.innerHTML!==html)sum.innerHTML=html;
   }
 
-  // Confirmed/actual event is authoritative. Keep a machine-readable marker so
-  // later render layers can detect that pre-event expectations are obsolete.
   host.dataset.vhActualMacroEvent=ev.event_id||'active';
   host.dataset.vhMacroPrecedence='ACTUAL_EVENT';
   host.dataset.vhMacroAsOf=String(m.as_of||ev.occurred_at||m.generated_at||'');
@@ -100,8 +105,6 @@ async function vhInitActualMacro(){
     fetching=true;
     try{
       const next=await vhFetchActualMacro();
-      // A verified/confirmed actual event always outranks expectation or an
-      // older baked snapshot. Never downgrade from actual-event state here.
       if(next?.policy_event?.ok){
         latest=next;
         apply();
@@ -115,12 +118,8 @@ async function vhInitActualMacro(){
 
   await refresh();
 
-  // Other V5 layers may re-render the board. Re-assert confirmed-event state
-  // after every mutation instead of relying on a short-lived 15s patch.
   const obs=new MutationObserver(()=>requestAnimationFrame(apply));
   obs.observe(host,{childList:true,subtree:true,characterData:true});
-
-  // News intelligence can confirm/update an event while the page remains open.
   setInterval(refresh,VH_ACTUAL_REFRESH_MS);
 }
 
