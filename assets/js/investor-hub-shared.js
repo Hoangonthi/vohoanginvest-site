@@ -1,7 +1,10 @@
 import { supabaseClient } from './supabase-client.js';
 import { trackTool } from './tool-events.js';
 
-export const MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed';
+const DEFAULT_MARKET_ENDPOINT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed';
+const LOCAL_PRIMARY_MARKET_ENDPOINT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/local-primary-market-public';
+const isMorningBriefPage=()=>/\/(?:sang-nay-can-nhin-gi\.html)?$/.test(window.location.pathname)&&window.location.pathname.includes('sang-nay-can-nhin-gi.html');
+export const MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || (isMorningBriefPage()?LOCAL_PRIMARY_MARKET_ENDPOINT:DEFAULT_MARKET_ENDPOINT);
 export const SECTORS = [
   ['VNFIN','Tài chính'],['VNREAL','Bất động sản'],['VNIND','Công nghiệp'],['VNIT','Công nghệ thông tin'],
   ['VNMAT','Nguyên vật liệu'],['VNCONS','Hàng tiêu dùng thiết yếu'],['VNCOND','Hàng tiêu dùng không thiết yếu'],
