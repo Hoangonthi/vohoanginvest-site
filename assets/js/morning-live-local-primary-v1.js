@@ -18,7 +18,7 @@ function marketState(mi){const s=nn(mi?.state?.score)??50;if(s<=25)return{score:
 function breadthText(mi){const b=mi?.breadth||{},a=nn(b.adv),d=nn(b.dec),f=nn(b.flat)||0;if(a==null||d==null)return'Dữ liệu độ rộng đang cập nhật.';return`${Math.round(a)} mã tăng · ${Math.round(f)} tham chiếu · ${Math.round(d)} mã giảm.`}
 function flowText(mi){const r=nn(mi?.flow?.same_time_ratio);if(r==null)return'Dữ liệu GTGD cùng thời điểm chưa có chuẩn xác minh; tạm không suy diễn thanh khoản.';return`Thanh khoản khoảng ${Math.round(r*100)}% mức chuẩn cùng thời điểm.`}
 function moverRows(raw){const rows=raw?.market_intelligence?.movers?.leaders;return Array.isArray(rows)?rows.filter(x=>x?.symbol&&nn(x?.change_pct)!=null).slice(0,3):[]}
-function patchMovers(raw){const host=q('#vhDecisionBoardV5');if(!host)return;const rows=moverRows(raw);if(!rows.length)return;const act=section(host,'Hành động hôm nay');if(!act)return;let box=q('.vh5-stock-mini',act);if(!box)return;setHtml(box,rows.map(x=>`<div class="vh5-stock-chip"><b>${esc(x.symbol)}</b><span>${esc(pct(x.change_pct,1))}</span></div>`).join(''))}
+function patchMovers(raw){const host=q('#vhDecisionBoardV5');if(!host)return;const rows=moverRows(raw);if(!rows.length)return;const act=section(host,'Hành động hôm nay');if(!act)return;const box=q('.vh5-stock-mini',act);if(!box)return;setHtml(box,rows.map(x=>`<div class="vh5-stock-chip"><b>${esc(x.symbol)}</b><span>${esc(pct(x.change_pct,1))}</span></div>`).join(''))}
 function patch(raw){const host=q('#vhDecisionBoardV5');if(!host||!raw?.ok)return;const mi=raw.market_intelligence||{},m=marketState(mi),short=q('.vhb-lane.short',host);
   setText(q('.vhb-top .vh5-verdict-main',host),m.label);
   setText(q('.vhb-top .vh5-verdict-sub',host),m.action);
@@ -30,12 +30,9 @@ function patch(raw){const host=q('#vhDecisionBoardV5');if(!host||!raw?.ok)return
 }
 async function get(){const r=await fetch(`${ENDPOINT}?t=${Date.now()}`,{headers:{Accept:'application/json'},cache:'no-store'});const j=await r.json();if(!r.ok||!j?.ok)throw new Error(j?.error||`HTTP ${r.status}`);return j}
 function inSession(){const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Ho_Chi_Minh',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{});if(['Sat','Sun'].includes(p.weekday))return false;const m=Number(p.hour)*60+Number(p.minute);return(m>=525&&m<=695)||(m>=770&&m<=910)}
-let busy=false;
+let busy=false,closedTicks=0;
 async function cycle(){if(busy||document.hidden)return;busy=true;try{patch(await get())}catch(e){console.warn('[local-primary-market]',e?.message||e)}finally{busy=false}}
 addStyle();
 cycle();
-setInterval(cycle,()=>inSession()?15000:60000);
-// setInterval requires a fixed delay; use 15s and skip most closed-session ticks.
-let closedTick=0;clearInterval();
-setInterval(()=>{if(inSession()){cycle();closedTick=0}else if(++closedTick>=4){closedTick=0;cycle()}},15000);
+setInterval(()=>{if(inSession()){closedTicks=0;cycle();return}closedTicks++;if(closedTicks>=4){closedTicks=0;cycle()}},15000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)cycle()});
