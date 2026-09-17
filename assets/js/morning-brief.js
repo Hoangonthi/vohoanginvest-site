@@ -9,7 +9,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 setTimeout(clearStaleMorningLoader,800);
 setTimeout(clearStaleMorningLoader,2500);
 
-const V='20260917-local-primary-1';
+const V='20260916-5';
 await import(`./morning-brief-core.js?v=${V}`);
 await import(`./morning-decision-dashboard-v5.js?v=${V}`);
 await import(`./morning-decision-dashboard-v5-anchor.js?v=${V}`);
@@ -17,6 +17,6 @@ await import(`./morning-advisor-engine-v1.js?v=${V}`);
 await import(`./morning-verdict-board-v2.js?v=${V}`);
 await import(`./morning-macro-action-engine-v2.js?v=${V}`);
 await import(`./morning-readable-type-v1.js?v=${V}`);
-await import(`./morning-live-local-primary-v1.js?v=${V}`);
+await import(`./morning-live-patch-v1.js?v=${V}`);
 await import(`./morning-stock-link-v1.js?v=${V}`);
 clearStaleMorningLoader();
