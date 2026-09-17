@@ -9,9 +9,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 setTimeout(clearStaleMorningLoader,800);
 setTimeout(clearStaleMorningLoader,2500);
 
-const V='20260916-5';
+const V='20260917-middle-repair-1';
 await import(`./morning-brief-core.js?v=${V}`);
 await import(`./morning-decision-dashboard-v5.js?v=${V}`);
+await import(`./morning-decision-dashboard-v5-repair.js?v=${V}`);
 await import(`./morning-decision-dashboard-v5-anchor.js?v=${V}`);
 await import(`./morning-advisor-engine-v1.js?v=${V}`);
 await import(`./morning-verdict-board-v2.js?v=${V}`);
