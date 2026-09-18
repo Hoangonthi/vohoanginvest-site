@@ -313,6 +313,53 @@ function renderHistoryEdge(d){
     <div class="sd-history-grid">${rows||'<div class="sd-empty">Chưa có outcome đủ để thống kê.</div>'}</div>
     <p class="sd-history-note">Đây là thống kê các tín hiệu đã xảy ra của chính mã, dùng để hiểu hành vi lịch sử; không phải xác suất dự báo cho lần hiện tại.</p>`;
 }
+function actionLabel(d,a){
+  const t=d.technical||{}, f=d.flow||{}, b=d.fundamental||{};
+  const rsi=valid(t.rsi14)?Number(t.rsi14):null;
+  const dist20=valid(t.distance_to_ma20_pct)?Number(t.distance_to_ma20_pct):null;
+  const foreign5=valid(f?.window_5?.foreign_net_volume)?Number(f.window_5.foreign_net_volume):null;
+  const foreign20=valid(f?.window_20?.foreign_net_volume)?Number(f.window_20.foreign_net_volume):null;
+  const hasFund=hasMeaningfulFundamental(b);
+
+  const technicalStrong=a.techScore>=3;
+  const technicalHealthy=a.techScore>=1;
+  const technicalWeak=a.techScore<=-2;
+  const fundamentalStrong=hasFund&&a.fundScore>=2;
+  const fundamentalWeak=hasFund&&a.fundScore<=0;
+  const flowSupportive=a.flowScore>=0;
+  const flowClearlyNegative=a.flowScore<0 && foreign5!==null && foreign20!==null && foreign5<0 && foreign20<0;
+  const overheated=(rsi!==null&&rsi>=70)||(dist20!==null&&dist20>=8);
+  const breakdown=t.breakdown_20d===true;
+  const below50=t.above_ma50===false;
+  const below200=t.above_ma200===false;
+
+  // Chỉ gia tăng khi nhiều lớp cùng xác nhận và giá chưa bị kéo giãn.
+  if(fundamentalStrong&&technicalStrong&&flowSupportive&&!overheated&&!breakdown){
+    return "CÓ THỂ GIA TĂNG";
+  }
+
+  // Cơ bản tốt nhưng giá chưa xác nhận: không vội tăng thêm.
+  if(fundamentalStrong&&!technicalHealthy){
+    return technicalWeak||breakdown?"HẠ TỶ TRỌNG":"GIỮ & THEO DÕI";
+  }
+
+  // Giá khỏe nhưng cơ bản yếu/thiếu: có thể giữ vị thế, không nâng rủi ro.
+  if(technicalStrong&&(fundamentalWeak||!hasFund)){
+    return overheated||flowClearlyNegative?"KHÔNG GIA TĂNG":"GIỮ TỶ TRỌNG";
+  }
+
+  // Cấu trúc kỹ thuật suy yếu rõ mới chuyển sang phòng thủ.
+  if(technicalWeak||breakdown||(below50&&flowClearlyNegative)){
+    return below200?"ƯU TIÊN PHÒNG THỦ":"HẠ TỶ TRỌNG";
+  }
+
+  // Trạng thái tích cực nhưng còn thiếu đồng thuận.
+  if(technicalHealthy&&a.fundScore>=1){
+    return overheated||flowClearlyNegative?"GIỮ TỶ TRỌNG":"GIỮ TỶ TRỌNG";
+  }
+
+  return "GIỮ & THEO DÕI";
+}
 function renderOverview(d){
   const t=d.technical||{}, f=d.flow||{}, q=d.live_quote||null;
   $("#overviewKpis").innerHTML=[
