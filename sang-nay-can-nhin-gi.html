@@ -2545,6 +2545,11 @@
 
 }
   </style>
+
+  <style id="vhCriticalDecisionPrehide">
+    /* Prevent the retired decision blocks from flashing before the Decision Brain mounts. */
+    .vh-legacy-decision{display:none!important}
+  </style>
 </head>
 <body>
 
@@ -2641,7 +2646,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section vh-legacy-decision" aria-hidden="true">
         <article class="card spotlight-card">
           <div class="card-head">
             <div class="title-side">
@@ -2678,7 +2683,7 @@
         </article>
       </section>
 
-      <section class="section two-col">
+      <section class="section two-col vh-legacy-decision" aria-hidden="true">
         <article class="card">
           <div class="card-head">
             <div class="title-side">
@@ -2762,7 +2767,7 @@
         </article>
       </section>
 
-      <section class="section two-col">
+      <section class="section two-col vh-legacy-decision" aria-hidden="true">
         <article class="card view-card">
           <div class="card-head">
             <div class="title-side">
@@ -3189,7 +3194,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/morning-brief.js?v=20260918-brain8"></script>
+  <script type="module" src="assets/js/morning-brief.js?v=20260918-brain9"></script>
 
   <script type="module" src="assets/js/site-header.js?v=20260913-8"></script>
 </body>
