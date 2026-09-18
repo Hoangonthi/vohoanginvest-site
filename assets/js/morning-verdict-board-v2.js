@@ -15,7 +15,7 @@ function vhStyle(){
   s.id='vhVerdictBoardV2Style';
   s.textContent=`
   .vh5-verdict.vhb-v2{display:block!important;overflow:hidden;background:linear-gradient(180deg,rgba(8,32,53,.92),rgba(6,25,42,.96));}
-  .vhb-top{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:18px 20px;border-bottom:1px solid rgba(242,204,99,.20);background:linear-gradient(90deg,rgba(242,204,99,.045),rgba(77,197,255,.025));}
+  .vhb-top{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:14px 20px;border-bottom:1px solid rgba(242,204,99,.20);background:linear-gradient(90deg,rgba(242,204,99,.045),rgba(77,197,255,.025));}
   .vhb-top-copy{min-width:0;flex:1 1 auto}.vhb-top .vh5-titleline{font-size:12.5px}.vhb-top .vh5-verdict-main{margin-top:8px;font-size:34px;line-height:1.06}.vhb-top .vh5-verdict-sub{margin-top:7px;max-width:760px;font-size:14px;line-height:1.52;color:#d5dfe8}
   .vhb-badges{display:flex;gap:8px;flex:0 0 auto}.vhb-badge{min-width:155px;padding:9px 11px;border:1px solid rgba(255,255,255,.10);border-radius:11px;background:rgba(5,24,41,.58)}.vhb-badge small{display:block;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:#8fa4b7}.vhb-badge b{display:block;margin-top:3px;font-size:11.5px;line-height:1.35;color:#f4d66f}.vhb-badge.medium b{color:#62dfb5}
   .vhb-lanes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.vhb-lane{border:1px solid rgba(93,154,195,.22);border-radius:13px;background:rgba(5,25,43,.72);padding:11px}.vhb-lane.short{border-color:rgba(242,204,99,.24)}.vhb-lane.medium{border-color:rgba(63,220,168,.22)}
@@ -172,7 +172,6 @@ function vhRender(d,macro,hot){
       <div class="vhb-top-copy">
         <div class="vh5-titleline"><span class="ico">▥</span>Kết luận hôm nay</div>
         <div class="vh5-verdict-main" data-tone="${vhe(mk.tone)}">${vhe(mk.label)}</div>
-        <div class="vh5-verdict-sub">${vhe(mk.action)}</div>
       </div>
       <div class="vhb-badges" aria-label="Tóm tắt theo thời gian">
         <div class="vhb-badge"><small>Ngắn hạn · 1–5 phiên</small><b>${vhe(mk.label)}</b></div>
