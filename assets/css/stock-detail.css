@@ -289,3 +289,33 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
   .sd-insight-layout{grid-template-columns:1fr}
   .sd-right-stack{gap:6px}
 }
+
+
+/* Mobile readability hierarchy */
+@media(max-width:760px){
+  [data-panel="overview"] .sd-thesis-item p{
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+  [data-panel="overview"] .sd-thesis-item b{
+    font-size:10px!important;
+    line-height:1.35!important;
+  }
+  [data-panel="overview"] .sd-card-head span{
+    font-size:8.5px!important;
+  }
+  [data-panel="overview"] .sd-card-head h2{
+    font-size:15px!important;
+    line-height:1.25!important;
+  }
+  [data-panel="overview"] .sd-regime>span{
+    font-size:8.5px!important;
+  }
+  [data-panel="overview"] .sd-regime>strong{
+    font-size:15px!important;
+  }
+  [data-panel="overview"] .sd-regime>p{
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+}
