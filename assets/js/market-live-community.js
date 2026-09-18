@@ -66,7 +66,7 @@ function renderComposer(){
   }
   root.innerHTML=`
     <div class="community-compose">
-      <textarea id="communityText" maxlength="800" placeholder="Bạn đang chú ý điều gì? Chia sẻ ngắn gọn góc nhìn về diễn biến thị trường."></textarea>
+      <textarea id="communityText" maxlength="800" placeholder="Bạn đang theo dõi điều gì trên thị trường? Cùng trao đổi góc nhìn tại đây nhé."></textarea>
       <div class="community-compose-foot">
         <span class="community-identity">Đang bình luận với tên: ${esc(labelForUser(user))}</span>
         <button class="community-submit" type="button" id="communitySubmit">Đăng bình luận</button>
