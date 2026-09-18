@@ -1,49 +1,155 @@
-const VH_LIVE_MARKET='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed';
-const VH_LIVE_HOT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed';
+const VH_BRAIN='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test';
+const VH_HOT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed';
 
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
-const nn=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
-const fmt=(v,d=1)=>{const n=nn(v);return n==null?'—':n.toLocaleString('vi-VN',{maximumFractionDigits:d})};
-const pct=(v,d=1)=>{const n=nn(v);return n==null?'—':`${n>0?'+':''}${fmt(n,d)}%`};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nn=v=>{const x=Number(v);return Number.isFinite(x)?x:null};
+const fmt=(v,d=1)=>{const x=nn(v);return x==null?'—':x.toLocaleString('vi-VN',{maximumFractionDigits:d})};
+const pct=(v,d=1)=>{const x=nn(v);return x==null?'—':(x>0?'+':'')+fmt(x,d)+'%'};
 
-function addStyle(){if(q('#vhLivePatchStyle'))return;const s=document.createElement('style');s.id='vhLivePatchStyle';s.textContent=`
-#vhDecisionBoardV5 .vh-live-updated{transition:background-color .45s ease,box-shadow .45s ease;background-color:rgba(84,205,164,.07)!important;box-shadow:inset 0 0 0 1px rgba(84,205,164,.10)}
-#vhDecisionBoardV5 .vh-live-stamp{display:inline-flex;align-items:center;gap:5px;color:#7fd9b8}
-#vhDecisionBoardV5 .vh-live-stamp:before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
-`;document.head.appendChild(s)}
+function addStyle(){
+  if(q('#vhLivePatchStyle'))return;
+  const s=document.createElement('style');
+  s.id='vhLivePatchStyle';
+  s.textContent='#vhDecisionBoardV5 .vh-live-updated{transition:background-color .45s ease;background-color:rgba(84,205,164,.07)!important}#vhDecisionBoardV5 .vh-live-stamp{color:#7fd9b8}';
+  document.head.appendChild(s);
+}
 function flash(el){if(!el)return;el.classList.remove('vh-live-updated');void el.offsetWidth;el.classList.add('vh-live-updated');setTimeout(()=>el.classList.remove('vh-live-updated'),650)}
 function setText(el,text){if(!el||text==null||el.textContent===String(text))return false;el.textContent=String(text);flash(el);return true}
 function setHtml(el,html){if(!el||el.innerHTML===html)return false;el.innerHTML=html;flash(el);return true}
-
-function state(score){score=nn(score)??50;if(score<=25)return{score,label:'PHÒNG THỦ CAO',tone:'risk',action:'Ưu tiên giảm rủi ro danh mục, hạn chế mở vị thế mới và không dùng đòn bẩy để bắt đáy.'};if(score<40)return{score,label:'THẬN TRỌNG',tone:'negative',action:'Chưa phù hợp để mở rộng danh mục trên diện rộng; giữ tỷ trọng an toàn và chỉ chọn mã khỏe hơn thị trường.'};if(score<55)return{score,label:'TRUNG TÍNH / CHỌN LỌC',tone:'neutral',action:'Chưa có lợi thế đủ rõ để tăng mạnh tỷ trọng; giữ vị thế tốt và chờ độ rộng, dòng tiền xác nhận.'};if(score<70)return{score,label:'TÍCH CỰC CÓ ĐIỀU KIỆN',tone:'positive',action:'Có thể nâng mức chủ động từng bước, nhưng chỉ ở cổ phiếu có điểm mua và dòng tiền xác nhận.'};return{score,label:'TÍCH CỰC',tone:'positive',action:'Môi trường ngắn hạn đang thuận lợi hơn; có thể duy trì tỷ trọng chủ động nhưng vẫn giữ kỷ luật điểm mua và quản trị rủi ro.'}}
-function breadth(mi){const b=mi?.breadth||{},a=nn(b.adv),d=nn(b.dec),f=nn(b.flat)||0,bal=nn(b.balance);if(a==null||d==null)return'Dữ liệu độ rộng đang được cập nhật.';if((bal??((a-d)/(a+d+f||1)))<-.08)return`${Math.round(a)} mã tăng · ${Math.round(f)} tham chiếu · ${Math.round(d)} mã giảm. Số mã giảm đang chiếm ưu thế; chưa phù hợp để mua thêm trên diện rộng.`;if((bal??0)>.08)return`${Math.round(a)} mã tăng · ${Math.round(f)} tham chiếu · ${Math.round(d)} mã giảm. Độ lan tỏa đang tốt hơn và hỗ trợ việc chọn lọc cơ hội.`;return`${Math.round(a)} mã tăng · ${Math.round(f)} tham chiếu · ${Math.round(d)} mã giảm. Độ rộng khá cân bằng, chưa tạo lợi thế rõ.`}
-function liquidity(mi){const f=mi?.flow||{},r=nn(f.same_time_ratio);if(r==null)return'Thanh khoản chưa đủ chuẩn so sánh cùng thời điểm.';const p=Math.round(r*100);if(r<=.82)return`Thanh khoản đang ở khoảng ${p}% mức chuẩn cùng thời điểm; dòng tiền chưa đủ khỏe để xác nhận một nhịp mở rộng.`;if(r>=1.08)return`Thanh khoản đang ở khoảng ${p}% mức chuẩn cùng thời điểm; dòng tiền đang hỗ trợ tốt hơn nếu độ rộng cùng cải thiện.`;return`Thanh khoản đang ở khoảng ${p}% mức chuẩn cùng thời điểm; chưa tạo thêm lợi thế rõ cho bên mua hoặc bên bán.`}
-function actionLists(m){if(m.score<40)return{good:['Giữ tỷ trọng theo hướng an toàn; ưu tiên cổ phiếu đang khỏe hơn thị trường.','Nếu giao dịch ngắn hạn, chỉ chọn mã có dòng tiền riêng và điểm dừng lỗ rõ.'],bad:['Chưa mở rộng danh mục hoặc tăng mạnh tỷ trọng khi trạng thái thị trường còn yếu.','Không dùng đòn bẩy để bắt đáy hoặc bình quân giá xuống chỉ vì cổ phiếu đã giảm nhiều.']};if(m.score<55)return{good:['Giữ vị thế tốt và chỉ mua thêm từng phần khi cổ phiếu có tín hiệu riêng rõ.','Ưu tiên nhóm có dòng tiền thực thay vì mua theo chỉ số.'],bad:['Không tăng tỷ trọng mạnh khi độ rộng và dòng tiền chưa cùng xác nhận.','Không mua đuổi chỉ vì một vài mã đang tăng mạnh.']};return{good:['Có thể nâng mức chủ động từng bước ở cổ phiếu có xu hướng và dòng tiền xác nhận.','Giữ kỷ luật điểm mua và giới hạn rủi ro khi tăng tỷ trọng.'],bad:['Không mua đuổi các mã đã tăng nóng.','Không tăng đòn bẩy quá nhanh chỉ dựa trên một nhịp tăng ngắn.']}}
-function scenarioTexts(m){if(m.score<40)return['Thị trường có thể tiếp tục phân hóa và rung lắc. Ưu tiên giữ tỷ trọng an toàn, chỉ giao dịch ở cổ phiếu có dòng tiền riêng.','Nâng mức chủ động khi điểm trạng thái trở lại vùng trung tính, số mã tăng cải thiện rõ và thanh khoản cùng tăng.','Hạ thêm tỷ trọng nếu số mã giảm tiếp tục áp đảo, dòng tiền suy yếu và VN-Index mất thêm vùng hỗ trợ.'];if(m.score<55)return['Thị trường tiếp tục giằng co, cơ hội và rủi ro đan xen. Chiến lược phù hợp là chọn lọc thay vì mở rộng danh mục.','Có thể tăng tỷ trọng từng bước khi điểm trạng thái vượt 55, độ rộng và dòng tiền cùng xác nhận.','Quay lại phòng thủ nếu điểm trạng thái rơi dưới 40, thanh khoản suy yếu và số mã giảm mở rộng.'];return['Xu hướng ngắn hạn duy trì tích cực nhưng vẫn có rung lắc. Tiếp tục nắm giữ cổ phiếu khỏe và mua mới có chọn lọc.','Nâng mức chủ động khi điểm trạng thái vượt 70, nhóm dẫn dắt mở rộng và thanh khoản duy trì tốt.','Giảm mức chủ động nếu điểm trạng thái rơi dưới 55 hoặc chỉ số tăng nhưng độ rộng và dòng tiền bắt đầu suy yếu.']}
-function patchListHead(ul,rows){if(!ul)return;const lis=qa('li',ul);rows.forEach((t,i)=>{if(lis[i])setText(lis[i],t);else{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);flash(li)}})}
 function section(host,name){return qa('.vh5-section',host).find(x=>q('.vh5-sec-title',x)?.textContent?.toLowerCase().includes(name.toLowerCase()))||null}
+function toneClass(x){return x?.direction==='negative'?'redish':x?.direction==='positive'?'greenish':'warn'}
+function signalHeadline(x){return String(x?.title||x?.summary||'Tín hiệu đáng chú ý')}
+function signalImpact(x){return String(x?.action_effect||x?.summary||'Đọc cùng giá, độ rộng và dòng tiền trước khi thay đổi hành động.')}
 
-function patchMarket(raw){const host=q('#vhDecisionBoardV5');if(!host)return;const mi=raw?.market_intelligence||{},m=state(mi?.state?.score),short=q('.vhb-lane.short',host);
-  const verdict=q('.vhb-top .vh5-verdict-main',host);if(verdict){setText(verdict,m.label);verdict.dataset.tone=m.tone}
-  setText(q('.vhb-top .vh5-verdict-sub',host),m.action);
-  const badges=qa('.vhb-badge',host);if(badges[0])setText(q('b',badges[0]),m.label);
-  setText(q('.vhb-lane.short .vhb-lane-status',host),m.label);
-  if(short){setText(q('.vhb-cell.c1 p',short),`${m.label} · Điểm trạng thái ${Math.round(m.score)}/100. ${m.action}`);const lines=qa('.vhb-cell.c2 .vhb-mini-lines div',short);if(lines[0])setHtml(lines[0],`<b>Độ lan tỏa:</b> ${esc(breadth(mi))}`);if(lines[1])setHtml(lines[1],`<b>Dòng tiền:</b> ${esc(liquidity(mi))}`);setText(q('.vhb-cell.c4 p',short),m.action)}
-  const act=section(host,'Hành động hôm nay'),lists=act?qa('.vh5-action ul',act):[],a=actionLists(m);if(lists[0])patchListHead(lists[0],a.good);if(lists[1])patchListHead(lists[1],a.bad);
-  const sc=section(host,'Kịch bản 1–3 phiên'),cards=sc?qa('.vh5-scenario',sc):[],texts=scenarioTexts(m);cards.forEach((c,i)=>texts[i]&&setText(q('p',c),texts[i]));
-  const foot=q('.vh5-foot span',host),fresh=mi?.freshness?.label||'Dữ liệu gần nhất';if(foot){const now=new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());setHtml(foot,`<span class="vh-live-stamp">${esc(fresh)}</span> · ${esc(now)} (GMT+7)`)}}
+function patchBrain(d){
+  const host=q('#vhDecisionBoardV5');
+  const brain=d?.brain;
+  if(!host||!brain)return;
 
-function hotRows(h){return(h?.stocks||[]).filter(x=>nn(x.change_pct)!=null).sort((a,b)=>(nn(b.value_traded_bn)||0)-(nn(a.value_traded_bn)||0)).slice(0,3)}
-function patchHot(h){const host=q('#vhDecisionBoardV5');if(!host)return;const rows=hotRows(h);if(!rows.length)return;const chips=rows.map(x=>`<div class="vh5-stock-chip"><b>${esc(x.symbol)}</b><span>${esc(pct(x.change_pct,1))} · ${esc(fmt(x.value_traded_bn,1))} tỷ</span></div>`).join('');const act=section(host,'Hành động hôm nay');if(act)setHtml(q('.vh5-stock-mini',act),chips);
-  const short=q('.vhb-lane.short .vhb-cell.c4',host);if(short){let box=q('.vhb-chips',short);if(!box){box=document.createElement('div');box.className='vhb-chips';short.appendChild(box)}setHtml(box,rows.map(x=>`<span class="vhb-chip"><b>${esc(x.symbol)}</b><span class="up">${esc(pct(x.change_pct,1))}</span> · ${esc(fmt(x.value_traded_bn,1))} tỷ</span>`).join(''))}}
+  window.__VH_LIVE_SIGNAL_ITEMS__=brain.top_signals||[];
 
-function patchSlowSnapshot(s){const host=q('#vhDecisionBoardV5');if(!host||!s)return;patchHot(s.hot||{});const macro=s.macro;if(macro?.ok){const med=q('.vhb-lane.medium',host),reg=String(macro.regime||'TRUNG TÍNH');const badges=qa('.vhb-badge',host);if(badges[1])setText(q('b',badges[1]),reg);setText(q('.vhb-lane.medium .vhb-lane-status',host),reg);if(med){setText(q('.vhb-cell.c1 p',med),`${reg}. ${macro.thesis||'Tiếp tục theo dõi nền vĩ mô 3–12 tháng.'}`);const cards=macro.cards||[];if(cards[0])setText(q('.vhb-cell.c2 p',med),(cards[0].conclusion||cards[0].market_implication||'').trim());if(cards[1])setText(q('.vhb-cell.c3 p',med),(cards[1].contradiction||cards[1].watch||'').trim());const watch=(cards.map(x=>x.watch).filter(Boolean).slice(0,2).join(' · '));if(watch)setText(q('.vhb-cell.c4 p',med),watch)}
-    const sec=section(host,'Nền vĩ mô'),cardsDom=sec?qa('.vh5-card',sec):[];(macro.cards||[]).slice(0,cardsDom.length).forEach((x,i)=>{const c=cardsDom[i];setText(q('.vh5-cat',c),x.status||'THEO DÕI');setText(q('h3',c),x.title||'Vĩ mô');setText(q('.vh5-evidence',c),(x.evidence||[]).slice(0,3).join(' · '))})}}
+  setText(q('.vh5-verdict-main',host),brain?.conclusion?.label||d?.evaluation?.decision||'CHỜ XÁC NHẬN');
+  setText(q('.vh5-verdict-sub',host),brain?.conclusion?.summary||d?.evaluation?.rationale||'');
 
-async function get(url){const r=await fetch(`${url}${url.includes('?')?'&':'?'}live=1&t=${Date.now()}`,{headers:{Accept:'application/json'},cache:'no-store'});const j=await r.json();if(!r.ok||!j?.ok)throw new Error(j?.error||`HTTP ${r.status}`);return j}
-function inSession(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Ho_Chi_Minh',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).reduce((a,p)=>(a[p.type]=p.value,a),{});if(['Sat','Sun'].includes(parts.weekday))return false;const m=Number(parts.hour)*60+Number(parts.minute);return(m>=525&&m<=690)||(m>=780&&m<=900)}
-async function cycle(){if(document.visibilityState!=='visible')return;const [m,h]=await Promise.allSettled([get(VH_LIVE_MARKET),get(VH_LIVE_HOT)]);if(m.status==='fulfilled')patchMarket(m.value);if(h.status==='fulfilled')patchHot(h.value)}
-async function waitHost(){for(let i=0;i<100;i++){const h=q('#vhDecisionBoardV5.vh-final-ready')||q('#vhDecisionBoardV5');if(h)return h;await new Promise(r=>setTimeout(r,60))}return null}
-async function init(){addStyle();const host=await waitHost();if(!host)return;if(window.__vhMorningSnapshot)patchSlowSnapshot(window.__vhMorningSnapshot);window.addEventListener('vh:morning-snapshot',e=>patchSlowSnapshot(e.detail));setTimeout(()=>cycle().catch(()=>{}),120);const loop=async()=>{await cycle().catch(()=>{});setTimeout(loop,inSession()?60000:300000)};setTimeout(loop,inSession()?60000:300000)}
+  setText(q('.vhb-top .vh5-verdict-main',host),brain?.conclusion?.label||'CHỜ XÁC NHẬN');
+  setText(q('.vhb-top .vh5-verdict-sub',host),brain?.conclusion?.summary||'');
+
+  const badges=qa('.vhb-badge',host);
+  if(badges[0])setText(q('b',badges[0]),brain?.conclusion?.label||'CHỜ XÁC NHẬN');
+  setText(q('.vhb-lane.short .vhb-lane-status',host),brain?.conclusion?.label||'CHỜ XÁC NHẬN');
+  const short=q('.vhb-lane.short',host);
+  if(short){
+    const score=nn(d?.market?.state?.score);
+    setText(q('.vhb-cell.c1 p',short),(brain?.conclusion?.label||'')+(score!=null?' · Market Score '+Math.round(score)+'/100. ':' ')+(brain?.conclusion?.summary||''));
+    const c4=q('.vhb-cell.c4 p',short);
+    if(c4)setText(c4,(brain?.actions?.good||[])[0]||brain?.conclusion?.summary||'');
+  }
+
+  const sigSec=section(host,'Tín hiệu quyết định');
+  const cards=sigSec?qa('.vh5-grid3 .vh5-card',sigSec):[];
+  (brain.top_signals||[]).slice(0,3).forEach((x,i)=>{
+    const card=cards[i];if(!card)return;
+    card.classList.remove('redish','greenish','warn');
+    card.classList.add(toneClass(x));
+    setText(q('.vh5-cat',card),x.scope||x.kind||'TÍN HIỆU');
+    setText(q('h3',card),signalHeadline(x));
+    setText(q('.vh5-evidence',card),(x.evidence||[]).slice(0,2).join(' · '));
+    setText(q('.vh5-impact',card),'→ '+signalImpact(x).slice(0,180));
+  });
+
+  const act=section(host,'Hành động hôm nay');
+  const lists=act?qa('.vh5-action ul',act):[];
+  const writeList=(ul,rows)=>{
+    if(!ul)return;
+    ul.innerHTML=(rows||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+    flash(ul);
+  };
+  writeList(lists[0],brain?.actions?.good||[]);
+  writeList(lists[1],brain?.actions?.bad||[]);
+
+  const sc=section(host,'Kịch bản 1–3 phiên');
+  const scCards=sc?qa('.vh5-scenario',sc):[];
+  (brain.scenarios||[]).slice(0,3).forEach((x,i)=>{
+    const card=scCards[i];if(!card)return;
+    setText(q('b',card),x.name||'KỊCH BẢN');
+    setText(q('p',card),x.text||'');
+    const tag=q('.vh5-tag',card);
+    if(tag&&x.tag)setText(tag,x.tag);
+  });
+
+  const foot=q('.vh5-foot span',host);
+  if(foot){
+    const t=new Date(d.generated_at||brain.generated_at||Date.now()).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'});
+    setHtml(foot,'<span class="vh-live-stamp">Decision Brain</span> · '+esc(t)+' (GMT+7)');
+  }
+}
+
+function hotRows(h){
+  return(h?.stocks||[]).filter(x=>nn(x.change_pct)!=null).sort((a,b)=>(nn(b.value_traded_bn)||0)-(nn(a.value_traded_bn)||0)).slice(0,3);
+}
+function patchHot(h){
+  const host=q('#vhDecisionBoardV5');if(!host)return;
+  const rows=hotRows(h);if(!rows.length)return;
+  const act=section(host,'Hành động hôm nay');
+  const box=act?q('.vh5-stock-mini',act):null;
+  if(box)setHtml(box,rows.map(x=>'<div class="vh5-stock-chip"><b>'+esc(x.symbol)+'</b><span>'+esc(pct(x.change_pct,1))+' · '+esc(fmt(x.value_traded_bn,1))+' tỷ</span></div>').join(''));
+}
+
+function patchMacroSnapshot(s){
+  const host=q('#vhDecisionBoardV5');if(!host||!s)return;
+  const macro=s.macro;
+  if(!macro?.ok)return;
+  window.__VH_LIVE_MACRO__=macro;
+  const sec=section(host,'Nền vĩ mô'),cardsDom=sec?qa('.vh5-card',sec):[];
+  (macro.cards||[]).slice(0,cardsDom.length).forEach((x,i)=>{
+    const card=cardsDom[i];
+    setText(q('.vh5-cat',card),x.status||'THEO DÕI');
+    setText(q('h3',card),x.title||'Vĩ mô');
+    setText(q('.vh5-evidence',card),(x.evidence||[]).slice(0,3).join(' · '));
+  });
+  const reg=q('.vh5-macro-regime',sec);
+  if(reg)setHtml(reg,'<b>'+esc(macro.regime||'NỀN VĨ MÔ')+'</b> · '+esc(macro.thesis||''));
+  const badges=qa('.vhb-badge',host);
+  if(badges[1])setText(q('b',badges[1]),macro.regime||'TRUNG TÍNH');
+}
+
+async function get(url){
+  const r=await fetch(url+(url.includes('?')?'&':'?')+'brain_live=1&t='+Date.now(),{headers:{Accept:'application/json'},cache:'no-store'});
+  const j=await r.json();
+  if(!r.ok||!j?.ok)throw new Error(j?.error||('HTTP '+r.status));
+  return j;
+}
+function inSession(){
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Ho_Chi_Minh',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{});
+  if(['Sat','Sun'].includes(p.weekday))return false;
+  const m=Number(p.hour)*60+Number(p.minute);
+  return(m>=525&&m<=690)||(m>=780&&m<=900);
+}
+async function waitHost(){
+  for(let i=0;i<100;i++){
+    const h=q('#vhDecisionBoardV5.vh-final-ready')||q('#vhDecisionBoardV5');
+    if(h)return h;
+    await new Promise(r=>setTimeout(r,60));
+  }
+  return null;
+}
+async function cycle(){
+  if(document.visibilityState!=='visible')return;
+  const [b,h]=await Promise.allSettled([get(VH_BRAIN),get(VH_HOT)]);
+  if(b.status==='fulfilled')patchBrain(b.value);
+  if(h.status==='fulfilled')patchHot(h.value);
+}
+async function init(){
+  addStyle();
+  const host=await waitHost();if(!host)return;
+  if(window.__vhMorningSnapshot)patchMacroSnapshot(window.__vhMorningSnapshot);
+  window.addEventListener('vh:morning-snapshot',e=>patchMacroSnapshot(e.detail));
+  setTimeout(()=>cycle().catch(()=>{}),250);
+  const loop=async()=>{
+    await cycle().catch(()=>{});
+    setTimeout(loop,inSession()?60000:180000);
+  };
+  setTimeout(loop,inSession()?60000:180000);
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
