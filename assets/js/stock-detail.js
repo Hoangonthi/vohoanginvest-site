@@ -479,17 +479,26 @@ function renderHistory(d){
  if(si) $("#signalList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(si[1])}</div>`);
  if(ei) $("#eventList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(ei[1])}</div>`);
 }
+function scrollToRequestedSection(){
+  const id=(location.hash||"").replace(/^#/,"");
+  if(!id)return;
+  const target=document.getElementById(id);
+  if(!target)return;
+  window.setTimeout(()=>target.scrollIntoView({behavior:"smooth",block:"start"}),120);
+}
+
 function render(d){
  current=d;
  document.title=`${d.symbol} | Hồ sơ cổ phiếu | Võ Hoàng`;
  $("#symbolTitle").textContent=d.symbol;
  $("#symbolInput").value=d.symbol;
  const watchlistLink=$("#watchlistLink");
- if(watchlistLink) watchlistLink.href=`watchlist.html?symbol=${encodeURIComponent(d.symbol)}&from=profile`;
+ if(watchlistLink) watchlistLink.href=`watchlist.html?symbol=${encodeURIComponent(d.symbol)}&from=profile#them-ma`;
  $("#effectiveDate").textContent="";
  renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);
  setDataVisible(true);
  setStatus("");
+ scrollToRequestedSection();
 }
 async function fetchLiveQuote(symbol){
  try{
