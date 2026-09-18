@@ -95,7 +95,7 @@ async function loadComments(){
     return;
   }
   if(!data?.length){
-    list.innerHTML='<div class="community-empty">Chưa có bình luận nào. Người đăng nhập có thể mở đầu câu chuyện.</div>';
+    list.innerHTML='';
     return;
   }
   list.innerHTML=data.map(row=>`
