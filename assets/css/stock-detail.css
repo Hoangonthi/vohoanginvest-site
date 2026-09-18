@@ -829,3 +829,18 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
     font-size:8px!important;
   }
 }
+
+
+/* Center mobile stock hero text */
+@media(max-width:760px){
+  .sd-hero>div:first-child{
+    text-align:center!important;
+  }
+  .sd-eyebrow,
+  .sd-title-row,
+  .sd-title-row h1,
+  .sd-lead{
+    width:100%!important;
+    text-align:center!important;
+  }
+}
