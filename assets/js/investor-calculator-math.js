@@ -95,7 +95,6 @@ export function calcMarginThresholds(input={}){
     const qty=input.qty===undefined||input.qty===null||input.qty===''?0:integer(input.qty,'Số cổ phiếu',{allowZero:true});
     const callPct=percent(input.callPct,'Ngưỡng Margin Call',{allowZero:false,max:99.999});
     const forcePct=percent(input.forcePct,'Ngưỡng Force Sell',{allowZero:false,max:99.999});
-    if(forcePct>callPct)throw new Error('Theo mô hình tỷ lệ vốn/tài sản, ngưỡng Force Sell không nên cao hơn ngưỡng Margin Call. Hãy kiểm tra cấu hình CTCK.');
     const currentRatio=(marketValue-debt)/marketValue;
     const threshold=(pct)=>{
       const r=pct/100;
