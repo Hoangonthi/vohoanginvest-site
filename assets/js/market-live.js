@@ -12,6 +12,8 @@ let isAdmin = false;
 let pollCount = 0;
 let dayHistoryLoaded = false;
 let historyLoading = false;
+const HISTORY_STEP = 7;
+let timelineVisible = HISTORY_STEP;
 
 const $ = (id) => document.getElementById(id);
 const esc = (value = "") => String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
@@ -261,18 +263,65 @@ function adminActions(c){
   if(!isAdmin)return"";
   return `<div class="admin-comment-actions"><button type="button" data-edit-comment="${Number(c.id)}">Sửa bình luận</button>${c.is_final?`<span class="final-badge">ĐÃ CHỐT</span>`:""}${c.admin_edited_at?`<span class="edited-badge">ĐÃ SỬA</span>`:""}</div>`;
 }
+function renderRecentContext(){
+  const panel=$("recentContextPanel"),list=$("recentContextList");
+  if(!panel||!list)return;
+
+  const raw=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
+  const comments=isAdmin?raw:dedupeTimeline(raw);
+  if(!comments.length){panel.hidden=true;list.innerHTML="";return;}
+
+  const latestSaved=comments[0]||null;
+  const latestSavedIsMain=Boolean(latestSaved&&latestSaved.event_id==null);
+  const prior=comments.slice(latestSavedIsMain?1:0,latestSavedIsMain?3:2);
+
+  if(!prior.length){panel.hidden=true;list.innerHTML="";return;}
+
+  panel.hidden=false;
+  list.innerHTML=prior.map(c=>`
+    <article class="recent-context-item ${esc(c.tone||"neutral")}">
+      <div class="recent-context-time">${timeText(c.published_at)}</div>
+      <h3>${esc(c.headline)}</h3>
+      <p>${esc(c.body)}</p>
+      ${c.watch_next?`<div class="recent-context-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}
+    </article>`).join("");
+}
+
 function renderTimeline(){
   const list=$("timelineList");if(!list)return;
   const raw=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
   const comments=isAdmin?raw:dedupeTimeline(raw);
-  const counter=$("timelineCount");if(counter)counter.textContent=comments.length?`${comments.length} bình luận đã lưu`:"Ký ức của câu chuyện";
-  if(!comments.length){list.innerHTML=`<div class="empty">Chưa có bình luận trong ngày.</div>`;return;}
-  list.innerHTML=comments.map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
+  const visible=comments.slice(0,timelineVisible);
+  const counter=$("timelineCount");
+  const more=$("timelineMoreBtn");
+
+  if(counter)counter.textContent=comments.length
+    ?`Đang xem ${Math.min(timelineVisible,comments.length)}/${comments.length} bình luận`
+    :"Chưa có bình luận";
+
+  if(!comments.length){
+    list.innerHTML=`<div class="empty">Chưa có bình luận trong ngày.</div>`;
+    if(more)more.hidden=true;
+    return;
+  }
+
+  list.innerHTML=visible.map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
+
+  if(more){
+    const remaining=Math.max(0,comments.length-visible.length);
+    more.hidden=remaining===0;
+    more.textContent=remaining>0?`Đọc tiếp ${Math.min(HISTORY_STEP,remaining)} bình luận`:"";
+  }
+}
+
+function loadMoreTimeline(){
+  timelineVisible+=HISTORY_STEP;
+  renderTimeline();
 }
 
 
 function renderSnapshot(snapshot){setStatus(snapshot);if(!snapshot)return;renderStrip(snapshot);}
-function mergeComments(items=[],replace=false){if(replace){commentsById.clear();maxCommentId=0;}for(const c of items){const id=Number(c?.id);if(!Number.isFinite(id))continue;commentsById.set(id,c);maxCommentId=Math.max(maxCommentId,id);}renderLatest();renderTimeline();}
+function mergeComments(items=[],replace=false){if(replace){commentsById.clear();maxCommentId=0;}for(const c of items){const id=Number(c?.id);if(!Number.isFinite(id))continue;commentsById.set(id,c);maxCommentId=Math.max(maxCommentId,id);}renderLatest();renderRecentContext();renderTimeline();}
 
 async function load(initial=false){
   try{
@@ -319,11 +368,14 @@ async function toggleDayHistory(){
   const panel=$("timelinePanel"),btn=$("reviewCommentsBtn");if(!panel)return;
   if(panel.hidden){
     if(!dayHistoryLoaded)await loadDayHistory();
-    panel.hidden=false;renderTimeline();
+    timelineVisible=HISTORY_STEP;
+    panel.hidden=false;
+    renderTimeline();
     if(btn)btn.textContent="Ẩn bình luận trong ngày";
     panel.scrollIntoView({behavior:"smooth",block:"start"});
   }else{
     panel.hidden=true;
+    timelineVisible=HISTORY_STEP;
     if(btn)btn.textContent="Xem lại bình luận trong ngày";
   }
 }
@@ -340,6 +392,7 @@ async function applyCommentarySessionUi(){
   }
 
   if(!dayHistoryLoaded)await loadDayHistory();
+  timelineVisible=HISTORY_STEP;
   panel.hidden=false;
   renderTimeline();
   if(btn)btn.textContent="Ẩn bình luận trong ngày";
@@ -480,6 +533,7 @@ async function saveCommentEdit(e){
 
 function bindAdminUi(){
   $("reviewCommentsBtn")?.addEventListener("click",toggleDayHistory);
+  $("timelineMoreBtn")?.addEventListener("click",loadMoreTimeline);
   $("exportCommentsPdfBtn")?.addEventListener("click",exportCommentsPdf);
   $("adminNotePublish")?.addEventListener("click",publishAdminNote);
   $("adminLiveNote")?.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();publishAdminNote();}});
