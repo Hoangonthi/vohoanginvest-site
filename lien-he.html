@@ -3761,6 +3761,112 @@
       }
     }
 
+  
+    /* Contact page refinement */
+    .contact-title-only{
+      text-align:center;
+      padding-top:24px!important;
+      padding-bottom:18px!important;
+    }
+    .contact-title-only .policy-kicker{
+      display:block;
+      width:100%;
+      color:#f3cf74;
+      font-size:30px;
+      line-height:1.15;
+      font-weight:850;
+      letter-spacing:.035em;
+      text-align:center;
+    }
+    .direct-contact-wide{
+      padding:18px!important;
+    }
+    .direct-contact-kicker{
+      margin-bottom:12px;
+      text-align:center;
+    }
+    .direct-contact-wide .direct-contact-grid{
+      gap:12px;
+      margin-top:0;
+    }
+    .direct-contact-wide .direct-contact-card{
+      min-height:176px;
+      display:grid;
+      grid-template-columns:48px 1fr;
+      grid-template-areas:
+        "icon info"
+        "action action";
+      align-content:start;
+      gap:12px;
+      padding:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.024),rgba(255,255,255,.012));
+    }
+    .direct-contact-wide .direct-contact-icon{
+      grid-area:icon;
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      font-size:11px;
+    }
+    .direct-contact-wide .direct-contact-info{
+      grid-area:info;
+      align-self:center;
+      overflow:hidden;
+    }
+    .direct-contact-wide .direct-contact-info span{
+      font-size:8px;
+      color:var(--muted-2);
+    }
+    .direct-contact-wide .direct-contact-info strong{
+      margin-top:2px;
+      font-size:16px;
+      line-height:1.25;
+      color:#fff;
+      overflow:visible;
+    }
+    .direct-contact-wide .direct-contact-info small{
+      display:block;
+      margin-top:5px;
+      color:rgba(231,237,246,.62);
+      font-size:10px;
+      line-height:1.45;
+      overflow-wrap:anywhere;
+    }
+    .direct-contact-wide .direct-contact-action{
+      grid-area:action;
+      width:100%;
+      min-height:38px;
+      margin-top:2px;
+      border-radius:11px;
+      font-size:10px;
+      background:rgba(224,187,99,.075);
+    }
+    @media(max-width:680px){
+      .contact-title-only{padding-top:16px!important;padding-bottom:14px!important}
+      .contact-title-only .policy-kicker{font-size:24px}
+      .direct-contact-wide{padding:13px!important}
+      .direct-contact-wide .direct-contact-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .direct-contact-wide .direct-contact-card{
+        min-height:168px;
+        grid-template-columns:42px 1fr;
+        padding:12px;
+        gap:9px;
+      }
+      .direct-contact-wide .direct-contact-icon{width:42px;height:42px}
+      .direct-contact-wide .direct-contact-info strong{font-size:14px}
+      .direct-contact-wide .direct-contact-info small{font-size:9px}
+      .direct-contact-wide .direct-contact-action{font-size:9.5px}
+    }
+    @media(max-width:430px){
+      .direct-contact-wide .direct-contact-grid{grid-template-columns:1fr}
+      .direct-contact-wide .direct-contact-card{
+        min-height:126px;
+        grid-template-columns:44px 1fr auto;
+        grid-template-areas:"icon info action";
+        align-items:center;
+      }
+      .direct-contact-wide .direct-contact-action{width:auto;min-width:86px;margin-top:0;padding:0 10px}
+    }
   </style>
 </head>
 <body>
@@ -3768,13 +3874,8 @@
 <main class="policy-main">
     <div class="policy-wrap">
 
-      <section class="policy-hero">
+      <section class="policy-hero contact-title-only">
         <div class="policy-kicker">LIÊN HỆ VÕ HOÀNG</div>
-        <h1>Bắt đầu từ đúng vấn đề bạn đang cần giải quyết.</h1>
-        <p>
-          Nếu bạn muốn trao đổi về tài khoản, hệ thống đầu tư, bài đánh giá hoặc mở tài khoản chứng khoán,
-          có thể liên hệ trực tiếp qua Gmail, email công việc, điện thoại hoặc Zalo. Bạn cũng có thể chọn lối đi phù hợp bên dưới để cuộc trao đổi đi thẳng vào vấn đề.
-        </p>
       </section>
 
       <div class="contact-grid">
@@ -3891,34 +3992,35 @@
 
       <section class="contact-card direct-contact-wide">
 
-        <div class="policy-kicker">LIÊN HỆ TRỰC TIẾP</div>
-        <h2>Gmail, điện thoại hoặc Zalo</h2>
-        <p>Bạn có thể liên hệ trực tiếp với Võ Hoàng qua một trong các kênh dưới đây.</p>
+        <div class="policy-kicker direct-contact-kicker">LIÊN HỆ TRỰC TIẾP</div>
 
         <div class="direct-contact-grid">
 <div class="direct-contact-card">
               <div class="direct-contact-icon">GM</div>
               <div class="direct-contact-info">
-                <span>Gmail</span>
-                <strong>vohoang.bank@gmail.com</strong>
+                <span>Email cá nhân</span>
+                <strong>Gmail</strong>
+                <small>vohoang.bank@gmail.com</small>
               </div>
-              <a class="direct-contact-action" href="mailto:vohoang.bank@gmail.com">Gửi mail →</a>
+              <a class="direct-contact-action" href="mailto:vohoang.bank@gmail.com">Gửi email →</a>
             </div>
 
             <div class="direct-contact-card">
               <div class="direct-contact-icon">VPS</div>
               <div class="direct-contact-info">
                 <span>Email công việc</span>
-                <strong>hoangvv1@vps.com.vn</strong>
+                <strong>VPS</strong>
+                <small>hoangvv1@vps.com.vn</small>
               </div>
-              <a class="direct-contact-action" href="mailto:hoangvv1@vps.com.vn">Gửi mail →</a>
+              <a class="direct-contact-action" href="mailto:hoangvv1@vps.com.vn">Gửi email →</a>
             </div>
 
             <div class="direct-contact-card">
               <div class="direct-contact-icon">TEL</div>
               <div class="direct-contact-info">
-                <span>Điện thoại</span>
-                <strong>0971 853 227</strong>
+                <span>Liên hệ trực tiếp</span>
+                <strong>Điện thoại</strong>
+                <small>0971 853 227</small>
               </div>
               <a class="direct-contact-action" href="tel:+84971853227">Gọi ngay →</a>
             </div>
@@ -3926,8 +4028,9 @@
             <div class="direct-contact-card">
               <div class="direct-contact-icon">ZL</div>
               <div class="direct-contact-info">
-                <span>Zalo</span>
-                <strong>0928 007 302</strong>
+                <span>Nhắn tin nhanh</span>
+                <strong>Zalo</strong>
+                <small>0928 007 302</small>
               </div>
               <a class="direct-contact-action" href="https://zalo.me/0928007302" target="_blank" rel="noopener noreferrer">Mở Zalo →</a>
             </div>
