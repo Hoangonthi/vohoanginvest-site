@@ -67,6 +67,26 @@
     .side-stack{grid-template-columns:1fr!important}
     @media(max-width:900px){.live-grid{grid-template-columns:1fr!important}.market-context-line{padding:9px 10px}}
     @media(max-width:680px){.live-eyebrow{font-size:17px}.live-intro{font-size:10.5px!important}.market-context-item{font-size:10px}.market-context-item.primary b{font-size:13px}}
+  
+    /* Running context ticker */
+    .live-grid{grid-template-columns:1fr!important}
+    .market-marquee{position:relative;overflow:hidden;border:1px solid var(--line2);border-radius:13px;background:rgba(255,255,255,.018)}
+    .market-marquee::before,.market-marquee::after{content:"";position:absolute;top:0;bottom:0;width:26px;z-index:2;pointer-events:none}
+    .market-marquee::before{left:0;background:linear-gradient(90deg,#07192a,transparent)}
+    .market-marquee::after{right:0;background:linear-gradient(270deg,#07192a,transparent)}
+    .market-marquee-track{display:flex;width:max-content;will-change:transform;animation:vhMarketMarquee var(--marquee-duration,48s) linear infinite}
+    .market-marquee:hover .market-marquee-track{animation-play-state:paused}
+    .market-marquee-group{display:flex;align-items:center;flex:none;padding:10px 28px 10px 12px}
+    .market-context-item{flex:none;white-space:nowrap}
+    @keyframes vhMarketMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @media(prefers-reduced-motion:reduce){.market-marquee-track{animation:none}.market-marquee{overflow-x:auto}.market-marquee-group[aria-hidden="true"]{display:none}}
+    @media(max-width:680px){
+      .live-topline{justify-content:center;flex-direction:column;gap:7px;text-align:center}
+      .live-eyebrow{width:100%;text-align:center}
+      .live-status{margin:0 auto}
+      .live-intro{max-width:330px!important;margin:5px auto 0!important;text-align:center}
+      .market-marquee-group{padding-top:9px;padding-bottom:9px}
+    }
   </style>
 </head>
 <body>
@@ -80,7 +100,7 @@
         </div>
         <p class="live-intro">Theo dõi diễn biến thị trường trong phiên, câu chuyện đang dẫn dắt và điều cần nhìn tiếp.</p>
         <div class="live-strip" id="liveStrip">
-          <div class="market-context-line"><span class="market-context-item"><span>Đang chờ dữ liệu thị trường...</span></span></div>
+          <div class="market-marquee"><div class="market-marquee-track"><div class="market-marquee-group"><span class="market-context-item"><span>Đang chờ dữ liệu thị trường...</span></span></div></div></div>
         </div>
         <div class="live-tools">
           <button type="button" id="reviewCommentsBtn">Xem lại bình luận trong ngày</button>
@@ -114,12 +134,6 @@
           </div>
         </section>
 
-        <aside class="side-stack">
-          <div class="panel">
-            <div class="panel-head"><h2>Cổ phiếu nổi bật</h2><span>Thanh khoản đủ lớn</span></div>
-            <div class="side-body" id="marketLeaders"><div class="empty">Đang chờ dữ liệu...</div></div>
-          </div>
-        </aside>
       </div>
 
       <div class="live-links"><a href="thi-truong-hom-nay.html">← Thị trường hôm nay</a><a href="tin-tuc-24h.html">Tin tức 24h →</a></div>
@@ -149,7 +163,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js" defer></script>
   <script src="assets/js/market-ticker.js?v=20260914-1" defer></script>
-  <script type="module" src="assets/js/market-live.js?v=20260918-commentary-ui3"></script>
+  <script type="module" src="assets/js/market-live.js?v=20260918-commentary-ui4"></script>
   <script type="module" src="assets/js/site-header.js?v=20260914-2"></script>
 </body>
 </html>
