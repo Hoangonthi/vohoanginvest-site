@@ -15,6 +15,17 @@ let historyLoading = false;
 const HISTORY_STEP = 7;
 let timelineVisible = HISTORY_STEP;
 
+const marqueeState={
+  raf:0,
+  lastTs:0,
+  offset:0,
+  width:0,
+  speed:52,
+  track:null,
+  first:null,
+  second:null
+};
+
 const $ = (id) => document.getElementById(id);
 const esc = (value = "") => String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
 const num = (v) => { if(v===null||v===undefined||v==="")return null; const x=Number(v); return Number.isFinite(x)?x:null; };
@@ -68,6 +79,54 @@ function liquidStockExtremes(snapshot){
   };
 }
 
+function startMarqueeLoop(){
+  if(marqueeState.raf)return;
+  const step=(ts)=>{
+    if(!marqueeState.lastTs)marqueeState.lastTs=ts;
+    const dt=Math.min(50,Math.max(0,ts-marqueeState.lastTs));
+    marqueeState.lastTs=ts;
+
+    if(marqueeState.track&&marqueeState.width>0){
+      marqueeState.offset+=marqueeState.speed*(dt/1000);
+      if(marqueeState.offset>=marqueeState.width){
+        marqueeState.offset%=marqueeState.width;
+      }
+      marqueeState.track.style.transform=`translate3d(-${marqueeState.offset}px,0,0)`;
+    }
+
+    marqueeState.raf=requestAnimationFrame(step);
+  };
+  marqueeState.raf=requestAnimationFrame(step);
+}
+
+function measureMarquee(){
+  if(!marqueeState.first)return;
+  requestAnimationFrame(()=>{
+    if(!marqueeState.first)return;
+    const width=marqueeState.first.getBoundingClientRect().width;
+    if(width>0){
+      marqueeState.width=width;
+      if(marqueeState.offset>=width)marqueeState.offset%=width;
+    }
+  });
+}
+
+function ensureMarqueeShell(el){
+  let track=el.querySelector(".market-marquee-track");
+  let groups=el.querySelectorAll(".market-marquee-group");
+
+  if(!track||groups.length<2){
+    el.innerHTML=`<div class="market-marquee"><div class="market-marquee-track"><div class="market-marquee-group"></div><div class="market-marquee-group" aria-hidden="true"></div></div></div>`;
+    track=el.querySelector(".market-marquee-track");
+    groups=el.querySelectorAll(".market-marquee-group");
+  }
+
+  marqueeState.track=track;
+  marqueeState.first=groups[0]||null;
+  marqueeState.second=groups[1]||null;
+  startMarqueeLoop();
+}
+
 function renderStrip(snapshot){
   const el=$("liveStrip");if(!el||!snapshot)return;
   const v=snapshot.vnindex||{};
@@ -88,17 +147,15 @@ function renderStrip(snapshot){
     weakStocks?`<span class="market-context-item"><span>Mã yếu</span><b class="down">${esc(weakStocks)}</b></span>`:""
   ].filter(Boolean).join("");
 
-  el.innerHTML=`<div class="market-marquee"><div class="market-marquee-track"><div class="market-marquee-group">${items}</div><div class="market-marquee-group" aria-hidden="true">${items}</div></div></div>`;
+  ensureMarqueeShell(el);
 
-  requestAnimationFrame(()=>{
-    const track=el.querySelector(".market-marquee-track");
-    const first=el.querySelector(".market-marquee-group");
-    if(!track||!first)return;
-    const distance=first.getBoundingClientRect().width;
-    const duration=Math.max(26,Math.min(72,distance/52));
-    track.style.setProperty("--marquee-shift",`-${distance}px`);
-    track.style.setProperty("--marquee-duration",`${duration}s`);
-  });
+  if(marqueeState.first&&marqueeState.first.innerHTML!==items){
+    marqueeState.first.innerHTML=items;
+    marqueeState.second.innerHTML=items;
+    measureMarquee();
+  }else if(!marqueeState.width){
+    measureMarquee();
+  }
 }
 
 function sectorRows(snapshot){return Array.isArray(snapshot?.sectors?.all)?snapshot.sectors.all:[];}
@@ -565,6 +622,7 @@ function bindAdminUi(){
 }
 
 async function start(){
+  window.addEventListener("resize",measureMarquee,{passive:true});
   bindAdminUi();
   await load(true);
   await applyCommentarySessionUi();
