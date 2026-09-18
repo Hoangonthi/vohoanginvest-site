@@ -90,7 +90,7 @@ function flowInsight(f){
   return ["Dòng tiền",items.join(" "),""];
 }
 function fundamentalInsight(b){
-  if(!hasMeaningfulFundamental(b)) return ["Cơ bản","Hiện chưa đủ dữ liệu Cơ bản đáng tin cậy để hệ thống diễn giải; phần này được để trống thay vì suy đoán.","watch"];
+  if(!hasMeaningfulFundamental(b)) return ["Cơ bản","Hiện chưa đủ dữ liệu Cơ bản đáng tin cậy để diễn giải; phần này được để trống thay vì suy đoán.","watch"];
   const parts=[];
   if(valid(b.return_on_equity)) parts.push(`ROE hiện ${fmtPct(b.return_on_equity)}`);
   if(valid(b.profit_margin)) parts.push(`biên lợi nhuận ${fmtPct(b.profit_margin)}`);
@@ -229,9 +229,9 @@ function buildDynamicAnalysis(d){
     if(valid(b.pe))val.push(`P/E ${fmtNum(b.pe)}x`);
     if(valid(b.pb))val.push(`P/B ${fmtNum(b.pb)}x`);
     if(valid(b.ps))val.push(`P/S ${fmtNum(b.ps)}x`);
-    if(val.length)addPoint(neutral,"Định giá hiện tại",`${val.join(" · ")}. Hệ thống chưa gọi rẻ/đắt khi chưa có benchmark lịch sử và ngành.`,"");
+    if(val.length)addPoint(neutral,"Định giá hiện tại",`${val.join(" · ")}. Chưa kết luận rẻ/đắt khi chưa có benchmark lịch sử và ngành.`,"");
   }else{
-    addPoint(risk,"Cơ bản chưa đủ dữ liệu","Nguồn hiện chưa có đủ số liệu Cơ bản đáng tin cậy để đánh giá doanh nghiệp; hệ thống không suy diễn từ các giá trị 0 mặc định.","watch");
+    addPoint(risk,"Cơ bản chưa đủ dữ liệu","Nguồn hiện chưa có đủ số liệu Cơ bản đáng tin cậy để đánh giá doanh nghiệp; không diễn giải các giá trị 0 mặc định thành dữ liệu thực.","watch");
   }
 
   let regime="PHÂN HÓA — CẦN ĐỌC TỪNG LỚP";
@@ -356,7 +356,7 @@ function renderTechnical(d){
  ];
  const insight=[technicalInsight(t),momentumInsight(t)].filter(Boolean);
  $("#technicalGrid").innerHTML=arr.map(([a,b,sub])=>cell(a,b,sub||"")).join("")+
-   (insight.length?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${insight.map(x=>esc(x[1])).join(" ")}</div>`:"");
+   (insight.length?`<div class="sd-analysis" style="grid-column:1/-1"><b>Nhận định:</b> ${insight.map(x=>esc(x[1])).join(" ")}</div>`:"");
 }
 function renderFlow(d){
  const f=d.flow||{};
@@ -369,13 +369,13 @@ function renderFlow(d){
  </div>`;
  const fi=flowInsight(f);
  $("#flowGrid").innerHTML=one("1 phiên",f.window_1)+one("5 phiên",f.window_5)+one("20 phiên",f.window_20)+
-   (fi?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${esc(fi[1])}</div>`:"");
+   (fi?`<div class="sd-analysis" style="grid-column:1/-1"><b>Nhận định:</b> ${esc(fi[1])}</div>`:"");
 }
 function renderFundamental(d){
  const b=d.fundamental||{};
  $("#fundamentalDate").textContent=b.snapshot_date?`Snapshot ${dateVN(b.snapshot_date)}`:"";
  if(!hasMeaningfulFundamental(b)){
-   $("#fundamentalGrid").innerHTML=`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản để phân tích. Hệ thống không diễn giải các giá trị 0 mặc định như dữ liệu thực.</div><div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> Chưa đủ dữ liệu đáng tin cậy nên không tạo kết luận Cơ bản cho mã này.</div>`;
+   $("#fundamentalGrid").innerHTML=`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản để phân tích. Không diễn giải các giá trị 0 mặc định như dữ liệu thực.</div><div class="sd-analysis" style="grid-column:1/-1"><b>Nhận định:</b> Chưa đủ dữ liệu đáng tin cậy để kết luận phần Cơ bản của mã này.</div>`;
    return;
  }
  const fields=[
@@ -390,7 +390,7 @@ function renderFundamental(d){
  const have=fields.filter(([,v])=>v!==null&&v!==undefined&&v!==""&&v!=="—");
  const fi=fundamentalInsight(b);
  $("#fundamentalGrid").innerHTML=(have.length?have.map(([a,v])=>cell(a,typeof v==="number"?fmtNum(v):v)).join(""):`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản.</div>`)+
-   (fi?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${esc(fi[1])}</div>`:"");
+   (fi?`<div class="sd-analysis" style="grid-column:1/-1"><b>Nhận định:</b> ${esc(fi[1])}</div>`:"");
 }
 function renderHistory(d){
  const sig=d.signals||[], ev=d.market_events||[];
@@ -400,8 +400,8 @@ function renderHistory(d){
  }).join(""):`<div class="sd-empty">Chưa có tín hiệu HT gần đây.</div>`;
  $("#eventList").innerHTML=ev.length?ev.map(e=>`<div class="sd-list-item"><header><strong>${esc(e.title)}</strong><time>${dateVN(e.event_date)}</time></header><p>${esc(e.summary||"")}</p><small>${esc(e.category||"SK")} · cách ngày đang xem ${Math.abs(Number(e.days_from_event||0))} ngày</small></div>`).join(""):`<div class="sd-empty">Không có SK trong cửa sổ thời gian hiện tại.</div>`;
  const si=signalInsight(sig), ei=eventInsight(ev,d);
- if(si) $("#signalList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Hệ thống đọc:</b> ${esc(si[1])}</div>`);
- if(ei) $("#eventList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Hệ thống đọc:</b> ${esc(ei[1])}</div>`);
+ if(si) $("#signalList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(si[1])}</div>`);
+ if(ei) $("#eventList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(ei[1])}</div>`);
 }
 function render(d){
  current=d;
@@ -436,7 +436,7 @@ async function load(symbol){
  clearVisibleData();
  $("#symbolTitle").textContent=s||"—";
  if(!/^[A-Z0-9]{2,12}$/.test(s)){setStatus("Mã cổ phiếu chưa hợp lệ.",true);return}
- setStatus("Đang đọc Stock Memory và tính chỉ số…");
+ setStatus("Đang cập nhật dữ liệu…");
  try{
   const url=`${SUPABASE_URL}/functions/v1/stock-metrics-v1?symbol=${encodeURIComponent(s)}`;
   const [r,liveQuote]=await Promise.all([
