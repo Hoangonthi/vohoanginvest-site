@@ -1,6 +1,7 @@
 const EPS=1e-12;
 
 function finiteNumber(value,name){
+  if(value===null||value===undefined||(typeof value==='string'&&value.trim()===''))throw new Error(name+' không được để trống.');
   const n=Number(value);
   if(!Number.isFinite(n))throw new Error(name+' phải là số hợp lệ.');
   return n;
