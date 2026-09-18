@@ -7,6 +7,14 @@ const fmtNum=(v,d=2)=>{
   return new Intl.NumberFormat("vi-VN",{maximumFractionDigits:d}).format(n);
 };
 const fmtPct=(v)=>v===null||v===undefined||!Number.isFinite(Number(v))?"—":`${Number(v)>0?"+":""}${fmtNum(v,2)}%`;
+const fmtCompact=(v)=>{
+  if(v===null||v===undefined||v===""||!Number.isFinite(Number(v))) return "—";
+  const n=Number(v), a=Math.abs(n);
+  if(a>=1_000_000_000) return `${fmtNum(n/1_000_000_000,2)} Tỷ`;
+  if(a>=1_000_000) return `${fmtNum(n/1_000_000,2)} Tr`;
+  if(a>=1_000) return `${fmtNum(n/1_000,2)} N`;
+  return fmtNum(n,0);
+};
 const cls=(v)=>v===null||v===undefined?"":Number(v)>0?"up":Number(v)<0?"down":"";
 const esc=(s)=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const dateVN=(v)=>{if(!v)return"—";const [y,m,d]=String(v).slice(0,10).split("-");return d&&m&&y?`${d}/${m}/${y}`:String(v)};
@@ -313,7 +321,7 @@ function renderOverview(d){
     metric("20 phiên",fmtPct(t.return_20d_pct),"",cls(t.return_20d_pct)),
     metric("RSI14",fmtNum(t.rsi14),valid(t.rsi14)?(Number(t.rsi14)>=70?"Vùng cao":Number(t.rsi14)>=50?"Trên 50":Number(t.rsi14)<=30?"Vùng thấp":"Dưới 50"):""),
     metric("MA20",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"Trên":"Dưới"):"—",valid(t.ma20)?fmtNum(t.ma20):"",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"up":"down"):""),
-    metric("Ngoại 20P",fmtNum(f.window_20?.foreign_net_volume,0),"cp ròng",cls(f.window_20?.foreign_net_volume))
+    metric("Ngoại 20P",fmtCompact(f.window_20?.foreign_net_volume),"cp ròng",cls(f.window_20?.foreign_net_volume))
   ].join("");
 
   const a=buildDynamicAnalysis(d);
@@ -342,7 +350,7 @@ function renderOverview(d){
     cell("KL / TB20",valid(t.volume_vs_avg20)?fmtNum(t.volume_vs_avg20)+"x":"—"),
     cell("ATR14 / Giá",valid(t.atr14_pct)?fmtPct(t.atr14_pct):"—"),
     cell("Vị trí biên 60P",valid(t.range60?.position_pct)?fmtPct(t.range60.position_pct):"—"),
-    cell("Ngoại 5P",fmtNum(f.window_5?.foreign_net_volume,0),"",cls(f.window_5?.foreign_net_volume)),
+    cell("Ngoại 5P",fmtCompact(f.window_5?.foreign_net_volume),"",cls(f.window_5?.foreign_net_volume)),
     cell("MA20 dốc",valid(t.ma20_slope_5d_pct)?fmtPct(t.ma20_slope_5d_pct):"—"),
     cell("MA50 dốc",valid(t.ma50_slope_10d_pct)?fmtPct(t.ma50_slope_10d_pct):"—")
   ].join("");
@@ -364,10 +372,10 @@ function renderTechnical(d){
 function renderFlow(d){
  const f=d.flow||{};
  const one=(label,w)=>`<div class="sd-flow-card"><h3>${label}</h3>
-   <div class="sd-flow-row"><span>Khối ngoại</span><b class="${cls(w?.foreign_net_volume)}">${fmtNum(w?.foreign_net_volume,0)}</b></div>
-   <div class="sd-flow-row"><span>Tự doanh</span><b class="${cls(w?.proprietary_net_volume)}">${fmtNum(w?.proprietary_net_volume,0)}</b></div>
-   <div class="sd-flow-row"><span>Chủ động mua/bán</span><b class="${cls(w?.active_net_volume)}">${fmtNum(w?.active_net_volume,0)}</b></div>
-   <div class="sd-flow-row"><span>Dư mua - dư bán</span><b class="${cls(w?.bid_ask_surplus_net_volume)}">${fmtNum(w?.bid_ask_surplus_net_volume,0)}</b></div>
+   <div class="sd-flow-row"><span>Khối ngoại</span><b class="${cls(w?.foreign_net_volume)}">${fmtCompact(w?.foreign_net_volume)}</b></div>
+   <div class="sd-flow-row"><span>Tự doanh</span><b class="${cls(w?.proprietary_net_volume)}">${fmtCompact(w?.proprietary_net_volume)}</b></div>
+   <div class="sd-flow-row"><span>Chủ động mua/bán</span><b class="${cls(w?.active_net_volume)}">${fmtCompact(w?.active_net_volume)}</b></div>
+   <div class="sd-flow-row"><span>Dư mua - dư bán</span><b class="${cls(w?.bid_ask_surplus_net_volume)}">${fmtCompact(w?.bid_ask_surplus_net_volume)}</b></div>
    <div class="sd-flow-row"><span>Số phiên có dữ liệu</span><b>${fmtNum(w?.rows_available,0)}</b></div>
  </div>`;
  const fi=flowInsight(f);
