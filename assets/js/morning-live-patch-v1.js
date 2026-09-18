@@ -21,7 +21,7 @@ function section(host,name){return qa('.vh5-section',host).find(x=>q('.vh5-sec-t
 function toneClass(x){return x?.direction==='negative'?'redish':x?.direction==='positive'?'greenish':'warn'}
 function signalHeadline(x){return String(x?.title||x?.summary||'Tín hiệu đáng chú ý')}
 function signalImpact(x){return String(x?.action_effect||x?.summary||'Đọc cùng giá, độ rộng và dòng tiền trước khi thay đổi hành động.')}
-function shortBrainLabel(d){const raw=d?.brain?.conclusion?.label_short||d?.shortBrainLabel(d);const s=String(raw).trim(),u=s.toUpperCase();if(u.includes('PHÒNG THỦ'))return'PHÒNG THỦ';if(u.includes('THẬN TRỌNG'))return'THẬN TRỌNG';if(u.includes('TÍCH CỰC'))return'TÍCH CỰC';if(u.includes('CHỌN LỌC'))return'CHỌN LỌC';if(u.includes('THEO DÕI')||u.includes('QUAN SÁT'))return'QUAN SÁT';if(u.includes('TRUNG TÍNH'))return'TRUNG TÍNH';return s.split(/[·:–—]/)[0].trim().split(/\s+/).slice(0,3).join(' ').toUpperCase()}
+function shortBrainLabel(d){const raw=d?.brain?.conclusion?.label_short||d?.brain?.conclusion?.label||d?.evaluation?.decision||'CHỜ XÁC NHẬN';const s=String(raw).trim(),u=s.toUpperCase();if(u.includes('PHÒNG THỦ'))return'PHÒNG THỦ';if(u.includes('THẬN TRỌNG'))return'THẬN TRỌNG';if(u.includes('TÍCH CỰC'))return'TÍCH CỰC';if(u.includes('CHỌN LỌC'))return'CHỌN LỌC';if(u.includes('THEO DÕI')||u.includes('QUAN SÁT'))return'QUAN SÁT';if(u.includes('TRUNG TÍNH'))return'TRUNG TÍNH';return s.split(/[·:–—]/)[0].trim().split(/\s+/).slice(0,3).join(' ').toUpperCase()}
 
 function patchBrain(d){
   const host=q('#vhDecisionBoardV5');
