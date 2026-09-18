@@ -160,13 +160,171 @@ details.admin-tech code{
   background:#f1f4f7;color:#596778;font-size:9px;overflow-wrap:anywhere
 }
 .admin-filters-label{font-size:11px;font-weight:800;color:#526174}
+.admin-tabs{
+  display:flex;
+  gap:6px;
+  margin:0 0 22px;
+  padding:4px;
+  width:max-content;
+  max-width:100%;
+  border:1px solid var(--admin-line);
+  border-radius:12px;
+  background:#fff;
+}
+.admin-tab{
+  min-height:38px;
+  padding:0 14px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#657184;
+  font:inherit;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.admin-tab.is-active{
+  background:var(--admin-navy);
+  color:#fff;
+  box-shadow:0 4px 12px rgba(16,35,59,.14);
+}
+.admin-tab-panel{min-width:0}
+
+.visitor-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);
+  gap:12px;
+  align-items:start;
+}
+.visitor-card{
+  padding:14px 15px;
+  display:grid;
+  gap:10px;
+  cursor:pointer;
+  transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.visitor-card:hover{
+  border-color:#c8d3df;
+  box-shadow:0 10px 28px rgba(27,42,65,.07);
+  transform:translateY(-1px);
+}
+.visitor-card.is-selected{
+  border-color:#9eb0c5;
+  box-shadow:0 0 0 2px rgba(51,93,157,.08),0 12px 30px rgba(27,42,65,.07);
+}
+.visitor-card-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.visitor-card h3{margin:0 0 4px;font-size:16px}
+.visitor-card-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px 10px;
+  color:var(--admin-muted);
+  font-size:10.5px;
+  line-height:1.45;
+}
+.visitor-kind{
+  display:inline-flex;
+  align-items:center;
+  min-height:25px;
+  padding:0 8px;
+  border-radius:999px;
+  background:#eef2f7;
+  color:#526174;
+  font-size:9.5px;
+  font-weight:850;
+  white-space:nowrap;
+}
+.visitor-kind.is-anonymous{background:#f0f2f5;color:#697484}
+.visitor-kind.is-login{background:#edf3fb;color:#3d5f8a}
+.visitor-kind.is-known{background:#edf8f3;color:#17684f}
+.visitor-attention{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  font-size:9.5px;
+  font-weight:850;
+}
+.visitor-attention.is-high{background:#fff1e8;color:#a64c1e}
+.visitor-attention.is-medium{background:#fff8df;color:#826518}
+.visitor-attention.is-low{background:#eef5fb;color:#496680}
+.visitor-actions-preview{
+  display:grid;
+  gap:4px;
+  padding-top:8px;
+  border-top:1px solid #edf1f5;
+}
+.visitor-actions-preview div{
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:8px;
+  color:#566477;
+  font-size:10.5px;
+  line-height:1.45;
+}
+.visitor-actions-preview time{color:#8d98a7;font-variant-numeric:tabular-nums}
+.visitor-detail{
+  position:sticky;
+  top:78px;
+  min-height:300px;
+  padding:16px;
+}
+.visitor-detail h2{margin:0 0 5px;font-size:18px}
+.visitor-detail-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:14px;
+}
+.visitor-detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:12px;
+}
+.visitor-detail-box{
+  padding:10px;
+  border:1px solid #e7ecf2;
+  border-radius:10px;
+  background:#f8fafc;
+}
+.visitor-detail-box span{display:block;color:#7b8796;font-size:9.5px;font-weight:700}
+.visitor-detail-box strong{display:block;margin-top:3px;font-size:12px}
+.visitor-timeline{display:grid;gap:0;margin-top:12px}
+.visitor-timeline-item{
+  display:grid;
+  grid-template-columns:50px 1fr;
+  gap:10px;
+  padding:9px 0;
+  border-top:1px solid #edf1f5;
+}
+.visitor-timeline-item time{
+  color:#8a95a4;
+  font-size:10px;
+  font-variant-numeric:tabular-nums;
+}
+.visitor-timeline-item strong{display:block;font-size:11px;line-height:1.45}
+.visitor-timeline-item span{display:block;margin-top:2px;color:#7a8695;font-size:9.5px;line-height:1.45}
+
 @media(max-width:1050px){
+  .visitor-layout{grid-template-columns:1fr}
+  .visitor-detail{position:static}
   .admin-metrics{grid-template-columns:repeat(3,1fr)}
   .person-card{grid-template-columns:130px 1fr 1fr}
   .person-card>.admin-activity{grid-column:2/4}
   .person-card>.admin-actions{grid-column:1/4;justify-content:flex-start;max-width:none}
 }
 @media(max-width:760px){
+  .admin-tabs{width:100%}
+  .admin-tab{flex:1}
+  .visitor-detail-grid{grid-template-columns:1fr 1fr}
   .admin-wrap{width:min(100% - 20px,1240px);margin-top:14px}
   .admin-hero{align-items:flex-start;flex-direction:column}
   .admin-hero h1{font-size:23px}
