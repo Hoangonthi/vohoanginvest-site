@@ -141,14 +141,7 @@ function renderOverview(d){
         ${cell("Ngoại 5P",fmtNum(f.window_5?.foreign_net_volume,0),"",cls(f.window_5?.foreign_net_volume))}
       </div>
     </article>
-    <article class="sd-card sd-compact-card"><div class="sd-card-head"><div><span>ĐỘ PHỦ DỮ LIỆU</span><h2>Hệ thống đang biết gì</h2></div></div>
-      <div class="sd-grid">
-        ${cell("D1",valid(t.bars_used)?fmtNum(t.bars_used,0)+" phiên":"—")}
-        ${cell("Cơ bản",hasMeaningfulFundamental(b)?"Có":"Chưa đủ")}
-        ${cell("HT",String(sig.length))}
-        ${cell("SK",String(ev.length))}
-      </div>
-    </article>`;
+`;
 }
 function renderTechnical(d){
  const t=d.technical||{};
