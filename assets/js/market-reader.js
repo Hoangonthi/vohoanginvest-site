@@ -25,6 +25,13 @@ function pct(v){const x=n(v);return x===null?"—":`${x>0?"+":""}${fmtTrim(x,2)}
 function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 function tone(v){const t=String(v||"neutral");return ["positive","warning","danger","neutral"].includes(t)?t:"neutral"}
 function safeHref(v){const h=String(v||"");return /^[a-z0-9-]+\.html(?:[?#].*)?$/i.test(h)?h:"#"}
+function actionHref(link){
+  const href=String(link?.href||"");
+  const label=String(link?.label||"").toLowerCase();
+  if(href.includes("tinh-rui-ro-danh-muc.html")||label.includes("rủi ro danh mục"))return "investor-calculator.html#portfolio";
+  if(href.includes("tinh-quy-mo-lenh-co-phieu.html")||label.includes("quy mô lệnh"))return "investor-calculator.html#position";
+  return safeHref(href);
+}
 function index(data,symbol){return Array.isArray(data?.indexes)?data.indexes.find(x=>String(x?.symbol||"")===symbol):null}
 function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
 function setHtml(id,v){const e=document.getElementById(id);if(e)e.innerHTML=v}
@@ -73,7 +80,7 @@ function renderState(mi){
   setText("readerAction",humanize(mi?.action?.headline||"Theo dõi thêm dữ liệu."));
   setText("readerActionDetail",humanize(mi?.action?.detail||""));
   const links=Array.isArray(mi?.action?.links)?mi.action.links:[];
-  setHtml("readerActions",links.map(x=>`<a href="${safeHref(x?.href)}" data-reader-cta="tool">${esc(x?.label||"Mở công cụ")}</a>`).join(""));
+  setHtml("readerActions",links.map(x=>`<a href="${actionHref(x)}" data-reader-cta="tool">${esc(x?.label||"Mở công cụ")}</a>`).join(""));
 }
 
 function ensureViewpoint(){
