@@ -8,8 +8,16 @@ const $=s=>document.querySelector(s);
 const loginBox=$('#loginBox'),app=$('#app'),loginForm=$('#loginForm'),googleLogin=$('#googleLogin');
 const loginMsg=$('#loginMsg'),logout=$('#logout'),days=$('#days'),refresh=$('#refresh');
 const metrics=$('#metrics'),rates=$('#rates'),sources=$('#sources'),sync=$('#sync'),queue=$('#queue');
-const search=$('#search'),priority=$('#priority'),temperature=$('#temperature');
+const search=$('#search'),priority=$('#priority'),temperature=$('#temperature'),todaySummary=$('#todaySummary');
 let rows=[];
+
+function plainCrmText(v=''){
+  return String(v||'')
+    .replace(/\blead\b/gi,'khách')
+    .replace(/assessment/gi,'bài đánh giá')
+    .replace(/follow-?up/gi,'liên hệ tiếp')
+    .replace(/\bgap\b/gi,'điểm cần cải thiện');
+}
 
 function zaloPhone(phone=''){
   let p=String(phone).replace(/\D/g,'');
@@ -45,12 +53,22 @@ function activityBox(r){
   const actions=Array.isArray(r.web_actions_today)?r.web_actions_today:[];
   const tools=Array.isArray(r.web_tools_today)?r.web_tools_today:[];
   if(!r.web_session_id||!Number(r.web_events_today||0)){
-    return '<div class="admin-activity"><div class="admin-activity-title">Hoạt động hôm nay <span>Chưa ghi nhận</span></div><div class="admin-help">Chưa có dấu vết sử dụng website trong hôm nay từ phiên đã gắn với khách này.</div></div>';
+    return '<div class="admin-activity"><div class="admin-activity-title">Hoạt động hôm nay <span>Chưa ghi nhận</span></div><div class="admin-help">Chưa ghi nhận hoạt động website hôm nay từ phiên đã gắn với khách này.</div></div>';
+  }
+  const seen=new Set();
+  const uniqueActions=[];
+  for(const a of actions){
+    const label=actionText(a);
+    const key=String(a.tool_code||'')+'|'+String(a.event_type||'')+'|'+label;
+    if(seen.has(key))continue;
+    seen.add(key);
+    uniqueActions.push({...a,_label:label});
+    if(uniqueActions.length>=5)break;
   }
   return '<div class="admin-activity">'
     +'<div class="admin-activity-title">Hoạt động trên website hôm nay <span>'+Number(r.web_events_today||0)+' lượt · gần nhất '+formatTime(r.web_last_seen_at)+'</span></div>'
     +'<div class="admin-activity-tools">'+tools.map(t=>'<span class="admin-tool">'+esc(toolLabel(t))+'</span>').join('')+'</div>'
-    +'<div class="admin-activity-list">'+actions.slice(0,5).map(a=>'<div class="admin-activity-item"><time>'+formatTime(a.created_at)+'</time><span>'+esc(actionText(a))+'</span></div>').join('')+'</div>'
+    +'<div class="admin-activity-list">'+uniqueActions.map(a=>'<div class="admin-activity-item"><time>'+formatTime(a.created_at)+'</time><span>'+esc(a._label)+'</span></div>').join('')+'</div>'
     +'</div>';
 }
 
@@ -72,7 +90,7 @@ function renderQueue(){
     const tags=(r.tags||[]).map(x=>'<span class="admin-tool">'+esc(tagLabel(x))+'</span>').join('');
     const phone=r.phone||'';
     return '<article class="admin-card person-card">'
-      +'<div><span class="admin-badge '+priorityClass(r.priority)+'">'+esc(priorityLabel(r.priority))+'</span><div class="admin-score">'+Number(r.lead_score||0)+'</div><span class="admin-badge">'+esc(temperatureLabel(r.temperature))+'</span></div>'
+      +'<div><span class="admin-badge '+priorityClass(r.priority)+'">'+esc(priorityLabel(r.priority))+'</span><div class="admin-score">'+Number(r.lead_score||0)+'</div><div class="admin-help" style="margin:-1px 0 7px">Điểm ưu tiên</div><span class="admin-badge">'+esc(temperatureLabel(r.temperature))+'</span></div>'
       +'<div class="person-contact"><h3>'+esc(r.full_name||'Chưa có tên')+'</h3><div class="person-meta">'
         +(phone?'<a href="tel:'+esc(phone)+'"><strong>'+esc(phone)+'</strong></a>':'<span>Chưa có số điện thoại</span>')
         +(r.email?'<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>':'<span>Chưa có email</span>')
@@ -81,7 +99,7 @@ function renderQueue(){
       +'</div></div>'
       +'<div>'+sourceBox(r.source)+'<div class="person-meta" style="margin-top:8px"><span>Đánh giá gần nhất: '+esc(severityLabel(r.latest_assessment_severity))+'</span><span>Điểm đánh giá: '+(r.latest_assessment_score??'—')+(r.latest_assessment_gap?' · Điểm cần cải thiện: '+esc(r.latest_assessment_gap):'')+'</span></div></div>'
       +activityBox(r)
-      +'<div class="admin-actions"><div style="width:100%;font-size:11px;line-height:1.5"><strong>'+esc(r.next_action_title||'Theo dõi khách')+'</strong><div class="admin-help">'+esc(r.priority_reason||'')+'</div><div class="admin-help">'+esc(dueText(r.next_action_due_at))+'</div></div>'
+      +'<div class="admin-actions"><div style="width:100%;font-size:11px;line-height:1.5"><strong>'+esc(plainCrmText(r.next_action_title||'Theo dõi khách'))+'</strong><div class="admin-help">'+esc(plainCrmText(r.priority_reason||''))+'</div><div class="admin-help">'+esc(dueText(r.next_action_due_at))+'</div></div>'
         +'<a class="is-main" href="khach-hang.html?id='+encodeURIComponent(r.customer_id)+'">Hồ sơ khách</a>'
         +(phone?'<a href="tel:'+esc(phone)+'">Gọi</a><a href="https://zalo.me/'+esc(zaloPhone(phone))+'" target="_blank" rel="noopener">Zalo</a>':'')
         +(r.task_id?'<button class="is-done" data-task="'+esc(r.task_id)+'">Đã xử lý xong</button>':'')
@@ -133,6 +151,14 @@ async function load(){
   sources.innerHTML=(sf.sources||[]).map(s=>'<span class="admin-chip">'+esc(sourceLabel(s.source))+': <strong>'+Number(s.count||0)+'</strong></span>').join('');
 
   rows=queueRes.data||[];
+  const activeToday=rows.filter(r=>Number(r.web_events_today||0)>0).length;
+  const hasPhone=rows.filter(r=>String(r.phone||'').trim()).length;
+  const overdue=rows.filter(r=>r.next_action_due_at&&new Date(r.next_action_due_at).getTime()<Date.now()).length;
+  todaySummary.innerHTML=[
+    ['Có hoạt động web hôm nay',activeToday],
+    ['Có số điện thoại để liên hệ',hasPhone],
+    ['Việc đang quá hạn',overdue]
+  ].map(x=>'<span class="admin-chip">'+esc(x[0])+': <strong>'+Number(x[1]||0)+'</strong></span>').join('');
   renderQueue();
 }
 
