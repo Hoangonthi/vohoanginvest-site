@@ -144,7 +144,7 @@ function render(){
   const shownRows=rows.slice(0,visibleCount);
   out.className='';
   out.innerHTML=`<table class="table"><thead><tr><th>Mã</th><th>Tín hiệu</th><th>Nền giá</th><th>Điểm T+</th><th>Giá</th><th>Tăng/giảm</th><th>GTGD (tỷ)</th><th>KL dự kiến</th><th>KL phiên trước</th><th>Hành động</th></tr></thead><tbody>${shownRows.map(r=>`<tr>
-    <td class="symbol"><a class="symbol-link" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}" title="Xem hồ sơ ${esc(r.symbol)}">${esc(r.symbol)}</a></td>
+    <td class="symbol"><a class="symbol-link" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}#tong-quan" title="Xem hồ sơ ${esc(r.symbol)}">${esc(r.symbol)}</a></td>
     <td><span class="pill ${signalClass(r.signal_class)}">${esc(signalText(r.signal_class))}</span></td>
     <td>${esc(baseText(r.base_type))}</td>
     <td><b>${fmt(r.t_score,0)}</b></td>
@@ -153,7 +153,7 @@ function render(){
     <td>${fmt(r.value_traded_bn,2)}</td>
     <td>${fmt(r.projected_volume_ratio_pct,1)}%</td>
     <td>${fmt(r.previous_volume_ratio_pct,1)}%</td>
-    <td><div class="row-actions"><a class="row-action primary" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}">Xem hồ sơ</a><a class="row-action" href="watchlist.html?symbol=${encodeURIComponent(r.symbol)}&from=notable">+ Theo dõi</a></div></td>
+    <td><div class="row-actions"><a class="row-action primary" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}#tong-quan">Xem hồ sơ</a><a class="row-action" href="watchlist.html?symbol=${encodeURIComponent(r.symbol)}&from=notable#them-ma">+ Theo dõi</a></div></td>
   </tr>`).join('')}</tbody></table>`;
 
   updateExpandButton(rows.length);
