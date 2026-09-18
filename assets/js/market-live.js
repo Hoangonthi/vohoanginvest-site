@@ -32,6 +32,26 @@ function setStatus(snapshot){
   root.querySelector("span").textContent=live?`TRỰC TIẾP · ${timeText(snapshot.captured_at)}`:`Dữ liệu gần nhất · ${timeText(snapshot.captured_at)}`;
 }
 
+function liquidStockExtremes(snapshot){
+  const map=new Map();
+  for(const s of sectorRows(snapshot)){
+    for(const side of ["top_gainers","top_losers"]){
+      for(const x of (s?.[side]||[])){
+        const p=num(x?.change_pct),vol=num(x?.volume),price=num(x?.price),turnover=price!==null&&vol!==null?price*vol/1000000:null;
+        if(!x?.symbol||p===null||vol===null||turnover===null||vol<500000||turnover<15)continue;
+        const row={symbol:String(x.symbol).toUpperCase(),pct:p,sector:s.name||"",turnover};
+        const old=map.get(row.symbol);
+        if(!old||Math.abs(row.pct)>Math.abs(old.pct))map.set(row.symbol,row);
+      }
+    }
+  }
+  const all=[...map.values()];
+  return{
+    strong:all.filter(x=>x.pct>0).sort((a,b)=>b.pct-a.pct).slice(0,3),
+    weak:all.filter(x=>x.pct<0).sort((a,b)=>a.pct-b.pct).slice(0,3)
+  };
+}
+
 function renderStrip(snapshot){
   const el=$("liveStrip");if(!el||!snapshot)return;
   const v=snapshot.vnindex||{};
@@ -40,13 +60,19 @@ function renderStrip(snapshot){
   const breadth=num(v.adv)!==null&&num(v.dec)!==null?`${Math.round(v.adv)} tăng / ${Math.round(v.dec)} giảm`:null;
   const sectorText=(rows)=>rows.slice(0,3).filter(x=>x&&num(x.change_pct)!==null).map(x=>`${x.name||x.symbol} ${pct(x.change_pct)}`).join(" · ");
   const strongText=sectorText(strong),weakText=sectorText(weak);
+  const stocks=liquidStockExtremes(snapshot);
+  const stockText=(rows)=>rows.map(x=>`${x.symbol} ${pct(x.pct)}`).join(" · ");
+  const strongStocks=stockText(stocks.strong),weakStocks=stockText(stocks.weak);
   const items=[
     `<span class="market-context-item primary"><b class="${toneClass(v.change)}">VN-Index ${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})</b></span>`,
     breadth?`<span class="market-context-item"><span>Độ rộng</span><b>${breadth}</b></span>`:"",
     strongText?`<span class="market-context-item"><span>Nhóm mạnh</span><b class="up">${esc(strongText)}</b></span>`:"",
-    weakText?`<span class="market-context-item"><span>Nhóm yếu</span><b class="down">${esc(weakText)}</b></span>`:""
-  ].filter(Boolean);
-  el.innerHTML=`<div class="market-context-line">${items.join("")}</div>`;
+    weakText?`<span class="market-context-item"><span>Nhóm yếu</span><b class="down">${esc(weakText)}</b></span>`:"",
+    strongStocks?`<span class="market-context-item"><span>Mã mạnh</span><b class="up">${esc(strongStocks)}</b></span>`:"",
+    weakStocks?`<span class="market-context-item"><span>Mã yếu</span><b class="down">${esc(weakStocks)}</b></span>`:""
+  ].filter(Boolean).join("");
+  const duration=Math.max(34,Math.min(70,Math.round(items.length/18)));
+  el.innerHTML=`<div class="market-marquee" style="--marquee-duration:${duration}s"><div class="market-marquee-track"><div class="market-marquee-group">${items}</div><div class="market-marquee-group" aria-hidden="true">${items}</div></div></div>`;
 }
 
 function sectorRows(snapshot){return Array.isArray(snapshot?.sectors?.all)?snapshot.sectors.all:[];}
@@ -236,34 +262,8 @@ function renderMarketNow(snapshot){
 }
 
 function stockPct(row){return num(row?.change_pct??row?.changePct??row?.pct);}
-function renderLeaders(snapshot){
-  const root=$("marketLeaders");if(!root||!snapshot)return;
-  const map=new Map();
-  for(const s of (snapshot?.sectors?.all||[])){
-    for(const side of ["top_gainers","top_losers"]){
-      for(const x of (s?.[side]||[])){
-        const p=stockPct(x),vol=num(x?.volume),price=num(x?.price),turnover=price!==null&&vol!==null?price*vol/1000000:null;
-        if(!x?.symbol||p===null||vol===null||turnover===null||vol<500000||turnover<15)continue;
-        const row={symbol:String(x.symbol).toUpperCase(),pct:p,sector:s.name||"",turnover};
-        const old=map.get(row.symbol);
-        if(!old||Math.abs(row.pct)>Math.abs(old.pct))map.set(row.symbol,row);
-      }
-    }
-  }
-  const all=[...map.values()];
-  const strong=all.filter(x=>x.pct>0).sort((a,b)=>b.pct-a.pct).slice(0,3);
-  const weak=all.filter(x=>x.pct<0).sort((a,b)=>a.pct-b.pct).slice(0,3);
-  const rows=(items)=>items.map(x=>`<div class="mini-row"><span>${esc(x.symbol)}${x.sector?` · ${esc(x.sector)}`:""}</span><b class="${toneClass(x.pct)}">${pct(x.pct)}</b></div>`).join("");
-  const sections=[];
-  if(strong.length)sections.push(`<div class="section-mini"><h3>3 mã mạnh · thanh khoản đủ lớn</h3><div class="row-list">${rows(strong)}</div></div>`);
-  if(weak.length)sections.push(`<div class="section-mini"><h3>3 mã yếu · thanh khoản đủ lớn</h3><div class="row-list">${rows(weak)}</div></div>`);
-  const panel=root.closest(".panel");
-  if(!sections.length){if(panel)panel.hidden=true;root.innerHTML="";return;}
-  if(panel)panel.hidden=false;
-  root.innerHTML=sections.join("");
-}
 
-function renderSnapshot(snapshot){setStatus(snapshot);if(!snapshot)return;renderStrip(snapshot);renderMarketNow(snapshot);renderLeaders(snapshot);const st=$("snapshotTime");if(st)st.textContent=timeText(snapshot.captured_at);}
+function renderSnapshot(snapshot){setStatus(snapshot);if(!snapshot)return;renderStrip(snapshot);}
 function mergeComments(items=[],replace=false){if(replace){commentsById.clear();maxCommentId=0;}for(const c of items){const id=Number(c?.id);if(!Number.isFinite(id))continue;commentsById.set(id,c);maxCommentId=Math.max(maxCommentId,id);}renderLatest();renderTimeline();}
 
 async function load(initial=false){
