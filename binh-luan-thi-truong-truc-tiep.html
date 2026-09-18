@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/market-live.css?v=20260918-clean3">
+  <link rel="stylesheet" href="assets/css/market-live.css?v=20260918-clean4">
 </head>
 <body>
   <div id="siteHeader"></div>
@@ -77,6 +77,11 @@
             <div class="recent-context-list" id="recentContextList"></div>
           </div>
 
+          <div class="live-history-action">
+            <button type="button" id="reviewCommentsBtn">Xem lại bình luận trong ngày</button>
+            <span id="historyInfo">Đã lưu bình luận theo ngày</span>
+          </div>
+
           <div class="panel timeline" id="timelinePanel" hidden>
             <div class="panel-head">
               <h2>Bình luận trong ngày</h2>
@@ -94,10 +99,8 @@
         <aside class="live-side" id="communityMount"></aside>
       </div>
 
-      <div class="live-tools">
-        <button type="button" id="reviewCommentsBtn">Xem lại bình luận trong ngày</button>
+      <div class="live-tools live-tools-export">
         <button type="button" id="exportCommentsPdfBtn">Xuất PDF</button>
-        <span id="historyInfo">Đã lưu bình luận theo ngày</span>
       </div>
 
       <div class="live-links">
