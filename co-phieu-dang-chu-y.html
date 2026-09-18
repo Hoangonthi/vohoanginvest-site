@@ -267,7 +267,16 @@
       font-weight:800;
       display:inline-flex;
       align-items:center;
+      justify-content:center;
     }
+    .row-action.primary{
+      background:linear-gradient(180deg,#f0cf79,#d8b254);
+      color:#211705;
+      border-color:rgba(224,187,99,.55);
+    }
+    .row-actions{display:flex;gap:6px;justify-content:flex-end}
+    .symbol-link{display:inline-block;color:var(--gold2);font-weight:900}
+    .symbol-link:hover{text-decoration:underline}
     .empty{
       padding:34px;
       text-align:center;
@@ -405,7 +414,7 @@
   <!-- Footer dùng chung toàn website, cùng source với trang chủ -->
   <div id="siteFooter"></div>
 
-  <script src="assets/js/co-phieu-dang-chu-y.js?v=20260917-3" defer></script>
+  <script src="assets/js/co-phieu-dang-chu-y.js?v=20260918-4" defer></script>
   <script type="module" src="assets/js/site-header.js?v=20260917-9"></script>
 </body>
 </html>
