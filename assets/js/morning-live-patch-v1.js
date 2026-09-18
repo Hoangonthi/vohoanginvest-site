@@ -31,10 +31,8 @@ function patchBrain(d){
   window.__VH_LIVE_SIGNAL_ITEMS__=brain.top_signals||[];
 
   setText(q('.vh5-verdict-main',host),shortBrainLabel(d));
-  setText(q('.vh5-verdict-sub',host),brain?.conclusion?.summary||d?.evaluation?.rationale||'');
 
   setText(q('.vhb-top .vh5-verdict-main',host),shortBrainLabel(d));
-  setText(q('.vhb-top .vh5-verdict-sub',host),brain?.conclusion?.summary||'');
 
   const badges=qa('.vhb-badge',host);
   if(badges[0])setText(q('b',badges[0]),shortBrainLabel(d));
