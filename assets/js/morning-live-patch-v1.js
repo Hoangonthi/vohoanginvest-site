@@ -22,6 +22,13 @@ function toneClass(x){return x?.direction==='negative'?'redish':x?.direction==='
 function signalHeadline(x){return String(x?.title||x?.summary||'Tín hiệu đáng chú ý')}
 function signalImpact(x){return String(x?.action_effect||x?.summary||'Đọc cùng giá, độ rộng và dòng tiền trước khi thay đổi hành động.')}
 function shortBrainLabel(d){const raw=d?.brain?.conclusion?.label_short||d?.brain?.conclusion?.label||d?.evaluation?.decision||'CHỜ XÁC NHẬN';const s=String(raw).trim(),u=s.toUpperCase();if(u.includes('PHÒNG THỦ'))return'PHÒNG THỦ';if(u.includes('THẬN TRỌNG'))return'THẬN TRỌNG';if(u.includes('TÍCH CỰC'))return'TÍCH CỰC';if(u.includes('CHỌN LỌC'))return'CHỌN LỌC';if(u.includes('THEO DÕI')||u.includes('QUAN SÁT'))return'QUAN SÁT';if(u.includes('TRUNG TÍNH'))return'TRUNG TÍNH';return s.split(/[·:–—]/)[0].trim().split(/\s+/).slice(0,3).join(' ').toUpperCase()}
+function shortMacroStatus(raw){
+  const s=String(raw||'').trim(),u=s.toUpperCase();
+  if(u.includes('KÉM THUẬN LỢI'))return'TIỀN TỆ CHẶT HƠN';
+  if(u.includes('RỦI RO TIỀN TỆ'))return'THEO DÕI TIỀN TỆ';
+  if(u.includes('TIỀN TỆ THUẬN LỢI'))return'TIỀN TỆ THUẬN LỢI';
+  return s;
+}
 
 function patchBrain(d){
   const host=q('#vhDecisionBoardV5');
@@ -90,7 +97,7 @@ function patchBrain(d){
     const t=new Date(d.generated_at||brain.generated_at||Date.now()).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'});
     setHtml(foot,'<span class="vh-live-stamp">Decision Brain</span> · '+esc(t)+' (GMT+7)');
   }
-  requestAnimationFrame(()=>window.__VH_CARD_EQUALIZER__?.(host));
+  requestAnimationFrame(()=>{window.__VH_CARD_EQUALIZER__?.(host);window.__VH_DASH_CARD_EQUALIZER__?.(host)});
 }
 
 function hotRows(h){
@@ -112,7 +119,7 @@ function patchMacroSnapshot(s){
   const sec=section(host,'Nền vĩ mô'),cardsDom=sec?qa('.vh5-card',sec):[];
   (macro.cards||[]).slice(0,cardsDom.length).forEach((x,i)=>{
     const card=cardsDom[i];
-    setText(q('.vh5-cat',card),x.status||'THEO DÕI');
+    setText(q('.vh5-cat',card),shortMacroStatus(x.status||'THEO DÕI'));
     setText(q('h3',card),x.title||'Vĩ mô');
     setText(q('.vh5-evidence',card),(x.evidence||[]).slice(0,3).join(' · '));
   });
@@ -120,6 +127,7 @@ function patchMacroSnapshot(s){
   if(reg)setHtml(reg,'<b>'+esc(macro.regime||'NỀN VĨ MÔ')+'</b> · '+esc(macro.thesis||''));
   const badges=qa('.vhb-badge',host);
   if(badges[1])setText(q('b',badges[1]),macro.regime||'TRUNG TÍNH');
+  requestAnimationFrame(()=>window.__VH_DASH_CARD_EQUALIZER__?.(host));
 }
 
 async function get(url){
