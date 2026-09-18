@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/stock-detail.css?v=20260918-15">
+  <link rel="stylesheet" href="assets/css/stock-detail.css?v=20260918-16">
 </head>
 <body>
   <div id="siteHeader"></div>
@@ -68,8 +68,8 @@
           <div id="masterView"></div>
         </article>
 
-        <div class="sd-masonry" id="overviewMasonry">
-          <article class="sd-card sd-masonry-card sd-expandable" data-expandable>
+        <div class="sd-insight-layout">
+          <article class="sd-card sd-support-card sd-expandable" data-expandable>
             <div class="sd-card-head sd-section-head"><div><span>ĐIỂM ĐANG ỦNG HỘ</span><h2>Những gì đang đứng về phía cổ phiếu</h2></div><em class="sd-count positive" id="supportCount"></em></div>
             <div class="sd-expand-body">
               <div class="sd-thesis-list" id="supportList"></div>
@@ -77,20 +77,24 @@
             <button class="sd-expand-toggle" type="button" hidden>Xem thêm</button>
           </article>
 
-          <article class="sd-card sd-masonry-card sd-expandable" data-expandable>
-            <div class="sd-card-head sd-section-head"><div><span>ĐIỂM CÒN VƯỚNG</span><h2>Những gì chưa xác nhận hoặc đang chống lại</h2></div><em class="sd-count negative" id="riskCount"></em></div>
-            <div class="sd-expand-body">
-              <div class="sd-thesis-list" id="riskList"></div>
-            </div>
-            <button class="sd-expand-toggle" type="button" hidden>Xem thêm</button>
-          </article>
+          <div class="sd-right-stack">
+            <article class="sd-card sd-expandable" data-expandable>
+              <div class="sd-card-head sd-section-head"><div><span>ĐIỂM CÒN VƯỚNG</span><h2>Những gì chưa xác nhận hoặc đang chống lại</h2></div><em class="sd-count negative" id="riskCount"></em></div>
+              <div class="sd-expand-body">
+                <div class="sd-thesis-list" id="riskList"></div>
+              </div>
+              <button class="sd-expand-toggle" type="button" hidden>Xem thêm</button>
+            </article>
 
-          <article class="sd-card sd-masonry-card">
-            <div class="sd-card-head sd-section-head"><div><span>3 KỊCH BẢN</span><h2>Điều kiện cần theo dõi tiếp</h2></div><em class="sd-count neutral">Theo dữ liệu hiện tại</em></div>
-            <div class="sd-scenarios" id="scenarioGrid"></div>
-          </article>
+            <article class="sd-card">
+              <div class="sd-card-head sd-section-head"><div><span>3 KỊCH BẢN</span><h2>Điều kiện cần theo dõi tiếp</h2></div><em class="sd-count neutral">Theo dữ liệu hiện tại</em></div>
+              <div class="sd-scenarios" id="scenarioGrid"></div>
+            </article>
+          </div>
+        </div>
 
-          <article class="sd-card sd-masonry-card sd-expandable" data-expandable>
+        <div class="sd-two">
+          <article class="sd-card sd-expandable" data-expandable>
             <div class="sd-card-head sd-section-head"><div><span>KHI NÀO ĐỔI QUAN ĐIỂM?</span><h2>Điểm xác nhận & điểm vô hiệu</h2></div><em class="sd-count neutral" id="changeCount"></em></div>
             <div class="sd-expand-body">
               <div class="sd-thesis-list" id="changeView"></div>
@@ -98,7 +102,7 @@
             <button class="sd-expand-toggle" type="button" hidden>Xem thêm</button>
           </article>
 
-          <article class="sd-card sd-masonry-card sd-expandable" data-expandable>
+          <article class="sd-card sd-expandable" data-expandable>
             <div class="sd-card-head sd-section-head"><div><span>LỊCH SỬ SETUP</span><h2>Chính mã này từng phản ứng thế nào?</h2></div><em class="sd-count neutral">Kết quả quá khứ</em></div>
             <div class="sd-expand-body" id="historyEdge"></div>
             <button class="sd-expand-toggle" type="button" hidden>Xem thêm</button>
@@ -154,7 +158,7 @@
 
   <div id="siteFooter"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/stock-detail.js?v=20260918-14"></script>
+  <script type="module" src="assets/js/stock-detail.js?v=20260918-15"></script>
   <script type="module" src="assets/js/site-header.js?v=20260913-8"></script>
 </body>
 </html>
