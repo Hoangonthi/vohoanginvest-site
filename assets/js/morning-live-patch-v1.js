@@ -75,7 +75,15 @@ function patchBrain(d){
     setText(q('b',card),x.name||'KỊCH BẢN');
     setText(q('p',card),x.text||'');
     const tag=q('.vh5-tag',card);
-    if(tag&&x.tag)setText(tag,x.tag);
+    if(tag){setText(tag,x.tag||'');tag.style.display=x.tag?'inline-block':'none'}
+  });
+
+  const change=section(host,'Điều kiện đổi quan điểm');
+  const changeCards=change?qa('[data-vh-change]',change):[];
+  (brain.change_view||[]).slice(0,3).forEach((x,i)=>{
+    const card=changeCards[i];if(!card)return;
+    setText(q('h3',card),x||'');
+    flash(card);
   });
 
   const foot=q('.vh5-foot span',host);
