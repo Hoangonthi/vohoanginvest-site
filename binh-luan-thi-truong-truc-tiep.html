@@ -4,181 +4,101 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Bình luận thị trường trực tiếp | Võ Hoàng</title>
-  <meta name="description" content="Theo dõi câu chuyện thị trường trong phiên: VN-Index, thế trận, nhóm ngành, cổ phiếu nổi bật, vùng kỹ thuật và điều cần nhìn tiếp.">
+  <meta name="description" content="Theo dõi diễn biến thị trường trong phiên, câu chuyện đang dẫn dắt và điều cần nhìn tiếp.">
   <meta name="theme-color" content="#04111f">
   <link rel="canonical" href="https://www.vohoanginvest.com/binh-luan-thi-truong-truc-tiep.html">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#04111f;--panel:#081b2f;--panel2:#0a2138;--line:rgba(224,187,99,.17);--line2:rgba(255,255,255,.075);--gold:#e0bb63;--gold2:#f3cf74;--text:#f5f7fb;--muted:rgba(231,237,246,.68);--muted2:rgba(231,237,246,.48);--green:#35e08b;--red:#ff6b72;--orange:#ffae57;--max:1240px}
-    *{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--text);background:radial-gradient(circle at 85% 0,rgba(224,187,99,.075),transparent 24%),linear-gradient(180deg,#04111d,#06172a 45%,#04111f);min-height:100vh}a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}.live-main{padding:20px 0 0}.live-wrap{width:min(calc(100% - 32px),var(--max));margin:0 auto}.live-hero{padding:18px 0 20px;border-bottom:1px solid rgba(224,187,99,.13)}.live-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.live-eyebrow{color:var(--gold2);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.live-status{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid rgba(53,224,139,.22);border-radius:999px;background:rgba(53,224,139,.055);font-size:11px;font-weight:700;color:#baf6d4}.live-status i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(53,224,139,.09)}.live-status.off{color:var(--muted);border-color:var(--line2);background:rgba(255,255,255,.02)}.live-status.off i{background:#8493a3;box-shadow:none}.live-hero h1{margin:10px 0 0;max-width:900px;font-size:35px;line-height:1.14;letter-spacing:-.035em}.live-hero p{margin:10px 0 0;max-width:900px;color:var(--muted);font-size:13.5px;line-height:1.68}.live-strip{display:grid;grid-template-columns:1.2fr repeat(4,minmax(0,.8fr));gap:8px;margin:14px 0 0}.stat{min-width:0;padding:12px 13px;border:1px solid var(--line2);border-radius:13px;background:rgba(255,255,255,.018)}.stat span{display:block;color:var(--muted2);font-size:9px;text-transform:uppercase;letter-spacing:.08em}.stat strong{display:block;margin-top:5px;font-size:15px;line-height:1.25}.stat.primary strong{font-size:20px}.up{color:var(--green)!important}.down{color:var(--red)!important}.flat{color:#e8edf3!important}
-    .admin-panel{margin-top:10px;border:1px dashed rgba(224,187,99,.35);border-radius:14px;background:rgba(224,187,99,.045);padding:12px}.admin-panel[hidden]{display:none!important}.admin-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.admin-panel-head strong{font-size:11px;color:var(--gold2);letter-spacing:.06em;text-transform:uppercase}.admin-panel-head span{font-size:9px;color:var(--muted2)}.admin-compose{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:stretch}.admin-compose-fields{display:grid;gap:8px}.admin-compose input,.admin-compose textarea{width:100%;border:1px solid var(--line2);border-radius:11px;background:#06182a;color:var(--text);padding:10px 11px;outline:none}.admin-compose input{min-height:42px;font-weight:700}.admin-compose textarea{min-height:72px;resize:vertical}.admin-compose input:focus,.admin-compose textarea:focus{border-color:rgba(224,187,99,.5)}.admin-compose button,.admin-comment-actions button,.dialog-actions button{border:1px solid rgba(224,187,99,.35);border-radius:10px;background:rgba(224,187,99,.09);color:var(--gold2);font-weight:700;padding:0 14px;cursor:pointer}.admin-compose button:disabled,.admin-comment-actions button:disabled,.dialog-actions button:disabled{opacity:.5;cursor:not-allowed}.admin-note-msg{margin-top:7px;color:var(--muted);font-size:10px}.admin-note-history{margin-top:8px;display:grid;gap:6px}.admin-note-row{display:grid;grid-template-columns:64px 1fr;gap:8px;padding-top:6px;border-top:1px solid var(--line2)}.admin-note-row span{font-size:9px;color:var(--muted2)}.admin-note-row p{margin:0;font-size:10px;color:var(--muted);line-height:1.5}.admin-note-empty{font-size:9px;color:var(--muted2)}
-    .live-grid{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(300px,.78fr);gap:14px;margin-top:14px}.panel{border:1px solid var(--line);border-radius:18px;background:radial-gradient(circle at 100% 0,rgba(224,187,99,.035),transparent 34%),linear-gradient(180deg,rgba(8,27,46,.97),rgba(6,22,38,.96));box-shadow:0 14px 32px rgba(0,0,0,.16);overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line2)}.panel-head h2{margin:0;font-size:15px}.panel-head span{color:var(--muted2);font-size:10px}.latest{padding:18px}.latest-time{color:var(--gold2);font-size:11px;font-weight:800}.latest h2{margin:7px 0 0;font-size:24px;line-height:1.28;letter-spacing:-.025em}.latest-body{margin:11px 0 0;color:rgba(245,247,251,.88);font-size:14px;line-height:1.75}.watch-next{margin-top:15px;padding:12px 13px;border-left:2px solid var(--gold);border-radius:0 12px 12px 0;background:rgba(224,187,99,.045);font-size:12.5px;line-height:1.65}.watch-next b{color:var(--gold2)}.last-event{margin-top:10px;color:var(--muted2);font-size:10px;line-height:1.55}.last-event b{color:#d9c78f}details.evidence{margin-top:13px;border-top:1px solid var(--line2);padding-top:10px}details.evidence summary{width:max-content;color:#d8c182;font-size:11px;font-weight:700;cursor:pointer}.evidence-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:10px}.evi{padding:9px 10px;border:1px solid var(--line2);border-radius:10px;background:rgba(255,255,255,.015)}.evi span{display:block;color:var(--muted2);font-size:8px;text-transform:uppercase}.evi b{display:block;margin-top:4px;font-size:11px}.timeline{margin-top:14px}.timeline-list{padding:3px 17px 10px}.timeline-item{position:relative;padding:15px 0 15px 24px;border-bottom:1px solid var(--line2)}.timeline-item:last-child{border-bottom:0}.timeline-item::before{content:"";position:absolute;left:4px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(224,187,99,.07)}.timeline-item.positive::before{background:var(--green)}.timeline-item.warning::before,.timeline-item.danger::before{background:var(--red)}.timeline-time{color:var(--muted2);font-size:9px}.timeline-item h3{margin:4px 0 0;font-size:13px;line-height:1.4}.timeline-item p{margin:5px 0 0;color:var(--muted);font-size:11.5px;line-height:1.6}.timeline-watch{margin-top:6px;color:var(--muted2);font-size:10px;line-height:1.5}.timeline-watch b{color:#d8c182}.admin-comment-actions{display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap}.admin-comment-actions button{padding:5px 8px;font-size:9px}.final-badge,.edited-badge{display:inline-flex;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:800}.final-badge{color:#baf6d4;border:1px solid rgba(53,224,139,.22);background:rgba(53,224,139,.06)}.edited-badge{color:#ead18c;border:1px solid rgba(224,187,99,.22);background:rgba(224,187,99,.05)}.side-stack{display:grid;gap:12px}.side-body{padding:14px 15px}.side-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.side-cell{padding:10px;border:1px solid var(--line2);border-radius:11px;background:rgba(255,255,255,.015)}.side-cell span{display:block;color:var(--muted2);font-size:8px;text-transform:uppercase}.side-cell b{display:block;margin-top:4px;font-size:11px}.section-mini{margin-top:14px;padding-top:12px;border-top:1px solid var(--line2)}.section-mini:first-child{margin-top:0;padding-top:0;border-top:0}.section-mini h3{margin:0 0 8px;font-size:10px;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em}.row-list{display:grid;gap:7px}.mini-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:10.5px}.mini-row span{color:var(--muted)}.empty{padding:22px 18px;color:var(--muted);font-size:12px;line-height:1.65}.live-note{margin:14px 0 0;text-align:center;color:var(--muted2);font-size:9.5px;line-height:1.5}.live-links{display:flex;justify-content:center;gap:8px 14px;flex-wrap:wrap;margin-top:10px}.live-links a{font-size:10.5px;color:#e8cf8f}.footer-space{height:8px}
-    dialog.comment-editor{width:min(720px,calc(100% - 24px));border:1px solid rgba(224,187,99,.3);border-radius:16px;background:#07192b;color:var(--text);padding:0;box-shadow:0 30px 80px rgba(0,0,0,.45)}dialog.comment-editor::backdrop{background:rgba(1,8,15,.72);backdrop-filter:blur(3px)}.dialog-head{padding:14px 16px;border-bottom:1px solid var(--line2);font-size:14px;font-weight:800}.dialog-body{padding:15px}.dialog-body label{display:block;margin:10px 0 5px;color:var(--muted2);font-size:9px;text-transform:uppercase}.dialog-body input[type="text"],.dialog-body textarea{width:100%;border:1px solid var(--line2);border-radius:10px;background:#041321;color:var(--text);padding:10px;outline:none}.dialog-body textarea{min-height:120px;resize:vertical}.dialog-body #editWatchNext{min-height:80px}.final-check{display:flex!important;align-items:center;gap:8px;margin-top:12px!important;color:var(--text)!important;text-transform:none!important;font-size:11px!important}.dialog-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:14px}.dialog-actions button{padding:9px 12px}.dialog-actions .ghost{color:var(--muted);border-color:var(--line2);background:rgba(255,255,255,.02)}.edit-msg{margin-right:auto;color:var(--muted);font-size:10px}
-    @media(max-width:900px){.live-grid{grid-template-columns:1fr}.side-stack{grid-template-columns:1fr 1fr}.live-strip{grid-template-columns:repeat(3,minmax(0,1fr))}.stat.primary{grid-column:span 1}}
-    @media(max-width:680px){.live-wrap{width:min(calc(100% - 20px),var(--max))}.live-main{padding-top:12px}.live-hero h1{font-size:27px}.live-hero p{font-size:12px}.live-status{font-size:9.5px}.live-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.stat{padding:10px}.stat.primary{grid-column:1/-1}.stat.primary strong{font-size:18px}.admin-compose{grid-template-columns:1fr}.admin-compose button{min-height:40px}.live-grid{gap:10px}.latest{padding:15px 13px}.latest h2{font-size:20px}.latest-body{font-size:13px;line-height:1.68}.watch-next{font-size:11.5px}.evidence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.timeline-list{padding-left:13px;padding-right:13px}.side-stack{grid-template-columns:1fr}.panel-head{padding:13px}.side-body{padding:12px}.live-note{padding:0 8px}}
-  
-    /* Commentary-first layout: bình luận là nội dung chính, dữ liệu chỉ làm bối cảnh. */
-    .live-hero{padding:14px 0 15px}
-    .live-hero h1{max-width:980px;font-size:32px}
-    .live-hero p{max-width:980px;margin-top:8px;font-size:12.5px;line-height:1.6}
-    .live-strip{margin-top:11px}
-    .stat{padding:10px 11px}
-    .stat strong{font-size:13px}
-    .stat.primary strong{font-size:18px}
-    .live-grid{grid-template-columns:minmax(0,1.92fr) minmax(280px,.68fr);align-items:start}
-    .side-stack{align-content:start}
-    .side-stack .panel-head{padding:12px 14px}
-    .side-stack .panel-head h2{font-size:13px}
-    .side-body{padding:12px 13px}
-    .context-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .context-summary .side-cell.wide{grid-column:1/-1}
-    .side-details{margin-top:10px;padding-top:9px;border-top:1px solid var(--line2)}
-    .side-details summary{width:max-content;cursor:pointer;color:#d8c182;font-size:10px;font-weight:700}
-    .technical-detail{margin-top:8px}
-    .side-data-note{margin-top:8px;color:var(--muted2);font-size:9px;line-height:1.5}
-    .section-mini{margin-top:11px;padding-top:10px}
-    .section-mini h3{margin-bottom:6px;font-size:9px}
-    .mini-row{font-size:10px}
-    @media(max-width:900px){.live-grid{grid-template-columns:1fr}.side-stack{grid-template-columns:1fr 1fr}.live-hero h1{font-size:29px}}
-    @media(max-width:680px){.live-hero{padding-top:10px}.live-hero h1{font-size:25px}.side-stack{grid-template-columns:1fr}.context-summary{grid-template-columns:1fr}.context-summary .side-cell.wide{grid-column:auto}}
-      
-    /* Compact live-commentary header */
-    .live-hero{padding:12px 0 13px}
-    .live-eyebrow{font-size:20px;letter-spacing:.09em}
-    .live-intro{margin:5px 0 0!important;max-width:none!important;font-size:11.5px!important;line-height:1.5!important;color:var(--muted)!important}
-    .live-strip{display:block!important;margin-top:10px!important}
-    .market-context-line{display:flex;align-items:center;gap:0;white-space:nowrap;overflow-x:auto;padding:10px 12px;border:1px solid var(--line2);border-radius:13px;background:rgba(255,255,255,.018);scrollbar-width:thin}
-    .market-context-line::-webkit-scrollbar{height:4px}.market-context-line::-webkit-scrollbar-thumb{background:rgba(224,187,99,.24);border-radius:999px}
-    .market-context-item{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);line-height:1.4}
-    .market-context-item+ .market-context-item::before{content:"·";margin:0 10px;color:rgba(224,187,99,.52)}
-    .market-context-item b{font-size:12px;color:var(--text)}
-    .market-context-item.primary b{font-size:15px}
-    .market-context-item .up{color:var(--green)!important}.market-context-item .down{color:var(--red)!important}
-    .live-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}
-    .live-tools button{border:1px solid var(--line2);border-radius:9px;background:rgba(255,255,255,.025);color:#e8cf8f;padding:7px 10px;font-size:9.5px;font-weight:700;cursor:pointer}
-    .live-tools button:hover{border-color:rgba(224,187,99,.35);background:rgba(224,187,99,.06)}
-    .live-tools button:disabled{opacity:.5;cursor:not-allowed}
-    .live-tools span{color:var(--muted2);font-size:9px}
-    .live-grid{grid-template-columns:minmax(0,1.95fr) minmax(260px,.65fr)!important}
-    .timeline[hidden]{display:none!important}
-    .side-stack{grid-template-columns:1fr!important}
-    @media(max-width:900px){.live-grid{grid-template-columns:1fr!important}.market-context-line{padding:9px 10px}}
-    @media(max-width:680px){.live-eyebrow{font-size:17px}.live-intro{font-size:10.5px!important}.market-context-item{font-size:10px}.market-context-item.primary b{font-size:13px}}
-  
-    /* Running context ticker */
-    .live-grid{grid-template-columns:1fr!important}
-    .market-marquee{position:relative;overflow:hidden;border:1px solid var(--line2);border-radius:13px;background:rgba(255,255,255,.018)}
-    .market-marquee::before,.market-marquee::after{content:"";position:absolute;top:0;bottom:0;width:26px;z-index:2;pointer-events:none}
-    .market-marquee::before{left:0;background:linear-gradient(90deg,#07192a,transparent)}
-    .market-marquee::after{right:0;background:linear-gradient(270deg,#07192a,transparent)}
-    .market-marquee-track{display:flex;width:max-content;will-change:transform;animation:vhMarketMarquee var(--marquee-duration,48s) linear infinite}
-    .market-marquee:hover .market-marquee-track{animation-play-state:paused}
-    .market-marquee-group{display:flex;align-items:center;flex:none;padding:10px 28px 10px 12px}
-    .market-context-item{flex:none;white-space:nowrap}
-    @keyframes vhMarketMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @media(prefers-reduced-motion:reduce){.market-marquee-track{animation:none}.market-marquee{overflow-x:auto}.market-marquee-group[aria-hidden="true"]{display:none}}
-    @media(max-width:680px){
-      .live-topline{justify-content:center;flex-direction:column;gap:7px;text-align:center}
-      .live-eyebrow{width:100%;text-align:center}
-      .live-status{margin:0 auto}
-      .live-intro{max-width:330px!important;margin:5px auto 0!important;text-align:center}
-      .market-marquee-group{padding-top:9px;padding-bottom:9px}
-    }
-  
-    /* Live UI v5 */
-    .live-main{padding-top:3px!important}
-    .live-hero{padding-top:4px!important}
-    .live-status-row{display:flex;justify-content:flex-end;align-items:center;min-height:30px;margin:0 0 2px}
-    .live-topline{justify-content:flex-start!important}
-    .live-grid{grid-template-columns:minmax(0,1.78fr) minmax(290px,.72fr)!important}
-    .side-stack{display:grid!important;align-content:start;gap:12px}
-    .market-marquee{overflow:hidden!important;overscroll-behavior:none;touch-action:pan-y}
-    .market-marquee::-webkit-scrollbar,.market-marquee-track::-webkit-scrollbar{display:none!important}
-    .market-marquee-track{
-      display:flex!important;
-      width:max-content!important;
-      animation-name:vhMarketMarquee!important;
-      animation-duration:var(--marquee-duration,48s)!important;
-      animation-timing-function:linear!important;
-      animation-iteration-count:infinite!important;
-      animation-play-state:running!important;
-      transform:translate3d(0,0,0);
-    }
-    .market-marquee-group{flex:none!important}
-    @keyframes vhMarketMarquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
-    @media(prefers-reduced-motion:reduce){
-      .market-marquee-track{animation-name:vhMarketMarquee!important;animation-duration:60s!important;animation-iteration-count:infinite!important}
-      .market-marquee-group[aria-hidden="true"]{display:flex!important}
-    }
-    @media(max-width:900px){.live-grid{grid-template-columns:1fr!important}.side-stack{grid-template-columns:1fr!important}}
-    @media(max-width:680px){
-      .live-main{padding-top:2px!important}
-      .live-hero{padding-top:2px!important}
-      .live-status-row{justify-content:center;margin-bottom:3px}
-      .live-topline{justify-content:center!important;text-align:center}
-      .live-eyebrow{width:100%;text-align:center}
-      .live-intro{max-width:330px!important;margin:5px auto 0!important;text-align:center}
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/market-live.css?v=20260918-clean1">
 </head>
 <body>
   <div id="siteHeader"></div>
+
   <main class="live-main">
     <div class="live-wrap">
       <section class="live-hero">
         <div class="live-status-row">
-          <div class="live-status off" id="liveStatus"><i></i><span>Đang chờ dữ liệu</span></div>
+          <div class="live-status off" id="liveStatus">
+            <i></i>
+            <span>Đang chờ dữ liệu</span>
+          </div>
         </div>
+
         <div class="live-topline">
           <div class="live-eyebrow">BÌNH LUẬN THỊ TRƯỜNG TRỰC TIẾP</div>
         </div>
+
         <p class="live-intro">Theo dõi diễn biến thị trường trong phiên, câu chuyện đang dẫn dắt và điều cần nhìn tiếp.</p>
+
         <div class="live-strip" id="liveStrip">
-          <div class="market-marquee"><div class="market-marquee-track"><div class="market-marquee-group"><span class="market-context-item"><span>Đang chờ dữ liệu thị trường...</span></span></div></div></div>
-        </div>
-        <div class="live-tools">
-          <button type="button" id="reviewCommentsBtn">Xem lại bình luận trong ngày</button>
-          <button type="button" id="exportCommentsPdfBtn">Xuất PDF</button>
-          <span id="historyInfo">Đã lưu bình luận theo ngày</span>
+          <div class="market-marquee">
+            <div class="market-marquee-track">
+              <div class="market-marquee-group">
+                <span class="market-context-item">Đang chờ dữ liệu thị trường...</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <section class="admin-panel" id="liveAdminPanel" hidden>
-          <div class="admin-panel-head"><strong>Góc nhìn Admin · Võ Hoàng</strong><span>Chỉ tài khoản ADMIN nhìn thấy</span></div>
+          <div class="admin-panel-head">
+            <strong>Góc nhìn Admin · Võ Hoàng</strong>
+            <span>Chỉ tài khoản ADMIN nhìn thấy</span>
+          </div>
           <div class="admin-compose">
             <div class="admin-compose-fields">
-              <input id="adminLiveHeadline" type="text" maxlength="220" placeholder="Tiêu đề bình luận: ví dụ GELEX nổi bật, GEX và VIX cùng tăng">
-              <textarea id="adminLiveNote" maxlength="1200" placeholder="Nội dung bình luận bạn muốn đưa vào luồng trực tiếp... (Ctrl + Enter để đăng)"></textarea>
+              <input id="adminLiveHeadline" type="text" maxlength="220" placeholder="Tiêu đề bình luận">
+              <textarea id="adminLiveNote" maxlength="1200" placeholder="Nội dung bình luận muốn đưa vào luồng trực tiếp..."></textarea>
             </div>
             <button type="button" id="adminNotePublish">Đưa vào bình luận</button>
           </div>
-          <div class="admin-note-msg" id="adminNoteMsg"></div>
+          <div class="admin-note-msg" id="adminNoteMsg" aria-live="polite"></div>
           <div class="admin-note-history" id="adminNoteHistory"></div>
         </section>
       </section>
 
       <div class="live-grid">
-        <section>
+        <section class="live-primary">
           <div class="panel" id="latestPanel">
-            <div class="panel-head"><h2>Bình luận mới nhất</h2><span id="latestRefresh">Tự cập nhật</span></div>
+            <div class="panel-head">
+              <h2>Bình luận mới nhất</h2>
+              <span id="latestRefresh">Tự cập nhật</span>
+            </div>
             <div class="empty">Đang chờ dữ liệu trực tiếp...</div>
           </div>
+
           <div class="panel timeline" id="timelinePanel" hidden>
-            <div class="panel-head"><h2>Bình luận trong ngày</h2><span id="timelineCount">Ký ức của câu chuyện</span></div>
-            <div class="timeline-list" id="timelineList"><div class="empty">Chưa có bình luận trong ngày.</div></div>
+            <div class="panel-head">
+              <h2>Bình luận trong ngày</h2>
+              <span id="timelineCount">Ký ức của câu chuyện</span>
+            </div>
+            <div class="timeline-list" id="timelineList">
+              <div class="empty">Chưa có bình luận trong ngày.</div>
+            </div>
           </div>
         </section>
 
-        <aside class="side-stack"></aside>
+        <aside class="live-side" id="communityMount"></aside>
       </div>
 
-      <div class="live-links"><a href="thi-truong-hom-nay.html">← Thị trường hôm nay</a><a href="tin-tuc-24h.html">Tin tức 24h →</a></div>
-      <p class="live-note">Dữ liệu hỗ trợ theo dõi và kỷ luật ra quyết định, không phải tín hiệu mua/bán. Phái sinh, tin tức và vĩ mô chỉ là bối cảnh; hệ thống không tự quy kết nguyên nhân cho biến động giá.</p>
+      <div class="live-tools">
+        <button type="button" id="reviewCommentsBtn">Xem lại bình luận trong ngày</button>
+        <button type="button" id="exportCommentsPdfBtn">Xuất PDF</button>
+        <span id="historyInfo">Đã lưu bình luận theo ngày</span>
+      </div>
+
+      <div class="live-links">
+        <a href="thi-truong-hom-nay.html">← Thị trường hôm nay</a>
+        <a href="tin-tuc-24h.html">Tin tức 24h →</a>
+      </div>
+
+      <p class="live-note">Dữ liệu hỗ trợ theo dõi và kỷ luật ra quyết định, không phải tín hiệu mua/bán. Tin tức, phái sinh và vĩ mô chỉ là bối cảnh; hệ thống không tự quy kết nguyên nhân khi chưa có xác nhận.</p>
       <div class="footer-space"></div>
     </div>
   </main>
+
   <div id="siteFooter"></div>
 
   <dialog class="comment-editor" id="commentEditorDialog">
@@ -186,22 +106,33 @@
     <form id="commentEditorForm">
       <div class="dialog-body">
         <input type="hidden" id="editCommentId">
+
         <label for="editHeadline">Tiêu đề</label>
         <input type="text" id="editHeadline" maxlength="220" required>
+
         <label for="editBody">Nội dung</label>
         <textarea id="editBody" maxlength="5000" required></textarea>
+
         <label for="editWatchNext">Điểm cần nhìn tiếp</label>
         <textarea id="editWatchNext" maxlength="1800"></textarea>
-        <label class="final-check"><input type="checkbox" id="editFinalize"> Chốt làm bản cuối để dùng sau phiên</label>
-        <div class="dialog-actions"><span class="edit-msg" id="editMsg"></span><button class="ghost" type="button" id="editCancel">Hủy</button><button type="submit" id="editSave">Lưu bình luận</button></div>
+
+        <label class="final-check">
+          <input type="checkbox" id="editFinalize">
+          Chốt làm bản cuối để dùng sau phiên
+        </label>
+
+        <div class="dialog-actions">
+          <span class="edit-msg" id="editMsg"></span>
+          <button class="ghost" type="button" id="editCancel">Hủy</button>
+          <button type="submit" id="editSave">Lưu bình luận</button>
+        </div>
       </div>
     </form>
   </dialog>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js" defer></script>
-  <script src="assets/js/market-ticker.js?v=20260914-1" defer></script>
-  <script type="module" src="assets/js/market-live.js?v=20260918-commentary-ui5"></script>
-  <script type="module" src="assets/js/site-header.js?v=20260914-2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script type="module" src="assets/js/market-live.js?v=20260918-clean1"></script>
+  <script type="module" src="assets/js/market-live-community.js?v=20260918-clean1"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260918-clean1"></script>
 </body>
 </html>
