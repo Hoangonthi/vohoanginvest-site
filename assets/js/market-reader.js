@@ -274,6 +274,88 @@ function macroSummary(){
   return{label,thesis,watch};
 }
 
+function shortDecisionLabel(raw){
+  const s=String(raw||"").trim(),u=s.toUpperCase();
+  if(!s)return"CHỜ XÁC NHẬN";
+  if(u.includes("PHÒNG THỦ")||u.includes("RỦI RO CAO"))return"PHÒNG THỦ";
+  if(u.includes("THẬN TRỌNG"))return"THẬN TRỌNG";
+  if(u.includes("TÍCH CỰC"))return"TÍCH CỰC";
+  if(u.includes("CHỌN LỌC"))return"CHỌN LỌC";
+  if(u.includes("PHÂN HÓA"))return"PHÂN HÓA";
+  if(u.includes("QUAN SÁT")||u.includes("THEO DÕI"))return"QUAN SÁT";
+  return s.split(/[·:–—/]/)[0].trim().split(/\s+/).slice(0,3).join(" ").toUpperCase();
+}
+
+function usableDecisionBrain(data){
+  const brain=latestSnapshot?.decision?.brain;
+  if(!brain?.conclusion)return null;
+  const live=data?.market_intelligence?.freshness?.status==="live";
+  const raw=brain.generated_at||latestSnapshot?.source_decision_at||latestSnapshot?.generated_at||"";
+  const ts=raw?Date.parse(raw):NaN;
+  // Trong phiên, không cho một Brain quá cũ điều khiển thông điệp gửi khách.
+  if(live&&Number.isFinite(ts)&&Date.now()-ts>90*60*1000)return null;
+  return brain;
+}
+
+function compactSentence(value,max=180){
+  return clip(humanize(value||"").replace(/\s+/g," ").trim(),max).replace(/[.;:,\s]+$/,"");
+}
+
+function currentMarketLine(data,mi){
+  const vn=index(data,"VN-INDEX")||{};
+  const value=n(vn.value),change=n(vn.change_pct);
+  const b=mi?.breadth||{};
+  const adv=n(b.adv),flat=n(b.flat),dec=n(b.dec);
+  const parts=[];
+  if(value!==null)parts.push(`VN-Index ${fmt(value,2)}${change===null?"":` (${pct(change)})`}`);
+  if(adv!==null&&dec!==null)parts.push(`${Math.round(adv)} tăng · ${Math.round(flat||0)} TC · ${Math.round(dec)} giảm`);
+  return parts.join(" · ");
+}
+
+function briefFreshnessLine(mi){
+  const fresh=mi?.freshness||{};
+  if(fresh.status==="stale")return"⚠ Dữ liệu đang mất đồng bộ: chưa dùng bản này để mở quyết định mới.";
+  if(fresh.status==="delayed")return"⚠ Dữ liệu đang chậm: ưu tiên kiểm tra lại realtime trước khi hành động.";
+  if(fresh.status==="live")return"Realtime";
+  return fresh.label||"Dữ liệu gần nhất";
+}
+
+function brainSignalLines(brain){
+  const sigs=Array.isArray(brain?.top_signals)?brain.top_signals.slice(0,3):[];
+  return sigs.map((x,i)=>{
+    const title=compactSentence(x?.title||"Tín hiệu đáng chú ý",92);
+    const evidence=compactSentence((x?.evidence||[])[0]||x?.summary||"",105);
+    const effect=compactSentence(x?.action_effect||"",125);
+    let line=`${i+1}) ${title}`;
+    if(evidence)line+=` — ${evidence}`;
+    if(effect)line+=`. ${effect}`;
+    return line.replace(/\.\.$/,".");
+  });
+}
+
+function briefMacroLines(brain){
+  const out=[];
+  const macro=macroSummary();
+  if(macro){
+    out.push(`• Vĩ mô 3–12 tháng: ${macro.label}. ${compactSentence(macro.thesis,180)}.`);
+  }
+  const val=compactSentence(brain?.valuation_note||"",180);
+  if(val)out.push(`• Định giá: ${val}.`);
+  return out.slice(0,2);
+}
+
+function dedupeLines(items){
+  const seen=new Set(),out=[];
+  for(const raw of items||[]){
+    const s=compactSentence(raw,260);
+    if(!s)continue;
+    const key=s.toLowerCase().replace(/[^a-z0-9à-ỹ]+/gi," ").slice(0,90);
+    if(seen.has(key))continue;
+    seen.add(key);out.push(s);
+  }
+  return out;
+}
+
 async function fetchNewsContext(){
   const r=await fetch(NEWS_ENDPOINT,{cache:"no-store",headers:{Accept:"application/json"}});
   const j=await r.json();
@@ -302,40 +384,81 @@ function buildBrief(data){
   const state=mi.state||{};
   const flow=mi.flow||{};
   const adaptive=getAdaptiveMarketBrief(data);
+  const brain=usableDecisionBrain(data);
+  const shortConclusion=brain?shortDecisionLabel(brain?.conclusion?.label):shortDecisionLabel(state.label);
+  const signalLines=brainSignalLines(brain);
+  const good=dedupeLines(brain?.actions?.good||[]);
+  const bad=dedupeLines(brain?.actions?.bad||[]);
+  const change=dedupeLines(brain?.change_view||[]);
+  const macroLines=briefMacroLines(brain);
   const vn30=vn30Narrative(data,mi);
+  const freshLine=briefFreshnessLine(mi);
 
   const lines=[
     `RÀ SOÁT THỊ TRƯỜNG – VÕ HOÀNG`,
-    `Cập nhật ${formatBriefTime(data)}`,
+    `Cập nhật ${formatBriefTime(data)} · ${freshLine}`,
     ``,
     `TRẠNG THÁI: ${state.label||"—"} · ${state.score??"—"}/100`,
-    breadthNarrative(data,mi)
+    currentMarketLine(data,mi)||breadthNarrative(data,mi)
   ];
 
-  if(vn30)lines.push(vn30);
+  if(vn30)lines.push(compactSentence(vn30,220)+".");
+  lines.push(
+    ``,
+    `DÒNG TIỀN & DẪN DẮT`,
+    flowNarrative(flow),
+    `Nhóm mạnh: ${formatLeadership(mi?.leadership?.leaders,3)}`,
+    `Nhóm yếu: ${formatLeadership(mi?.leadership?.laggards,3)}`
+  );
+
+  if(signalLines.length){
+    lines.push(`\n3 ĐIỂM QUYẾT ĐỊNH`,...signalLines);
+  }else{
+    const fallbackNews=newsLines().slice(0,2);
+    if(fallbackNews.length)lines.push(`\nTIN ĐÁNG CHÚ Ý`,...fallbackNews);
+  }
+
+  lines.push(`\nQUAN ĐIỂM`);
+  if(brain){
+    lines.push(`Ad nhìn khá đơn giản: ${shortConclusion}.`);
+    const summary=compactSentence(brain?.conclusion?.summary,300);
+    if(summary)lines.push(summary+".");
+  }else{
+    lines.push(humanize(adaptive.headline),humanize(adaptive.detail));
+  }
+
+  lines.push(`\nHÀNH ĐỘNG`);
+  const actionLines=dedupeLines([
+    adaptive.action,
+    good[0],
+    good[1]
+  ]).slice(0,3);
+  actionLines.forEach(x=>lines.push(`• ${x}.`));
+  if(bad[0])lines.push(`• Chưa nên: ${bad[0]}.`);
+
+  lines.push(`\nKHI NÀO ĐỔI QUAN ĐIỂM?`);
+  if(change.length){
+    change.slice(0,3).forEach(x=>lines.push(`• ${x}.`));
+  }else{
+    lines.push(`• ${compactSentence(adaptive.transition,260)}.`);
+  }
+
+  if(macroLines.length)lines.push(`\nNỀN CẦN NHỚ`,...macroLines);
+
+  const freshness=mi?.freshness?.status;
+  if(freshness==="stale"||freshness==="delayed"){
+    lines.push(`\nLƯU Ý DỮ LIỆU`,freshLine);
+  }
 
   lines.push(
     ``,
-    `DÒNG TIỀN`,
-    flowNarrative(flow),
-    `Nhóm mạnh: ${formatLeadership(mi?.leadership?.leaders,3)}`,
-    `Nhóm yếu: ${formatLeadership(mi?.leadership?.laggards,3)}`,
-    ``,
-    `QUAN ĐIỂM`,
-    humanize(adaptive.headline),
-    humanize(adaptive.detail),
-    ``,
-    `HÀNH ĐỘNG`,
-    humanize(adaptive.action),
-    `Theo dõi: ${humanize(adaptive.watch)}.`,
-    ``,
-    `Tin tức 24h: ${NEWS_24H_URL}`,
-    `Xem thị trường realtime: ${SHARE_URL}`,
+    `Nội dung cung cấp thông tin và góc nhìn hệ thống, không phải khuyến nghị mua/bán.`,
+    `Theo dõi realtime: ${SHARE_URL}`,
     ``,
     `VÕ HOÀNG – ĐẦU TƯ CHUẨN HỆ THỐNG`
   );
 
-  return lines.join("\n");
+  return lines.join("\n").replace(/\n{3,}/g,"\n\n");
 }
 
 function showCopySuccess(){
@@ -348,12 +471,15 @@ function showCopySuccess(){
 
 async function copyBrief(){
   if(!latestData)return;
-  const text=buildBrief(latestData),message=document.getElementById("readerShareMessage");
+  const message=document.getElementById("readerShareMessage");
+  if(message)message.textContent="Đang tổng hợp realtime + Decision Brain + tin đã xác minh…";
+  await Promise.race([refreshBriefContext(false),new Promise(resolve=>setTimeout(resolve,2200))]);
+  const text=buildBrief(latestData);
   try{
     if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);
     else{const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()}
     showCopySuccess();
-    if(message)message.textContent="Đã sao chép rà soát trong phiên. Có thể dán thẳng vào Zalo/Facebook/Threads.";
+    if(message)message.textContent="Đã sao chép bản tư vấn đã ghép realtime + Decision Brain + tin/vĩ mô. Có thể dán thẳng gửi ACE.";
     trackTool("MARKET_READER","COPY_BRIEF",{resultCode:"SUCCESS",metadata:{score:latestData?.market_intelligence?.state?.score??null,vn30:extractVn30Rows(latestData).length}});
   }catch{
     if(message)message.textContent="Chưa sao chép được trên trình duyệt này.";
@@ -362,6 +488,7 @@ async function copyBrief(){
 
 async function shareBrief(){
   if(!latestData)return;
+  await Promise.race([refreshBriefContext(false),new Promise(resolve=>setTimeout(resolve,2200))]);
   const text=buildBrief(latestData);
   if(navigator.share){
     try{await navigator.share({title:"Rà soát thị trường – Võ Hoàng",text,url:SHARE_URL});trackTool("MARKET_READER","SHARE",{resultCode:"SUCCESS"});return}
@@ -397,5 +524,7 @@ function initConversion(){
 
 initConversion();
 refresh();
+refreshBriefContext(true);
 setInterval(()=>{if(!document.hidden)refresh()},REFRESH_MS);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
+setInterval(()=>{if(!document.hidden)refreshBriefContext(true)},AUX_REFRESH_MS);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){refresh();refreshBriefContext(false)}});
