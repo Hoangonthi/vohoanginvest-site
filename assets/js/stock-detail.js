@@ -373,7 +373,7 @@ function renderOverview(d){
   const t=d.technical||{}, f=d.flow||{}, q=d.live_quote||null;
   $("#overviewKpis").innerHTML=[
     metric("Giá đóng cửa",fmtNum(t.close),dateVN(d.effective_as_of_date)),
-    metric("Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.price)?(q.fresh===false?"Giá gần nhất":"Realtime"):"Chưa có intraday",q&&valid(q.change_pct)?cls(q.change_pct):""),
+    metric("Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.price)?(q.status_label|| (q.fresh===false?"Giá gần nhất":"Realtime")):"Chưa có intraday",q&&valid(q.change_pct)?cls(q.change_pct):""),
     metric("20 phiên",fmtPct(t.return_20d_pct),"",cls(t.return_20d_pct)),
     metric("RSI14",fmtNum(t.rsi14),valid(t.rsi14)?(Number(t.rsi14)>=70?"Vùng cao":Number(t.rsi14)>=50?"Trên 50":Number(t.rsi14)<=30?"Vùng thấp":"Dưới 50"):""),
     metric("MA20",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"Trên":"Dưới"):"—",valid(t.ma20)?fmtNum(t.ma20):"",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"up":"down"):""),
@@ -550,6 +550,9 @@ async function fetchLiveQuote(symbol){
       captured_at:d?.captured_at||null,
       age_seconds:Number.isFinite(Number(d?.age_seconds))?Number(d.age_seconds):null,
       fresh:d?.fresh===true,
+      realtime:d?.realtime===true,
+      status:d?.status||null,
+      status_label:d?.status_label||null,
       source:d?.source||"stock-price-live"
     };
    }
