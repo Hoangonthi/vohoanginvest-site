@@ -51,6 +51,267 @@ setupToolAccordion();
 $$('.tab').forEach(btn=>btn.addEventListener('click',()=>{const group=btn.closest('.tool-group');setToolGroupOpen(group,true);$$('.tab').forEach(x=>x.classList.toggle('active',x===btn));$$('.calc-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===btn.dataset.tab));history.replaceState(null,'',`#${btn.dataset.tab}`)}));
 function activateFromHash(){const key=location.hash.replace('#','');const btn=$(`.tab[data-tab="${key}"]`);if(btn)btn.click()}
 
+function newCalcError(validationId,res){
+  clearValidation(validationId);
+  if(res?.ok)return false;
+  validate(validationId,res?.error||'Dữ liệu chưa hợp lệ.');
+  return true;
+}
+
+const depRowsEl=$('#depRows');
+function addDeploymentRow(values={}){
+  if(!depRowsEl||depRowsEl.children.length>=8)return;
+  const row=document.createElement('div');
+  row.className='dynamic-row dep-row';
+  const price=values.price??'';
+  const qty=values.qty??'';
+  const amount=values.amount??'';
+  row.innerHTML='<input class="dep-price" type="number" min="0" step="any" placeholder="Giá" value="'+price+'">'
+    +'<input class="dep-qty" type="number" min="0" step="1" placeholder="Số lượng" value="'+qty+'">'
+    +'<input class="dep-amount" type="number" min="0" step="any" placeholder="Số tiền" value="'+amount+'">'
+    +'<button class="row-remove" type="button" data-remove-dep aria-label="Xóa nhịp">×</button>';
+  depRowsEl.appendChild(row);
+}
+if(depRowsEl){
+  addDeploymentRow({price:75000,qty:500});
+  addDeploymentRow({price:72000,qty:500});
+  addDeploymentRow({price:68000,qty:500});
+  $('#depAddLeg')?.addEventListener('click',()=>addDeploymentRow());
+  depRowsEl.addEventListener('click',e=>{
+    const b=e.target.closest('[data-remove-dep]');
+    if(!b)return;
+    if(depRowsEl.children.length<=1)return;
+    b.closest('.dep-row')?.remove();
+  });
+}
+
+const concRowsEl=$('#concRows');
+function addConcentrationRow(values={}){
+  if(!concRowsEl||concRowsEl.children.length>=12)return;
+  const row=document.createElement('div');
+  row.className='dynamic-row conc-row';
+  const symbol=values.symbol??'';
+  const value=values.value??'';
+  const sector=values.sector??'';
+  row.innerHTML='<input class="conc-symbol" type="text" maxlength="12" placeholder="Mã" value="'+symbol+'">'
+    +'<input class="conc-value" type="number" min="0" step="any" placeholder="Giá trị" value="'+value+'">'
+    +'<input class="conc-sector" type="text" maxlength="40" placeholder="Ngành / nhóm" value="'+sector+'">'
+    +'<button class="row-remove" type="button" data-remove-conc aria-label="Xóa vị thế">×</button>';
+  concRowsEl.appendChild(row);
+}
+if(concRowsEl){
+  for(let i=0;i<4;i++)addConcentrationRow();
+  $('#concAddRow')?.addEventListener('click',()=>addConcentrationRow());
+  concRowsEl.addEventListener('click',e=>{
+    const b=e.target.closest('[data-remove-conc]');
+    if(!b)return;
+    if(concRowsEl.children.length<=1)return;
+    b.closest('.conc-row')?.remove();
+  });
+}
+
+bind('#stForm',e=>{
+  e.preventDefault();
+  const res=calcStopTargetRR({
+    entry:n('#stEntry'),
+    stop:n('#stStop'),
+    target:n('#stTarget'),
+    qty:n('#stQty')
+  });
+  if(newCalcError('#stValidation',res))return;
+  $('#stRatio').textContent='1 : '+ratioFmt(res.ratio);
+  $('#stRiskPerShare').textContent=money(res.riskPerShare);
+  $('#stRewardPerShare').textContent=money(res.rewardPerShare);
+  $('#stRiskPct').textContent=pct(res.riskPct);
+  $('#stRewardPct').textContent=pct(res.rewardPct);
+  $('#stTotalRisk').textContent=money(res.totalRisk);
+  $('#stTotalReward').textContent=money(res.totalReward);
+  verdict($('#stVerdict'),'ĐÃ TÍNH THEO STOP / TARGET ĐÃ NHẬP');
+  saveIfLogged('PRE_BUY','CALC_STOP_TARGET_RR',
+    {entry:res.entry,stop:res.stop,target:res.target,qty:res.qty},
+    {riskPerShare:res.riskPerShare,rewardPerShare:res.rewardPerShare,riskPct:res.riskPct,rewardPct:res.rewardPct,totalRisk:res.totalRisk,totalReward:res.totalReward,ratio:res.ratio},
+    $('#stAction').textContent
+  );
+});
+
+bind('#depForm',e=>{
+  e.preventDefault();
+  const legs=[...depRowsEl.querySelectorAll('.dep-row')].map(row=>({
+    price:row.querySelector('.dep-price').value,
+    qty:row.querySelector('.dep-qty').value,
+    amount:row.querySelector('.dep-amount').value
+  })).filter(x=>String(x.price).trim()||String(x.qty).trim()||String(x.amount).trim());
+  const res=calcDeploymentPlan({buyFeePct:n('#depFeePct'),lot:n('#depLot'),legs});
+  if(newCalcError('#depValidation',res))return;
+  $('#depAvgCost').textContent=money(res.averageCost);
+  $('#depCapital').textContent=money(res.totalCapital);
+  $('#depQty').textContent=qtyFmt(res.totalQty);
+  $('#depGross').textContent=money(res.grossValue);
+  $('#depFees').textContent=money(res.totalFee);
+  verdict($('#depVerdict'),'KẾ HOẠCH ĐÃ ĐƯỢC TÍNH ĐỦ PHÍ');
+  saveIfLogged('PRE_BUY','CALC_DEPLOYMENT_PLAN',
+    {buyFeePct:res.buyFeePct,lot:res.lot,legs},
+    {totalQty:res.totalQty,grossValue:res.grossValue,totalFee:res.totalFee,totalCapital:res.totalCapital,averageCost:res.averageCost},
+    $('#depAction').textContent
+  );
+});
+
+bind('#mcallForm',e=>{
+  e.preventDefault();
+  const res=calcMarginThresholds({
+    debt:n('#mcallDebt'),
+    marketValue:n('#mcallMarketValue'),
+    qty:$('#mcallQty').value,
+    callPct:n('#mcallCallPct'),
+    forcePct:n('#mcallForcePct')
+  });
+  if(newCalcError('#mcallValidation',res))return;
+  $('#mcallCurrent').textContent=pct(res.currentRatioPct);
+  $('#mcallCallValue').textContent=money(res.marginCall.value);
+  $('#mcallCallPrice').textContent=res.marginCall.price===null?'—':money(res.marginCall.price);
+  $('#mcallForceValue').textContent=money(res.forceSell.value);
+  $('#mcallForcePrice').textContent=res.forceSell.price===null?'—':money(res.forceSell.price);
+  if(res.alreadyBelowForce)verdict($('#mcallVerdict'),'ĐÃ THẤP HƠN NGƯỠNG FORCE SELL ĐÃ NHẬP','bad');
+  else if(res.alreadyBelowCall)verdict($('#mcallVerdict'),'ĐÃ THẤP HƠN NGƯỠNG MARGIN CALL ĐÃ NHẬP','warn');
+  else verdict($('#mcallVerdict'),'TRÊN CÁC NGƯỠNG ĐÃ NHẬP');
+  saveIfLogged('HOLDING','CALC_MARGIN_THRESHOLDS',
+    {debt:res.debt,marketValue:res.marketValue,qty:res.qty,callPct:res.marginCall.pct,forcePct:res.forceSell.pct},
+    {currentRatioPct:res.currentRatioPct,marginCall:res.marginCall,forceSell:res.forceSell},
+    $('#mcallAction').textContent
+  );
+});
+
+bind('#levForm',e=>{
+  e.preventDefault();
+  const res=calcActualLeverage({
+    exposure:n('#levExposure'),
+    cash:n('#levCash'),
+    debt:n('#levDebt')
+  });
+  if(newCalcError('#levValidation',res))return;
+  $('#levNav').textContent=money(res.nav);
+  $('#levAssets').textContent=money(res.totalAssets);
+  $('#levRatio').textContent=ratioFmt(res.leverage)+'x';
+  $('#levDebtNav').textContent=pct(res.debtToNav*100);
+  $('#levExposureOut').textContent=money(res.exposure);
+  $('#levScenarioBody').innerHTML=res.scenarios.map(s=>
+    '<tr><td>'+(s.changePct>0?'+':'')+s.changePct+'%</td><td>'+money(s.newNav)+'</td><td>'+pct(s.navChangePct)+'</td></tr>'
+  ).join('');
+  verdict($('#levVerdict'),'ĐÃ TÍNH LẠI NAV THEO TỪNG KỊCH BẢN');
+  saveIfLogged('HOLDING','CALC_ACTUAL_LEVERAGE',
+    {exposure:res.exposure,cash:res.cash,debt:res.debt},
+    {totalAssets:res.totalAssets,nav:res.nav,leverage:res.leverage,debtToNav:res.debtToNav,scenarios:res.scenarios},
+    $('#levAction').textContent
+  );
+});
+
+bind('#streakForm',e=>{
+  e.preventDefault();
+  const res=calcLosingStreak({
+    capital:n('#streakCapital'),
+    riskPct:n('#streakRiskPct'),
+    milestones:[3,5,7,10,15,20]
+  });
+  if(newCalcError('#streakValidation',res))return;
+  $('#streakBody').innerHTML=res.rows.map(r=>
+    '<tr><td>'+r.losses+'</td><td>'+money(r.remaining)+'</td><td>'+pct(r.drawdownPct)+'</td><td>'+money(r.lossMoney)+'</td></tr>'
+  ).join('');
+  const r20=res.rows.find(r=>r.losses===20)||res.rows[res.rows.length-1];
+  $('#streak20').textContent=money(r20.remaining);
+  verdict($('#streakVerdict'),'MÔ PHỎNG THEO % NAV CÒN LẠI');
+  saveIfLogged('PRE_BUY','CALC_LOSING_STREAK',
+    {capital:res.capital,riskPct:res.riskPct},
+    {rows:res.rows},
+    $('#streakAction').textContent
+  );
+});
+
+bind('#concForm',e=>{
+  e.preventDefault();
+  const positions=[...concRowsEl.querySelectorAll('.conc-row')].map(row=>({
+    symbol:row.querySelector('.conc-symbol').value,
+    value:row.querySelector('.conc-value').value,
+    sector:row.querySelector('.conc-sector').value
+  }));
+  const res=calcPortfolioConcentration({positions});
+  if(newCalcError('#concValidation',res))return;
+  $('#concHhi').textContent=hhiFmt(res.hhi);
+  $('#concTop1').textContent=pct(res.top1*100);
+  $('#concTop3').textContent=pct(res.top3*100);
+  $('#concEffective').textContent=ratioFmt(res.effectivePositions);
+  $('#concTotal').textContent=money(res.total);
+  $('#concSectors').innerHTML=res.sectors.map(s=>
+    '<div class="sector-line"><span>'+escHtml(s.sector)+'</span><span>'+pct(s.weight*100)+'</span></div>'
+  ).join('');
+  verdict($('#concVerdict'),'KẾT QUẢ THUẦN TOÁN HỌC');
+  saveIfLogged('HOLDING','CALC_PORTFOLIO_CONCENTRATION',
+    {positions},
+    {total:res.total,top1:res.top1,top3:res.top3,hhi:res.hhi,effectivePositions:res.effectivePositions,sectors:res.sectors},
+    $('#concAction').textContent
+  );
+});
+
+bind('#dyForm',e=>{
+  e.preventDefault();
+  const res=calcDividendYield({
+    marketPrice:n('#dyMarket'),
+    parValue:n('#dyPar'),
+    dividendPct:n('#dyPct')
+  });
+  if(newCalcError('#dyValidation',res))return;
+  $('#dyYield').textContent=pct(res.yieldPct);
+  $('#dyPerShare').textContent=money(res.dividendPerShare);
+  $('#dyDeclared').textContent=pct(res.dividendPct);
+  $('#dyParOut').textContent=money(res.parValue);
+  $('#dyMarketOut').textContent=money(res.marketPrice);
+  verdict($('#dyVerdict'),'ĐÃ TÁCH MỆNH GIÁ VÀ GIÁ THỊ TRƯỜNG');
+  saveIfLogged('HOLDING','CALC_DIVIDEND_YIELD',
+    {marketPrice:res.marketPrice,parValue:res.parValue,dividendPct:res.dividendPct},
+    {dividendPerShare:res.dividendPerShare,yieldPct:res.yieldPct},
+    $('#dyAction').textContent
+  );
+});
+
+bind('#crForm',e=>{
+  e.preventDefault();
+  const res=calcCostBasisAfterRights({
+    oldQty:n('#crOldQty'),
+    oldAvgCost:n('#crOldAvg'),
+    bonusPct:n('#crBonusPct'),
+    ratioOld:$('#crRatioOld').value,
+    ratioNew:$('#crRatioNew').value,
+    subPrice:$('#crSubPrice').value,
+    actualSubQty:$('#crActualSubQty').value,
+    relatedFee:$('#crRelatedFee').value,
+    fractionRule:$('#crFractionRule').value
+  });
+  if(newCalcError('#crValidation',res))return;
+  $('#crNewAvg').textContent=money(res.newAvgCost);
+  $('#crOldBasis').textContent=money(res.oldCostBasis);
+  $('#crBonusQty').textContent=qtyFmt(res.bonusQty);
+  $('#crEntitledQty').textContent=qtyFmt(res.entitledSubQty);
+  $('#crBoughtQty').textContent=qtyFmt(res.actualSubQty);
+  $('#crNewBasis').textContent=money(res.newCostBasis);
+  $('#crTotalQty').textContent=qtyFmt(res.totalQty);
+  verdict($('#crVerdict'),'ĐÃ TÍNH LẠI COST BASIS');
+  saveIfLogged('HOLDING','CALC_COST_BASIS_AFTER_RIGHTS',
+    {
+      oldQty:res.oldQty,oldAvgCost:res.oldAvgCost,bonusPct:res.bonusPct,
+      ratioOld:res.ratioOld,ratioNew:res.ratioNew,subPrice:res.subPrice,
+      actualSubQty:res.actualSubQty,relatedFee:res.relatedFee,fractionRule:res.fractionRule
+    },
+    {
+      oldCostBasis:res.oldCostBasis,bonusQty:res.bonusQty,entitledSubQty:res.entitledSubQty,
+      subscriptionCost:res.subscriptionCost,totalQty:res.totalQty,newCostBasis:res.newCostBasis,newAvgCost:res.newAvgCost
+    },
+    $('#crAction').textContent
+  );
+});
+
+function escHtml(v=''){
+  return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+}
+
 bind('#positionForm',e=>{e.preventDefault();clearValidation('#posValidation');const capital=n('#posCapital'),riskPct=n('#posRiskPct'),budgetPct=n('#posPortfolioBudget'),usedPct=n('#posRiskUsed'),entry=n('#posEntry'),stop=n('#posStop'),maxPct=n('#posMaxPct'),lot=Math.max(1,n('#posLot'));if(capital<=0||entry<=0||stop<=0)return validate('#posValidation','Vốn, giá mua và giá cắt lỗ phải lớn hơn 0.');if(stop>=entry)return validate('#posValidation','Giá cắt lỗ phải thấp hơn giá mua.');if(riskPct<=0||budgetPct<=0||maxPct<=0)return validate('#posValidation','Các giới hạn rủi ro phải lớn hơn 0.');const roomPct=Math.max(0,budgetPct-usedPct),cashRisk=Math.min(capital*riskPct/100,capital*roomPct/100),riskPerShare=entry-stop,qtyRisk=Math.floor(cashRisk/riskPerShare),qtyWeight=Math.floor((capital*maxPct/100)/entry),qty=Math.max(0,floorLot(Math.min(qtyRisk,qtyWeight),lot)),value=qty*entry,loss=qty*riskPerShare,weight=value/capital*100,roomAfter=Math.max(0,roomPct-loss/capital*100);$('#posQty').textContent=num(qty);$('#posValue').textContent=money(value);$('#posLoss').textContent=money(loss);$('#posWeight').textContent=pct(weight);$('#posRoom').textContent=pct(roomAfter);if(roomPct<=0||qty===0){verdict($('#posVerdict'),'KHÔNG NÊN MỞ THÊM','bad');$('#posAction').textContent='Ngân sách rủi ro không còn đủ cho một lô hợp lệ. Giảm rủi ro vị thế hiện có hoặc bỏ lệnh.'}else if(qtyWeight<qtyRisk){verdict($('#posVerdict'),'BỊ GIỚI HẠN BỞI TỶ TRỌNG','warn');$('#posAction').textContent=`Giới hạn tỷ trọng/mã đang chặn quy mô ở khoảng ${pct(weight)}.`}else{verdict($('#posVerdict'),'TRONG GIỚI HẠN','good');$('#posAction').textContent=`Nếu luận điểm còn hiệu lực, quy mô tối đa khoảng ${num(qty)} cổ phiếu; lỗ tại cắt lỗ khoảng ${money(loss)}.`}saveIfLogged('PRE_BUY','CALC_POSITION_SIZE',{capital,riskPct,budgetPct,usedPct,entry,stop,maxPct,lot},{qty,value,loss,weight,roomAfter},$('#posAction').textContent)});
 
 bind('#rrForm',e=>{e.preventDefault();clearValidation('#rrValidation');const entry=n('#rrEntry'),stop=n('#rrStop'),target=n('#rrTarget'),qty=n('#rrQty');if(entry<=0||stop<=0||target<=0||qty<=0)return validate('#rrValidation','Nhập đầy đủ giá mua, giá cắt lỗ, giá mục tiêu và số lượng.');if(stop>=entry||target<=entry)return validate('#rrValidation','Giá cắt lỗ phải dưới giá mua và giá mục tiêu phải trên giá mua.');const risk=(entry-stop)*qty,reward=(target-entry)*qty,ratio=reward/risk,be=100/(1+ratio),stopPct=(entry-stop)/entry*100;$('#rrRatio').textContent=`1 : ${ratio.toFixed(2)}`;$('#rrLoss').textContent=money(risk);$('#rrProfit').textContent=money(reward);$('#rrBreakeven').textContent=pct(be);$('#rrStopPct').textContent=pct(stopPct);if(ratio>=2){verdict($('#rrVerdict'),'TỶ LỆ TỐT','good');$('#rrAction').textContent='Tỷ lệ toán học tốt. Tiếp tục kiểm tra luận điểm và quy mô lệnh.'}else if(ratio>=1.3){verdict($('#rrVerdict'),'TỶ LỆ TRUNG BÌNH','warn');$('#rrAction').textContent='Không kéo mục tiêu xa chỉ để làm đẹp tỷ lệ.'}else{verdict($('#rrVerdict'),'KHÔNG HẤP DẪN VỀ TOÁN HỌC','bad');$('#rrAction').textContent='Chờ điểm vào tốt hơn, cắt lỗ hợp lý hơn hoặc bỏ lệnh.'}saveIfLogged('PRE_BUY','CALC_RR',{entry,stop,target,qty},{risk,reward,ratio,be,stopPct},$('#rrAction').textContent)});
