@@ -1144,3 +1144,80 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
 
 #tong-quan{scroll-margin-top:92px}
 @media(max-width:760px){#tong-quan{scroll-margin-top:76px}}
+
+
+/* =========================
+   OVERVIEW MASONRY / DENSE PACKING
+   Desktop: cards flow into the shorter column.
+   Mobile: normal one-column document flow.
+========================= */
+.sd-masonry{
+  position:relative;
+  width:100%;
+}
+.sd-masonry-card{
+  width:100%;
+  margin:0;
+  height:auto!important;
+  box-sizing:border-box;
+}
+.sd-masonry.is-ready .sd-masonry-card{
+  position:absolute;
+  margin:0;
+}
+.sd-expandable .sd-expand-body{
+  position:relative;
+}
+.sd-expandable.is-collapsed .sd-expand-body{
+  max-height:245px;
+  overflow:hidden;
+}
+.sd-expandable.is-collapsed .sd-expand-body::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:34px;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,24,40,0),rgba(5,24,40,.96));
+}
+.sd-expand-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:27px;
+  margin:8px auto 0;
+  padding:0 12px;
+  border:1px solid rgba(242,204,99,.30);
+  border-radius:999px;
+  background:rgba(242,204,99,.045);
+  color:var(--gold2);
+  font:800 8.5px/1 "Be Vietnam Pro",sans-serif;
+  cursor:pointer;
+}
+.sd-expand-toggle:hover,
+.sd-expand-toggle:focus-visible{
+  border-color:rgba(242,204,99,.58);
+  background:rgba(242,204,99,.09);
+  outline:none;
+}
+.sd-expand-toggle[hidden]{display:none!important}
+
+@media(max-width:760px){
+  .sd-masonry{
+    display:grid;
+    gap:6px;
+    height:auto!important;
+  }
+  .sd-masonry.is-ready .sd-masonry-card{
+    position:static!important;
+    width:auto!important;
+    transform:none!important;
+    left:auto!important;
+    top:auto!important;
+  }
+  .sd-expandable.is-collapsed .sd-expand-body{
+    max-height:220px;
+  }
+}
