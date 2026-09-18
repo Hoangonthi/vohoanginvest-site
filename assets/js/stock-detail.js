@@ -19,6 +19,7 @@ const cls=(v)=>v===null||v===undefined?"":Number(v)>0?"up":Number(v)<0?"down":""
 const esc=(s)=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const dateVN=(v)=>{if(!v)return"—";const [y,m,d]=String(v).slice(0,10).split("-");return d&&m&&y?`${d}/${m}/${y}`:String(v)};
 const MARKET_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+const HOT_STOCKS_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
 
 let current=null;
 
@@ -379,10 +380,20 @@ function renderOverview(d){
   ].join("");
 
   const a=buildDynamicAnalysis(d);
+  const action=actionLabel(d,a);
+  const tplus=d.tplus_candidate||null;
+  const tplusLine=tplus&&valid(tplus.price)
+    ? `<div class="sd-tplus-line"><span>T+ ngắn hạn</span><b>Có điểm tham gia/gia tăng có kiểm soát quanh ${esc(fmtNum(tplus.price,2))}</b></div>`
+    : "";
   $("#masterView").innerHTML=`
     <div class="sd-regime ${a.regimeTone}">
       <span>TRẠNG THÁI TỔNG HỢP</span>
-      <strong>${esc(a.regime)}</strong>
+      <div class="sd-regime-action">
+        <strong class="sd-regime-title">${esc(a.regime)}</strong>
+        <i class="sd-premium-arrow" aria-hidden="true">⟶</i>
+        <strong class="sd-action-title">${esc(action)}</strong>
+      </div>
+      ${tplusLine}
       <p>${esc(a.thesis)}</p>
     </div>
     <div class="sd-master-evidence">
@@ -496,6 +507,28 @@ async function fetchLiveQuote(symbol){
  }catch{return null}
 }
 
+async function fetchTplusCandidate(symbol){
+ try{
+  const r=await fetch(`${HOT_STOCKS_ENDPOINT}?_=${Date.now()}`,{cache:"no-store",headers:{"Accept":"application/json"}});
+  if(!r.ok)return null;
+  const data=await r.json();
+  const rows=Array.isArray(data?.stocks)?data.stocks:[];
+  const row=rows.find(x=>String(x?.symbol||"").toUpperCase()===symbol);
+  if(!row)return null;
+  const price=Number(row.price), score=Number(row.t_score);
+  return {
+    symbol,
+    price:Number.isFinite(price)?price:null,
+    t_score:Number.isFinite(score)?score:null,
+    signal_class:row.signal_class||null,
+    base_type:row.base_type||null,
+    projected_volume_ratio_pct:Number.isFinite(Number(row.projected_volume_ratio_pct))?Number(row.projected_volume_ratio_pct):null,
+    previous_volume_ratio_pct:Number.isFinite(Number(row.previous_volume_ratio_pct))?Number(row.previous_volume_ratio_pct):null,
+    source_updated_at:data?.source_updated_at||data?.received_at||null
+  };
+ }catch{return null}
+}
+
 async function load(symbol){
  const s=String(symbol||"").trim().toUpperCase();
  clearVisibleData();
@@ -504,13 +537,15 @@ async function load(symbol){
  setStatus("Đang cập nhật dữ liệu…");
  try{
   const url=`${SUPABASE_URL}/functions/v1/stock-metrics-v1?symbol=${encodeURIComponent(s)}`;
-  const [r,liveQuote]=await Promise.all([
+  const [r,liveQuote,tplusCandidate]=await Promise.all([
     fetch(url,{headers:{"Accept":"application/json"}}),
-    fetchLiveQuote(s)
+    fetchLiveQuote(s),
+    fetchTplusCandidate(s)
   ]);
   const body=await r.json();
   if(!r.ok||!body?.ok)throw new Error(body?.error||"Không đọc được dữ liệu");
   body.data.live_quote=liveQuote;
+  body.data.tplus_candidate=tplusCandidate;
   render(body.data);
   history.replaceState({}, "", `stock-detail.html?symbol=${encodeURIComponent(s)}`);
  }catch(err){
