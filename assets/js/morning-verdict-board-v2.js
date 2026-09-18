@@ -20,7 +20,7 @@ function vhStyle(){
   .vhb-badges{display:flex;gap:8px;flex:0 0 auto}.vhb-badge{min-width:155px;padding:9px 11px;border:1px solid rgba(255,255,255,.10);border-radius:11px;background:rgba(5,24,41,.58)}.vhb-badge small{display:block;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:#8fa4b7}.vhb-badge b{display:block;margin-top:3px;font-size:11.5px;line-height:1.35;color:#f4d66f}.vhb-badge.medium b{color:#62dfb5}
   .vhb-lanes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}.vhb-lane{border:1px solid rgba(93,154,195,.22);border-radius:13px;background:rgba(5,25,43,.72);padding:11px}.vhb-lane.short{border-color:rgba(242,204,99,.24)}.vhb-lane.medium{border-color:rgba(63,220,168,.22)}
   .vhb-lane-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:0 2px}.vhb-lane-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:850}.vhb-lane.short .vhb-lane-title{color:#72d4ff}.vhb-lane.medium .vhb-lane-title{color:#58e1b0}.vhb-lane-title .ico{width:27px;height:27px;display:grid;place-items:center;border-radius:8px;border:1px solid currentColor;opacity:.88;font-size:13px}.vhb-lane-status{font-size:10px;font-weight:850;letter-spacing:.045em;text-transform:uppercase;color:#f4d66f;padding:5px 8px;border-radius:999px;border:1px solid rgba(242,204,99,.24);background:rgba(242,204,99,.045)}.vhb-lane.medium .vhb-lane-status{color:#59e0b1;border-color:rgba(89,224,177,.24);background:rgba(89,224,177,.035)}
-  .vhb-flow{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);grid-template-rows:auto 12px auto;align-items:stretch;column-gap:3px;row-gap:2px}.vhb-cell{border:1px solid rgba(255,255,255,.075);border-radius:10px;background:linear-gradient(180deg,rgba(14,48,75,.68),rgba(8,34,56,.72));padding:10px 11px;min-height:102px}.vhb-cell.c1{grid-column:1;grid-row:1}.vhb-a1{grid-column:2;grid-row:1}.vhb-cell.c2{grid-column:3;grid-row:1}.vhb-a2{grid-column:3;grid-row:2}.vhb-cell.c3{grid-column:3;grid-row:3}.vhb-a3{grid-column:2;grid-row:3}.vhb-cell.c4{grid-column:1;grid-row:3}.vhb-arrow{display:grid;place-items:center;color:#e4be5a;font-size:11px;line-height:1;opacity:.68;user-select:none}.vhb-arrow.down{font-size:10px}.vhb-label{display:flex;align-items:center;gap:6px;color:#f3d67c;font-size:10.5px;font-weight:850;letter-spacing:.035em;text-transform:uppercase}.vhb-label:before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex:0 0 auto}.vhb-cell p{margin:6px 0 0;color:#d5dfe8;font-size:12.2px;line-height:1.5}.vhb-cell strong{color:#fff}.vhb-cell .good{color:#64e5b3}.vhb-cell .warn{color:#f3cf74}.vhb-cell .bad{color:#ff7d87}
+  .vhb-flow{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);grid-template-rows:auto 12px auto;align-items:stretch;column-gap:3px;row-gap:2px}.vhb-cell{border:1px solid rgba(255,255,255,.075);border-radius:10px;background:linear-gradient(180deg,rgba(14,48,75,.68),rgba(8,34,56,.72));padding:10px 11px;min-height:142px;height:100%;display:flex;flex-direction:column}.vhb-cell.c1{grid-column:1;grid-row:1}.vhb-a1{grid-column:2;grid-row:1}.vhb-cell.c2{grid-column:3;grid-row:1}.vhb-a2{grid-column:3;grid-row:2}.vhb-cell.c3{grid-column:3;grid-row:3}.vhb-a3{grid-column:2;grid-row:3}.vhb-cell.c4{grid-column:1;grid-row:3}.vhb-arrow{display:grid;place-items:center;color:#e4be5a;font-size:11px;line-height:1;opacity:.68;user-select:none}.vhb-arrow.down{font-size:10px}.vhb-label{display:flex;align-items:center;gap:6px;color:#f3d67c;font-size:10.5px;font-weight:850;letter-spacing:.035em;text-transform:uppercase}.vhb-label:before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex:0 0 auto}.vhb-cell p{margin:6px 0 0;color:#d5dfe8;font-size:12.2px;line-height:1.5}.vhb-cell strong{color:#fff}.vhb-cell .good{color:#64e5b3}.vhb-cell .warn{color:#f3cf74}.vhb-cell .bad{color:#ff7d87}.vhb-cell-body{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}.vhb-cell-body.vhb-clamped{max-height:7.5em}.vhb-cell.is-expanded .vhb-cell-body{max-height:none;overflow:visible}.vhb-cell-toggle-slot{min-height:31px;display:flex;align-items:flex-end;margin-top:5px}.vhb-cell-toggle{height:26px;padding:0 9px;border:1px solid rgba(242,204,99,.42);border-radius:999px;background:rgba(242,204,99,.045);color:#f3d67c;font:800 10.5px/1 inherit;cursor:pointer}.vhb-cell-toggle:hover,.vhb-cell-toggle:focus-visible{background:rgba(242,204,99,.11);outline:none}.vhb-cell-toggle.is-placeholder{visibility:hidden;pointer-events:none}.vhb-cell.is-expanded .vhb-cell-toggle{color:#75d9ff;border-color:rgba(77,197,255,.42);background:rgba(77,197,255,.05)}
   .vhb-mini-lines{display:grid;gap:4px;margin-top:5px}.vhb-mini-lines div{font-size:11.7px;line-height:1.42;color:#d0dae4}.vhb-mini-lines b{color:#f3d67c;font-weight:800}
   .vhb-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.vhb-chip{display:inline-flex;gap:4px;align-items:center;padding:4px 6px;border:1px solid rgba(77,197,255,.20);border-radius:7px;background:rgba(77,197,255,.035);font-size:10.5px;color:#dce7ef}.vhb-chip b{font-size:10.5px}.vhb-chip .up{color:#58e6a7;font-weight:850}
   @media(max-width:980px){.vhb-top{align-items:flex-start;flex-direction:column}.vhb-badges{width:100%;flex-wrap:wrap}.vhb-badge{flex:1 1 180px}.vhb-lanes{grid-template-columns:1fr}.vhb-cell{min-height:94px}}
@@ -31,13 +31,24 @@ function vhStyle(){
 
 function vhFindVar(d,kind){return(d?.variables||[]).find(x=>x.kind===kind)||null}
 function vhGlobal(d,symbol){return(d?.global_markets||[]).find(x=>x.symbol===symbol)||null}
+function vhShortDecisionLabel(raw){
+  const s=String(raw||'').trim(),u=s.toUpperCase();
+  if(!s)return'CHỜ XÁC NHẬN';
+  if(u.includes('PHÒNG THỦ'))return'PHÒNG THỦ';
+  if(u.includes('THẬN TRỌNG'))return'THẬN TRỌNG';
+  if(u.includes('TÍCH CỰC'))return'TÍCH CỰC';
+  if(u.includes('CHỌN LỌC'))return'CHỌN LỌC';
+  if(u.includes('THEO DÕI')||u.includes('QUAN SÁT'))return'QUAN SÁT';
+  if(u.includes('TRUNG TÍNH'))return'TRUNG TÍNH';
+  return s.split(/[·:–—]/)[0].trim().split(/\s+/).slice(0,3).join(' ').toUpperCase();
+}
 
 function vhMarket(d){
   const score=vhn(d?.market?.state?.score)??50;
   const brain=d?.brain;
   if(brain?.conclusion?.label){
     const tone=d?.evaluation?.decision_tone==="negative"?"negative":d?.evaluation?.decision_tone==="positive"?"positive":"neutral";
-    return{score,label:String(brain.conclusion.label),tone,action:String(brain.conclusion.summary||"")};
+    return{score,label:vhShortDecisionLabel(brain?.conclusion?.label_short||brain.conclusion.label),tone,action:String(brain.conclusion.summary||"")};
   }
   if(score<=25)return{score,label:'PHÒNG THỦ CAO',tone:'risk',action:'Ưu tiên giảm rủi ro danh mục, hạn chế mở vị thế mới và không dùng đòn bẩy để bắt đáy.'};
   if(score<40)return{score,label:'THẬN TRỌNG',tone:'negative',action:'Chưa phù hợp để mở rộng danh mục trên diện rộng; giữ tỷ trọng an toàn và chỉ chọn mã khỏe hơn thị trường.'};
@@ -84,6 +95,51 @@ function vhFed(d){
   return'Kỳ vọng lãi suất Fed chưa dịch chuyển đủ mạnh để tạo một hướng rõ.';
 }
 function vhHot(h,limit=3){return(h?.stocks||[]).filter(x=>vhn(x.change_pct)!=null).sort((a,b)=>(vhn(b.value_traded_bn)||0)-(vhn(a.value_traded_bn)||0)).slice(0,limit)}
+
+function vhEqualizeExpandableCards(root){
+  const cards=[...root.querySelectorAll('.vhb-cell')];
+  cards.forEach(card=>{
+    let body=card.querySelector(':scope > .vhb-cell-body');
+    let slot=card.querySelector(':scope > .vhb-cell-toggle-slot');
+    let btn=slot?.querySelector('.vhb-cell-toggle');
+    if(!body){
+      const label=card.querySelector(':scope > .vhb-label');
+      body=document.createElement('div');
+      body.className='vhb-cell-body vhb-clamped';
+      [...card.children].filter(x=>x!==label).forEach(x=>body.appendChild(x));
+      card.appendChild(body);
+      slot=document.createElement('div');
+      slot.className='vhb-cell-toggle-slot';
+      btn=document.createElement('button');
+      btn.type='button';
+      btn.className='vhb-cell-toggle is-placeholder';
+      btn.textContent='Xem thêm';
+      btn.setAttribute('aria-expanded','false');
+      slot.appendChild(btn);
+      card.appendChild(slot);
+      btn.addEventListener('click',()=>{
+        const expanded=card.classList.toggle('is-expanded');
+        body.classList.toggle('vhb-clamped',!expanded);
+        btn.textContent=expanded?'Thu gọn':'Xem thêm';
+        btn.setAttribute('aria-expanded',expanded?'true':'false');
+        requestAnimationFrame(()=>vhEqualizeExpandableCards(root));
+      });
+    }
+    if(!body||!btn)return;
+    if(card.classList.contains('is-expanded')){
+      btn.classList.remove('is-placeholder');
+      btn.textContent='Thu gọn';
+      return;
+    }
+    body.classList.add('vhb-clamped');
+    btn.textContent='Xem thêm';
+    requestAnimationFrame(()=>{
+      const overflowing=body.scrollHeight>body.clientHeight+3;
+      btn.classList.toggle('is-placeholder',!overflowing);
+    });
+  });
+}
+window.__VH_CARD_EQUALIZER__=root=>vhEqualizeExpandableCards(root||document);
 
 function vhMacroState(macro,d){
   let m=macro;
@@ -149,6 +205,7 @@ function vhRender(d,macro,hot){
         </div>
       </section>
     </div>`;
+  vhEqualizeExpandableCards(box);
 }
 
 async function vhGet(url){const r=await fetch(url,{headers:{Accept:'application/json'},cache:'no-store'});const j=await r.json();if(!r.ok||!j?.ok)throw new Error(j?.error||`HTTP ${r.status}`);return j}
