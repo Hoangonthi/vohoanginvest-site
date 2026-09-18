@@ -249,3 +249,43 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
     font-size:7.5px!important;
   }
 }
+
+
+/* Compact overview packing: use right stack to consume empty space */
+.sd-insight-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  gap:8px;
+  align-items:start;
+}
+.sd-right-stack{
+  display:grid;
+  gap:8px;
+  align-content:start;
+}
+.sd-support-card{align-self:start}
+.sd-right-stack .sd-card{align-self:start}
+.sd-insight-layout .sd-card,
+.sd-right-stack .sd-card{height:auto!important}
+
+.sd-scenarios{
+  grid-template-columns:1fr!important;
+  gap:5px!important;
+}
+.sd-scenario{
+  padding:8px 9px!important;
+}
+.sd-scenario>p{margin-top:4px!important}
+.sd-scenario>small{margin-top:5px!important;padding-top:4px!important}
+
+/* Slightly tighter cards in overview, without shrinking type */
+[data-panel="overview"] .sd-card{padding:9px 10px}
+[data-panel="overview"] .sd-card-head{margin-bottom:6px}
+[data-panel="overview"] .sd-thesis-list{gap:4px}
+[data-panel="overview"] .sd-thesis-item{padding:6px 7px}
+[data-panel="overview"] .sd-thesis-item p{margin-top:2px}
+
+@media(max-width:760px){
+  .sd-insight-layout{grid-template-columns:1fr}
+  .sd-right-stack{gap:6px}
+}
