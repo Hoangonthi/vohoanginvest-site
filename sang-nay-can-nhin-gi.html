@@ -2836,7 +2836,7 @@
             </div>
           </div>
 
-          <div class="live-status" id="vh-ps-status">Dữ liệu cuối cùng</div>
+          <div class="live-status" id="vh-ps-status">Dữ liệu phái sinh cuối cùng</div>
 
           <div class="ps-table">
             <div class="ps-row">
@@ -2934,8 +2934,6 @@
       "use strict";
 
       const HOT_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
-      const PS_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
-
       const nf = new Intl.NumberFormat("vi-VN", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
@@ -2944,36 +2942,6 @@
       function num(v){
         const n = Number(v);
         return Number.isFinite(n) ? nf.format(n) : "—";
-      }
-
-      async function loadDerivatives(){
-        try{
-          const r = await fetch(PS_URL, { cache:"no-store" });
-          if(!r.ok) throw new Error("HTTP " + r.status);
-
-          const d = await r.json();
-          if(!d || !d.trend) return;
-
-          const trend = String(d.trend).trim();
-          const trendEl = document.getElementById("vh-ps-trend");
-
-          trendEl.textContent = trend;
-          trendEl.className =
-            "ps-value " +
-            (trend.toLowerCase() === "tăng"
-              ? "up"
-              : trend.toLowerCase() === "giảm"
-              ? "down"
-              : "");
-
-          document.getElementById("vh-ps-entry").textContent = num(d.system_price);
-          document.getElementById("vh-ps-current").textContent = num(d.last_price);
-          document.getElementById("vh-ps-targets").textContent =
-            `T1 ${num(d.targets?.t1)} · T2 ${num(d.targets?.t2)} · T3 ${num(d.targets?.t3)}`;
-          document.getElementById("vh-ps-reversal").textContent = num(d.reversal_price);
-          document.getElementById("vh-ps-status").textContent =
-            d.fresh === true ? "Realtime" : "Dữ liệu cuối cùng";
-        }catch(_){}
       }
 
       async function loadHotStocks(){
@@ -2996,9 +2964,7 @@
         }catch(_){}
       }
 
-      loadDerivatives();
       loadHotStocks();
-      setInterval(loadDerivatives, 3000);
       setInterval(loadHotStocks, 60000);
     })();
   </script>
