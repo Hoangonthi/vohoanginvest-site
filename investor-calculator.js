@@ -8,7 +8,7 @@ import {
   calcPortfolioConcentration,
   calcDividendYield,
   calcCostBasisAfterRights
-} from './assets/js/investor-calculator-math.js?v=20260918-1';
+} from './assets/js/investor-calculator-math.js?v=20260918-2';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const n=id=>Number($(id)?.value||0), fmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:0}).format(Number(v||0)), money=v=>`${fmt(v)} đ`, pct=v=>`${Number(v||0).toFixed(1)}%`, num=v=>fmt(v);
 const qtyFmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:4}).format(Number(v||0));
