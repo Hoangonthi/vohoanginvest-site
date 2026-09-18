@@ -33,15 +33,17 @@ function setStatus(snapshot){
 function renderStrip(snapshot){
   const el=$("liveStrip");if(!el||!snapshot)return;
   const v=snapshot.vnindex||{},flow=snapshot.flow||{},w=snapshot.world||{},ball=w.ball||{};
-  const breadth=num(v.adv)!==null&&num(v.dec)!==null?`${Math.round(v.adv)} tăng / ${Math.round(v.dec)} giảm`:"—";
+  const breadth=num(v.adv)!==null&&num(v.dec)!==null?`${Math.round(v.adv)} tăng / ${Math.round(v.dec)} giảm`:null;
   const d15=num(ball.delta_15m);
   const leader=strongest(snapshot);
-  el.innerHTML=`
-    <div class="stat primary"><span>VN-Index</span><strong class="${toneClass(v.change)}">${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})</strong></div>
-    <div class="stat"><span>Nhịp 15 phút</span><strong class="${toneClass(d15)}">${d15!==null?`${signed(d15,1)} điểm`:"—"}</strong></div>
-    <div class="stat"><span>Độ rộng</span><strong>${breadth}</strong></div>
-    <div class="stat"><span>Nhóm dẫn</span><strong>${leader?`${esc(leader.name)} · ${pct(leader.change_pct)}`:"—"}</strong></div>
-    <div class="stat"><span>Thanh khoản</span><strong>${num(v.value_b)!==null?`${fmt(v.value_b,1)} tỷ`:esc(flow.label||"—")}</strong></div>`;
+  const cards=[
+    `<div class="stat primary"><span>VN-Index</span><strong class="${toneClass(v.change)}">${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})</strong></div>`,
+    d15!==null?`<div class="stat"><span>Nhịp 15 phút</span><strong class="${toneClass(d15)}">${signed(d15,1)} điểm</strong></div>`:"",
+    breadth?`<div class="stat"><span>Độ rộng</span><strong>${breadth}</strong></div>`:"",
+    leader?`<div class="stat"><span>Nhóm dẫn</span><strong>${esc(leader.name)} · ${pct(leader.change_pct)}</strong></div>`:"",
+    num(v.value_b)!==null?`<div class="stat"><span>Thanh khoản</span><strong>${fmt(v.value_b,1)} tỷ</strong></div>`:flow.label?`<div class="stat"><span>Nhịp tiền</span><strong>${esc(flow.label)}</strong></div>`:""
+  ].filter(Boolean);
+  el.innerHTML=cards.join("");
 }
 
 function sectorRows(snapshot){return Array.isArray(snapshot?.sectors?.all)?snapshot.sectors.all:[];}
@@ -250,7 +252,10 @@ function renderLeaders(snapshot){
   if(strong.length)sections.push(`<div class="section-mini"><h3>Nhóm đang hỗ trợ</h3><div class="row-list">${rows(strong)}</div></div>`);
   if(weak.length)sections.push(`<div class="section-mini"><h3>Nhóm đang gây áp lực</h3><div class="row-list">${rows(weak)}</div></div>`);
   if(moverHtml)sections.push(`<div class="section-mini"><h3>Cổ phiếu đáng nhìn · thanh khoản thực</h3><div class="row-list">${moverHtml}</div></div>`);
-  root.innerHTML=sections.join("")||`<div class="empty compact-empty">Chưa có câu chuyện nhóm/cổ phiếu đủ đáng chú ý.</div>`;
+  const panel=root.closest(".panel");
+  if(!sections.length){if(panel)panel.hidden=true;root.innerHTML="";return;}
+  if(panel)panel.hidden=false;
+  root.innerHTML=sections.join("");
 }
 
 function renderSnapshot(snapshot){setStatus(snapshot);if(!snapshot)return;renderStrip(snapshot);renderMarketNow(snapshot);renderLeaders(snapshot);const st=$("snapshotTime");if(st)st.textContent=timeText(snapshot.captured_at);}
