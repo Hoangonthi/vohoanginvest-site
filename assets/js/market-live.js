@@ -22,6 +22,17 @@ const pct = (v) => { const x=num(v); return x===null?"—":`${signed(x,2)}%`; };
 const toneClass = (v) => { const x=num(v); return x===null||Math.abs(x)<.0001?"flat":x>0?"up":"down"; };
 const timeText = (iso) => { if(!iso)return"—"; try{return new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date(iso));}catch{return"—";} };
 const isVietnamTradingNow = () => { const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Ho_Chi_Minh",weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()); const get=(t)=>parts.find(p=>p.type===t)?.value||""; if(["Sat","Sun"].includes(get("weekday")))return false; const m=Number(get("hour"))*60+Number(get("minute")); return(m>=525&&m<=691)||(m>=780&&m<=901); };
+const commentaryClock = () => {
+  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Ho_Chi_Minh",weekday:"short",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date());
+  const get=t=>parts.find(p=>p.type===t)?.value||"";
+  return{weekday:get("weekday"),minutes:Number(get("hour"))*60+Number(get("minute"))};
+};
+const isCommentaryWindowNow = () => {
+  const now=commentaryClock();
+  if(["Sat","Sun"].includes(now.weekday))return false;
+  return now.minutes>=520&&now.minutes<=900;
+};
+const commentaryWindowLabel = "08:40–15:00";
 const sameName = (a,b) => String(a||"").trim().toLowerCase()===String(b||"").trim().toLowerCase();
 
 function setStatus(snapshot){
@@ -207,22 +218,34 @@ function renderLatest(){
   const panel=$("latestPanel");if(!panel)return;
   const comments=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
   const c=comments[0]||null;
-  const pulse=currentPulse(latestSnapshot);
-  const head=`<div class="panel-head"><h2>Bình luận mới nhất</h2><span id="latestRefresh">Cập nhật ~10 giây</span></div>`;
+  const liveWindow=isCommentaryWindowNow();
+  const pulse=liveWindow?currentPulse(latestSnapshot):null;
+  const title=liveWindow?"Bình luận trực tiếp":"Bình luận gần nhất";
+  const status=liveWindow?"Đang cập nhật ~10 giây":`Khung bình luận ${commentaryWindowLabel}`;
+  const stamp=liveWindow?"ĐANG THEO DÕI":"BÌNH LUẬN GẦN NHẤT";
+  const head=`<div class="panel-head"><h2>${title}</h2><span id="latestRefresh">${status}</span></div>`;
+
+  if(!liveWindow&&c){
+    panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ${stamp}</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;
+    return;
+  }
 
   if(c&&c.event_id==null){
-    panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ĐANG THEO DÕI</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;
+    panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ${stamp}</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;
     return;
   }
 
   if(!pulse){
-    if(c){panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ĐANG THEO DÕI</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;}
-    else panel.innerHTML=head+`<div class="empty">Đang chờ dữ liệu trực tiếp...</div>`;
+    if(c){
+      panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ${stamp}</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;
+    }else{
+      panel.innerHTML=head+`<div class="empty">${liveWindow?"Đang chờ dữ liệu trực tiếp...":`Ngoài giờ bình luận. Khung bình luận từ ${commentaryWindowLabel}.`}</div>`;
+    }
     return;
   }
 
   const lastEvent=c?`<div class="last-event"><b>Mốc lịch sử gần nhất · ${timeText(c.published_at)}:</b> ${esc(c.headline)}</div>`:"";
-  panel.innerHTML=head+`<article class="latest"><div class="latest-time">${timeText(latestSnapshot?.captured_at)} · ĐANG THEO DÕI</div><h2>${esc(pulse.headline)}</h2><p class="latest-body">${esc(pulse.body)}</p><div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(pulse.watch)}</div>${lastEvent}${c?evidenceHtml(c):""}</article>`;
+  panel.innerHTML=head+`<article class="latest"><div class="latest-time">${timeText(latestSnapshot?.captured_at)} · ${stamp}</div><h2>${esc(pulse.headline)}</h2><p class="latest-body">${esc(pulse.body)}</p><div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(pulse.watch)}</div>${lastEvent}${c?evidenceHtml(c):""}</article>`;
 }
 
 function dedupeTimeline(comments){
@@ -303,6 +326,23 @@ async function toggleDayHistory(){
     panel.hidden=true;
     if(btn)btn.textContent="Xem lại bình luận trong ngày";
   }
+}
+async function applyCommentarySessionUi(){
+  const panel=$("timelinePanel"),btn=$("reviewCommentsBtn");
+  if(!panel)return;
+
+  if(isCommentaryWindowNow()){
+    if(!dayHistoryLoaded){
+      panel.hidden=true;
+      if(btn)btn.textContent="Xem lại bình luận trong ngày";
+    }
+    return;
+  }
+
+  if(!dayHistoryLoaded)await loadDayHistory();
+  panel.hidden=false;
+  renderTimeline();
+  if(btn)btn.textContent="Ẩn bình luận trong ngày";
 }
 function pdfHistoryHtml(comments){
   const rows=[...comments].sort((a,b)=>new Date(a.published_at)-new Date(b.published_at));
@@ -449,11 +489,23 @@ function bindAdminUi(){
   $("editCancel")?.addEventListener("click",()=>$("commentEditorDialog")?.close());
 }
 
-function start(){
+async function start(){
   bindAdminUi();
-  load(true);
+  await load(true);
+  await applyCommentarySessionUi();
   initAdmin();
-  pollTimer=window.setInterval(()=>{if(document.visibilityState==="visible")load(false);},10000);
-  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")load(false);});
+  pollTimer=window.setInterval(()=>{
+    if(document.visibilityState==="visible"){
+      load(false);
+      renderLatest();
+    }
+  },10000);
+  document.addEventListener("visibilitychange",async()=>{
+    if(document.visibilityState==="visible"){
+      await load(false);
+      await applyCommentarySessionUi();
+      renderLatest();
+    }
+  });
 }
 start();
