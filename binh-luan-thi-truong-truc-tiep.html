@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/market-live.css?v=20260918-clean4">
+  <link rel="stylesheet" href="assets/css/market-live.css?v=20260918-clean5">
 </head>
 <body>
   <div id="siteHeader"></div>
@@ -78,8 +78,9 @@
           </div>
 
           <div class="live-history-action">
-            <button type="button" id="reviewCommentsBtn">Xem lại bình luận trong ngày</button>
+            <button type="button" id="exportCommentsPdfBtn" class="history-export-btn">Xuất PDF</button>
             <span id="historyInfo">Đã lưu bình luận theo ngày</span>
+            <button type="button" id="reviewCommentsBtn" class="history-review-btn">Xem lại bình luận trong ngày</button>
           </div>
 
           <div class="panel timeline" id="timelinePanel" hidden>
@@ -97,10 +98,6 @@
         </section>
 
         <aside class="live-side" id="communityMount"></aside>
-      </div>
-
-      <div class="live-tools live-tools-export">
-        <button type="button" id="exportCommentsPdfBtn">Xuất PDF</button>
       </div>
 
       <div class="live-links">
@@ -146,7 +143,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script type="module" src="assets/js/market-live.js?v=20260918-clean7"></script>
-  <script type="module" src="assets/js/market-live-community.js?v=20260918-clean3"></script>
+  <script type="module" src="assets/js/market-live-community.js?v=20260918-clean4"></script>
   <script type="module" src="assets/js/site-header.js?v=20260918-clean2"></script>
 </body>
 </html>
