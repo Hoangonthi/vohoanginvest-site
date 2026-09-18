@@ -10,6 +10,7 @@ const fmtPct=(v)=>v===null||v===undefined||!Number.isFinite(Number(v))?"—":`${
 const cls=(v)=>v===null||v===undefined?"":Number(v)>0?"up":Number(v)<0?"down":"";
 const esc=(s)=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const dateVN=(v)=>{if(!v)return"—";const [y,m,d]=String(v).slice(0,10).split("-");return d&&m&&y?`${d}/${m}/${y}`:String(v)};
+const MARKET_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
 
 let current=null;
 
@@ -109,10 +110,10 @@ function eventInsight(ev,d){
   return ["Bối cảnh sự kiện",`Có ${ev.length} SK trong cửa sổ quanh ${dateVN(d.effective_as_of_date)}; gần nhất: “${nearest.title}” (${dateVN(nearest.event_date)}). SK chỉ là bối cảnh, không mặc định là nguyên nhân biến động giá.`,""];
 }
 function renderOverview(d){
-  const t=d.technical||{}, f=d.flow||{}, b=d.fundamental||{}, sig=d.signals||[], ev=d.market_events||[];
+  const t=d.technical||{}, f=d.flow||{}, b=d.fundamental||{}, sig=d.signals||[], ev=d.market_events||[], q=d.live_quote||null;
   $("#overviewKpis").innerHTML=[
-    metric("Giá",fmtNum(t.close),dateVN(d.effective_as_of_date)),
-    metric("1 phiên",fmtPct(t.change_1d_pct),"",cls(t.change_1d_pct)),
+    metric("Giá đóng cửa",fmtNum(t.close),dateVN(d.effective_as_of_date)),
+    metric("Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.change_pct)?fmtPct(q.change_pct):"Chưa có intraday",q&&valid(q.change_pct)?cls(q.change_pct):""),
     metric("20 phiên",fmtPct(t.return_20d_pct),"",cls(t.return_20d_pct)),
     metric("RSI14",fmtNum(t.rsi14),valid(t.rsi14)?(Number(t.rsi14)>=70?"Vùng cao":Number(t.rsi14)>=50?"Trên 50":Number(t.rsi14)<=30?"Vùng thấp":"Dưới 50"):""),
     metric("MA20",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"Trên":"Dưới"):"—",valid(t.ma20)?fmtNum(t.ma20):"",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"up":"down"):""),
@@ -128,7 +129,7 @@ function renderOverview(d){
     eventInsight(ev,d)
   ].filter(Boolean);
 
-  $("#overviewHeading").textContent=`${d.symbol} · đọc nhanh tại ${dateVN(d.effective_as_of_date)}`;
+  $("#overviewHeading").textContent="";
   $("#overviewSummary").innerHTML=insights.map(x=>summaryLine(x[0],x[1],x[2])).join("");
 
   $("#overviewDeep").innerHTML=`
@@ -151,8 +152,9 @@ function renderOverview(d){
 }
 function renderTechnical(d){
  const t=d.technical||{};
+ const q=d.live_quote||null;
  const arr=[
-  ["Close",fmtNum(t.close)],["1 phiên",fmtPct(t.change_1d_pct)],["5 phiên",fmtPct(t.return_5d_pct)],["20 phiên",fmtPct(t.return_20d_pct)],
+  ["Close D1",fmtNum(t.close)],["Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.change_pct)?fmtPct(q.change_pct):"Chưa có intraday"],["5 phiên",fmtPct(t.return_5d_pct)],[ "20 phiên",fmtPct(t.return_20d_pct)],
   ["60 phiên",fmtPct(t.return_60d_pct)],["MA10",fmtNum(t.ma10)],["MA20",fmtNum(t.ma20)],["MA50",fmtNum(t.ma50)],
   ["MA200",fmtNum(t.ma200)],["RSI14",fmtNum(t.rsi14)],["Đỉnh 20P trước",fmtNum(t.high20_prev)],["Đáy 20P trước",fmtNum(t.low20_prev)],
   ["Breakout 20D",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—"],["Breakdown 20D",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—"],
@@ -212,19 +214,41 @@ function render(d){
  document.title=`${d.symbol} | Hồ sơ cổ phiếu | Võ Hoàng`;
  $("#symbolTitle").textContent=d.symbol;
  $("#symbolInput").value=d.symbol;
- $("#effectiveDate").textContent=`Dữ liệu đến ${dateVN(d.effective_as_of_date)}`;
+ $("#effectiveDate").textContent="";
  renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);
  setStatus("");
 }
+async function fetchLiveQuote(symbol){
+ try{
+  const r=await fetch(`${MARKET_ENDPOINT}?_=${Date.now()}`,{cache:"no-store",headers:{"Accept":"application/json"}});
+  if(!r.ok)return null;
+  const data=await r.json();
+  const rows=Array.isArray(data?.vn30_stocks)?data.vn30_stocks:[];
+  const row=rows.find(x=>String(x?.symbol||"").toUpperCase()===symbol);
+  if(!row)return null;
+  const price=Number(row.close), changePct=Number(row.change_pct);
+  return {
+    price:Number.isFinite(price)?price:null,
+    change_pct:Number.isFinite(changePct)?changePct:null,
+    date:row.date||null,
+    source:data.vn30_stock_source||"market-feed"
+  };
+ }catch{return null}
+}
+
 async function load(symbol){
  const s=String(symbol||"").trim().toUpperCase();
  if(!/^[A-Z0-9]{2,12}$/.test(s)){setStatus("Mã cổ phiếu chưa hợp lệ.",true);return}
  setStatus("Đang đọc Stock Memory và tính chỉ số…");
  try{
   const url=`${SUPABASE_URL}/functions/v1/stock-metrics-v1?symbol=${encodeURIComponent(s)}`;
-  const r=await fetch(url,{headers:{"Accept":"application/json"}});
+  const [r,liveQuote]=await Promise.all([
+    fetch(url,{headers:{"Accept":"application/json"}}),
+    fetchLiveQuote(s)
+  ]);
   const body=await r.json();
   if(!r.ok||!body?.ok)throw new Error(body?.error||"Không đọc được dữ liệu");
+  body.data.live_quote=liveQuote;
   render(body.data);
   history.replaceState({}, "", `stock-detail.html?symbol=${encodeURIComponent(s)}`);
  }catch(err){setStatus(err?.message==="SYMBOL_NOT_ACTIVE_CORE"?"Mã này chưa nằm trong 165 mã Core hiện tại.":"Chưa đọc được dữ liệu mã này. Vui lòng thử lại.",true)}
