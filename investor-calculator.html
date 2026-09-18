@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Giữ stylesheet cũ để không phá logic/class hiện có -->
-  <link rel="stylesheet" href="assets/css/investor-calculator.css">
+  <link rel="stylesheet" href="assets/css/investor-calculator.css?v=20260918-2">
 
   <style>
     :root{
@@ -3951,6 +3951,481 @@
 
         </div>
 
+
+      </section>
+
+
+      <!-- 13 STOP / TARGET R:R -->
+      <section class="calc-panel" data-panel="starr">
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC MUA</span>
+            <h2>Stop và Target đang tạo ra tỷ lệ R:R bao nhiêu?</h2>
+          </div>
+          <div class="formula">Stop &lt; Giá mua &lt; Target</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Biết chính xác mỗi cổ phiếu và toàn bộ vị thế có thể mất bao nhiêu, kỳ vọng được bao nhiêu và tỷ lệ lãi/lỗ là bao nhiêu.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="stForm" class="input-panel">
+            <div class="field-grid">
+              <label>Giá mua
+                <input id="stEntry" type="number" min="0" step="any" value="75000">
+              </label>
+              <label>Giá cắt lỗ
+                <input id="stStop" type="number" min="0" step="any" value="71000">
+              </label>
+              <label>Giá mục tiêu
+                <input id="stTarget" type="number" min="0" step="any" value="85000">
+              </label>
+              <label>Số lượng cổ phiếu
+                <input id="stQty" type="number" min="1" step="1" value="1000">
+              </label>
+            </div>
+            <button class="calculate" type="submit">TÍNH STOP / TARGET · R:R</button>
+            <p class="validation" id="stValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="stVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>Rủi ro : Lợi nhuận kỳ vọng</span>
+              <strong id="stRatio">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Rủi ro / cổ phiếu</span><b id="stRiskPerShare">—</b></div>
+              <div><span>Lợi nhuận kỳ vọng / cổ phiếu</span><b id="stRewardPerShare">—</b></div>
+              <div><span>Risk %</span><b id="stRiskPct">—</b></div>
+              <div><span>Reward %</span><b id="stRewardPct">—</b></div>
+              <div><span>Tổng tiền có thể lỗ</span><b id="stTotalRisk">—</b></div>
+              <div><span>Tổng lợi nhuận kỳ vọng</span><b id="stTotalReward">—</b></div>
+            </div>
+            <div class="nba">
+              <span>ĐIỂM CẦN NHỚ</span>
+              <p id="stAction">Công cụ chỉ tính cấu trúc Stop/Target đã nhập, không đánh giá xác suất đạt mục tiêu.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 14 DEPLOYMENT PLAN -->
+      <section class="calc-panel" data-panel="deployment">
+        <div class="panel-head">
+          <div>
+            <span class="step">TRƯỚC MUA</span>
+            <h2>Nếu mua nhiều nhịp, tổng vốn và giá vốn dự kiến là bao nhiêu?</h2>
+          </div>
+          <div class="formula">Σ chi phí ÷ Σ số cổ phiếu</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Lập trước từng nhịp mua bằng số lượng hoặc số tiền, tính phí mua vào cost basis và nhìn giá vốn dự kiến của toàn kế hoạch.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="depForm" class="input-panel">
+            <div class="field-grid">
+              <label>Phí mua (%)
+                <input id="depFeePct" type="number" min="0" max="20" step="0.001" value="0.15">
+              </label>
+              <label>Lô giao dịch
+                <input id="depLot" type="number" min="1" step="1" value="100">
+              </label>
+            </div>
+
+            <div class="dynamic-block-head">
+              <strong>Các nhịp giải ngân</strong>
+              <button id="depAddLeg" class="mini-button" type="button">+ Thêm nhịp</button>
+            </div>
+            <div class="dynamic-table plan-table">
+              <div class="dynamic-row dynamic-head">
+                <span>Giá dự kiến</span><span>Số lượng</span><span>Hoặc số tiền</span><span></span>
+              </div>
+              <div id="depRows"></div>
+            </div>
+
+            <button class="calculate" type="submit">TÍNH KẾ HOẠCH GIẢI NGÂN</button>
+            <p class="validation" id="depValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="depVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>Giá vốn bình quân dự kiến</span>
+              <strong id="depAvgCost">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Tổng vốn dự kiến</span><b id="depCapital">—</b></div>
+              <div><span>Tổng số cổ phiếu</span><b id="depQty">—</b></div>
+              <div><span>Giá trị mua trước phí</span><b id="depGross">—</b></div>
+              <div><span>Tổng phí mua</span><b id="depFees">—</b></div>
+            </div>
+            <div class="nba">
+              <span>GIẢ ĐỊNH ĐANG DÙNG</span>
+              <p id="depAction">Mỗi nhịp chỉ nhập Số lượng hoặc Số tiền. Nếu nhập bằng tiền, số lượng được làm tròn xuống theo lô giao dịch đã chọn.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 15 MARGIN CALL -->
+      <section class="calc-panel" data-panel="mcall">
+        <div class="panel-head">
+          <div>
+            <span class="step">MARGIN</span>
+            <h2>Với ngưỡng của tài khoản này, giá trị tài sản chạm Margin Call ở đâu?</h2>
+          </div>
+          <div class="formula">V ngưỡng = D ÷ (1 - R)</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Ước tính ngưỡng theo đúng tỷ lệ do anh/chị nhập, không dùng một mức Margin Call chung cho mọi công ty chứng khoán.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="mcallForm" class="input-panel">
+            <div class="field-grid">
+              <label>Dư nợ hiện tại (đồng)
+                <input id="mcallDebt" type="number" min="0" step="any" value="200000000">
+              </label>
+              <label>Giá trị thị trường tài sản (đồng)
+                <input id="mcallMarketValue" type="number" min="0" step="any" value="500000000">
+              </label>
+              <label>Số cổ phiếu của mã đang mô phỏng
+                <input id="mcallQty" type="number" min="0" step="1" value="10000">
+              </label>
+              <label>Ngưỡng Margin Call R (%)
+                <input id="mcallCallPct" type="number" min="0.001" max="99.999" step="0.1" value="30">
+              </label>
+              <label>Ngưỡng Force Sell R (%)
+                <input id="mcallForcePct" type="number" min="0.001" max="99.999" step="0.1" value="25">
+              </label>
+            </div>
+            <button class="calculate" type="submit">ƯỚC TÍNH NGƯỠNG MARGIN</button>
+            <p class="validation" id="mcallValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="mcallVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>Tỷ lệ vốn / tài sản hiện tại</span>
+              <strong id="mcallCurrent">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Giá trị tài sản tại Margin Call</span><b id="mcallCallValue">—</b></div>
+              <div><span>Giá/cp ước tính tại Margin Call</span><b id="mcallCallPrice">—</b></div>
+              <div><span>Giá trị tài sản tại Force Sell</span><b id="mcallForceValue">—</b></div>
+              <div><span>Giá/cp ước tính tại Force Sell</span><b id="mcallForcePrice">—</b></div>
+            </div>
+            <div class="nba">
+              <span>GIỚI HẠN CỦA MÔ HÌNH</span>
+              <p id="mcallAction">Đây là ước tính theo D, V và ngưỡng R anh/chị nhập. Thực tế CTCK có thể tính thêm tiền mặt, tỷ lệ cho vay từng mã, haircut, lãi vay, tài sản đảm bảo và quy tắc riêng.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 16 ACTUAL LEVERAGE -->
+      <section class="calc-panel" data-panel="leverage">
+        <div class="panel-head">
+          <div>
+            <span class="step">MARGIN</span>
+            <h2>Đòn bẩy thực tế của tài khoản đang là bao nhiêu?</h2>
+          </div>
+          <div class="formula">Exposure ÷ NAV</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Tách phần danh mục chịu biến động khỏi tiền mặt để tính lại NAV thật trong từng kịch bản tăng/giảm giá.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="levForm" class="input-panel">
+            <div class="field-grid">
+              <label>Giá trị danh mục chịu biến động
+                <input id="levExposure" type="number" min="0" step="any" value="600000000">
+              </label>
+              <label>Tiền mặt / tài sản không mô phỏng biến động
+                <input id="levCash" type="number" min="0" step="any" value="100000000">
+              </label>
+              <label>Dư nợ
+                <input id="levDebt" type="number" min="0" step="any" value="200000000">
+              </label>
+            </div>
+            <button class="calculate" type="submit">TÍNH ĐÒN BẨY THỰC TẾ</button>
+            <p class="validation" id="levValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="levVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>NAV hiện tại</span>
+              <strong id="levNav">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Tổng tài sản</span><b id="levAssets">—</b></div>
+              <div><span>Đòn bẩy thực tế</span><b id="levRatio">—</b></div>
+              <div><span>Dư nợ / NAV</span><b id="levDebtNav">—</b></div>
+              <div><span>Exposure</span><b id="levExposureOut">—</b></div>
+            </div>
+            <div class="scenario-table-wrap">
+              <table class="scenario-table">
+                <thead><tr><th>Danh mục</th><th>NAV mới</th><th>NAV thay đổi</th></tr></thead>
+                <tbody id="levScenarioBody"></tbody>
+              </table>
+            </div>
+            <div class="nba">
+              <span>ĐIỂM CẦN NHỚ</span>
+              <p id="levAction">Kịch bản được tính lại từ giá trị danh mục chịu biến động; tiền mặt không bị nhân cùng phần trăm thay đổi.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 17 LOSING STREAK -->
+      <section class="calc-panel" data-panel="streak">
+        <div class="panel-head">
+          <div>
+            <span class="step">RỦI RO</span>
+            <h2>Nếu thua liên tiếp, tài khoản còn lại bao nhiêu?</h2>
+          </div>
+          <div class="formula">Cₙ = C₀ × (1-r)ⁿ</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Cho thấy tác động lũy kế khi mỗi lệnh đều rủi ro theo phần trăm NAV còn lại sau lệnh trước.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="streakForm" class="input-panel">
+            <div class="field-grid">
+              <label>Vốn ban đầu
+                <input id="streakCapital" type="number" min="0" step="any" value="500000000">
+              </label>
+              <label>Rủi ro mỗi lệnh (% NAV hiện tại)
+                <input id="streakRiskPct" type="number" min="0.001" max="99.999" step="0.1" value="1">
+              </label>
+            </div>
+            <button class="calculate" type="submit">TÍNH SỨC CHỊU CHUỖI THUA</button>
+            <p class="validation" id="streakValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="streakVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>Vốn còn lại sau 20 lệnh thua</span>
+              <strong id="streak20">—</strong>
+            </div>
+            <div class="scenario-table-wrap">
+              <table class="scenario-table">
+                <thead><tr><th>Số lệnh thua</th><th>Vốn còn lại</th><th>Drawdown</th><th>Tiền đã mất</th></tr></thead>
+                <tbody id="streakBody"></tbody>
+              </table>
+            </div>
+            <div class="nba">
+              <span>MÔ HÌNH ĐANG DÙNG</span>
+              <p id="streakAction">Risk mỗi lệnh được tính trên NAV còn lại sau mỗi lần thua, không phải mất cố định một số tiền như nhau.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 18 PORTFOLIO CONCENTRATION -->
+      <section class="calc-panel" data-panel="concentration">
+        <div class="panel-head">
+          <div>
+            <span class="step">RỦI RO</span>
+            <h2>Danh mục đang tập trung vào mã và ngành nào?</h2>
+          </div>
+          <div class="formula">HHI = Σ(wᵢ²)</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Đo trọng số Top 1, Top 3, trọng số theo ngành và mức tập trung toán học bằng HHI mà không tự gắn nhãn an toàn/nguy hiểm.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="concForm" class="input-panel">
+            <div class="dynamic-block-head">
+              <strong>Các vị thế trong danh mục</strong>
+              <button id="concAddRow" class="mini-button" type="button">+ Thêm vị thế</button>
+            </div>
+            <div class="dynamic-table concentration-table">
+              <div class="dynamic-row dynamic-head">
+                <span>Mã</span><span>Giá trị vị thế</span><span>Ngành / nhóm</span><span></span>
+              </div>
+              <div id="concRows"></div>
+            </div>
+            <button class="calculate" type="submit">TÍNH MỨC TẬP TRUNG DANH MỤC</button>
+            <p class="validation" id="concValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="concVerdict">KẾT QUẢ THUẦN TOÁN HỌC</div>
+            <div class="big-number">
+              <span>HHI</span>
+              <strong id="concHhi">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Top 1</span><b id="concTop1">—</b></div>
+              <div><span>Top 3</span><b id="concTop3">—</b></div>
+              <div><span>Số vị thế hiệu dụng</span><b id="concEffective">—</b></div>
+              <div><span>Tổng giá trị danh mục</span><b id="concTotal">—</b></div>
+            </div>
+            <div class="sector-summary">
+              <strong>Trọng số theo ngành / nhóm</strong>
+              <div id="concSectors"></div>
+            </div>
+            <div class="nba">
+              <span>ĐIỂM CẦN NHỚ</span>
+              <p id="concAction">HHI càng lớn thì giá trị danh mục càng tập trung vào ít vị thế hơn. Công cụ không tự đặt ngưỡng “an toàn/nguy hiểm”.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 19 DIVIDEND YIELD -->
+      <section class="calc-panel" data-panel="divyield">
+        <div class="panel-head">
+          <div>
+            <span class="step">CỔ TỨC / QUYỀN</span>
+            <h2>Cổ tức công bố tương đương bao nhiêu % trên giá thị trường?</h2>
+          </div>
+          <div class="formula">Yield = Cổ tức/cp ÷ Giá thị trường</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Phân biệt tỷ lệ cổ tức công bố trên mệnh giá với tỷ suất cổ tức tính trên giá thị trường hiện tại.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="dyForm" class="input-panel">
+            <div class="field-grid">
+              <label>Giá thị trường (đồng/cp)
+                <input id="dyMarket" type="number" min="0" step="any" value="50000">
+              </label>
+              <label>Mệnh giá (đồng/cp)
+                <input id="dyPar" type="number" min="0" step="any" value="10000">
+              </label>
+              <label>Cổ tức tiền mặt công bố (% mệnh giá)
+                <input id="dyPct" type="number" min="0" step="0.1" value="20">
+              </label>
+            </div>
+            <button class="calculate" type="submit">TÍNH TỶ SUẤT CỔ TỨC</button>
+            <p class="validation" id="dyValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="dyVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>Tỷ suất cổ tức trên giá thị trường</span>
+              <strong id="dyYield">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Cổ tức / cổ phiếu</span><b id="dyPerShare">—</b></div>
+              <div><span>Tỷ lệ công bố trên mệnh giá</span><b id="dyDeclared">—</b></div>
+              <div><span>Mệnh giá đang dùng</span><b id="dyParOut">—</b></div>
+              <div><span>Giá thị trường</span><b id="dyMarketOut">—</b></div>
+            </div>
+            <div class="nba">
+              <span>GIẢ ĐỊNH ĐANG DÙNG</span>
+              <p id="dyAction">Mệnh giá mặc định 10.000 đồng cho cổ phiếu Việt Nam nhưng có thể chỉnh. Công cụ này không tự áp thuế cổ tức.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 20 COST BASIS AFTER RIGHTS -->
+      <section class="calc-panel" data-panel="costrights">
+        <div class="panel-head">
+          <div>
+            <span class="step">CỔ TỨC / QUYỀN</span>
+            <h2>Sau cổ phiếu thưởng hoặc quyền mua, giá vốn thực tế còn bao nhiêu?</h2>
+          </div>
+          <div class="formula">Cost basis mới ÷ Tổng CP sau quyền</div>
+        </div>
+
+        <div class="why">
+          <strong>Công cụ này giúp tôi trả lời câu hỏi gì?</strong>
+          <p>Tính lại cost basis thật sau cổ phiếu nhận thêm và cổ phiếu thực mua theo quyền; không lặp lại phép tính giá lý thuyết sau ngày không hưởng quyền.</p>
+        </div>
+
+        <div class="workbench">
+          <form id="crForm" class="input-panel">
+            <div class="field-grid">
+              <label>Số cổ phiếu đang có
+                <input id="crOldQty" type="number" min="0" step="any" value="2000">
+              </label>
+              <label>Giá vốn hiện tại (đồng/cp)
+                <input id="crOldAvg" type="number" min="0" step="any" value="40000">
+              </label>
+              <label>Cổ tức CP / CP thưởng (%)
+                <input id="crBonusPct" type="number" min="0" step="0.1" value="20">
+              </label>
+              <label>Tỷ lệ quyền: số CP cũ
+                <input id="crRatioOld" type="number" min="0" step="any" value="5">
+              </label>
+              <label>Tỷ lệ quyền: số CP mới
+                <input id="crRatioNew" type="number" min="0" step="any" value="1">
+              </label>
+              <label>Giá mua theo quyền (đồng/cp)
+                <input id="crSubPrice" type="number" min="0" step="any" value="10000">
+              </label>
+              <label>Số CP thực mua theo quyền
+                <input id="crActualSubQty" type="number" min="0" step="any" value="400">
+              </label>
+              <label>Phí liên quan (đồng)
+                <input id="crRelatedFee" type="number" min="0" step="any" value="0">
+              </label>
+              <label>Quy tắc cổ phiếu lẻ
+                <select id="crFractionRule">
+                  <option value="FLOOR" selected>Làm tròn xuống cổ phiếu nguyên</option>
+                  <option value="KEEP_DECIMAL">Giữ số lẻ theo tỷ lệ nhập</option>
+                </select>
+              </label>
+            </div>
+            <button class="calculate" type="submit">TÍNH GIÁ VỐN SAU QUYỀN</button>
+            <p class="validation" id="crValidation"></p>
+          </form>
+
+          <div class="result-panel">
+            <div class="verdict" id="crVerdict">CHỜ DỮ LIỆU</div>
+            <div class="big-number">
+              <span>Giá vốn bình quân mới</span>
+              <strong id="crNewAvg">—</strong>
+            </div>
+            <div class="metric-grid">
+              <div><span>Cost basis cũ</span><b id="crOldBasis">—</b></div>
+              <div><span>CP thưởng / nhận thêm</span><b id="crBonusQty">—</b></div>
+              <div><span>CP được quyền mua</span><b id="crEntitledQty">—</b></div>
+              <div><span>CP thực mua theo quyền</span><b id="crBoughtQty">—</b></div>
+              <div><span>Cost basis mới</span><b id="crNewBasis">—</b></div>
+              <div><span>Tổng CP sau quyền</span><b id="crTotalQty">—</b></div>
+            </div>
+            <div class="nba">
+              <span>GIẢ ĐỊNH ĐANG DÙNG</span>
+              <p id="crAction">Cổ phiếu thưởng không làm tăng cost basis; quyền mua làm tăng cost basis bằng tiền thực mua cộng phí liên quan. Quy tắc cổ phiếu lẻ lấy đúng theo lựa chọn phía trên.</p>
+            </div>
+          </div>
+        </div>
+
       </section>
 
     </section>
@@ -3971,7 +4446,7 @@
   <div id="siteFooter"></div>
 <!-- Logic máy tính giữ nguyên -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="investor-calculator.js"></script>
+  <script type="module" src="investor-calculator.js?v=20260918-2"></script>
 
 
   <!-- Menu mobile -->
