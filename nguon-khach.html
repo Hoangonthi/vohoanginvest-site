@@ -1,91 +1,121 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Nguồn khách – Võ Hoàng</title>
-  <link rel="icon" href="LOGO.png" />
-  <link rel="stylesheet" href="assets/css/app-nav.css" />
+  <link rel="icon" href="LOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/app-nav.css">
+  <link rel="stylesheet" href="assets/css/admin-crm-v2.css?v=20260918-1">
   <style>
-    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#172033;background:#f4f6f8}*{box-sizing:border-box}body{margin:0;background:#f4f6f8}.wrap{max-width:1180px;margin:24px auto;padding:0 16px}.hidden{display:none!important}.card{background:#fff;border:1px solid #dfe5ed;border-radius:16px;padding:18px;margin-bottom:14px}.login{max-width:420px;margin:70px auto}.login input,.login button,.toolbar select,.generator input,.generator select,.generator button{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #cfd7e2}.google{margin-bottom:12px;font-weight:800;background:#fff}.primary{background:#172033!important;color:#fff!important}.muted{color:#6d7786}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select{width:auto}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid #e7ebf0}.table th{font-size:.85rem;color:#677384}.table td strong{font-size:.95rem}.generator{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:10px;align-items:end}.generator label{display:grid;gap:6px;font-size:.85rem;font-weight:700}.output{margin-top:12px;padding:12px;background:#eef2f6;border-radius:10px;word-break:break-all}.empty{text-align:center;padding:36px;color:#6b7484}@media(max-width:900px){.generator{grid-template-columns:1fr 1fr}.generator button{grid-column:1/-1}}@media(max-width:560px){.generator{grid-template-columns:1fr}}
+    .source-generator{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+    .source-generator label{display:grid;gap:6px;font-size:11px;font-weight:800;color:#526174}
+    .source-generator input,.source-generator select{min-height:40px;border:1px solid #cfd8e4;border-radius:10px;padding:0 11px;font:inherit;background:#fff}
+    .source-output{margin-top:12px;padding:11px 12px;border:1px solid #e2e8ef;border-radius:10px;background:#f7f9fc;color:#536173;font-size:11px;word-break:break-all}
+    @media(max-width:900px){.source-generator{grid-template-columns:1fr 1fr}.source-generator button{grid-column:1/-1}}
+    @media(max-width:620px){.source-generator{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-  <header class="app-nav">
-    <div class="app-nav-inner">
-      <a class="app-nav-brand" href="./"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · HỆ THỐNG</span></a>
-      <nav class="app-nav-links" aria-label="Điều hướng hệ thống">
-        <button class="app-nav-back" type="button" data-smart-back>← Quay lại</button>
-        <a class="app-nav-home" href="./">Trang chủ</a>
-        <a href="crm-hom-nay.html">CRM hôm nay</a>
-        <a href="admin-dich-vu.html">Khách gửi việc</a>
-        <a class="app-nav-active" href="nguon-khach.html">Nguồn khách</a>
-        <a href="dich-vu-so.html">Trang dịch vụ</a>
-        <button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
-      </nav>
-    </div>
-  </header>
-  <main class="wrap">
-    <section id="loginBox" class="card login">
-      <h1>Đăng nhập quản trị</h1>
-      <p class="muted">Dùng tài khoản Admin/Staff CRM.</p>
-      <button id="googleLogin" class="google" type="button">Đăng nhập với Google</button>
-      <form id="loginForm">
-        <p><input id="email" type="email" value="vohoang.bank@gmail.com" placeholder="Email" required /></p>
-        <p><input id="password" type="password" placeholder="Mật khẩu" required /></p>
-        <button class="primary" type="submit">Đăng nhập</button>
-        <p id="loginMsg" class="muted"></p>
-      </form>
-    </section>
+<header class="app-nav">
+  <div class="app-nav-inner">
+    <a class="app-nav-brand" href="he-thong.html"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · QUẢN TRỊ KHÁCH HÀNG</span></a>
+    <nav class="app-nav-links">
+      <button type="button" data-smart-back>← Quay lại</button>
+      <a href="crm-hom-nay.html">CRM hôm nay</a>
+      <a class="app-nav-active" href="nguon-khach.html">Nguồn khách</a>
+      <a href="admin-market-leads.html">Khách quan tâm thị trường</a>
+      <a href="admin-retention.html">Mức độ quay lại</a>
+      <button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
+    </nav>
+  </div>
+</header>
 
-    <section id="app" class="hidden">
-      <section class="card">
-        <h2>Tạo link có tracking</h2>
-        <p class="muted">Dùng link này khi gửi cho khách hoặc giao cho CTV. Hệ thống sẽ giữ nguồn trong 30 ngày.</p>
-        <div class="generator">
-          <label>Trang đích
-            <select id="target">
-              <option value="dich-vu-so.html">Trang dịch vụ</option>
-              <option value="index.html">Website đầu tư</option>
-            </select>
-          </label>
-          <label>Nguồn
-            <select id="src">
-              <option value="zalo">Zalo</option>
-              <option value="facebook">Facebook</option>
-              <option value="tiktok">TikTok</option>
-              <option value="referral">Giới thiệu</option>
-              <option value="ctv">CTV</option>
-            </select>
-          </label>
-          <label>Mã người giới thiệu / CTV
-            <input id="ref" placeholder="VD: CTV0001" maxlength="24" />
-          </label>
-          <label>Chiến dịch
-            <input id="campaign" value="kiem-khach-01" maxlength="28" />
-          </label>
-          <button id="makeLink" class="primary" type="button">Tạo & sao chép</button>
-        </div>
-        <div id="linkOut" class="output">Chưa tạo link.</div>
-      </section>
+<main class="admin-wrap">
+  <section id="loginBox" class="admin-card admin-login">
+    <h1>Đăng nhập quản trị</h1>
+    <p>Xem khách đến từ đâu và nguồn nào tạo ra nhiều cuộc hẹn hơn.</p>
+    <button id="googleLogin" class="admin-google" type="button">Đăng nhập với Google</button>
+    <form id="loginForm">
+      <p><input id="email" type="email" value="vohoang.bank@gmail.com" autocomplete="username" placeholder="Email" required></p>
+      <p><input id="password" type="password" autocomplete="current-password" placeholder="Mật khẩu" required></p>
+      <button class="admin-primary" type="submit" style="width:100%">Đăng nhập</button>
+      <p id="loginMsg" class="admin-help"></p>
+    </form>
+  </section>
 
-      <div class="toolbar">
-        <strong>Hiệu quả nguồn:</strong>
-        <select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option><option value="365">365 ngày</option></select>
-        <button id="refresh">Làm mới</button>
+  <section id="app" class="hidden">
+    <div class="admin-hero">
+      <div>
+        <h1>Nguồn khách</h1>
+        <p>Biết khách đến từ Zalo, Facebook, TikTok, CTV hay trang nào trên website; đồng thời xem nguồn nào thực sự tạo ra khách có nhu cầu.</p>
       </div>
+    </div>
 
-      <section class="card table-wrap">
-        <table class="table">
-          <thead><tr><th>Nguồn</th><th>Lead</th><th>Assessment</th><th>Yêu cầu hẹn</th><th>Hoàn thành</th><th>Assessment → Hẹn</th><th>Hẹn → Hoàn thành</th></tr></thead>
-          <tbody id="body"></tbody>
-        </table>
-        <div id="empty" class="empty hidden">Chưa có dữ liệu nguồn trong khoảng thời gian này.</div>
-      </section>
+    <section class="admin-card admin-panel">
+      <h2>Tạo link có ghi nhận nguồn</h2>
+      <p class="admin-help">Dùng khi gửi link cho khách hoặc giao cho CTV. Khi khách để lại thông tin, hệ thống sẽ biết họ đến từ đâu mà không cần anh nhớ thủ công.</p>
+      <div class="source-generator">
+        <label>Trang muốn gửi
+          <select id="target">
+            <option value="sang-nay-can-nhin-gi.html">Sáng nay cần nhìn gì</option>
+            <option value="thi-truong-hom-nay.html">Thị trường hôm nay</option>
+            <option value="investor-calculator.html">Máy tính nhà đầu tư</option>
+            <option value="dich-vu-so.html">Dịch vụ số</option>
+            <option value="">Trang chủ</option>
+          </select>
+        </label>
+        <label>Kênh gửi
+          <select id="src">
+            <option value="zalo">Zalo</option>
+            <option value="facebook">Facebook</option>
+            <option value="tiktok">TikTok</option>
+            <option value="referral">Giới thiệu</option>
+            <option value="ctv">CTV</option>
+          </select>
+        </label>
+        <label>Người giới thiệu / CTV
+          <input id="ref" placeholder="Ví dụ: CTV0001" maxlength="24">
+        </label>
+        <label>Tên chiến dịch
+          <input id="campaign" value="kiem-khach-01" maxlength="28">
+        </label>
+        <button id="makeLink" class="admin-primary admin-button" type="button">Tạo & sao chép</button>
+      </div>
+      <div id="linkOut" class="source-output">Chưa tạo link.</div>
     </section>
-  </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/app-nav.js"></script>
-  <script type="module" src="nguon-khach.js"></script>
+
+    <div class="admin-toolbar">
+      <span class="admin-filters-label">Xem hiệu quả trong:</span>
+      <select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option><option value="365">365 ngày</option></select>
+      <button id="refresh">Làm mới</button>
+    </div>
+
+    <section class="admin-card admin-panel admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nguồn khách</th>
+            <th>Khách đã ghi nhận</th>
+            <th>Đã làm đánh giá</th>
+            <th>Yêu cầu hẹn</th>
+            <th>Buổi đã hoàn thành</th>
+            <th>Từ đánh giá → hẹn</th>
+            <th>Từ hẹn → hoàn thành</th>
+          </tr>
+        </thead>
+        <tbody id="body"></tbody>
+      </table>
+      <div id="empty" class="admin-empty hidden">Chưa có dữ liệu nguồn trong khoảng thời gian này.</div>
+    </section>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="assets/js/app-nav.js"></script>
+<script type="module" src="nguon-khach.js?v=20260918-2"></script>
 </body>
 </html>
