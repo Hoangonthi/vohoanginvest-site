@@ -154,11 +154,11 @@ function buildDynamicAnalysis(d){
   const ret20=valid(t.return_20d_pct)?Number(t.return_20d_pct):null;
   const ret60=valid(t.return_60d_pct)?Number(t.return_60d_pct):null;
 
-  let techScore=0, fundScore=0, flowScore=0;
+  let techScore=0, shortTermScore=0, fundScore=0, flowScore=0;
 
   if(px!==null&&m20!==null){
-    if(px>m20){addPoint(support,"Giá giữ trên MA20",`Giá hiện tại ${fmtNum(px)} đang cao hơn MA20 ${fmtNum(m20)}, cấu trúc ngắn hạn vẫn giữ được nền.`,"positive");techScore++}
-    else {addPoint(risk,"Giá dưới MA20",`Giá hiện tại ${fmtNum(px)} đang dưới MA20 ${fmtNum(m20)}, nhịp ngắn hạn chưa lấy lại ưu thế.`,"negative");techScore--}
+    if(px>m20){addPoint(support,"Giá giữ trên MA20",`Giá hiện tại ${fmtNum(px)} đang cao hơn MA20 ${fmtNum(m20)}, cấu trúc ngắn hạn vẫn giữ được nền.`,"positive");techScore+=2;shortTermScore+=2}
+    else {addPoint(risk,"Giá dưới MA20",`Giá hiện tại ${fmtNum(px)} đang dưới MA20 ${fmtNum(m20)}, nhịp ngắn hạn chưa lấy lại ưu thế.`,"negative");techScore-=2;shortTermScore-=2}
   }
   if(px!==null&&m50!==null){
     if(px>m50){addPoint(support,"Trên MA50",`Giá vẫn nằm trên MA50 ${fmtNum(m50)}, xu hướng trung hạn chưa bị phá vỡ.`,"positive");techScore++}
@@ -169,24 +169,28 @@ function buildDynamicAnalysis(d){
     else {addPoint(risk,"Chưa vượt MA200",`Giá vẫn dưới MA200 ${fmtNum(m200)}, xu hướng dài hơn chưa xác nhận hoàn toàn.`,"watch")}
   }
   if(s20!==null){
-    if(s20>0.25){addPoint(support,"MA20 đang dốc lên",`MA20 tăng ${fmtPct(s20)} trong 5 phiên đo lường, cho thấy nền giá ngắn hạn đang nâng dần.`,"positive");techScore++}
-    else if(s20<-.25){addPoint(risk,"MA20 đang dốc xuống",`MA20 giảm ${fmtPct(s20)} trong 5 phiên đo lường, xu hướng ngắn hạn còn chịu sức ép.`,"negative");techScore--}
+    if(s20>0.25){addPoint(support,"MA20 đang dốc lên",`MA20 tăng ${fmtPct(s20)} trong 5 phiên đo lường, cho thấy nền giá ngắn hạn đang nâng dần.`,"positive");techScore+=2;shortTermScore+=2}
+    else if(s20<-.25){addPoint(risk,"MA20 đang dốc xuống",`MA20 giảm ${fmtPct(s20)} trong 5 phiên đo lường, xu hướng ngắn hạn còn chịu sức ép.`,"negative");techScore-=2;shortTermScore-=2}
   }
   if(s50!==null){
     if(s50>0.35){addPoint(support,"MA50 cải thiện",`MA50 đang đi lên ${fmtPct(s50)} trong 10 phiên đo lường, nền trung hạn được nâng dần.`,"positive")}
     else if(s50<-.35){addPoint(risk,"MA50 suy yếu",`MA50 đang đi xuống ${fmtPct(s50)} trong 10 phiên đo lường.`,"negative")}
   }
   if(rsi!==null){
-    if(rsi>=50&&rsi<70){addPoint(support,"Động lượng trên 50",`RSI14 ở ${fmtNum(rsi)}, động lượng nghiêng tích cực nhưng chưa vào vùng quá nóng.`,"positive");techScore++}
+    if(rsi>=50&&rsi<70){addPoint(support,"Động lượng trên 50",`RSI14 ở ${fmtNum(rsi)}, động lượng nghiêng tích cực nhưng chưa vào vùng quá nóng.`,"positive");techScore++;shortTermScore++}
     else if(rsi>=70){addPoint(risk,"Động lượng nóng",`RSI14 ở ${fmtNum(rsi)}; xu hướng có lực nhưng rủi ro rung lắc ngắn hạn cao hơn.`,"watch")}
-    else if(rsi<40){addPoint(risk,"Động lượng yếu",`RSI14 chỉ ${fmtNum(rsi)}, cho thấy lực giá hiện còn yếu.`,"negative");techScore--}
+    else if(rsi<40){addPoint(risk,"Động lượng yếu",`RSI14 chỉ ${fmtNum(rsi)}, cho thấy lực giá hiện còn yếu.`,"negative");techScore--;shortTermScore--}
   }
   if(vol!==null){
-    if(vol>=1.2&&ret20!==null&&ret20>0){addPoint(support,"Thanh khoản xác nhận",`Khối lượng bằng ${fmtNum(vol)}x trung bình 20 phiên trong bối cảnh giá 20 phiên tăng ${fmtPct(ret20)}.`,"positive");techScore++}
+    if(vol>=1.2&&ret20!==null&&ret20>0){addPoint(support,"Thanh khoản xác nhận",`Khối lượng bằng ${fmtNum(vol)}x trung bình 20 phiên trong bối cảnh giá 20 phiên tăng ${fmtPct(ret20)}.`,"positive");techScore+=2;shortTermScore+=2}
     else if(vol<=.8){addPoint(risk,"Thanh khoản chưa xác nhận",`Khối lượng chỉ bằng ${fmtNum(vol)}x trung bình 20 phiên; tín hiệu giá hiện thiếu sự tham gia mạnh của dòng tiền.`,"watch")}
   }
-  if(t.breakout_20d===true){addPoint(support,"Đã vượt đỉnh 20P",`Close đã vượt đỉnh của 20 phiên trước (${fmtNum(t.high20_prev)}).`,"positive");techScore+=2}
-  if(t.breakdown_20d===true){addPoint(risk,"Đã thủng đáy 20P",`Close đã thủng đáy của 20 phiên trước (${fmtNum(t.low20_prev)}).`,"negative");techScore-=2}
+  if(t.breakout_20d===true){addPoint(support,"Đã vượt đỉnh 20P",`Close đã vượt đỉnh của 20 phiên trước (${fmtNum(t.high20_prev)}).`,"positive");techScore+=4;shortTermScore+=4}
+  else if(px!==null&&valid(t.high20_prev)&&px>Number(t.high20_prev)){
+    addPoint(support,"Đang kiểm định vùng breakout",`Giá hiện tại ${fmtNum(px)} đã vượt đỉnh 20 phiên ${fmtNum(t.high20_prev)} trong phiên; đây là tín hiệu sớm, chưa thay thế xác nhận D1.`,"positive");
+    techScore+=2;shortTermScore+=2;
+  }
+  if(t.breakdown_20d===true){addPoint(risk,"Đã thủng đáy 20P",`Close đã thủng đáy của 20 phiên trước (${fmtNum(t.low20_prev)}).`,"negative");techScore-=4;shortTermScore-=4}
   if(valid(t.range60?.position_pct)){
     const pos=Number(t.range60.position_pct);
     if(pos>=75)addPoint(support,"Đứng ở vùng trên của biên 60 phiên",`Giá đang ở khoảng ${fmtNum(pos)}% biên dao động 60 phiên, phản ánh sức mạnh giá tương đối tốt.`,"positive");
@@ -200,10 +204,10 @@ function buildDynamicAnalysis(d){
   const flowPair=(label,v5,v20)=>{
     if(!valid(v5)||!valid(v20))return;
     const a=Number(v5),z=Number(v20);
-    if(a>0&&z>0){addPoint(support,`${label} duy trì mua ròng`,`5 phiên +${fmtNum(a,0)} cp và 20 phiên +${fmtNum(z,0)} cp; dòng tiền có tính duy trì.`,"positive");flowScore++}
-    else if(a<0&&z<0){addPoint(risk,`${label} duy trì bán ròng`,`5 phiên ${fmtNum(a,0)} cp và 20 phiên ${fmtNum(z,0)} cp; áp lực bán chưa phải nhiễu một phiên.`,"negative");flowScore--}
-    else if(a>0&&z<0){addPoint(neutral,`${label} đang cải thiện ngắn hạn`,`5 phiên đã chuyển mua ròng nhưng 20 phiên vẫn âm; có chuyển biến nhưng chưa đảo được xu hướng dài hơn.`,"watch")}
-    else if(a<0&&z>0){addPoint(risk,`${label} ngắn hạn suy yếu`,`5 phiên chuyển bán ròng dù 20 phiên vẫn dương; cần theo dõi đây là chốt lời hay đổi trạng thái.`,"watch")}
+    if(a>0&&z>0){addPoint(support,`${label} duy trì mua ròng`,`5 phiên +${fmtNum(a,0)} cp và 20 phiên +${fmtNum(z,0)} cp; dòng tiền có tính duy trì.`,"positive");flowScore+=2;shortTermScore++}
+    else if(a<0&&z<0){addPoint(risk,`${label} duy trì bán ròng`,`5 phiên ${fmtNum(a,0)} cp và 20 phiên ${fmtNum(z,0)} cp; áp lực bán chưa phải nhiễu một phiên.`,"negative");flowScore-=2;shortTermScore--}
+    else if(a>0&&z<0){addPoint(neutral,`${label} đang cải thiện ngắn hạn`,`5 phiên đã chuyển mua ròng nhưng 20 phiên vẫn âm; có chuyển biến nhưng chưa đảo được xu hướng dài hơn.`,"watch");flowScore++;shortTermScore++}
+    else if(a<0&&z>0){addPoint(risk,`${label} ngắn hạn suy yếu`,`5 phiên chuyển bán ròng dù 20 phiên vẫn dương; cần theo dõi đây là chốt lời hay đổi trạng thái.`,"watch");flowScore--;shortTermScore--}
   };
   flowPair("Khối ngoại",fw5.foreign_net_volume,fw20.foreign_net_volume);
   flowPair("Tự doanh",fw5.proprietary_net_volume,fw20.proprietary_net_volume);
@@ -245,7 +249,7 @@ function buildDynamicAnalysis(d){
   let regime="PHÂN HÓA — CẦN ĐỌC TỪNG LỚP";
   let regimeTone="watch";
   let thesis="Giá, dòng tiền và nền tảng doanh nghiệp chưa tạo thành một tín hiệu đồng thuận rõ ràng.";
-  if(techScore>=3&&fundScore>=2&&flowScore>=0){
+  if(shortTermScore>=7&&techScore>=5&&fundScore>=1&&flowScore>=0){
     regime="CƠ BẢN & KỸ THUẬT ĐANG ĐỒNG THUẬN";
     regimeTone="positive";
     thesis="Nền tảng doanh nghiệp và cấu trúc giá đang cùng nghiêng tích cực; điểm cần theo dõi là độ bền của dòng tiền và khả năng giữ các vùng xác nhận.";
@@ -253,15 +257,15 @@ function buildDynamicAnalysis(d){
     regime="CƠ BẢN TỐT — GIÁ CHƯA XÁC NHẬN";
     regimeTone="watch";
     thesis="Doanh nghiệp có các điểm nền tảng tích cực nhưng hành vi giá chưa xác nhận; đây là trạng thái cần chờ thị trường đồng thuận thay vì chỉ dựa vào Cơ bản.";
-  }else if(techScore>=3&&fundScore<=0){
+  }else if(shortTermScore>=6&&techScore>=4&&fundScore<=0){
     regime="GIÁ MẠNH — CƠ BẢN CHƯA THEO KỊP";
     regimeTone="watch";
     thesis="Kỹ thuật đang mạnh hơn nền tảng Cơ bản hiện có; cần phân biệt một xu hướng giá tốt với một luận điểm đầu tư dài hơn đã được xác nhận.";
-  }else if(techScore<=-2&&fundScore<=0){
+  }else if(shortTermScore<=-4||techScore<=-3){
     regime="CẤU TRÚC ĐANG YẾU";
     regimeTone="negative";
     thesis="Giá và các lớp xác nhận hiện chưa thuận lợi; trọng tâm lúc này là theo dõi khả năng lấy lại các vùng kỹ thuật quan trọng và sự cải thiện của dòng tiền.";
-  }else if(techScore>=1&&fundScore>=1){
+  }else if(shortTermScore>=3&&techScore>=2&&fundScore>=0){
     regime="NGHIÊNG TÍCH CỰC — CHƯA ĐỦ ĐỒNG THUẬN";
     regimeTone="positive";
     thesis="Một số lớp dữ liệu đang ủng hộ nhau nhưng chưa đạt mức xác nhận toàn diện; cần theo dõi thêm xu hướng, flow và vùng giá then chốt.";
@@ -297,7 +301,7 @@ function buildDynamicAnalysis(d){
   if(m50!==null)addPoint(change,"Vô hiệu kỹ thuật trung hạn",`Giá nằm dưới MA50 ${fmtNum(m50)} và không sớm lấy lại vùng này sẽ làm cấu trúc trung hạn xấu hơn.`,"negative");
   if(low20!==null)addPoint(change,"Mốc cấu trúc quan trọng",`Thủng đáy 20 phiên ${fmtNum(low20)} là tín hiệu breakdown rõ hơn, cần đánh giá lại toàn bộ luận điểm kỹ thuật.`,"negative");
 
-  return {support,risk,neutral,regime,regimeTone,thesis,scenarios,change,techScore,fundScore,flowScore};
+  return {support,risk,neutral,regime,regimeTone,thesis,scenarios,change,techScore,shortTermScore,fundScore,flowScore};
 }
 function renderHistoryEdge(d){
   const s=d.signal_stats;
@@ -321,9 +325,12 @@ function actionLabel(d,a){
   const foreign20=valid(f?.window_20?.foreign_net_volume)?Number(f.window_20.foreign_net_volume):null;
   const hasFund=hasMeaningfulFundamental(b);
 
-  const technicalStrong=a.techScore>=3;
-  const technicalHealthy=a.techScore>=1;
-  const technicalWeak=a.techScore<=-2;
+  const shortTermStrong=(a.shortTermScore||0)>=7;
+  const shortTermHealthy=(a.shortTermScore||0)>=3;
+  const shortTermWeak=(a.shortTermScore||0)<=-4;
+  const technicalStrong=a.techScore>=5;
+  const technicalHealthy=a.techScore>=2;
+  const technicalWeak=a.techScore<=-3;
   const fundamentalStrong=hasFund&&a.fundScore>=2;
   const fundamentalWeak=hasFund&&a.fundScore<=0;
   const flowSupportive=a.flowScore>=0;
@@ -334,27 +341,27 @@ function actionLabel(d,a){
   const below200=t.above_ma200===false;
 
   // Chỉ gia tăng khi nhiều lớp cùng xác nhận và giá chưa bị kéo giãn.
-  if(fundamentalStrong&&technicalStrong&&flowSupportive&&!overheated&&!breakdown){
+  if(shortTermStrong&&technicalStrong&&flowSupportive&&!overheated&&!breakdown&&(!hasFund||a.fundScore>=0)){
     return "CÓ THỂ GIA TĂNG";
   }
 
   // Cơ bản tốt nhưng giá chưa xác nhận: không vội tăng thêm.
-  if(fundamentalStrong&&!technicalHealthy){
-    return technicalWeak||breakdown?"HẠ TỶ TRỌNG":"GIỮ & THEO DÕI";
+  if(fundamentalStrong&&!shortTermHealthy){
+    return technicalWeak||shortTermWeak||breakdown?"HẠ TỶ TRỌNG":"GIỮ & THEO DÕI";
   }
 
   // Giá khỏe nhưng cơ bản yếu/thiếu: có thể giữ vị thế, không nâng rủi ro.
-  if(technicalStrong&&(fundamentalWeak||!hasFund)){
+  if(shortTermStrong&&technicalStrong&&(fundamentalWeak||!hasFund)){
     return overheated||flowClearlyNegative?"KHÔNG GIA TĂNG":"GIỮ TỶ TRỌNG";
   }
 
   // Cấu trúc kỹ thuật suy yếu rõ mới chuyển sang phòng thủ.
-  if(technicalWeak||breakdown||(below50&&flowClearlyNegative)){
+  if(shortTermWeak||technicalWeak||breakdown||(below50&&flowClearlyNegative)){
     return below200?"ƯU TIÊN PHÒNG THỦ":"HẠ TỶ TRỌNG";
   }
 
   // Trạng thái tích cực nhưng còn thiếu đồng thuận.
-  if(technicalHealthy&&a.fundScore>=1){
+  if(shortTermHealthy&&technicalHealthy&&a.fundScore>=0){
     return overheated||flowClearlyNegative?"GIỮ TỶ TRỌNG":"GIỮ TỶ TRỌNG";
   }
 
