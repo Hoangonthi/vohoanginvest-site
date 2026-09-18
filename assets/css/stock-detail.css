@@ -223,3 +223,29 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
   .sd-history-head{align-items:flex-start;flex-direction:column;gap:3px}
   .sd-history-head span{text-align:left}
 }
+
+/* Compact sticky tabs: hug viewport top */
+.sd-tabs{
+  top:4px!important;
+  padding:3px 4px!important;
+  min-height:auto!important;
+  border-radius:9px!important;
+  box-shadow:0 6px 16px rgba(0,0,0,.14);
+}
+.sd-tabs button{
+  min-height:26px!important;
+  padding:0 9px!important;
+  font-size:8.5px!important;
+  line-height:1!important;
+}
+@media(max-width:760px){
+  .sd-tabs{
+    top:2px!important;
+    padding:2px 3px!important;
+  }
+  .sd-tabs button{
+    min-height:24px!important;
+    padding:0 5px!important;
+    font-size:7.5px!important;
+  }
+}
