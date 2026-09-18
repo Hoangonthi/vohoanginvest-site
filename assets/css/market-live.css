@@ -344,11 +344,10 @@ button,input,textarea{font:inherit}
 .timeline-more-wrap button[hidden]{display:none!important}
 
 .live-history-action{
-  display:flex;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
   align-items:center;
-  justify-content:flex-end;
   gap:9px;
-  flex-wrap:wrap;
   margin:9px 0 0;
 }
 .live-history-action button{
@@ -366,9 +365,13 @@ button,input,textarea{font:inherit}
   border-color:rgba(224,187,99,.52);
   background:rgba(224,187,99,.11);
 }
+.live-history-action .history-export-btn{justify-self:start}
+.live-history-action .history-review-btn{justify-self:end}
 .live-history-action span{
+  justify-self:center;
   color:var(--live-muted-2);
   font-size:8.5px;
+  text-align:center;
 }
 
 .live-tools{
@@ -669,11 +672,15 @@ button,input,textarea{font:inherit}
   .latest-body{font-size:12.5px}
   .evidence-grid{grid-template-columns:1fr 1fr}
   .live-history-action{
-    display:grid;
-    grid-template-columns:1fr;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
     gap:6px;
     margin-top:8px;
   }
+  .live-history-action .history-review-btn{order:1}
+  .live-history-action .history-export-btn{order:2}
+  .live-history-action span{order:3}
   .live-history-action button{
     width:100%;
     min-height:38px;
