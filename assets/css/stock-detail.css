@@ -91,3 +91,8 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
   .sd-tabs button{font-size:6.2px;padding:0 4px}
   .sd-summary-item{font-size:7.1px}
 }
+
+
+.sd-analysis{margin-top:6px;padding:8px 10px;border:1px solid rgba(224,187,99,.12);border-radius:9px;background:rgba(224,187,99,.025);color:rgba(245,247,251,.82);font-size:8.5px;line-height:1.45}
+.sd-analysis b{color:var(--gold2)}
+@media(max-width:760px){.sd-analysis{margin-top:4px;padding:6px 7px;font-size:7.2px;line-height:1.35}}
