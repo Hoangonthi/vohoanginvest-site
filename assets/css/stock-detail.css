@@ -96,3 +96,40 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
 .sd-analysis{margin-top:6px;padding:8px 10px;border:1px solid rgba(224,187,99,.12);border-radius:9px;background:rgba(224,187,99,.025);color:rgba(245,247,251,.82);font-size:8.5px;line-height:1.45}
 .sd-analysis b{color:var(--gold2)}
 @media(max-width:760px){.sd-analysis{margin-top:4px;padding:6px 7px;font-size:7.2px;line-height:1.35}}
+
+
+/* 2026-09-18 readability pass: +2 visual steps without reopening whitespace */
+#overviewHeading{display:none!important}
+.sd-lead{font-size:13px}
+.sd-tabs button{font-size:10px}
+.sd-kpi span{font-size:8.5px}
+.sd-kpi strong{font-size:19px}
+.sd-kpi small{font-size:8px}
+.sd-card-head h2{font-size:18px}
+.sd-card-head span{font-size:9.5px}
+.sd-summary-item{font-size:10.5px;line-height:1.42}
+.sd-cell span{font-size:8.5px}
+.sd-cell b{font-size:12.5px}
+.sd-cell small{font-size:8px}
+.sd-flow-card h3{font-size:13.5px}
+.sd-flow-row{font-size:10.5px}
+.sd-list-item strong{font-size:11.5px}
+.sd-list-item p{font-size:10px}
+.sd-list-item time,.sd-list-item small{font-size:8.5px}
+.sd-outcome{font-size:8.5px}
+.sd-analysis{font-size:10.5px;line-height:1.45}
+.sd-note{font-size:7.5px}
+
+@media(max-width:760px){
+  .sd-tabs button{font-size:8px}
+  .sd-kpi span{font-size:7px}
+  .sd-kpi strong{font-size:15px}
+  .sd-kpi small{font-size:6.8px}
+  .sd-summary-item{font-size:8.8px}
+  .sd-card-head h2{font-size:14px}
+  .sd-card-head span{font-size:7.5px}
+  .sd-cell span{font-size:7px}
+  .sd-cell b{font-size:10px}
+  .sd-cell small{font-size:6.8px}
+  .sd-analysis{font-size:8.5px}
+}
