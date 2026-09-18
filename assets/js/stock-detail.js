@@ -23,6 +23,11 @@ function cell(label,value,sub="",tone=""){
   return `<div class="sd-cell"><span>${esc(label)}</span><b class="${tone}">${esc(value)}</b>${sub?`<small>${esc(sub)}</small>`:""}</div>`;
 }
 function valid(v){return v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))}
+function hasMeaningfulFundamental(b){
+  if(!b||!Object.keys(b).length)return false;
+  const core=[b.eps,b.book_value_per_share,b.sales_per_share,b.return_on_equity,b.return_on_assets,b.gross_profit_per_share,b.ebitda_per_share];
+  return core.some(v=>valid(v)&&Number(v)!==0);
+}
 function summaryLine(title,text){
   return `<div class="sd-summary-item"><b>•</b><div><b>${esc(title)}:</b> ${esc(text)}</div></div>`;
 }
@@ -52,7 +57,7 @@ function renderOverview(d){
     if(valid(f.window_20.proprietary_net_volume)) parts.push(`tự doanh ${Number(f.window_20.proprietary_net_volume)>=0?"mua":"bán"} ròng ${fmtNum(Math.abs(f.window_20.proprietary_net_volume),0)} cp`);
     if(parts.length) lines.push(summaryLine("Flow 20 phiên",parts.join("; ")+"."));
   }
-  if(b&&Object.keys(b).length){
+  if(hasMeaningfulFundamental(b)){
     const parts=[];
     if(valid(b.return_on_equity))parts.push(`ROE ${fmtPct(b.return_on_equity)}`);
     if(valid(b.eps))parts.push(`EPS ${fmtNum(b.eps)}`);
@@ -78,7 +83,7 @@ function renderOverview(d){
     <article class="sd-card"><div class="sd-card-head"><div><span>DỮ LIỆU ĐANG CÓ</span><h2>Độ phủ hồ sơ</h2></div></div>
       <div class="sd-grid">
         ${cell("D1",valid(t.bars_used)?fmtNum(t.bars_used,0)+" phiên":"—")}
-        ${cell("Cơ bản",b&&Object.keys(b).length?"Có":"Chưa có")}
+        ${cell("Cơ bản",hasMeaningfulFundamental(b)?"Có":"Chưa đủ")}
         ${cell("Tín hiệu HT",String(sig.length))}
         ${cell("SK liên quan",String(ev.length))}
       </div>
@@ -109,6 +114,10 @@ function renderFlow(d){
 function renderFundamental(d){
  const b=d.fundamental||{};
  $("#fundamentalDate").textContent=b.snapshot_date?`Snapshot ${dateVN(b.snapshot_date)}`:"";
+ if(!hasMeaningfulFundamental(b)){
+   $("#fundamentalGrid").innerHTML=`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản để phân tích. Hệ thống không diễn giải các giá trị 0 mặc định như dữ liệu thực.</div>`;
+   return;
+ }
  const fields=[
   ["EPS",b.eps],["BVPS",b.book_value_per_share],["Sales/share",b.sales_per_share],["ROE",valid(b.return_on_equity)?fmtPct(b.return_on_equity):null],
   ["ROA",valid(b.return_on_assets)?fmtPct(b.return_on_assets):null],["P/E",b.pe],["P/B",b.pb],["P/S",b.ps],
