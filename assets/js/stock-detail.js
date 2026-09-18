@@ -17,6 +17,15 @@ let current=null;
 function setStatus(text,error=false){
   const el=$("#pageStatus"); el.textContent=text||""; el.classList.toggle("show",!!text); el.classList.toggle("error",error);
 }
+function setDataVisible(visible){
+  const tabs=document.querySelector(".sd-tabs");
+  if(tabs) tabs.hidden=!visible;
+  document.querySelectorAll(".sd-panel").forEach(el=>{el.hidden=!visible;});
+}
+function clearVisibleData(){
+  setDataVisible(false);
+  current=null;
+}
 function metric(label,value,sub="",tone=""){
   return `<div class="sd-kpi"><span>${esc(label)}</span><strong class="${tone}">${esc(value)}</strong><small>${esc(sub)}</small></div>`;
 }
@@ -401,6 +410,7 @@ function render(d){
  $("#symbolInput").value=d.symbol;
  $("#effectiveDate").textContent="";
  renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);
+ setDataVisible(true);
  setStatus("");
 }
 async function fetchLiveQuote(symbol){
@@ -423,6 +433,8 @@ async function fetchLiveQuote(symbol){
 
 async function load(symbol){
  const s=String(symbol||"").trim().toUpperCase();
+ clearVisibleData();
+ $("#symbolTitle").textContent=s||"—";
  if(!/^[A-Z0-9]{2,12}$/.test(s)){setStatus("Mã cổ phiếu chưa hợp lệ.",true);return}
  setStatus("Đang đọc Stock Memory và tính chỉ số…");
  try{
@@ -436,7 +448,10 @@ async function load(symbol){
   body.data.live_quote=liveQuote;
   render(body.data);
   history.replaceState({}, "", `stock-detail.html?symbol=${encodeURIComponent(s)}`);
- }catch(err){setStatus(err?.message==="SYMBOL_NOT_ACTIVE_CORE"?"Mã này chưa nằm trong 165 mã Core hiện tại.":"Chưa đọc được dữ liệu mã này. Vui lòng thử lại.",true)}
+ }catch(err){
+  clearVisibleData();
+  setStatus(err?.message==="SYMBOL_NOT_ACTIVE_CORE"?"Mã này hiện chưa có dữ liệu trong hệ thống.":"Chưa đọc được dữ liệu mã này. Vui lòng thử lại.",true);
+ }
 }
 document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{
  document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===btn));
