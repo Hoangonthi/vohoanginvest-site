@@ -19,6 +19,7 @@ const cls=(v)=>v===null||v===undefined?"":Number(v)>0?"up":Number(v)<0?"down":""
 const esc=(s)=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const dateVN=(v)=>{if(!v)return"—";const [y,m,d]=String(v).slice(0,10).split("-");return d&&m&&y?`${d}/${m}/${y}`:String(v)};
 const MARKET_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+const STOCK_PRICE_LIVE_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-price-live";
 const HOT_STOCKS_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
 
 let current=null;
@@ -372,7 +373,7 @@ function renderOverview(d){
   const t=d.technical||{}, f=d.flow||{}, q=d.live_quote||null;
   $("#overviewKpis").innerHTML=[
     metric("Giá đóng cửa",fmtNum(t.close),dateVN(d.effective_as_of_date)),
-    metric("Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.change_pct)?fmtPct(q.change_pct):"Chưa có intraday",q&&valid(q.change_pct)?cls(q.change_pct):""),
+    metric("Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.price)?(q.fresh===false?"Giá gần nhất":"Realtime"):"Chưa có intraday",q&&valid(q.change_pct)?cls(q.change_pct):""),
     metric("20 phiên",fmtPct(t.return_20d_pct),"",cls(t.return_20d_pct)),
     metric("RSI14",fmtNum(t.rsi14),valid(t.rsi14)?(Number(t.rsi14)>=70?"Vùng cao":Number(t.rsi14)>=50?"Trên 50":Number(t.rsi14)<=30?"Vùng thấp":"Dưới 50"):""),
     metric("MA20",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"Trên":"Dưới"):"—",valid(t.ma20)?fmtNum(t.ma20):"",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"up":"down"):""),
@@ -501,6 +502,27 @@ function render(d){
  scrollToRequestedSection();
 }
 async function fetchLiveQuote(symbol){
+ // Primary: current-only 165 Core price snapshot from local AmiBroker.
+ try{
+  const r=await fetch(`${STOCK_PRICE_LIVE_ENDPOINT}?symbol=${encodeURIComponent(symbol)}&_=${Date.now()}`,{cache:"no-store",headers:{"Accept":"application/json"}});
+  if(r.ok){
+   const d=await r.json();
+   const price=Number(d?.price);
+   if(Number.isFinite(price)&&price>0){
+    return {
+      price,
+      change_pct:null,
+      date:d?.market_date||null,
+      captured_at:d?.captured_at||null,
+      age_seconds:Number.isFinite(Number(d?.age_seconds))?Number(d.age_seconds):null,
+      fresh:d?.fresh===true,
+      source:d?.source||"stock-price-live"
+    };
+   }
+  }
+ }catch{}
+
+ // Transitional fallback: legacy market-feed VN30 stock list.
  try{
   const r=await fetch(`${MARKET_ENDPOINT}?_=${Date.now()}`,{cache:"no-store",headers:{"Accept":"application/json"}});
   if(!r.ok)return null;
@@ -513,6 +535,7 @@ async function fetchLiveQuote(symbol){
     price:Number.isFinite(price)?price:null,
     change_pct:Number.isFinite(changePct)?changePct:null,
     date:row.date||null,
+    fresh:true,
     source:data.vn30_stock_source||"market-feed"
   };
  }catch{return null}
@@ -555,7 +578,14 @@ async function load(symbol){
   ]);
   const body=await r.json();
   if(!r.ok||!body?.ok)throw new Error(body?.error||"Không đọc được dữ liệu");
-  body.data.live_quote=liveQuote;
+  const resolvedLiveQuote=liveQuote||(tplusCandidate&&valid(tplusCandidate.price)?{
+    price:Number(tplusCandidate.price),
+    change_pct:null,
+    fresh:null,
+    source:"hot-stocks-feed",
+    captured_at:tplusCandidate.source_updated_at||null
+  }:null);
+  body.data.live_quote=resolvedLiveQuote;
   body.data.tplus_candidate=tplusCandidate;
   render(body.data);
   history.replaceState({}, "", `stock-detail.html?symbol=${encodeURIComponent(s)}`);
