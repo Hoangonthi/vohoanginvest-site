@@ -12,7 +12,8 @@ const baseSourceMap={
   HOME_MARKET_BRIEF:'Bản đồ thị trường từ trang chủ',
   SERVICE_PAGE:'Trang dịch vụ số',
   INVESTOR_PROFILE_ASSESSMENT:'Bài đánh giá nhà đầu tư',
-  WEBSITE_CONTACT_FORM:'Form liên hệ website'
+  WEBSITE_CONTACT_FORM:'Form liên hệ website',
+  TOOL_GAME:'Hoạt động trên website'
 };
 
 const channelMap={
@@ -23,7 +24,12 @@ const channelMap={
   ctv:'CTV',
   website:'Website',
   email:'Email',
-  phone:'Điện thoại'
+  phone:'Điện thoại',
+  market_reader:'Thị trường hôm nay',
+  morning_brief:'Sáng nay cần nhìn gì',
+  watchlist:'Danh sách cổ phiếu theo dõi',
+  after_session:'Sau phiên',
+  cta:'Nút hành động'
 };
 
 const toolMap={
