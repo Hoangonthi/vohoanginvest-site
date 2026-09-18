@@ -1,1 +1,93 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Giữ chân & tăng trưởng – Võ Hoàng</title><link rel="icon" href="LOGO.png"><link rel="stylesheet" href="assets/css/app-nav.css"><style>:root{--ink:#172033;--muted:#6b7484;--line:#dce3eb;--bg:#f4f6f8;--green:#16865d;--gold:#9b7422}*{box-sizing:border-box}body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:var(--bg);color:var(--ink)}main{max-width:1220px;margin:24px auto;padding:0 16px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:12px}.login{max-width:420px;margin:70px auto}.hidden{display:none!important}input,select,button{font:inherit;padding:10px 11px;border-radius:10px;border:1px solid #cfd7e2;background:#fff}button{cursor:pointer;font-weight:700}.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.google{width:100%;font-weight:800}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end}.hero h1{margin:0 0 5px}.hero p{margin:0;color:var(--muted)}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0}.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.metric{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px}.metric span{display:block;color:var(--muted);font-size:.72rem}.metric b{display:block;font-size:1.45rem;margin-top:3px}.metric small{color:#8993a2}.north{background:#172033;color:#fff}.north span,.north small{color:#bdc7d3}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.table{display:grid;gap:6px}.row{display:grid;grid-template-columns:1.2fr .7fr .7fr .7fr;gap:8px;padding:9px;border-radius:9px;background:#f6f8fa;align-items:center}.row.head{background:#fff;color:#7a8492;font-size:.78rem;font-weight:800}.daily{display:grid;gap:6px}.day{display:grid;grid-template-columns:100px repeat(5,1fr);gap:7px;padding:8px;border-radius:8px;background:#f6f8fa;font-size:.82rem}.note{color:var(--muted);font-size:.9rem;line-height:1.55}@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.day{grid-template-columns:90px repeat(2,1fr)}}@media(max-width:580px){.metrics{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr 1fr}.row.head{display:none}.day{grid-template-columns:1fr 1fr}.app-nav-links a:nth-of-type(n+4){display:none}}</style></head><body><header class="app-nav"><div class="app-nav-inner"><a class="app-nav-brand" href="he-thong.html"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · HỆ THỐNG</span></a><nav class="app-nav-links"><button type="button" data-smart-back>← Quay lại</button><a href="he-thong.html">Trung tâm</a><a href="crm-hom-nay.html">CRM hôm nay</a><a class="app-nav-active" href="admin-retention.html">Giữ chân</a><a href="admin-market-leads.html">Lead thị trường</a><button id="logout" class="app-nav-logout hidden">Đăng xuất</button></nav></div></header><main><section id="loginBox" class="card login"><h1>Đăng nhập quản trị</h1><p class="note">Dùng tài khoản Admin/Staff.</p><button id="googleLogin" class="google">Đăng nhập với Google</button><form id="loginForm"><p><input id="email" type="email" value="vohoang.bank@gmail.com" required style="width:100%" placeholder="Email"></p><p><input id="password" type="password" required style="width:100%" placeholder="Mật khẩu"></p><button class="primary" style="width:100%">Đăng nhập</button><p id="loginMsg" class="note"></p></form></section><section id="app" class="hidden"><div class="hero"><div><h1>Giữ chân & tăng trưởng</h1><p>Đo thứ quan trọng hơn pageview: người quay lại, dùng nhiều công cụ và tiến sâu vào hệ thống.</p></div></div><div class="toolbar"><select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option></select><button id="refresh">Làm mới</button></div><section class="metrics"><div class="metric"><span>Session</span><b id="mTotal">—</b><small>tổng trong kỳ</small></div><div class="metric"><span>Quay lại ≥2 ngày</span><b id="mReturn2">—</b><small>tín hiệu giữ chân</small></div><div class="metric"><span>Dùng ≥2 công cụ</span><b id="mMulti">—</b><small>độ sâu sử dụng</small></div><div class="metric north"><span>NORTH STAR</span><b id="mNorth">—</b><small>≥3 ngày + ≥2 công cụ</small></div><div class="metric"><span>Lead thị trường</span><b id="mLeads">—</b><small>permission thật</small></div></section><section class="grid" style="margin-top:12px"><article class="card"><h2>Công cụ nào đang kéo người dùng?</h2><div id="toolTable" class="table"></div></article><article class="card"><h2>Chuyển đổi</h2><div class="metrics" style="grid-template-columns:1fr 1fr"><div class="metric"><span>Hẹn / yêu cầu</span><b id="cMeeting">—</b></div><div class="metric"><span>After-session đã lưu</span><b id="cAfter">—</b></div><div class="metric"><span>Mã Watchlist</span><b id="cWatch">—</b></div><div class="metric"><span>Lead thị trường</span><b id="cLead">—</b></div></div><p class="note">Nếu traffic tăng mà North Star không tăng, hệ thống đang kéo người vào nhưng chưa tạo thói quen. Nếu North Star tăng mà lead không tăng, cần tối ưu lời mời chuyển đổi.</p></article></section><article class="card"><h2>Nhịp sử dụng theo ngày</h2><div id="dailyBox" class="daily"></div></article></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script type="module" src="assets/js/app-nav.js"></script><script type="module" src="admin-retention.js"></script></body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mức độ quay lại – Võ Hoàng</title>
+  <link rel="icon" href="LOGO.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/app-nav.css">
+  <link rel="stylesheet" href="assets/css/admin-crm-v2.css?v=20260918-1">
+</head>
+<body>
+<header class="app-nav">
+  <div class="app-nav-inner">
+    <a class="app-nav-brand" href="he-thong.html"><img src="LOGO.png" alt=""><span>VÕ HOÀNG · QUẢN TRỊ KHÁCH HÀNG</span></a>
+    <nav class="app-nav-links">
+      <button type="button" data-smart-back>← Quay lại</button>
+      <a href="he-thong.html">Trung tâm</a>
+      <a href="crm-hom-nay.html">CRM hôm nay</a>
+      <a class="app-nav-active" href="admin-retention.html">Mức độ quay lại</a>
+      <a href="admin-market-leads.html">Khách quan tâm thị trường</a>
+      <a href="nguon-khach.html">Nguồn khách</a>
+      <button id="logout" class="app-nav-logout hidden">Đăng xuất</button>
+    </nav>
+  </div>
+</header>
+
+<main class="admin-wrap">
+  <section id="loginBox" class="admin-card admin-login">
+    <h1>Đăng nhập quản trị</h1>
+    <p>Xem mức độ khách quay lại và sử dụng các công cụ trên website.</p>
+    <button id="googleLogin" class="admin-google">Đăng nhập với Google</button>
+    <form id="loginForm">
+      <p><input id="email" type="email" value="vohoang.bank@gmail.com" autocomplete="username" required placeholder="Email"></p>
+      <p><input id="password" type="password" autocomplete="current-password" required placeholder="Mật khẩu"></p>
+      <button class="admin-primary" style="width:100%">Đăng nhập</button>
+      <p id="loginMsg" class="admin-help"></p>
+    </form>
+  </section>
+
+  <section id="app" class="hidden">
+    <div class="admin-hero">
+      <div>
+        <h1>Khách có quay lại website không?</h1>
+        <p>Trang này trả lời ba câu hỏi: có bao nhiêu người quay lại, họ dùng công cụ nào và bao nhiêu người tiến tới bước để lại thông tin hoặc hẹn trao đổi.</p>
+      </div>
+    </div>
+
+    <div class="admin-toolbar">
+      <span class="admin-filters-label">Khoảng thời gian:</span>
+      <select id="days"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="90">90 ngày</option></select>
+      <button id="refresh">Làm mới</button>
+    </div>
+
+    <section class="admin-metrics">
+      <div class="admin-card admin-metric"><span>Lượt truy cập có ghi nhận</span><strong id="mTotal">—</strong><small>Tổng số phiên sử dụng</small></div>
+      <div class="admin-card admin-metric"><span>Quay lại từ 2 ngày</span><strong id="mReturn2">—</strong><small>Có dấu hiệu hình thành thói quen</small></div>
+      <div class="admin-card admin-metric"><span>Dùng từ 2 công cụ</span><strong id="mMulti">—</strong><small>Không chỉ xem một trang rồi rời đi</small></div>
+      <div class="admin-card admin-metric is-focus"><span>Khách dùng sâu</span><strong id="mNorth">—</strong><small>Quay lại ≥3 ngày và dùng ≥2 công cụ</small></div>
+      <div class="admin-card admin-metric"><span>Đã để lại thông tin</span><strong id="mLeads">—</strong><small>Có thể chủ động chăm sóc</small></div>
+    </section>
+
+    <section class="admin-grid-2">
+      <article class="admin-card admin-panel">
+        <h2>Công cụ nào đang được dùng nhiều?</h2>
+        <div id="toolTable"></div>
+      </article>
+      <article class="admin-card admin-panel">
+        <h2>Từ sử dụng website đến liên hệ</h2>
+        <div class="admin-metrics" style="grid-template-columns:1fr 1fr;margin:0">
+          <div class="admin-card admin-metric"><span>Yêu cầu hẹn</span><strong id="cMeeting">—</strong></div>
+          <div class="admin-card admin-metric"><span>Đã lưu sau phiên</span><strong id="cAfter">—</strong></div>
+          <div class="admin-card admin-metric"><span>Mã đã theo dõi</span><strong id="cWatch">—</strong></div>
+          <div class="admin-card admin-metric"><span>Để lại thông tin thị trường</span><strong id="cLead">—</strong></div>
+        </div>
+        <p class="admin-help">Nếu lượt truy cập tăng nhưng số người quay lại không tăng, nội dung đang thu hút xem một lần nhưng chưa tạo thói quen. Nếu người quay lại tăng nhưng ít để lại thông tin, cần xem lại lời mời liên hệ.</p>
+      </article>
+    </section>
+
+    <article class="admin-card admin-panel" style="margin-top:12px">
+      <h2>Hoạt động theo từng ngày</h2>
+      <div id="dailyBox"></div>
+    </article>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="assets/js/app-nav.js"></script>
+<script type="module" src="admin-retention.js?v=20260918-2"></script>
+</body>
+</html>
