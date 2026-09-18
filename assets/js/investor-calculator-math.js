@@ -67,8 +67,7 @@ export function calcDeploymentPlan(input={}){
       let budget=null;
       if(hasQty){
         qty=integer(raw.qty,'Số lượng nhịp '+(i+1));
-        qty=Math.floor(qty/lot)*lot;
-        if(qty<=0)throw new Error('Nhịp '+(i+1)+': số lượng chưa đủ một lô.');
+        if(qty%lot!==0)throw new Error('Nhịp '+(i+1)+': số lượng phải chia hết cho lô giao dịch đã chọn.');
       }else{
         budget=positive(raw.amount,'Số tiền nhịp '+(i+1));
         const unitCost=price*(1+feeRate);
@@ -151,15 +150,28 @@ export function calcLosingStreak(input={}){
 
 export function calcPortfolioConcentration(input={}){
   return result(()=>{
-    const positions=(Array.isArray(input.positions)?input.positions:[])
-      .filter(x=>x&&String(x.symbol||'').trim()&&Number(x.value)>0)
-      .map((x,i)=>({
-        symbol:String(x.symbol).trim().toUpperCase(),
+    const rawPositions=Array.isArray(input.positions)?input.positions:[];
+    const positions=[];
+    for(let i=0;i<rawPositions.length;i++){
+      const x=rawPositions[i]||{};
+      const symbol=String(x.symbol||'').trim().toUpperCase();
+      const rawValue=Number(x.value||0);
+      if(!symbol&&rawValue<=0)continue;
+      if(!symbol)throw new Error('Vị thế '+(i+1)+': cần nhập mã.');
+      const value=positive(x.value,'Giá trị vị thế '+(i+1));
+      positions.push({
+        symbol,
         sector:String(x.sector||'Chưa phân nhóm').trim()||'Chưa phân nhóm',
-        value:positive(x.value,'Giá trị vị thế '+(i+1))
-      }));
+        value
+      });
+    }
     if(!positions.length)throw new Error('Nhập ít nhất một vị thế có mã và giá trị lớn hơn 0.');
     if(positions.length>12)throw new Error('Tối đa 12 vị thế.');
+    const seenSymbols=new Set();
+    for(const p of positions){
+      if(seenSymbols.has(p.symbol))throw new Error('Mã '+p.symbol+' đang bị nhập lặp. Hãy gộp về một giá trị vị thế.');
+      seenSymbols.add(p.symbol);
+    }
     const total=positions.reduce((s,x)=>s+x.value,0);
     const weighted=positions.map(x=>({...x,weight:x.value/total}));
     const sorted=[...weighted].sort((a,b)=>b.weight-a.weight);
@@ -209,9 +221,10 @@ export function calcCostBasisAfterRights(input={}){
 
     let entitledSubQty=0;
     if(ratioOld>0||ratioNew>0){
-      if(ratioOld<=0||ratioNew<0)throw new Error('Tỷ lệ quyền mua phải nhập đầy đủ cả hai vế, ví dụ 5:1 hoặc 10:3.');
+      if(ratioOld<=0||ratioNew<=0)throw new Error('Tỷ lệ quyền mua phải nhập đầy đủ cả hai vế dương, ví dụ 5:1 hoặc 10:3.');
       entitledSubQty=applyFraction(oldQty*ratioNew/ratioOld,fractionRule);
     }
+    if(fractionRule==='FLOOR'&&!Number.isInteger(actualSubQty))throw new Error('Với quy tắc làm tròn xuống, số cổ phiếu thực mua theo quyền phải là số nguyên.');
     if(actualSubQty>entitledSubQty+EPS)throw new Error('Số cổ phiếu thực mua theo quyền vượt số lượng được quyền mua theo tỷ lệ đã nhập.');
     if(actualSubQty>0&&subPrice<=0)throw new Error('Cần nhập giá mua theo quyền khi có mua thêm cổ phiếu.');
 
