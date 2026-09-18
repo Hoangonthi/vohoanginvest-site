@@ -21,6 +21,7 @@ function section(host,name){return qa('.vh5-section',host).find(x=>q('.vh5-sec-t
 function toneClass(x){return x?.direction==='negative'?'redish':x?.direction==='positive'?'greenish':'warn'}
 function signalHeadline(x){return String(x?.title||x?.summary||'Tín hiệu đáng chú ý')}
 function signalImpact(x){return String(x?.action_effect||x?.summary||'Đọc cùng giá, độ rộng và dòng tiền trước khi thay đổi hành động.')}
+function shortBrainLabel(d){const raw=d?.brain?.conclusion?.label_short||d?.shortBrainLabel(d);const s=String(raw).trim(),u=s.toUpperCase();if(u.includes('PHÒNG THỦ'))return'PHÒNG THỦ';if(u.includes('THẬN TRỌNG'))return'THẬN TRỌNG';if(u.includes('TÍCH CỰC'))return'TÍCH CỰC';if(u.includes('CHỌN LỌC'))return'CHỌN LỌC';if(u.includes('THEO DÕI')||u.includes('QUAN SÁT'))return'QUAN SÁT';if(u.includes('TRUNG TÍNH'))return'TRUNG TÍNH';return s.split(/[·:–—]/)[0].trim().split(/\s+/).slice(0,3).join(' ').toUpperCase()}
 
 function patchBrain(d){
   const host=q('#vhDecisionBoardV5');
@@ -29,15 +30,15 @@ function patchBrain(d){
 
   window.__VH_LIVE_SIGNAL_ITEMS__=brain.top_signals||[];
 
-  setText(q('.vh5-verdict-main',host),brain?.conclusion?.label||d?.evaluation?.decision||'CHỜ XÁC NHẬN');
+  setText(q('.vh5-verdict-main',host),shortBrainLabel(d));
   setText(q('.vh5-verdict-sub',host),brain?.conclusion?.summary||d?.evaluation?.rationale||'');
 
-  setText(q('.vhb-top .vh5-verdict-main',host),brain?.conclusion?.label||'CHỜ XÁC NHẬN');
+  setText(q('.vhb-top .vh5-verdict-main',host),shortBrainLabel(d));
   setText(q('.vhb-top .vh5-verdict-sub',host),brain?.conclusion?.summary||'');
 
   const badges=qa('.vhb-badge',host);
-  if(badges[0])setText(q('b',badges[0]),brain?.conclusion?.label||'CHỜ XÁC NHẬN');
-  setText(q('.vhb-lane.short .vhb-lane-status',host),brain?.conclusion?.label||'CHỜ XÁC NHẬN');
+  if(badges[0])setText(q('b',badges[0]),shortBrainLabel(d));
+  setText(q('.vhb-lane.short .vhb-lane-status',host),shortBrainLabel(d));
   const short=q('.vhb-lane.short',host);
   if(short){
     const score=nn(d?.market?.state?.score);
@@ -91,6 +92,7 @@ function patchBrain(d){
     const t=new Date(d.generated_at||brain.generated_at||Date.now()).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'});
     setHtml(foot,'<span class="vh-live-stamp">Decision Brain</span> · '+esc(t)+' (GMT+7)');
   }
+  requestAnimationFrame(()=>window.__VH_CARD_EQUALIZER__?.(host));
 }
 
 function hotRows(h){
