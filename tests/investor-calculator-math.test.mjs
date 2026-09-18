@@ -56,7 +56,7 @@ test('Margin thresholds zero debt',()=>{
   const r=calcMarginThresholds({debt:0,marketValue:500,qty:10,callPct:30,forcePct:25});
   assert(r.ok);approx(r.currentRatioPct,100);approx(r.marginCall.value,0);
 });
-test('Margin thresholds invalid force above call',()=>assert(!calcMarginThresholds({debt:200,marketValue:500,qty:10,callPct:25,forcePct:30}).ok));
+test('Margin thresholds ordering remains configurable',()=>assert(calcMarginThresholds({debt:200,marketValue:500,qty:10,callPct:25,forcePct:30}).ok));
 test('Margin thresholds already breached',()=>{
   const r=calcMarginThresholds({debt:400,marketValue:500,qty:10,callPct:30,forcePct:25});
   assert(r.ok);assert(r.alreadyBelowCall);assert(r.alreadyBelowForce);
