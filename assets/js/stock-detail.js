@@ -143,6 +143,117 @@ function scenarioCard(kind,title,condition,meaning,watch){
     <small>${esc(watch)}</small>
   </article>`;
 }
+
+function buildFundamentalScenarios(b){
+  const has=hasMeaningfulFundamental(b);
+  if(!has){
+    return {
+      status:"Dữ liệu Cơ bản còn hạn chế",
+      scenarios:[
+        {
+          kind:"positive",title:"Kịch bản tích cực",condition:"Dữ liệu bắt đầu đầy đủ hơn",
+          meaning:"Chỉ nâng đánh giá khi xuất hiện đồng thời dữ liệu hiệu quả vốn, tăng trưởng và chất lượng lợi nhuận đủ rõ; không suy diễn từ các ô trống.",
+          watch:"Theo dõi: ROE/ROA, tăng trưởng doanh thu–lợi nhuận, biên lợi nhuận và dòng tiền hoạt động."
+        },
+        {
+          kind:"base",title:"Kịch bản trung tính",condition:"Chưa đủ bằng chứng để đổi luận điểm",
+          meaning:"Khi dữ liệu mới chưa tạo thay đổi rõ về chất lượng doanh nghiệp, giữ đánh giá trung tính thay vì ép một kết luận Cơ bản.",
+          watch:"Theo dõi: snapshot Cơ bản mới và sự nhất quán giữa các chỉ tiêu."
+        },
+        {
+          kind:"negative",title:"Kịch bản xấu đi",condition:"Dữ liệu mới cho thấy chất lượng suy giảm",
+          meaning:"Nếu tăng trưởng, hiệu quả vốn hoặc dòng tiền cùng xấu đi, luận điểm Cơ bản phải được hạ xuống dù giá cổ phiếu có thể chưa phản ánh ngay.",
+          watch:"Theo dõi: lợi nhuận, ROE/ROA, biên lợi nhuận và OCF."
+        }
+      ]
+    };
+  }
+
+  const roe=valid(b.return_on_equity)?Number(b.return_on_equity):null;
+  const roa=valid(b.return_on_assets)?Number(b.return_on_assets):null;
+  const rev=valid(b.qtrly_revenue_growth)?Number(b.qtrly_revenue_growth):null;
+  const earn=valid(b.qtrly_earnings_growth)?Number(b.qtrly_earnings_growth):null;
+  const pm=valid(b.profit_margin)?Number(b.profit_margin):null;
+  const om=valid(b.operating_margin)?Number(b.operating_margin):null;
+  const ocf=valid(b.operating_cash_flow)?Number(b.operating_cash_flow):null;
+  const fcf=valid(b.levered_free_cash_flow)?Number(b.levered_free_cash_flow):null;
+  const pe=valid(b.pe)?Number(b.pe):null;
+  const pb=valid(b.pb)?Number(b.pb):null;
+
+  const quality=[];
+  if(roe!==null) quality.push("ROE "+fmtPct(roe));
+  if(roa!==null) quality.push("ROA "+fmtPct(roa));
+  if(pm!==null) quality.push("biên LN "+fmtPct(pm));
+
+  const growth=[];
+  if(rev!==null) growth.push("DT quý "+fmtPct(rev));
+  if(earn!==null) growth.push("LN quý "+fmtPct(earn));
+
+  const valuation=[];
+  if(pe!==null) valuation.push("P/E "+fmtNum(pe)+"x");
+  if(pb!==null) valuation.push("P/B "+fmtNum(pb)+"x");
+
+  const posCondition =
+    rev!==null&&earn!==null&&rev>0&&earn>0
+      ? "Giữ tăng trưởng: "+growth.join(" · ")
+      : roe!==null&&roe>=15
+        ? "Duy trì hiệu quả vốn: ROE "+fmtPct(roe)
+        : "Chất lượng và tăng trưởng cùng cải thiện";
+
+  let posMeaning="Một doanh nghiệp khỏe không chỉ cần lợi nhuận tăng; tăng trưởng phải đi cùng hiệu quả vốn và chất lượng dòng tiền. Chỉ khi các lớp này cùng tốt lên mới có cơ sở nâng luận điểm Cơ bản.";
+  if(rev!==null&&earn!==null&&rev>0&&earn>0){
+    posMeaning = earn>rev
+      ? "Lợi nhuận đang tăng nhanh hơn doanh thu ("+fmtPct(earn)+" so với "+fmtPct(rev)+"). Nếu nhịp này được duy trì mà biên và dòng tiền không xấu đi, chất lượng tăng trưởng sẽ thuyết phục hơn."
+      : "Doanh thu và lợi nhuận đang cùng tăng. Điều cần chứng minh tiếp là lợi nhuận không chỉ đi theo quy mô mà còn giữ được hiệu quả vốn và biên lợi nhuận.";
+  }
+
+  const baseCondition = quality.length
+    ? "Giữ nền hiện tại: "+quality.slice(0,2).join(" · ")
+    : "Các chỉ tiêu chính đi ngang nhưng không suy giảm";
+  const baseMeaning = valuation.length
+    ? "Nếu chất lượng doanh nghiệp giữ được nhưng chưa tăng tốc, trọng tâm là xem mức định giá hiện tại ("+valuation.join(" · ")+") có được lợi nhuận tương lai bù đắp hay không; không gọi rẻ/đắt khi chưa có benchmark ngành và lịch sử."
+    : "Nếu các chỉ tiêu chính giữ ổn định nhưng chưa có động lực mới, luận điểm phù hợp là chờ thêm dữ liệu thay vì nâng kỳ vọng.";
+
+  const weakSignals=[];
+  if(earn!==null&&earn<0) weakSignals.push("LN quý "+fmtPct(earn));
+  if(rev!==null&&rev<0) weakSignals.push("DT quý "+fmtPct(rev));
+  if(roe!==null&&roe<8) weakSignals.push("ROE "+fmtPct(roe));
+  if(ocf!==null&&ocf<0) weakSignals.push("OCF âm");
+  const negCondition=weakSignals.length?"Suy yếu: "+weakSignals.join(" · "):"Tăng trưởng hoặc chất lượng lợi nhuận suy giảm";
+  const negMeaning = ocf!==null&&ocf<0
+    ? "Dòng tiền hoạt động đang âm, vì vậy nếu lợi nhuận kế toán còn suy yếu thêm thì cần hạ chất lượng luận điểm; lợi nhuận tốt mà tiền không về vẫn phải kiểm tra."
+    : "Nếu lợi nhuận, hiệu quả vốn hoặc biên lợi nhuận cùng xấu đi, luận điểm Cơ bản phải được đánh giá lại trước khi nhìn đến câu chuyện định giá.";
+
+  const watchQuality=[
+    roe!==null?"ROE":null,
+    roa!==null?"ROA":null,
+    pm!==null?"biên LN":null,
+    om!==null?"biên HĐ":null
+  ].filter(Boolean).join("/");
+  const watchCash=[ocf!==null?"OCF":null,fcf!==null?"FCF":null].filter(Boolean).join("/");
+
+  return {
+    status:"Theo dữ liệu Cơ bản hiện có",
+    scenarios:[
+      {
+        kind:"positive",title:"Kịch bản tích cực",condition:posCondition,
+        meaning:posMeaning,
+        watch:"Theo dõi: "+[watchQuality||null,growth.length?"tăng trưởng DT/LN":null,watchCash||null].filter(Boolean).join(", ")+"."
+      },
+      {
+        kind:"base",title:"Kịch bản trung tính",condition:baseCondition,
+        meaning:baseMeaning,
+        watch:"Theo dõi: "+[watchQuality||null,valuation.length?"định giá":null,"snapshot quý tiếp theo"].filter(Boolean).join(", ")+"."
+      },
+      {
+        kind:"negative",title:"Kịch bản xấu đi",condition:negCondition,
+        meaning:negMeaning,
+        watch:"Theo dõi: "+[growth.length?"tăng trưởng":null,watchQuality||null,watchCash||null].filter(Boolean).join(", ")+"."
+      }
+    ]
+  };
+}
+
 function buildDynamicAnalysis(d){
   const t=d.technical||{}, f=d.flow||{}, b=d.fundamental||{}, q=d.live_quote||null;
   const support=[], risk=[], neutral=[];
@@ -407,6 +518,9 @@ function renderOverview(d){
   if($("#riskCount")) $("#riskCount").textContent=a.risk.length?`${Math.min(a.risk.length,7)} điểm cần lưu ý`:"";
   if($("#changeCount")) $("#changeCount").textContent=a.change.length?`${a.change.length} điều kiện`:"";
   $("#scenarioGrid").innerHTML=a.scenarios.map(s=>scenarioCard(s.kind,s.title,s.condition,s.meaning,s.watch)).join("");
+  const fundScenarios=buildFundamentalScenarios(d.fundamental||{});
+  $("#fundScenarioGrid").innerHTML=fundScenarios.scenarios.map(s=>scenarioCard(s.kind,s.title,s.condition,s.meaning,s.watch)).join("");
+  if($("#fundScenarioStatus")) $("#fundScenarioStatus").textContent=fundScenarios.status;
   $("#changeView").innerHTML=a.change.map(thesisItem).join("");
   $("#historyEdge").innerHTML=renderHistoryEdge(d);
 
@@ -480,35 +594,121 @@ function renderHistory(d){
  if(si) $("#signalList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(si[1])}</div>`);
  if(ei) $("#eventList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(ei[1])}</div>`);
 }
-function setupExpandableCards(){
-  const cards=document.querySelectorAll('[data-panel="overview"] [data-expandable]');
+
+function setVisibleRows(card,count){
+  const selector=card.dataset.rowSelector;
+  if(!selector)return 0;
+  const rows=[...card.querySelectorAll(selector)];
+  rows.forEach((row,i)=>row.classList.toggle("sd-row-hidden",i>=count));
+  return rows.length;
+}
+
+function resetExpandableCard(card){
+  const body=card.querySelector(".sd-expand-body");
+  const btn=card.querySelector(".sd-expand-toggle");
+  if(!body||!btn)return;
+  card.classList.remove("is-collapsed","is-expanded");
+  card.style.removeProperty("--sd-collapse-height");
+  btn.hidden=true;
+  btn.textContent="Xem thêm";
+  const selector=card.dataset.rowSelector;
+  if(selector) card.querySelectorAll(selector).forEach(row=>row.classList.remove("sd-row-hidden"));
+}
+
+function balanceCardGroup(group){
+  const cards=[...document.querySelectorAll('[data-balance-group="'+group+'"]')];
+  if(cards.length<2)return;
+
+  cards.forEach(resetExpandableCard);
+  const counts=cards.map(card=>{
+    const selector=card.dataset.rowSelector;
+    return selector?card.querySelectorAll(selector).length:0;
+  });
+
+  const positiveCounts=counts.filter(n=>n>0);
+  const target=positiveCounts.length
+    ? Math.max(1,Math.min(3,Math.min(...positiveCounts)))
+    : 3;
+
+  cards.forEach((card,index)=>{
+    const btn=card.querySelector(".sd-expand-toggle");
+    const total=counts[index];
+    if(!btn||!total)return;
+
+    const visible=Math.min(total,target);
+    setVisibleRows(card,visible);
+
+    if(total>visible){
+      card.classList.add("is-collapsed");
+      btn.hidden=false;
+      btn.textContent="Xem thêm";
+      btn.dataset.visibleRows=String(visible);
+    }
+  });
+}
+
+function setupStandaloneExpandableCards(){
+  const cards=[...document.querySelectorAll('[data-panel="overview"] [data-expandable]')]
+    .filter(card=>!card.dataset.balanceGroup);
 
   cards.forEach(card=>{
+    resetExpandableCard(card);
     const body=card.querySelector(".sd-expand-body");
     const btn=card.querySelector(".sd-expand-toggle");
     if(!body||!btn)return;
 
-    card.classList.remove("is-collapsed");
-    btn.hidden=true;
-    btn.textContent="Xem thêm";
+    const selector=card.dataset.rowSelector;
+    if(selector){
+      const rows=[...card.querySelectorAll(selector)];
+      if(rows.length>3){
+        setVisibleRows(card,3);
+        card.classList.add("is-collapsed");
+        btn.hidden=false;
+        btn.dataset.visibleRows="3";
+      }
+      return;
+    }
 
     const maxHeight=window.innerWidth<=760?220:245;
-    const needsToggle=body.scrollHeight>maxHeight+8;
-
-    if(needsToggle){
+    if(body.scrollHeight>maxHeight+8){
+      card.style.setProperty("--sd-collapse-height",maxHeight+"px");
       card.classList.add("is-collapsed");
       btn.hidden=false;
     }
+  });
+}
 
+function bindExpandButtons(){
+  document.querySelectorAll('[data-panel="overview"] [data-expandable] .sd-expand-toggle').forEach(btn=>{
     if(btn.dataset.bound==="1")return;
     btn.dataset.bound="1";
     btn.addEventListener("click",()=>{
+      const card=btn.closest("[data-expandable]");
+      if(!card)return;
       const opening=card.classList.contains("is-collapsed");
-      card.classList.toggle("is-collapsed",!opening);
-      btn.textContent=opening?"Thu gọn":"Xem thêm";
+      const selector=card.dataset.rowSelector;
 
+      if(opening){
+        if(selector) card.querySelectorAll(selector).forEach(row=>row.classList.remove("sd-row-hidden"));
+        card.classList.remove("is-collapsed");
+        card.classList.add("is-expanded");
+        btn.textContent="Thu gọn";
+      }else{
+        const visible=Math.max(1,Number(btn.dataset.visibleRows||3));
+        if(selector) setVisibleRows(card,visible);
+        card.classList.add("is-collapsed");
+        card.classList.remove("is-expanded");
+        btn.textContent="Xem thêm";
+      }
     });
   });
+}
+
+function setupExpandableCards(){
+  balanceCardGroup("thesis");
+  balanceCardGroup("scenario");
+  setupStandaloneExpandableCards();
+  bindExpandButtons();
 }
 
 function scrollToRequestedSection(){
