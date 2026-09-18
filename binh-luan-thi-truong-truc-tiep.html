@@ -87,6 +87,41 @@
       .live-intro{max-width:330px!important;margin:5px auto 0!important;text-align:center}
       .market-marquee-group{padding-top:9px;padding-bottom:9px}
     }
+  
+    /* Live UI v5 */
+    .live-main{padding-top:3px!important}
+    .live-hero{padding-top:4px!important}
+    .live-status-row{display:flex;justify-content:flex-end;align-items:center;min-height:30px;margin:0 0 2px}
+    .live-topline{justify-content:flex-start!important}
+    .live-grid{grid-template-columns:minmax(0,1.78fr) minmax(290px,.72fr)!important}
+    .side-stack{display:grid!important;align-content:start;gap:12px}
+    .market-marquee{overflow:hidden!important;overscroll-behavior:none;touch-action:pan-y}
+    .market-marquee::-webkit-scrollbar,.market-marquee-track::-webkit-scrollbar{display:none!important}
+    .market-marquee-track{
+      display:flex!important;
+      width:max-content!important;
+      animation-name:vhMarketMarquee!important;
+      animation-duration:var(--marquee-duration,48s)!important;
+      animation-timing-function:linear!important;
+      animation-iteration-count:infinite!important;
+      animation-play-state:running!important;
+      transform:translate3d(0,0,0);
+    }
+    .market-marquee-group{flex:none!important}
+    @keyframes vhMarketMarquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+    @media(prefers-reduced-motion:reduce){
+      .market-marquee-track{animation-name:vhMarketMarquee!important;animation-duration:60s!important;animation-iteration-count:infinite!important}
+      .market-marquee-group[aria-hidden="true"]{display:flex!important}
+    }
+    @media(max-width:900px){.live-grid{grid-template-columns:1fr!important}.side-stack{grid-template-columns:1fr!important}}
+    @media(max-width:680px){
+      .live-main{padding-top:2px!important}
+      .live-hero{padding-top:2px!important}
+      .live-status-row{justify-content:center;margin-bottom:3px}
+      .live-topline{justify-content:center!important;text-align:center}
+      .live-eyebrow{width:100%;text-align:center}
+      .live-intro{max-width:330px!important;margin:5px auto 0!important;text-align:center}
+    }
   </style>
 </head>
 <body>
@@ -94,9 +129,11 @@
   <main class="live-main">
     <div class="live-wrap">
       <section class="live-hero">
+        <div class="live-status-row">
+          <div class="live-status off" id="liveStatus"><i></i><span>Đang chờ dữ liệu</span></div>
+        </div>
         <div class="live-topline">
           <div class="live-eyebrow">BÌNH LUẬN THỊ TRƯỜNG TRỰC TIẾP</div>
-          <div class="live-status off" id="liveStatus"><i></i><span>Đang chờ dữ liệu</span></div>
         </div>
         <p class="live-intro">Theo dõi diễn biến thị trường trong phiên, câu chuyện đang dẫn dắt và điều cần nhìn tiếp.</p>
         <div class="live-strip" id="liveStrip">
@@ -134,6 +171,7 @@
           </div>
         </section>
 
+        <aside class="side-stack"></aside>
       </div>
 
       <div class="live-links"><a href="thi-truong-hom-nay.html">← Thị trường hôm nay</a><a href="tin-tuc-24h.html">Tin tức 24h →</a></div>
@@ -163,7 +201,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js" defer></script>
   <script src="assets/js/market-ticker.js?v=20260914-1" defer></script>
-  <script type="module" src="assets/js/market-live.js?v=20260918-commentary-ui4"></script>
+  <script type="module" src="assets/js/market-live.js?v=20260918-commentary-ui5"></script>
   <script type="module" src="assets/js/site-header.js?v=20260914-2"></script>
 </body>
 </html>
