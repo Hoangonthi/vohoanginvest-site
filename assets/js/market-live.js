@@ -29,11 +29,14 @@ const commentaryClock = () => {
   const get=t=>parts.find(p=>p.type===t)?.value||"";
   return{weekday:get("weekday"),minutes:Number(get("hour"))*60+Number(get("minute"))};
 };
-const isCommentaryWindowNow = () => {
+const commentaryPhaseNow = () => {
   const now=commentaryClock();
-  if(["Sat","Sun"].includes(now.weekday))return false;
-  return now.minutes>=520&&now.minutes<=900;
+  if(["Sat","Sun"].includes(now.weekday))return "OFF";
+  if(now.minutes<520)return "PRE";
+  if(now.minutes<=900)return "LIVE";
+  return "CLOSED";
 };
+const isCommentaryWindowNow = () => commentaryPhaseNow()==="LIVE";
 const commentaryWindowLabel = "08:40–15:00";
 const sameName = (a,b) => String(a||"").trim().toLowerCase()===String(b||"").trim().toLowerCase();
 
@@ -220,11 +223,32 @@ function renderLatest(){
   const panel=$("latestPanel");if(!panel)return;
   const comments=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
   const c=comments[0]||null;
-  const liveWindow=isCommentaryWindowNow();
+  const phase=commentaryPhaseNow();
+  const liveWindow=phase==="LIVE";
   const pulse=liveWindow?currentPulse(latestSnapshot):null;
-  const title=liveWindow?"Bình luận trực tiếp":"Bình luận gần nhất";
-  const status=liveWindow?"Đang cập nhật ~10 giây":`Khung bình luận ${commentaryWindowLabel}`;
-  const stamp=liveWindow?"ĐANG THEO DÕI":"BÌNH LUẬN GẦN NHẤT";
+
+  let title="Ngoài giờ bình luận";
+  let status=`Khung bình luận ${commentaryWindowLabel}`;
+  let stamp="BÌNH LUẬN GẦN NHẤT";
+  let emptyText=`Ngoài giờ bình luận. Khung bình luận từ ${commentaryWindowLabel}.`;
+
+  if(phase==="LIVE"){
+    title="Bình luận trực tiếp";
+    status="Đang cập nhật ~10 giây";
+    stamp="ĐANG BÌNH LUẬN";
+    emptyText="Đang chờ dữ liệu trực tiếp...";
+  }else if(phase==="CLOSED"){
+    title="Bình luận cuối phiên";
+    status="Kết thúc lúc 15:00";
+    stamp="BÌNH LUẬN CUỐI PHIÊN";
+    emptyText="Phiên bình luận hôm nay đã kết thúc lúc 15:00.";
+  }else if(phase==="PRE"){
+    title="Chuẩn bị trước phiên";
+    status="Bắt đầu bình luận lúc 08:40";
+    stamp="BÌNH LUẬN GẦN NHẤT";
+    emptyText="Bình luận trực tiếp bắt đầu lúc 08:40.";
+  }
+
   const head=`<div class="panel-head"><h2>${title}</h2><span id="latestRefresh">${status}</span></div>`;
 
   if(!liveWindow&&c){
@@ -241,7 +265,7 @@ function renderLatest(){
     if(c){
       panel.innerHTML=head+`<article class="latest ${esc(c.tone||"neutral")}"><div class="latest-time">${timeText(c.published_at)} · ${stamp}</div><h2>${esc(c.headline)}</h2><p class="latest-body">${esc(c.body)}</p>${c.watch_next?`<div class="watch-next"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${evidenceHtml(c)}</article>`;
     }else{
-      panel.innerHTML=head+`<div class="empty">${liveWindow?"Đang chờ dữ liệu trực tiếp...":`Ngoài giờ bình luận. Khung bình luận từ ${commentaryWindowLabel}.`}</div>`;
+      panel.innerHTML=head+`<div class="empty">${emptyText}</div>`;
     }
     return;
   }
