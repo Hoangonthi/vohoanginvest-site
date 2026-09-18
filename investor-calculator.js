@@ -8,7 +8,7 @@ import {
   calcPortfolioConcentration,
   calcDividendYield,
   calcCostBasisAfterRights
-} from './assets/js/investor-calculator-math.js?v=20260918-3';
+} from './assets/js/investor-calculator-math.js?v=20260918-4';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const n=id=>Number($(id)?.value||0), fmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:0}).format(Number(v||0)), money=v=>`${fmt(v)} đ`, pct=v=>`${Number(v||0).toFixed(1)}%`, num=v=>fmt(v);
 const qtyFmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:4}).format(Number(v||0));
@@ -113,10 +113,10 @@ if(concRowsEl){
 bind('#stForm',e=>{
   e.preventDefault();
   const res=calcStopTargetRR({
-    entry:n('#stEntry'),
-    stop:n('#stStop'),
-    target:n('#stTarget'),
-    qty:n('#stQty')
+    entry:$('#stEntry').value,
+    stop:$('#stStop').value,
+    target:$('#stTarget').value,
+    qty:$('#stQty').value
   });
   if(newCalcError('#stValidation',res))return;
   $('#stRatio').textContent='1 : '+ratioFmt(res.ratio);
@@ -141,7 +141,7 @@ bind('#depForm',e=>{
     qty:row.querySelector('.dep-qty').value,
     amount:row.querySelector('.dep-amount').value
   })).filter(x=>String(x.price).trim()||String(x.qty).trim()||String(x.amount).trim());
-  const res=calcDeploymentPlan({buyFeePct:n('#depFeePct'),lot:n('#depLot'),legs});
+  const res=calcDeploymentPlan({buyFeePct:$('#depFeePct').value,lot:$('#depLot').value,legs});
   if(newCalcError('#depValidation',res))return;
   $('#depAvgCost').textContent=money(res.averageCost);
   $('#depCapital').textContent=money(res.totalCapital);
@@ -159,11 +159,11 @@ bind('#depForm',e=>{
 bind('#mcallForm',e=>{
   e.preventDefault();
   const res=calcMarginThresholds({
-    debt:n('#mcallDebt'),
-    marketValue:n('#mcallMarketValue'),
+    debt:$('#mcallDebt').value,
+    marketValue:$('#mcallMarketValue').value,
     qty:$('#mcallQty').value,
-    callPct:n('#mcallCallPct'),
-    forcePct:n('#mcallForcePct')
+    callPct:$('#mcallCallPct').value,
+    forcePct:$('#mcallForcePct').value
   });
   if(newCalcError('#mcallValidation',res))return;
   $('#mcallCurrent').textContent=pct(res.currentRatioPct);
@@ -184,9 +184,9 @@ bind('#mcallForm',e=>{
 bind('#levForm',e=>{
   e.preventDefault();
   const res=calcActualLeverage({
-    exposure:n('#levExposure'),
-    cash:n('#levCash'),
-    debt:n('#levDebt')
+    exposure:$('#levExposure').value,
+    cash:$('#levCash').value,
+    debt:$('#levDebt').value
   });
   if(newCalcError('#levValidation',res))return;
   $('#levNav').textContent=money(res.nav);
@@ -208,8 +208,8 @@ bind('#levForm',e=>{
 bind('#streakForm',e=>{
   e.preventDefault();
   const res=calcLosingStreak({
-    capital:n('#streakCapital'),
-    riskPct:n('#streakRiskPct'),
+    capital:$('#streakCapital').value,
+    riskPct:$('#streakRiskPct').value,
     milestones:[3,5,7,10,15,20]
   });
   if(newCalcError('#streakValidation',res))return;
@@ -254,9 +254,9 @@ bind('#concForm',e=>{
 bind('#dyForm',e=>{
   e.preventDefault();
   const res=calcDividendYield({
-    marketPrice:n('#dyMarket'),
-    parValue:n('#dyPar'),
-    dividendPct:n('#dyPct')
+    marketPrice:$('#dyMarket').value,
+    parValue:$('#dyPar').value,
+    dividendPct:$('#dyPct').value
   });
   if(newCalcError('#dyValidation',res))return;
   $('#dyYield').textContent=pct(res.yieldPct);
@@ -275,9 +275,9 @@ bind('#dyForm',e=>{
 bind('#crForm',e=>{
   e.preventDefault();
   const res=calcCostBasisAfterRights({
-    oldQty:n('#crOldQty'),
-    oldAvgCost:n('#crOldAvg'),
-    bonusPct:n('#crBonusPct'),
+    oldQty:$('#crOldQty').value,
+    oldAvgCost:$('#crOldAvg').value,
+    bonusPct:$('#crBonusPct').value,
     ratioOld:$('#crRatioOld').value,
     ratioNew:$('#crRatioNew').value,
     subPrice:$('#crSubPrice').value,
