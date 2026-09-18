@@ -110,7 +110,7 @@ button,input,textarea{font:inherit}
   display:flex;
   width:max-content;
   will-change:transform;
-  animation:vhMarketLoop var(--marquee-duration,48s) linear infinite;
+  transform:translate3d(0,0,0);
 }
 .market-marquee-group{
   display:flex;
@@ -139,11 +139,6 @@ button,input,textarea{font:inherit}
 .up{color:var(--live-green)!important}
 .down{color:var(--live-red)!important}
 .flat{color:var(--live-text)!important}
-
-@keyframes vhMarketLoop{
-  from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(var(--marquee-shift,-50%),0,0)}
-}
 
 .live-grid{
   display:grid;
