@@ -161,7 +161,7 @@ function renderTechnical(d){
   ["KL TB20",fmtNum(t.avg_volume_20,0)],["KL / TB20",valid(t.volume_vs_avg20)?fmtNum(t.volume_vs_avg20)+"x":"—"]
  ];
  const insight=[technicalInsight(t),momentumInsight(t)].filter(Boolean);
- $("#technicalGrid").innerHTML=arr.map(([a,b])=>cell(a,b)).join("")+
+ $("#technicalGrid").innerHTML=arr.map(([a,b,sub])=>cell(a,b,sub||"")).join("")+
    (insight.length?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${insight.map(x=>esc(x[1])).join(" ")}</div>`:"");
 }
 function renderFlow(d){
