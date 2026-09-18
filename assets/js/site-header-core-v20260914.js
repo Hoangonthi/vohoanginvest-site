@@ -420,6 +420,7 @@ function injectSupportStyles() {
     .vh-auth-panel h2{margin:7px 36px 5px 0;font-size:24px;line-height:1.2;color:#fff}
     .vh-auth-panel>p{margin:0 0 16px;font-size:11px;line-height:1.55;color:rgba(231,237,246,.62)}
     .vh-auth-form{display:grid;gap:11px}
+    .vh-auth-username-proxy{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
     .vh-auth-field{display:grid;gap:5px}
     .vh-auth-field label{font-size:10px;font-weight:700;color:rgba(255,255,255,.78)}
     .vh-auth-field input{
@@ -924,6 +925,7 @@ function createAccountDialogs() {
         <h2 id="vhPasswordTitle">Đổi mật khẩu</h2>
         <p>Hệ thống xác minh lại mật khẩu hiện tại trước khi đổi.</p>
         <form class="vh-auth-form" data-password-form novalidate>
+          <input name="username" type="email" autocomplete="username" tabindex="-1" aria-hidden="true" class="vh-auth-username-proxy">
           <div class="vh-auth-field"><label>Mật khẩu hiện tại</label><input name="currentPassword" type="password" autocomplete="current-password" required></div>
           <div class="vh-auth-field"><label>Mật khẩu mới</label><input name="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Tối thiểu 8 ký tự"></div>
           <div class="vh-auth-field"><label>Nhập lại mật khẩu mới</label><input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
@@ -1209,8 +1211,11 @@ function createAccountDialogs() {
       if (email && input) input.value = email;
       requestAnimationFrame(() => input?.focus());
     },
-    openPasswordChange() {
+    async openPasswordChange() {
       setMessage(passwordMessage);
+      const { data } = await supabaseClient.auth.getUser();
+      const username = passwordDialog.querySelector('input[name="username"]');
+      if (username) username.value = data?.user?.email || "";
       openDialog(passwordDialog);
       requestAnimationFrame(() => passwordDialog.querySelector('input[name="currentPassword"]')?.focus());
     },
