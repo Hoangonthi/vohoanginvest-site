@@ -280,7 +280,7 @@ function applyLiveLayoutCommunity(){
     style.textContent=".community-side{grid-template-columns:1fr!important}.community-panel{min-width:0}";
     document.head.appendChild(style);
   }
-  import("./market-live-layout-community.js?v=20260915-2")
+  import("./market-live-layout-community.js?v=20260918-3")
     .then(()=>setupLiveCompactOverview())
     .catch(()=>{});
 }
