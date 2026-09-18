@@ -1,11 +1,11 @@
 (()=>{
-  const SNAPSHOT_URL='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-snapshot-local-primary';
+  const SNAPSHOT_URL='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-snapshot-public';
   const SOURCE_URLS={
     decision:'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test',
     macro:'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/macro-anchor-public',
     hot:'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed'
   };
-  const CACHE_KEY='vh_morning_baked_snapshot_v1';
+  const CACHE_KEY='vh_morning_baked_snapshot_v2';
   const nativeFetch=window.fetch.bind(window);
   window.__vhMorningPerf=window.__vhMorningPerf||{startedAt:performance.now(),snapshot:'none'};
 
