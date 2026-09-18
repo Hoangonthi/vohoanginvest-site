@@ -974,3 +974,17 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
   width:100%!important;
   text-align:center!important;
 }
+
+
+/* Center aggregate regime -> action on desktop */
+@media(min-width:981px){
+  [data-panel="overview"] .sd-regime-action{
+    width:100%!important;
+    justify-content:center!important;
+    text-align:center!important;
+  }
+  [data-panel="overview"] .sd-regime-title,
+  [data-panel="overview"] .sd-action-title{
+    text-align:center!important;
+  }
+}
