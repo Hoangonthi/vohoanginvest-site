@@ -10,6 +10,8 @@ let derivativeState = null;
 let previousDerivative = null;
 let isAdmin = false;
 let pollCount = 0;
+let dayHistoryLoaded = false;
+let historyLoading = false;
 
 const $ = (id) => document.getElementById(id);
 const esc = (value = "") => String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
@@ -32,18 +34,19 @@ function setStatus(snapshot){
 
 function renderStrip(snapshot){
   const el=$("liveStrip");if(!el||!snapshot)return;
-  const v=snapshot.vnindex||{},flow=snapshot.flow||{},w=snapshot.world||{},ball=w.ball||{};
+  const v=snapshot.vnindex||{};
+  const strong=snapshot?.sectors?.strongest?.length?snapshot.sectors.strongest:sectorRows(snapshot).slice(0,3);
+  const weak=snapshot?.sectors?.weakest?.length?snapshot.sectors.weakest:[...sectorRows(snapshot)].reverse().slice(0,3);
   const breadth=num(v.adv)!==null&&num(v.dec)!==null?`${Math.round(v.adv)} tăng / ${Math.round(v.dec)} giảm`:null;
-  const d15=num(ball.delta_15m);
-  const leader=strongest(snapshot);
-  const cards=[
-    `<div class="stat primary"><span>VN-Index</span><strong class="${toneClass(v.change)}">${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})</strong></div>`,
-    d15!==null?`<div class="stat"><span>Nhịp 15 phút</span><strong class="${toneClass(d15)}">${signed(d15,1)} điểm</strong></div>`:"",
-    breadth?`<div class="stat"><span>Độ rộng</span><strong>${breadth}</strong></div>`:"",
-    leader?`<div class="stat"><span>Nhóm dẫn</span><strong>${esc(leader.name)} · ${pct(leader.change_pct)}</strong></div>`:"",
-    num(v.value_b)!==null?`<div class="stat"><span>Thanh khoản</span><strong>${fmt(v.value_b,1)} tỷ</strong></div>`:flow.label?`<div class="stat"><span>Nhịp tiền</span><strong>${esc(flow.label)}</strong></div>`:""
+  const sectorText=(rows)=>rows.slice(0,3).filter(x=>x&&num(x.change_pct)!==null).map(x=>`${x.name||x.symbol} ${pct(x.change_pct)}`).join(" · ");
+  const strongText=sectorText(strong),weakText=sectorText(weak);
+  const items=[
+    `<span class="market-context-item primary"><b class="${toneClass(v.change)}">VN-Index ${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})</b></span>`,
+    breadth?`<span class="market-context-item"><span>Độ rộng</span><b>${breadth}</b></span>`:"",
+    strongText?`<span class="market-context-item"><span>Nhóm mạnh</span><b class="up">${esc(strongText)}</b></span>`:"",
+    weakText?`<span class="market-context-item"><span>Nhóm yếu</span><b class="down">${esc(weakText)}</b></span>`:""
   ].filter(Boolean);
-  el.innerHTML=cards.join("");
+  el.innerHTML=`<div class="market-context-line">${items.join("")}</div>`;
 }
 
 function sectorRows(snapshot){return Array.isArray(snapshot?.sectors?.all)?snapshot.sectors.all:[];}
@@ -203,8 +206,9 @@ function renderTimeline(){
   const list=$("timelineList");if(!list)return;
   const raw=[...commentsById.values()].sort((a,b)=>new Date(b.published_at)-new Date(a.published_at));
   const comments=isAdmin?raw:dedupeTimeline(raw);
-  if(!comments.length){list.innerHTML=`<div class="empty">Các mốc thay đổi đáng chú ý sẽ được ghi vào đây.</div>`;return;}
-  list.innerHTML=comments.slice(0,30).map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
+  const counter=$("timelineCount");if(counter)counter.textContent=comments.length?`${comments.length} bình luận đã lưu`:"Ký ức của câu chuyện";
+  if(!comments.length){list.innerHTML=`<div class="empty">Chưa có bình luận trong ngày.</div>`;return;}
+  list.innerHTML=comments.map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
 }
 
 function renderMarketNow(snapshot){
@@ -234,24 +238,25 @@ function renderMarketNow(snapshot){
 function stockPct(row){return num(row?.change_pct??row?.changePct??row?.pct);}
 function renderLeaders(snapshot){
   const root=$("marketLeaders");if(!root||!snapshot)return;
-  const world=snapshot.world||{},strong=world?.lines?.strongest?.length?world.lines.strongest:(snapshot?.sectors?.strongest||[]),weak=world?.lines?.weakest?.length?world.lines.weakest:(snapshot?.sectors?.weakest||[]);
-  const rows=(items)=>items.length?items.slice(0,3).map(x=>`<div class="mini-row"><span>${esc(x.name||x.symbol||"—")}</span><b class="${toneClass(x.change_pct)}">${pct(x.change_pct)}</b></div>`).join(""):"";
-  const movers=[];
+  const map=new Map();
   for(const s of (snapshot?.sectors?.all||[])){
     for(const side of ["top_gainers","top_losers"]){
       for(const x of (s?.[side]||[])){
         const p=stockPct(x),vol=num(x?.volume),price=num(x?.price),turnover=price!==null&&vol!==null?price*vol/1000000:null;
         if(!x?.symbol||p===null||vol===null||turnover===null||vol<500000||turnover<15)continue;
-        if(!movers.some(m=>m.symbol===x.symbol))movers.push({symbol:x.symbol,pct:p,sector:s.name,turnover});
+        const row={symbol:String(x.symbol).toUpperCase(),pct:p,sector:s.name||"",turnover};
+        const old=map.get(row.symbol);
+        if(!old||Math.abs(row.pct)>Math.abs(old.pct))map.set(row.symbol,row);
       }
     }
   }
-  movers.sort((a,b)=>Math.abs(b.pct)-Math.abs(a.pct));
-  const moverHtml=movers.length?movers.slice(0,4).map(x=>`<div class="mini-row"><span>${esc(x.symbol)} · ${esc(x.sector||"")}</span><b class="${toneClass(x.pct)}">${pct(x.pct)}</b></div>`).join(""):"";
+  const all=[...map.values()];
+  const strong=all.filter(x=>x.pct>0).sort((a,b)=>b.pct-a.pct).slice(0,3);
+  const weak=all.filter(x=>x.pct<0).sort((a,b)=>a.pct-b.pct).slice(0,3);
+  const rows=(items)=>items.map(x=>`<div class="mini-row"><span>${esc(x.symbol)}${x.sector?` · ${esc(x.sector)}`:""}</span><b class="${toneClass(x.pct)}">${pct(x.pct)}</b></div>`).join("");
   const sections=[];
-  if(strong.length)sections.push(`<div class="section-mini"><h3>Nhóm đang hỗ trợ</h3><div class="row-list">${rows(strong)}</div></div>`);
-  if(weak.length)sections.push(`<div class="section-mini"><h3>Nhóm đang gây áp lực</h3><div class="row-list">${rows(weak)}</div></div>`);
-  if(moverHtml)sections.push(`<div class="section-mini"><h3>Cổ phiếu đáng nhìn · thanh khoản thực</h3><div class="row-list">${moverHtml}</div></div>`);
+  if(strong.length)sections.push(`<div class="section-mini"><h3>3 mã mạnh · thanh khoản đủ lớn</h3><div class="row-list">${rows(strong)}</div></div>`);
+  if(weak.length)sections.push(`<div class="section-mini"><h3>3 mã yếu · thanh khoản đủ lớn</h3><div class="row-list">${rows(weak)}</div></div>`);
   const panel=root.closest(".panel");
   if(!sections.length){if(panel)panel.hidden=true;root.innerHTML="";return;}
   if(panel)panel.hidden=false;
@@ -276,6 +281,99 @@ async function load(initial=false){
     renderLatest();
     if(!data.latest){const now=$("marketNow");if(now)now.innerHTML=`<div class="empty">Chưa có dữ liệu live hôm nay. Hệ thống bắt đầu ghi khi AmiBridge chạy trong giờ giao dịch.</div>`;}
   }catch(error){console.warn("Market live load failed",error);const status=$("liveStatus");if(status){status.classList.add("off");status.querySelector("span").textContent="Chưa kết nối được dữ liệu";}}
+}
+
+function vnDateKey(){
+  const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+  const get=t=>parts.find(p=>p.type===t)?.value||"";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+function vnDateLabel(){
+  return new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date());
+}
+async function loadDayHistory(){
+  if(historyLoading)return;
+  historyLoading=true;
+  const info=$("historyInfo");if(info)info.textContent="Đang tải lịch sử trong ngày…";
+  try{
+    const r=await fetch(`${API}?limit=160&_=${Date.now()}`,{cache:"no-store"});
+    if(!r.ok)throw new Error(`HTTP ${r.status}`);
+    const data=await r.json();if(!data?.ok)throw new Error(data?.error||"NO_DATA");
+    mergeComments(Array.isArray(data.comments)?data.comments:[],false);
+    dayHistoryLoaded=true;
+    const count=dedupeTimeline([...commentsById.values()]).length;
+    if(info)info.textContent=`${count} bình luận đã lưu hôm nay`;
+  }catch(error){
+    console.warn("Load day history failed",error);
+    if(info)info.textContent="Chưa tải được lịch sử.";
+  }finally{historyLoading=false;}
+}
+async function toggleDayHistory(){
+  const panel=$("timelinePanel"),btn=$("reviewCommentsBtn");if(!panel)return;
+  if(panel.hidden){
+    if(!dayHistoryLoaded)await loadDayHistory();
+    panel.hidden=false;renderTimeline();
+    if(btn)btn.textContent="Ẩn bình luận trong ngày";
+    panel.scrollIntoView({behavior:"smooth",block:"start"});
+  }else{
+    panel.hidden=true;
+    if(btn)btn.textContent="Xem lại bình luận trong ngày";
+  }
+}
+function pdfHistoryHtml(comments){
+  const rows=[...comments].sort((a,b)=>new Date(a.published_at)-new Date(b.published_at));
+  const v=latestSnapshot?.vnindex||{};
+  const summary=num(v.value)!==null?`VN-Index ${fmt(v.value,2)} · ${signed(v.change,2)} (${pct(v.change_pct)})`:"";
+  return `<div style="font-family:'Be Vietnam Pro',Arial,sans-serif;color:#18202a;background:#fff;padding:0 4px">
+    <div style="padding:0 0 12px;border-bottom:2px solid #c49a3a">
+      <div style="font-size:19px;font-weight:800">BÌNH LUẬN THỊ TRƯỜNG TRỰC TIẾP</div>
+      <div style="margin-top:4px;font-size:11px;color:#667085">Võ Hoàng · ${vnDateLabel()}${summary?` · ${summary}`:""}</div>
+    </div>
+    <div style="margin-top:12px">
+      ${rows.map(c=>`<div style="padding:9px 0 10px;border-bottom:1px solid #e7e9ee;break-inside:avoid">
+        <div style="font-size:9px;font-weight:700;color:#9b741c">${timeText(c.published_at)}</div>
+        <div style="margin-top:3px;font-size:12.5px;font-weight:800;line-height:1.35">${esc(c.headline)}</div>
+        <div style="margin-top:4px;font-size:10.5px;line-height:1.6;color:#344054">${esc(c.body)}</div>
+        ${c.watch_next?`<div style="margin-top:5px;padding:6px 8px;border-left:2px solid #c49a3a;background:#faf8f2;font-size:9.5px;line-height:1.55"><b>Điểm cần nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}
+      </div>`).join("")}
+    </div>
+    <div style="margin-top:12px;padding-top:8px;border-top:1px solid #ddd;font-size:8.5px;line-height:1.5;color:#7b8490">Nội dung cung cấp thông tin và góc nhìn hệ thống, không phải khuyến nghị mua/bán.</div>
+  </div>`;
+}
+function printHistoryFallback(html){
+  const w=window.open("","_blank","noopener,noreferrer");if(!w)return;
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Bình luận thị trường</title><style>@page{size:A4;margin:14mm}body{margin:0;background:#fff}</style></head><body>${html}<script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
+  w.document.close();
+}
+async function exportCommentsPdf(){
+  const btn=$("exportCommentsPdfBtn"),info=$("historyInfo");
+  if(btn)btn.disabled=true;if(info)info.textContent="Đang chuẩn bị PDF…";
+  try{
+    if(!dayHistoryLoaded)await loadDayHistory();
+    const comments=dedupeTimeline([...commentsById.values()]);
+    if(!comments.length){if(info)info.textContent="Chưa có bình luận để xuất.";return;}
+    const wrap=document.createElement("div");
+    wrap.style.cssText="position:fixed;left:-100000px;top:0;width:760px;background:#fff;padding:24px;z-index:-1";
+    wrap.innerHTML=pdfHistoryHtml(comments);document.body.appendChild(wrap);
+    const html=wrap.firstElementChild;
+    if(typeof window.html2pdf==="function"){
+      await window.html2pdf().set({
+        margin:[10,10,10,10],
+        filename:`binh-luan-thi-truong-${vnDateKey()}.pdf`,
+        image:{type:"jpeg",quality:.98},
+        html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff"},
+        jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
+        pagebreak:{mode:["css","legacy"]}
+      }).from(html).save();
+    }else{
+      printHistoryFallback(html.outerHTML);
+    }
+    wrap.remove();
+    if(info)info.textContent=`Đã chuẩn bị ${comments.length} bình luận.`;
+  }catch(error){
+    console.warn("Export PDF failed",error);
+    if(info)info.textContent="Xuất PDF chưa thành công.";
+  }finally{if(btn)btn.disabled=false;}
 }
 
 async function loadAdminNotes(){
@@ -338,6 +436,8 @@ async function saveCommentEdit(e){
 }
 
 function bindAdminUi(){
+  $("reviewCommentsBtn")?.addEventListener("click",toggleDayHistory);
+  $("exportCommentsPdfBtn")?.addEventListener("click",exportCommentsPdf);
   $("adminNotePublish")?.addEventListener("click",publishAdminNote);
   $("adminLiveNote")?.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();publishAdminNote();}});
   $("adminLiveHeadline")?.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();publishAdminNote();}});
