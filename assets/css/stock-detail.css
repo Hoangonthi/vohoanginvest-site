@@ -946,3 +946,31 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
     font-size:9.5px;
   }
 }
+
+
+/* Center overview headline blocks on all screen sizes */
+[data-panel="overview"] .sd-master > .sd-card-head,
+[data-panel="overview"] .sd-compact-card > .sd-card-head{
+  justify-content:center!important;
+  text-align:center!important;
+}
+
+[data-panel="overview"] .sd-master > .sd-card-head > div,
+[data-panel="overview"] .sd-compact-card > .sd-card-head > div{
+  width:100%!important;
+  text-align:center!important;
+}
+
+[data-panel="overview"] .sd-master > .sd-card-head span,
+[data-panel="overview"] .sd-master > .sd-card-head h2,
+[data-panel="overview"] .sd-compact-card > .sd-card-head span,
+[data-panel="overview"] .sd-compact-card > .sd-card-head h2{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+}
+
+[data-panel="overview"] .sd-regime > span{
+  width:100%!important;
+  text-align:center!important;
+}
