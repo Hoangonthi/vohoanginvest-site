@@ -272,7 +272,8 @@ function renderRecentContext(){
   if(!comments.length){panel.hidden=true;list.innerHTML="";return;}
 
   const latestSaved=comments[0]||null;
-  const latestSavedIsMain=Boolean(latestSaved&&latestSaved.event_id==null);
+  const pulseVisible=isCommentaryWindowNow()&&Boolean(currentPulse(latestSnapshot));
+  const latestSavedIsMain=!pulseVisible||Boolean(latestSaved&&latestSaved.event_id==null);
   const prior=comments.slice(latestSavedIsMain?1:0,latestSavedIsMain?3:2);
 
   if(!prior.length){panel.hidden=true;list.innerHTML="";return;}
@@ -370,11 +371,13 @@ async function toggleDayHistory(){
     if(!dayHistoryLoaded)await loadDayHistory();
     timelineVisible=HISTORY_STEP;
     panel.hidden=false;
+    panel.dataset.opened="1";
     renderTimeline();
     if(btn)btn.textContent="Ẩn bình luận trong ngày";
     panel.scrollIntoView({behavior:"smooth",block:"start"});
   }else{
     panel.hidden=true;
+    panel.dataset.opened="0";
     timelineVisible=HISTORY_STEP;
     if(btn)btn.textContent="Xem lại bình luận trong ngày";
   }
@@ -382,20 +385,13 @@ async function toggleDayHistory(){
 async function applyCommentarySessionUi(){
   const panel=$("timelinePanel"),btn=$("reviewCommentsBtn");
   if(!panel)return;
-
-  if(isCommentaryWindowNow()){
-    if(!dayHistoryLoaded){
-      panel.hidden=true;
-      if(btn)btn.textContent="Xem lại bình luận trong ngày";
-    }
-    return;
+  const opened=panel.dataset.opened==="1";
+  panel.hidden=!opened;
+  if(btn)btn.textContent=opened?"Ẩn bình luận trong ngày":"Xem lại bình luận trong ngày";
+  if(opened){
+    if(!dayHistoryLoaded)await loadDayHistory();
+    renderTimeline();
   }
-
-  if(!dayHistoryLoaded)await loadDayHistory();
-  timelineVisible=HISTORY_STEP;
-  panel.hidden=false;
-  renderTimeline();
-  if(btn)btn.textContent="Ẩn bình luận trong ngày";
 }
 function pdfHistoryHtml(comments){
   const rows=[...comments].sort((a,b)=>new Date(a.published_at)-new Date(b.published_at));
