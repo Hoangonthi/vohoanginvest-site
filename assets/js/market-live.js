@@ -328,7 +328,8 @@ async function load(initial=false){
   try{
     pollCount++;
     const full=initial||!maxCommentId||pollCount%6===0;
-    const url=full?`${API}?limit=30&_=${Date.now()}`:`${API}?after_id=${maxCommentId}&limit=10&_=${Date.now()}`;
+    const fullLimit=dayHistoryLoaded?160:30;
+    const url=full?`${API}?limit=${fullLimit}&_=${Date.now()}`:`${API}?after_id=${maxCommentId}&limit=10&_=${Date.now()}`;
     const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw new Error(`HTTP ${r.status}`);
     const data=await r.json();if(!data?.ok)throw new Error(data?.error||"NO_DATA");
     if(data.latest&&data.latest.captured_at!==latestSnapshot?.captured_at){previousSnapshot=latestSnapshot;previousDerivative=derivativeState;}
