@@ -168,8 +168,8 @@ function buildDynamicAnalysis(d){
     if(vol>=1.2&&ret20!==null&&ret20>0){addPoint(support,"Thanh khoản xác nhận",`Khối lượng bằng ${fmtNum(vol)}x trung bình 20 phiên trong bối cảnh giá 20 phiên tăng ${fmtPct(ret20)}.`,"positive");techScore++}
     else if(vol<=.8){addPoint(risk,"Thanh khoản chưa xác nhận",`Khối lượng chỉ bằng ${fmtNum(vol)}x trung bình 20 phiên; tín hiệu giá hiện thiếu sự tham gia mạnh của dòng tiền.`,"watch")}
   }
-  if(t.breakout_20d===true){addPoint(support,"Đã breakout 20D",`Close đã vượt đỉnh của 20 phiên trước (${fmtNum(t.high20_prev)}).`,"positive");techScore+=2}
-  if(t.breakdown_20d===true){addPoint(risk,"Đã breakdown 20D",`Close đã thủng đáy của 20 phiên trước (${fmtNum(t.low20_prev)}).`,"negative");techScore-=2}
+  if(t.breakout_20d===true){addPoint(support,"Đã vượt đỉnh 20P",`Close đã vượt đỉnh của 20 phiên trước (${fmtNum(t.high20_prev)}).`,"positive");techScore+=2}
+  if(t.breakdown_20d===true){addPoint(risk,"Đã thủng đáy 20P",`Close đã thủng đáy của 20 phiên trước (${fmtNum(t.low20_prev)}).`,"negative");techScore-=2}
   if(valid(t.range60?.position_pct)){
     const pos=Number(t.range60.position_pct);
     if(pos>=75)addPoint(support,"Đứng ở vùng trên của biên 60 phiên",`Giá đang ở khoảng ${fmtNum(pos)}% biên dao động 60 phiên, phản ánh sức mạnh giá tương đối tốt.`,"positive");
@@ -260,7 +260,7 @@ function buildDynamicAnalysis(d){
     {
       kind:"positive",title:"Kịch bản tích cực",condition:posTrigger,
       meaning:vol!==null&&vol>=1.2?"Nếu đi kèm thanh khoản tiếp tục trên trung bình, tín hiệu xác nhận sẽ có chất lượng tốt hơn.":"Cần thêm sự xác nhận của thanh khoản và flow, không chỉ một nhịp vượt giá.",
-      watch:"Theo dõi: breakout, volume, flow 5 phiên và độ dốc MA20."
+      watch:"Theo dõi: vượt đỉnh, volume, flow 5 phiên và độ dốc MA20."
     },
     {
       kind:"base",title:"Kịch bản trung tính",condition:baseTrigger,
@@ -270,7 +270,7 @@ function buildDynamicAnalysis(d){
     {
       kind:"negative",title:"Kịch bản xấu đi",condition:negTrigger,
       meaning:"Nếu đi kèm MA20/MA50 dốc xuống và flow chuyển xấu, luận điểm kỹ thuật hiện tại sẽ suy yếu rõ.",
-      watch:"Theo dõi: breakdown, flow 5/20 phiên và vị trí trong biên 60 phiên."
+      watch:"Theo dõi: thủng đáy, flow 5/20 phiên và vị trí trong biên 60 phiên."
     }
   ];
 
@@ -287,7 +287,7 @@ function renderHistoryEdge(d){
   if(!s||!s.signal_code){
     return `<div class="sd-empty">Chưa có đủ mẫu lịch sử cùng loại tín hiệu để thống kê.</div>`;
   }
-  const labels={BREAKOUT_20D:"Breakout 20D",BREAKDOWN_20D:"Breakdown 20D"};
+  const labels={BREAKOUT_20D:"Vượt đỉnh 20P",BREAKDOWN_20D:"Thủng đáy 20P"};
   const rows=Object.entries(s.horizons||{}).map(([h,v])=>{
     const x=v||{};
     return `<div class="sd-history-stat"><span>T+${esc(h)}</span><b class="${cls(x.avg_return_pct)}">${fmtPct(x.avg_return_pct)}</b><small>${fmtNum(x.win_rate_pct)}% mẫu dương · n=${fmtNum(x.n,0)}</small></div>`;
@@ -325,8 +325,8 @@ function renderOverview(d){
   $("#historyEdge").innerHTML=renderHistoryEdge(d);
 
   $("#overviewConfirm").innerHTML=[
-    cell("Breakout 20D",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—"),
-    cell("Breakdown 20D",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—"),
+    cell("Vượt đỉnh 20P",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—"),
+    cell("Thủng đáy 20P",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—"),
     cell("KL / TB20",valid(t.volume_vs_avg20)?fmtNum(t.volume_vs_avg20)+"x":"—"),
     cell("ATR14 / Giá",valid(t.atr14_pct)?fmtPct(t.atr14_pct):"—"),
     cell("Vị trí biên 60P",valid(t.range60?.position_pct)?fmtPct(t.range60.position_pct):"—"),
@@ -342,7 +342,7 @@ function renderTechnical(d){
   ["Close D1",fmtNum(t.close)],["Giá hiện tại",q&&valid(q.price)?fmtNum(q.price):"—",q&&valid(q.change_pct)?fmtPct(q.change_pct):"Chưa có intraday"],["5 phiên",fmtPct(t.return_5d_pct)],[ "20 phiên",fmtPct(t.return_20d_pct)],
   ["60 phiên",fmtPct(t.return_60d_pct)],["MA10",fmtNum(t.ma10)],["MA20",fmtNum(t.ma20)],["MA50",fmtNum(t.ma50)],
   ["MA200",fmtNum(t.ma200)],["RSI14",fmtNum(t.rsi14)],["Đỉnh 20P trước",fmtNum(t.high20_prev)],["Đáy 20P trước",fmtNum(t.low20_prev)],
-  ["Breakout 20D",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—"],["Breakdown 20D",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—"],
+  ["Vượt đỉnh 20P",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—"],["Thủng đáy 20P",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—"],
   ["KL TB20",fmtNum(t.avg_volume_20,0)],["KL / TB20",valid(t.volume_vs_avg20)?fmtNum(t.volume_vs_avg20)+"x":"—"]
  ];
  const insight=[technicalInsight(t),momentumInsight(t)].filter(Boolean);
