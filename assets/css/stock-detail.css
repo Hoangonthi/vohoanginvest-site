@@ -1191,3 +1191,30 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
   .sd-expandable.is-collapsed .sd-expand-body{max-height:220px}
 }
 
+
+
+/* Paired scenario cards + row-balanced expand behavior */
+.sd-scenario-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  align-items:start;
+}
+.sd-scenario-card{
+  height:auto!important;
+}
+.sd-row-hidden{
+  display:none!important;
+}
+.sd-expandable.is-collapsed .sd-expand-body{
+  max-height:var(--sd-collapse-height,none);
+}
+.sd-expandable[data-row-selector].is-collapsed .sd-expand-body::after{
+  display:none;
+}
+@media(max-width:760px){
+  .sd-scenario-pair{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+}
