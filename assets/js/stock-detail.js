@@ -484,6 +484,8 @@ function render(d){
  document.title=`${d.symbol} | Hồ sơ cổ phiếu | Võ Hoàng`;
  $("#symbolTitle").textContent=d.symbol;
  $("#symbolInput").value=d.symbol;
+ const watchlistLink=$("#watchlistLink");
+ if(watchlistLink) watchlistLink.href=`watchlist.html?symbol=${encodeURIComponent(d.symbol)}&from=profile`;
  $("#effectiveDate").textContent="";
  renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);
  setDataVisible(true);
