@@ -480,6 +480,93 @@ function renderHistory(d){
  if(si) $("#signalList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(si[1])}</div>`);
  if(ei) $("#eventList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Nhận định:</b> ${esc(ei[1])}</div>`);
 }
+function layoutOverviewMasonry(){
+  const grid=$("#overviewMasonry");
+  if(!grid)return;
+
+  const cards=[...grid.querySelectorAll(".sd-masonry-card")];
+
+  if(window.innerWidth<=760){
+    grid.classList.remove("is-ready");
+    grid.style.height="";
+    cards.forEach(card=>{
+      card.style.position="";
+      card.style.width="";
+      card.style.left="";
+      card.style.top="";
+      card.style.transform="";
+    });
+    return;
+  }
+
+  const gap=8;
+  const width=grid.clientWidth;
+  if(!width)return;
+  const colWidth=(width-gap)/2;
+  const heights=[0,0];
+
+  grid.classList.add("is-ready");
+
+  cards.forEach(card=>{
+    card.style.position="absolute";
+    card.style.width=`${colWidth}px`;
+    card.style.left="0";
+    card.style.top="0";
+
+    const col=heights[0]<=heights[1]?0:1;
+    const left=col===0?0:colWidth+gap;
+    const top=heights[col];
+
+    card.style.left=`${left}px`;
+    card.style.top=`${top}px`;
+
+    const h=card.getBoundingClientRect().height;
+    heights[col]=top+h+gap;
+  });
+
+  grid.style.height=`${Math.max(0,Math.max(...heights)-gap)}px`;
+}
+
+function setupExpandableCards(){
+  const cards=document.querySelectorAll("#overviewMasonry [data-expandable]");
+
+  cards.forEach(card=>{
+    const body=card.querySelector(".sd-expand-body");
+    const btn=card.querySelector(".sd-expand-toggle");
+    if(!body||!btn)return;
+
+    card.classList.remove("is-collapsed");
+    btn.hidden=true;
+    btn.textContent="Xem thêm";
+
+    const maxHeight=window.innerWidth<=760?220:245;
+    const needsToggle=body.scrollHeight>maxHeight+8;
+
+    if(needsToggle){
+      card.classList.add("is-collapsed");
+      btn.hidden=false;
+    }
+
+    if(btn.dataset.bound==="1")return;
+    btn.dataset.bound="1";
+    btn.addEventListener("click",()=>{
+      const opening=card.classList.contains("is-collapsed");
+      card.classList.toggle("is-collapsed",!opening);
+      btn.textContent=opening?"Thu gọn":"Xem thêm";
+      requestAnimationFrame(layoutOverviewMasonry);
+    });
+  });
+}
+
+let masonryResizeTimer=null;
+window.addEventListener("resize",()=>{
+  clearTimeout(masonryResizeTimer);
+  masonryResizeTimer=setTimeout(()=>{
+    setupExpandableCards();
+    layoutOverviewMasonry();
+  },100);
+});
+
 function scrollToRequestedSection(){
   const id=(location.hash||"").replace(/^#/,"");
   if(!id)return;
@@ -499,7 +586,11 @@ function render(d){
  renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);
  setDataVisible(true);
  setStatus("");
- scrollToRequestedSection();
+ requestAnimationFrame(()=>{
+   setupExpandableCards();
+   layoutOverviewMasonry();
+   scrollToRequestedSection();
+ });
 }
 async function fetchLiveQuote(symbol){
  // Primary: current-only 165 Core price snapshot from local AmiBroker.
