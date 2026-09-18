@@ -1,4 +1,4 @@
-import "./site-header-core-v20260914.js";
+import "./site-header-core-v20260914.js?v=20260918-auth2";
 
 function applyAboutHeroCopy(){
   const page=(window.location.pathname.split("/").pop()||"").toLowerCase();
