@@ -133,3 +133,29 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
   .sd-cell small{font-size:6.8px}
   .sd-analysis{font-size:8.5px}
 }
+
+
+/* Center metric cards */
+.sd-kpi{
+  align-items:center;
+  text-align:center;
+}
+.sd-kpi span,
+.sd-kpi strong,
+.sd-kpi small{
+  width:100%;
+  text-align:center;
+}
+.sd-compact-card .sd-cell{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.sd-compact-card .sd-cell span,
+.sd-compact-card .sd-cell b,
+.sd-compact-card .sd-cell small{
+  width:100%;
+  text-align:center;
+}
