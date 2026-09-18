@@ -357,6 +357,18 @@
       background:radial-gradient(circle at center,rgba(224,187,99,.95) 0 2px,transparent 3px);
       flex:0 0 auto;
     }
+    .hero-quick-links li{font-weight:700}
+    .hero-quick-links a{
+      display:inline-flex;
+      align-items:center;
+      min-height:28px;
+      color:#eef3f9;
+      transition:color .2s ease,transform .2s ease;
+    }
+    .hero-quick-links a:hover{
+      color:var(--gold-2);
+      transform:translateY(-1px);
+    }
 
     .home-hero-visual{
     position:relative;
@@ -2359,10 +2371,9 @@
               <a class="btn-secondary" href="sang-nay-can-nhin-gi.html">Sáng nay cần nhìn gì? →</a>
             </div>
 
-            <ul class="hero-proof">
-              <li>Nhìn đúng bối cảnh</li>
-              <li>Ưu tiên an toàn vốn</li>
-              <li>Có điều kiện hành động</li>
+            <ul class="hero-proof hero-quick-links" aria-label="Lối tắt cổ phiếu">
+              <li><a href="co-phieu-dang-chu-y.html">Cổ phiếu mạnh →</a></li>
+              <li><a href="stock-detail.html">Phân tích mã →</a></li>
             </ul>
           </div>
 
