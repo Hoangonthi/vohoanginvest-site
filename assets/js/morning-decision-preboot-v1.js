@@ -68,16 +68,11 @@
       @media(max-width:720px){#vhMorningDecisionLoading{min-height:220px}#vhMorningDecisionLoading .vh-load-head{padding:18px}#vhMorningDecisionLoading .vh-load-verdict{grid-template-columns:1fr;margin:12px}.vh-load-box:nth-child(2){display:none}}
     `;document.head.appendChild(s);
   }
-  const findOld=()=>{
-    for(const el of document.querySelectorAll('.overline,.section-kicker,.kicker'))if(el.textContent.trim().toLowerCase()==='tại điểm đáng chú ý')return el.closest('.card,.section,.split-card');
-    for(const el of document.querySelectorAll('h2,h3'))if(el.textContent.trim().toLowerCase().includes('những biến số có thể làm thay đổi quyết định hôm nay'))return el.closest('.card,.section,.split-card');
-    return null;
-  };
   const mountLoading=()=>{
     if(document.getElementById('vhMorningDecisionLoading'))return;
-    const anchor=findOld();if(anchor)anchor.style.display='none';
+    const mount=document.getElementById('vhDecisionMount');
     const loading=document.createElement('section');loading.id='vhMorningDecisionLoading';loading.setAttribute('aria-label','Đang mở bản phân tích gần nhất');loading.innerHTML='<div class="vh-load-head"><div class="vh-load-kicker"></div><div class="vh-load-title"></div></div><div class="vh-load-verdict"><div class="vh-load-box"></div><div class="vh-load-box"></div></div>';
-    if(anchor?.parentNode)anchor.parentNode.insertBefore(loading,anchor);else document.querySelector('main .wrap')?.appendChild(loading);
+    if(mount)mount.appendChild(loading);else document.querySelector('main .wrap')?.appendChild(loading);
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountLoading,{once:true});else mountLoading();
 })();
