@@ -158,7 +158,9 @@ function renderTechnical(d){
   ["Breakout 20D",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—"],["Breakdown 20D",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—"],
   ["KL TB20",fmtNum(t.avg_volume_20,0)],["KL / TB20",valid(t.volume_vs_avg20)?fmtNum(t.volume_vs_avg20)+"x":"—"]
  ];
- $("#technicalGrid").innerHTML=arr.map(([a,b])=>cell(a,b)).join("");
+ const insight=[technicalInsight(t),momentumInsight(t)].filter(Boolean);
+ $("#technicalGrid").innerHTML=arr.map(([a,b])=>cell(a,b)).join("")+
+   (insight.length?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${insight.map(x=>esc(x[1])).join(" ")}</div>`:"");
 }
 function renderFlow(d){
  const f=d.flow||{};
@@ -169,13 +171,15 @@ function renderFlow(d){
    <div class="sd-flow-row"><span>Dư mua - dư bán</span><b class="${cls(w?.bid_ask_surplus_net_volume)}">${fmtNum(w?.bid_ask_surplus_net_volume,0)}</b></div>
    <div class="sd-flow-row"><span>Số phiên có dữ liệu</span><b>${fmtNum(w?.rows_available,0)}</b></div>
  </div>`;
- $("#flowGrid").innerHTML=one("1 phiên",f.window_1)+one("5 phiên",f.window_5)+one("20 phiên",f.window_20);
+ const fi=flowInsight(f);
+ $("#flowGrid").innerHTML=one("1 phiên",f.window_1)+one("5 phiên",f.window_5)+one("20 phiên",f.window_20)+
+   (fi?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${esc(fi[1])}</div>`:"");
 }
 function renderFundamental(d){
  const b=d.fundamental||{};
  $("#fundamentalDate").textContent=b.snapshot_date?`Snapshot ${dateVN(b.snapshot_date)}`:"";
  if(!hasMeaningfulFundamental(b)){
-   $("#fundamentalGrid").innerHTML=`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản để phân tích. Hệ thống không diễn giải các giá trị 0 mặc định như dữ liệu thực.</div>`;
+   $("#fundamentalGrid").innerHTML=`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản để phân tích. Hệ thống không diễn giải các giá trị 0 mặc định như dữ liệu thực.</div><div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> Chưa đủ dữ liệu đáng tin cậy nên không tạo kết luận Cơ bản cho mã này.</div>`;
    return;
  }
  const fields=[
@@ -188,7 +192,9 @@ function renderFundamental(d){
   ["Shares out",b.shares_out],["Shares float",b.shares_float],["Insider %",valid(b.insider_hold_percent)?fmtPct(b.insider_hold_percent):null],["Institution %",valid(b.institution_hold_percent)?fmtPct(b.institution_hold_percent):null]
  ];
  const have=fields.filter(([,v])=>v!==null&&v!==undefined&&v!==""&&v!=="—");
- $("#fundamentalGrid").innerHTML=have.length?have.map(([a,v])=>cell(a,typeof v==="number"?fmtNum(v):v)).join(""):`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản.</div>`;
+ const fi=fundamentalInsight(b);
+ $("#fundamentalGrid").innerHTML=(have.length?have.map(([a,v])=>cell(a,typeof v==="number"?fmtNum(v):v)).join(""):`<div class="sd-empty" style="grid-column:1/-1">Mã này hiện chưa có đủ dữ liệu Cơ bản.</div>`)+
+   (fi?`<div class="sd-analysis" style="grid-column:1/-1"><b>Hệ thống đọc:</b> ${esc(fi[1])}</div>`:"");
 }
 function renderHistory(d){
  const sig=d.signals||[], ev=d.market_events||[];
@@ -197,6 +203,9 @@ function renderHistory(d){
   return `<div class="sd-list-item"><header><strong>${esc(s.signal_label||s.signal_code||"Tín hiệu")}</strong><time>${dateVN(s.signal_date)}</time></header>${s.reason?`<p>${esc(s.reason)}</p>`:""}<div class="sd-outcomes">${outs}</div></div>`;
  }).join(""):`<div class="sd-empty">Chưa có tín hiệu HT gần đây.</div>`;
  $("#eventList").innerHTML=ev.length?ev.map(e=>`<div class="sd-list-item"><header><strong>${esc(e.title)}</strong><time>${dateVN(e.event_date)}</time></header><p>${esc(e.summary||"")}</p><small>${esc(e.category||"SK")} · cách ngày đang xem ${Math.abs(Number(e.days_from_event||0))} ngày</small></div>`).join(""):`<div class="sd-empty">Không có SK trong cửa sổ thời gian hiện tại.</div>`;
+ const si=signalInsight(sig), ei=eventInsight(ev,d);
+ if(si) $("#signalList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Hệ thống đọc:</b> ${esc(si[1])}</div>`);
+ if(ei) $("#eventList").insertAdjacentHTML("beforeend",`<div class="sd-analysis"><b>Hệ thống đọc:</b> ${esc(ei[1])}</div>`);
 }
 function render(d){
  current=d;
