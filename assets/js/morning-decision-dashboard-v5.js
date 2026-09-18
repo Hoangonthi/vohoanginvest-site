@@ -118,7 +118,7 @@ function mount(decision,macroRaw,hot,anchor){const macro=macroRaw?.ok?macroRaw:m
 <div class="vh5-section vh5-change-view"><div class="vh5-sec-head"><div class="vh5-sec-title"><span class="ico">◎</span>Điều kiện đổi quan điểm</div><div class="vh5-sec-note">Chỉ đổi hành động khi dữ liệu đổi.</div></div><div class="vh5-grid3">${(brain.change_view||[]).slice(0,3).map((x,i)=>`<article class="vh5-card warn" data-vh-change="${i}"><div class="vh5-card-head"><div class="vh5-num">0${i+1}</div><div><div class="vh5-cat">ĐIỀU KIỆN XÁC NHẬN</div><h3>${esc(x)}</h3></div></div></article>`).join('')}</div></div>
 <div class="vh5-foot"><span>◷ Cập nhật: ${new Date(decision.generated_at||Date.now()).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})} (GMT+7)</span><a href="tin-tuc-24h.html">Xem Tin tức 24h →</a></div>
 <div class="vh5-pop-layer" aria-hidden="true"><aside class="vh5-pop"><div class="vh5-pop-in"></div></aside></div>`;
-if(anchor?.parentNode)anchor.parentNode.insertBefore(host,anchor);else document.querySelector('main .wrap')?.appendChild(host);
+const mountPoint=document.getElementById('vhDecisionMount');if(mountPoint)mountPoint.appendChild(host);else {const mountPoint=document.getElementById('vhDecisionMount');if(mountPoint)mountPoint.appendChild(host);else if(anchor?.parentNode)anchor.parentNode.insertBefore(host,anchor);else document.querySelector('main .wrap')?.appendChild(host)};else document.querySelector('main .wrap')?.appendChild(host);
 equalizeDecisionCards(host);
 
 const layer=host.querySelector('.vh5-pop-layer'),pop=host.querySelector('.vh5-pop'),popIn=host.querySelector('.vh5-pop-in');let pinned=false,activeButton=null,openTimer=null,closeTimer=null;const hover=window.matchMedia?.('(hover:hover) and (pointer:fine)').matches;
