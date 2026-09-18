@@ -1,4 +1,5 @@
 import { supabaseClient } from './assets/js/supabase-client.js';
+import { esc,sourceLabel } from './assets/js/admin-humanize.js';
 
 const loginBox=document.querySelector('#loginBox');
 const app=document.querySelector('#app');
@@ -17,22 +18,8 @@ const campaign=document.querySelector('#campaign');
 const makeLink=document.querySelector('#makeLink');
 const linkOut=document.querySelector('#linkOut');
 
-function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
 function pct(v){return `${Number(v||0).toFixed(1)}%`}
 function clean(v,max){return String(v||'').trim().replace(/[^a-zA-Z0-9._-]/g,'-').replace(/-+/g,'-').slice(0,max)}
-function humanSource(s=''){
-  const x=String(s);
-  const src=x.match(/src=([^|]+)/)?.[1];
-  const ref=x.match(/ref=([^|]+)/)?.[1];
-  const cmp=x.match(/cmp=([^|]+)/)?.[1];
-  const base=x.split('|')[0]||x;
-  const labels=[];
-  if(src) labels.push(src.toUpperCase()); else labels.push(base);
-  if(ref) labels.push(`REF:${ref}`);
-  if(cmp) labels.push(cmp);
-  return labels.join(' · ');
-}
-
 async function load(){
   body.innerHTML='<tr><td colspan="7">Đang tải...</td></tr>';
   empty.classList.add('hidden');
@@ -46,7 +33,7 @@ async function load(){
   empty.classList.toggle('hidden',rows.length>0);
   for(const r of rows){
     body.insertAdjacentHTML('beforeend',`<tr>
-      <td><strong>${esc(humanSource(r.source))}</strong><div style="font-size:.78rem;color:#788394">${esc(r.source)}</div></td>
+      <td><strong>${esc(sourceLabel(r.source))}</strong><details class="admin-tech"><summary>Xem thông tin kỹ thuật</summary><code>${esc(r.source)}</code></details></td>
       <td>${Number(r.customers||0)}</td>
       <td>${Number(r.completed_assessments||0)}</td>
       <td>${Number(r.meeting_requests||0)}</td>
