@@ -329,6 +329,9 @@ function renderOverview(d){
 
   $("#supportList").innerHTML=a.support.length?a.support.slice(0,7).map(thesisItem).join(""):`<div class="sd-empty">Chưa có đủ lớp dữ liệu tạo thành điểm ủng hộ rõ ràng.</div>`;
   $("#riskList").innerHTML=a.risk.length?a.risk.slice(0,7).map(thesisItem).join(""):`<div class="sd-empty">Hiện chưa xuất hiện điểm đối nghịch nổi bật trong các dữ liệu đang có.</div>`;
+  if($("#supportCount")) $("#supportCount").textContent=a.support.length?`${Math.min(a.support.length,7)} điểm tích cực`:"";
+  if($("#riskCount")) $("#riskCount").textContent=a.risk.length?`${Math.min(a.risk.length,7)} điểm cần lưu ý`:"";
+  if($("#changeCount")) $("#changeCount").textContent=a.change.length?`${a.change.length} điều kiện`:"";
   $("#scenarioGrid").innerHTML=a.scenarios.map(s=>scenarioCard(s.kind,s.title,s.condition,s.meaning,s.watch)).join("");
   $("#changeView").innerHTML=a.change.map(thesisItem).join("");
   $("#historyEdge").innerHTML=renderHistoryEdge(d);
