@@ -844,3 +844,53 @@ button,input{font:inherit}.sd-main{padding:22px 0 50px}.sd-wrap{width:min(calc(1
     text-align:center!important;
   }
 }
+
+
+/* Premium regime -> action line */
+.sd-regime-action{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:5px;
+}
+.sd-regime-title,
+.sd-action-title{
+  display:block;
+  margin:0!important;
+}
+.sd-action-title{
+  color:var(--sd-gold)!important;
+  font-size:24px!important;
+  letter-spacing:-.02em;
+}
+.sd-premium-arrow{
+  color:var(--sd-gold);
+  font-style:normal;
+  font-size:24px;
+  line-height:1;
+  opacity:.9;
+  transform:translateY(-1px);
+}
+
+@media(max-width:980px){
+  .sd-regime-action{
+    gap:8px;
+  }
+  .sd-regime-title,
+  .sd-action-title{
+    width:100%;
+  }
+  .sd-premium-arrow{
+    transform:rotate(90deg);
+    margin:0 auto;
+    font-size:20px;
+  }
+  .sd-action-title{
+    text-align:center!important;
+    font-size:19px!important;
+  }
+  .sd-regime-title{
+    text-align:center!important;
+  }
+}
