@@ -34,6 +34,11 @@ function vhGlobal(d,symbol){return(d?.global_markets||[]).find(x=>x.symbol===sym
 
 function vhMarket(d){
   const score=vhn(d?.market?.state?.score)??50;
+  const brain=d?.brain;
+  if(brain?.conclusion?.label){
+    const tone=d?.evaluation?.decision_tone==="negative"?"negative":d?.evaluation?.decision_tone==="positive"?"positive":"neutral";
+    return{score,label:String(brain.conclusion.label),tone,action:String(brain.conclusion.summary||"")};
+  }
   if(score<=25)return{score,label:'PHÒNG THỦ CAO',tone:'risk',action:'Ưu tiên giảm rủi ro danh mục, hạn chế mở vị thế mới và không dùng đòn bẩy để bắt đáy.'};
   if(score<40)return{score,label:'THẬN TRỌNG',tone:'negative',action:'Chưa phù hợp để mở rộng danh mục trên diện rộng; giữ tỷ trọng an toàn và chỉ chọn mã khỏe hơn thị trường.'};
   if(score<55)return{score,label:'TRUNG TÍNH / CHỌN LỌC',tone:'neutral',action:'Chưa có lợi thế đủ rõ để tăng mạnh tỷ trọng; giữ vị thế tốt và chờ độ rộng, dòng tiền xác nhận.'};
