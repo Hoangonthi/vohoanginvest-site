@@ -71,8 +71,18 @@ function renderStrip(snapshot){
     strongStocks?`<span class="market-context-item"><span>Mã mạnh</span><b class="up">${esc(strongStocks)}</b></span>`:"",
     weakStocks?`<span class="market-context-item"><span>Mã yếu</span><b class="down">${esc(weakStocks)}</b></span>`:""
   ].filter(Boolean).join("");
-  const duration=Math.max(34,Math.min(70,Math.round(items.length/18)));
-  el.innerHTML=`<div class="market-marquee" style="--marquee-duration:${duration}s"><div class="market-marquee-track"><div class="market-marquee-group">${items}</div><div class="market-marquee-group" aria-hidden="true">${items}</div></div></div>`;
+
+  el.innerHTML=`<div class="market-marquee"><div class="market-marquee-track"><div class="market-marquee-group">${items}</div><div class="market-marquee-group" aria-hidden="true">${items}</div></div></div>`;
+
+  requestAnimationFrame(()=>{
+    const track=el.querySelector(".market-marquee-track");
+    const first=el.querySelector(".market-marquee-group");
+    if(!track||!first)return;
+    const distance=first.getBoundingClientRect().width;
+    const duration=Math.max(26,Math.min(72,distance/52));
+    track.style.setProperty("--marquee-shift",`-${distance}px`);
+    track.style.setProperty("--marquee-duration",`${duration}s`);
+  });
 }
 
 function sectorRows(snapshot){return Array.isArray(snapshot?.sectors?.all)?snapshot.sectors.all:[];}
@@ -237,31 +247,6 @@ function renderTimeline(){
   list.innerHTML=comments.map(c=>`<article class="timeline-item ${esc(c.tone||"neutral")}"><div class="timeline-time">${timeText(c.published_at)}</div><h3>${esc(c.headline)}</h3><p>${esc(c.body)}</p>${c.watch_next?`<div class="timeline-watch"><b>Nhìn tiếp:</b> ${esc(c.watch_next)}</div>`:""}${adminActions(c)}</article>`).join("");
 }
 
-function renderMarketNow(snapshot){
-  const root=$("marketNow");if(!root||!snapshot)return;
-  const v=snapshot.vnindex||{},t=snapshot.technical||{},state=snapshot.state||{},flow=snapshot.flow||{},w=snapshot.world||{},below=w?.zones?.nearest_below,above=w?.zones?.nearest_above;
-  const zoneText=below&&above?`${esc(below.label)} ${fmt(below.value,1)} ↔ ${esc(above.label)} ${fmt(above.value,1)}`:below?`${esc(below.label)} ${fmt(below.value,1)}`:above?`${esc(above.label)} ${fmt(above.value,1)}`:"—";
-  root.innerHTML=`
-    <div class="side-grid context-summary">
-      <div class="side-cell"><span>Trạng thái</span><b>${esc(state.label||"Đang theo dõi")} · ${num(state.score)!==null?`${Math.round(state.score)}/100`:"—"}</b></div>
-      <div class="side-cell"><span>Nhịp tiền</span><b>${esc(flow.label||"—")}</b></div>
-      <div class="side-cell wide"><span>Vùng gần nhất</span><b>${zoneText}</b></div>
-    </div>
-    <details class="side-details">
-      <summary>+ Xem kỹ thuật chi tiết</summary>
-      <div class="side-grid technical-detail">
-        <div class="side-cell"><span>Đỉnh / đáy phiên</span><b>${fmt(v.high,1)} / ${fmt(v.low,1)}</b></div>
-        <div class="side-cell"><span>MA10 / MA20</span><b>${fmt(t.ma10,1)} / ${fmt(t.ma20,1)}</b></div>
-        <div class="side-cell"><span>VWAP</span><b>${fmt(t.vwap,1)}</b></div>
-        <div class="side-cell"><span>RSI14</span><b>${fmt(t.rsi14,1)}</b></div>
-        <div class="side-cell"><span>MA50</span><b>${fmt(t.ma50,1)}</b></div>
-        <div class="side-cell"><span>Thanh khoản</span><b>${num(v.value_b)!==null?`${fmt(v.value_b,1)} tỷ`:"—"}</b></div>
-      </div>
-      ${snapshot.technical_available?"":`<div class="side-data-note">AFL kỹ thuật chưa gửi snapshot hợp lệ; hệ thống không hiển thị mức 0 giả.</div>`}
-    </details>`;
-}
-
-function stockPct(row){return num(row?.change_pct??row?.changePct??row?.pct);}
 
 function renderSnapshot(snapshot){setStatus(snapshot);if(!snapshot)return;renderStrip(snapshot);}
 function mergeComments(items=[],replace=false){if(replace){commentsById.clear();maxCommentId=0;}for(const c of items){const id=Number(c?.id);if(!Number.isFinite(id))continue;commentsById.set(id,c);maxCommentId=Math.max(maxCommentId,id);}renderLatest();renderTimeline();}
@@ -279,7 +264,6 @@ async function load(initial=false){
     renderSnapshot(latestSnapshot);
     mergeComments(Array.isArray(data.comments)?data.comments:[],full);
     renderLatest();
-    if(!data.latest){const now=$("marketNow");if(now)now.innerHTML=`<div class="empty">Chưa có dữ liệu live hôm nay. Hệ thống bắt đầu ghi khi AmiBridge chạy trong giờ giao dịch.</div>`;}
   }catch(error){console.warn("Market live load failed",error);const status=$("liveStatus");if(status){status.classList.add("off");status.querySelector("span").textContent="Chưa kết nối được dữ liệu";}}
 }
 
@@ -345,6 +329,24 @@ function printHistoryFallback(html){
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Bình luận thị trường</title><style>@page{size:A4;margin:14mm}body{margin:0;background:#fff}</style></head><body>${html}<script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
   w.document.close();
 }
+function ensureHtml2Pdf(){
+  if(typeof window.html2pdf==="function")return Promise.resolve(true);
+  return new Promise(resolve=>{
+    const existing=document.querySelector('script[data-html2pdf]');
+    if(existing){
+      existing.addEventListener("load",()=>resolve(typeof window.html2pdf==="function"),{once:true});
+      existing.addEventListener("error",()=>resolve(false),{once:true});
+      return;
+    }
+    const script=document.createElement("script");
+    script.src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js";
+    script.defer=true;
+    script.dataset.html2pdf="1";
+    script.onload=()=>resolve(typeof window.html2pdf==="function");
+    script.onerror=()=>resolve(false);
+    document.head.appendChild(script);
+  });
+}
 async function exportCommentsPdf(){
   const btn=$("exportCommentsPdfBtn"),info=$("historyInfo");
   if(btn)btn.disabled=true;if(info)info.textContent="Đang chuẩn bị PDF…";
@@ -356,7 +358,8 @@ async function exportCommentsPdf(){
     wrap.style.cssText="position:fixed;left:-100000px;top:0;width:760px;background:#fff;padding:24px;z-index:-1";
     wrap.innerHTML=pdfHistoryHtml(comments);document.body.appendChild(wrap);
     const html=wrap.firstElementChild;
-    if(typeof window.html2pdf==="function"){
+    const pdfReady=await ensureHtml2Pdf();
+    if(pdfReady&&typeof window.html2pdf==="function"){
       await window.html2pdf().set({
         margin:[10,10,10,10],
         filename:`binh-luan-thi-truong-${vnDateKey()}.pdf`,
