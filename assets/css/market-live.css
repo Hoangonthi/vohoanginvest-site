@@ -142,7 +142,7 @@ button,input,textarea{font:inherit}
 
 @keyframes vhMarketLoop{
   from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(calc(-1 * var(--marquee-distance,50%)),0,0)}
+  to{transform:translate3d(var(--marquee-shift,-50%),0,0)}
 }
 
 .live-grid{
