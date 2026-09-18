@@ -1,17 +1,30 @@
 import { supabaseClient } from './assets/js/supabase-client.js';
+import {
+  calcStopTargetRR,
+  calcDeploymentPlan,
+  calcMarginThresholds,
+  calcActualLeverage,
+  calcLosingStreak,
+  calcPortfolioConcentration,
+  calcDividendYield,
+  calcCostBasisAfterRights
+} from './assets/js/investor-calculator-math.js?v=20260918-1';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const n=id=>Number($(id)?.value||0), fmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:0}).format(Number(v||0)), money=v=>`${fmt(v)} đ`, pct=v=>`${Number(v||0).toFixed(1)}%`, num=v=>fmt(v);
+const qtyFmt=v=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:4}).format(Number(v||0));
+const ratioFmt=v=>new Intl.NumberFormat('vi-VN',{minimumFractionDigits:0,maximumFractionDigits:2}).format(Number(v||0));
+const hhiFmt=v=>new Intl.NumberFormat('vi-VN',{minimumFractionDigits:4,maximumFractionDigits:4}).format(Number(v||0));
 const ceilLot=(q,l)=>Math.ceil(q/l)*l, floorLot=(q,l)=>Math.floor(q/l)*l;
 function verdict(el,text,tone=''){if(!el)return;el.textContent=text;el.className=`verdict ${tone}`.trim()}
 function clearValidation(id){if($(id))$(id).textContent=''} function validate(id,msg){if($(id))$(id).textContent=msg;return false}
 function bind(id,fn){const el=$(id);if(el)el.addEventListener('submit',fn)}
 
 const TOOL_GROUPS=[
-  {id:'prebuy',title:'Trước mua',tools:['position','rr']},
+  {id:'prebuy',title:'Trước mua',tools:['position','rr','starr','deployment']},
   {id:'holding',title:'Đang giữ / xử lý vị thế',tools:['average','breakeven','deleverage','recovercapital']},
-  {id:'margin',title:'Margin',tools:['margin','margincost']},
-  {id:'risk',title:'Rủi ro',tools:['drawdown','portfolio']},
-  {id:'rights',title:'Cổ tức / quyền',tools:['dividend','exright']}
+  {id:'margin',title:'Margin',tools:['margin','margincost','mcall','leverage']},
+  {id:'risk',title:'Rủi ro',tools:['drawdown','portfolio','streak','concentration']},
+  {id:'rights',title:'Cổ tức / quyền',tools:['dividend','exright','divyield','costrights']}
 ];
 function setToolGroupOpen(group,open){if(!group)return;group.classList.toggle('open',open);const toggle=group.querySelector('.tool-group-toggle');if(toggle)toggle.setAttribute('aria-expanded',String(open))}
 function setupToolAccordion(){
