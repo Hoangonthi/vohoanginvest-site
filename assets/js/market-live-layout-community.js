@@ -197,7 +197,6 @@ function communityShell(){
   panel.innerHTML=`
     <div class="panel-head"><h2>Bình luận cộng đồng</h2><span>Người dùng đã đăng nhập</span></div>
     <div class="side-body">
-      <div class="community-copy">Trao đổi ngắn về diễn biến đang theo dõi. Bình luận hiển thị tối đa 7 ngày.</div>
       <div id="communityComposer"></div>
       <div class="community-msg" id="communityMsg"></div>
       <div class="community-list" id="communityList"><div class="community-empty">Đang tải bình luận...</div></div>
@@ -215,7 +214,7 @@ function renderComposer(){
   }
   root.innerHTML=`
     <div class="community-compose">
-      <textarea id="communityText" maxlength="800" placeholder="Bạn đang quan sát điều gì? Viết ngắn gọn, tập trung vào diễn biến thị trường..."></textarea>
+      <textarea id="communityText" maxlength="800" placeholder="Bạn đang chú ý điều gì? Chia sẻ ngắn gọn góc nhìn về diễn biến thị trường."></textarea>
       <div class="community-compose-foot">
         <span class="community-identity">Đang bình luận với tên: ${esc(userLabel(communityUser))}</span>
         <button class="community-submit" type="button" id="communitySubmit">Đăng bình luận</button>
