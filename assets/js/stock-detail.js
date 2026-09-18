@@ -28,51 +28,111 @@ function hasMeaningfulFundamental(b){
   const core=[b.eps,b.book_value_per_share,b.sales_per_share,b.return_on_equity,b.return_on_assets,b.gross_profit_per_share,b.ebitda_per_share];
   return core.some(v=>valid(v)&&Number(v)!==0);
 }
-function summaryLine(title,text){
-  return `<div class="sd-summary-item"><b>•</b><div><b>${esc(title)}:</b> ${esc(text)}</div></div>`;
+function summaryLine(title,text,tone=""){
+  return `<div class="sd-summary-item ${tone}"><b>•</b><div><b>${esc(title)}:</b> ${esc(text)}</div></div>`;
+}
+function technicalInsight(t){
+  if(!valid(t.close)) return null;
+  const c=Number(t.close), m20=valid(t.ma20)?Number(t.ma20):null, m50=valid(t.ma50)?Number(t.ma50):null, m200=valid(t.ma200)?Number(t.ma200):null;
+  if(m20!==null&&m50!==null&&m200!==null){
+    if(c>m20&&c>m50&&c>m200) return ["Xu hướng","Giá đang nằm trên MA20, MA50 và MA200; cấu trúc giá hiện đồng thuận theo hướng tích cực.","positive"];
+    if(c>m20&&c>m50&&c<m200) return ["Xu hướng","Giá đã đứng trên MA20 và MA50 nhưng vẫn dưới MA200; ngắn–trung hạn cải thiện, xu hướng dài hơn chưa xác nhận hoàn toàn.","watch"];
+    if(c<m20&&c<m50&&c<m200) return ["Xu hướng","Giá đang dưới cả MA20, MA50 và MA200; cấu trúc hiện vẫn yếu và cần tín hiệu cải thiện trước khi nói đến xu hướng bền hơn.","negative"];
+  }
+  if(m20!==null) return ["Xu hướng",`Giá đang ${c>m20?"trên":"dưới"} MA20; đây là tín hiệu ngắn hạn, cần đặt cùng MA50/MA200 để đọc đầy đủ hơn.`,c>m20?"positive":"watch"];
+  return null;
+}
+function momentumInsight(t){
+  const r=valid(t.rsi14)?Number(t.rsi14):null, v=valid(t.volume_vs_avg20)?Number(t.volume_vs_avg20):null;
+  const parts=[];
+  let tone="";
+  if(r!==null){
+    if(r>=70){parts.push(`RSI14 ${fmtNum(r)} đang ở vùng cao; động lượng mạnh nhưng dư địa ngắn hạn không còn rộng như trước.`);tone="watch"}
+    else if(r>=50){parts.push(`RSI14 ${fmtNum(r)} nằm trên 50, cho thấy động lượng hiện nghiêng tích cực.`);tone="positive"}
+    else if(r<=30){parts.push(`RSI14 ${fmtNum(r)} ở vùng thấp; áp lực giảm đã lớn nhưng đây không tự động là tín hiệu tạo đáy.`);tone="negative"}
+    else {parts.push(`RSI14 ${fmtNum(r)} dưới 50, động lượng hiện chưa mạnh.`);tone="watch"}
+  }
+  if(v!==null){
+    if(v>=1.2) parts.push(`Khối lượng phiên gần nhất bằng ${fmtNum(v)}x trung bình 20 phiên, cho thấy mức tham gia cao hơn bình thường.`);
+    else if(v<=0.8) parts.push(`Khối lượng chỉ bằng ${fmtNum(v)}x trung bình 20 phiên, nên tín hiệu giá hiện chưa có sự xác nhận mạnh từ thanh khoản.`);
+  }
+  return parts.length?["Động lượng & thanh khoản",parts.join(" "),tone]:null;
+}
+function flowInsight(f){
+  const w5=f?.window_5||{}, w20=f?.window_20||{};
+  const items=[];
+  const build=(label,v5,v20)=>{
+    if(!valid(v5)&&!valid(v20)) return;
+    if(valid(v5)&&valid(v20)){
+      const a=Number(v5),b=Number(v20);
+      if(a>0&&b>0) items.push(`${label} đang mua ròng cả 5 và 20 phiên, dòng tiền có tính duy trì.`);
+      else if(a<0&&b<0) items.push(`${label} đang bán ròng cả 5 và 20 phiên, áp lực chưa chỉ là một phiên đơn lẻ.`);
+      else if(a>0&&b<0) items.push(`${label} 5 phiên chuyển sang mua ròng nhưng 20 phiên vẫn âm; có cải thiện ngắn hạn nhưng chưa đảo được bức tranh dài hơn.`);
+      else if(a<0&&b>0) items.push(`${label} 5 phiên chuyển sang bán ròng trong khi 20 phiên vẫn dương; cần theo dõi đây là chốt lời ngắn hay thay đổi xu hướng dòng tiền.`);
+    }else{
+      const v=valid(v5)?Number(v5):Number(v20), n=valid(v5)?5:20;
+      items.push(`${label} ${n} phiên đang ${v>=0?"mua":"bán"} ròng ${fmtNum(Math.abs(v),0)} cp.`);
+    }
+  };
+  build("Khối ngoại",w5.foreign_net_volume,w20.foreign_net_volume);
+  build("Tự doanh",w5.proprietary_net_volume,w20.proprietary_net_volume);
+  if(!items.length) return null;
+  return ["Dòng tiền",items.join(" "),""];
+}
+function fundamentalInsight(b){
+  if(!hasMeaningfulFundamental(b)) return ["Cơ bản","Hiện chưa đủ dữ liệu Cơ bản đáng tin cậy để hệ thống diễn giải; phần này được để trống thay vì suy đoán.","watch"];
+  const parts=[];
+  if(valid(b.return_on_equity)) parts.push(`ROE hiện ${fmtPct(b.return_on_equity)}`);
+  if(valid(b.profit_margin)) parts.push(`biên lợi nhuận ${fmtPct(b.profit_margin)}`);
+  if(valid(b.qtrly_revenue_growth)) parts.push(`tăng trưởng doanh thu quý ${fmtPct(b.qtrly_revenue_growth)}`);
+  if(valid(b.qtrly_earnings_growth)) parts.push(`tăng trưởng lợi nhuận quý ${fmtPct(b.qtrly_earnings_growth)}`);
+  const val=[];
+  if(valid(b.pe)) val.push(`P/E ${fmtNum(b.pe)}`);
+  if(valid(b.pb)) val.push(`P/B ${fmtNum(b.pb)}`);
+  let text=parts.length?parts.join(" · ")+".":"Có snapshot Cơ bản nhưng số liệu hoạt động còn hạn chế.";
+  if(val.length) text+=` Định giá đang ghi nhận ${val.join(" · ")}; chưa nên gọi là rẻ/đắt nếu chưa đặt cạnh lịch sử và doanh nghiệp cùng ngành.`;
+  return ["Cơ bản",text,""];
+}
+function signalInsight(sig){
+  if(!sig?.length) return null;
+  const s=sig[0], outs=Array.isArray(s.outcomes)?s.outcomes:[];
+  let text=`Tín hiệu gần nhất là ${s.signal_label||s.signal_code||"tín hiệu kỹ thuật"} ngày ${dateVN(s.signal_date)}.`;
+  const settled=outs.filter(o=>valid(o.return_pct));
+  if(settled.length){
+    text+= " Kết quả lịch sử đã ghi nhận: "+settled.slice(0,4).map(o=>`T+${o.horizon_sessions} ${fmtPct(o.return_pct)}`).join(" · ")+". Đây là kết quả sau tín hiệu đã xảy ra, không phải dự báo.";
+  }
+  return ["Tín hiệu HT",text,""];
+}
+function eventInsight(ev,d){
+  if(!ev?.length) return null;
+  const nearest=[...ev].sort((a,b)=>Math.abs(Number(a.days_from_event||0))-Math.abs(Number(b.days_from_event||0)))[0];
+  return ["Bối cảnh sự kiện",`Có ${ev.length} SK trong cửa sổ quanh ${dateVN(d.effective_as_of_date)}; gần nhất: “${nearest.title}” (${dateVN(nearest.event_date)}). SK chỉ là bối cảnh, không mặc định là nguyên nhân biến động giá.`,""];
 }
 function renderOverview(d){
   const t=d.technical||{}, f=d.flow||{}, b=d.fundamental||{}, sig=d.signals||[], ev=d.market_events||[];
   $("#overviewKpis").innerHTML=[
-    metric("Giá đóng cửa",fmtNum(t.close),dateVN(d.effective_as_of_date)),
-    metric("1 phiên",fmtPct(t.change_1d_pct),"So với phiên trước",cls(t.change_1d_pct)),
-    metric("20 phiên",fmtPct(t.return_20d_pct),"Biến động 20 phiên",cls(t.return_20d_pct)),
-    metric("RSI 14",fmtNum(t.rsi14),valid(t.rsi14)?(Number(t.rsi14)>=70?"Vùng cao":Number(t.rsi14)<=30?"Vùng thấp":"Trung tính"):""),
-    metric("So MA20",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"Trên MA20":"Dưới MA20"):"—",valid(t.ma20)?`MA20: ${fmtNum(t.ma20)}`:"",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"up":"down"):""),
-    metric("Flow ngoại 20P",fmtNum(f.window_20?.foreign_net_volume,0),"Khối lượng ròng",cls(f.window_20?.foreign_net_volume))
+    metric("Giá",fmtNum(t.close),dateVN(d.effective_as_of_date)),
+    metric("1 phiên",fmtPct(t.change_1d_pct),"",cls(t.change_1d_pct)),
+    metric("20 phiên",fmtPct(t.return_20d_pct),"",cls(t.return_20d_pct)),
+    metric("RSI14",fmtNum(t.rsi14),valid(t.rsi14)?(Number(t.rsi14)>=70?"Vùng cao":Number(t.rsi14)>=50?"Trên 50":Number(t.rsi14)<=30?"Vùng thấp":"Dưới 50"):""),
+    metric("MA20",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"Trên":"Dưới"):"—",valid(t.ma20)?fmtNum(t.ma20):"",valid(t.ma20)&&valid(t.close)?(Number(t.close)>Number(t.ma20)?"up":"down"):""),
+    metric("Ngoại 20P",fmtNum(f.window_20?.foreign_net_volume,0),"cp ròng",cls(f.window_20?.foreign_net_volume))
   ].join("");
 
-  const lines=[];
-  if(valid(t.close)){
-    const pos=[];
-    [["MA20",t.ma20],["MA50",t.ma50],["MA200",t.ma200]].forEach(([name,v])=>{if(valid(v))pos.push(`${Number(t.close)>Number(v)?"trên":"dưới"} ${name}`)});
-    if(pos.length) lines.push(summaryLine("Vị trí giá",`Giá ${fmtNum(t.close)} đang ${pos.join(", ")}.`));
-  }
-  if(valid(t.return_5d_pct)||valid(t.return_20d_pct)||valid(t.return_60d_pct)){
-    lines.push(summaryLine("Biến động",`5 phiên ${fmtPct(t.return_5d_pct)}, 20 phiên ${fmtPct(t.return_20d_pct)}, 60 phiên ${fmtPct(t.return_60d_pct)}.`));
-  }
-  if(f.window_20){
-    const parts=[];
-    if(valid(f.window_20.foreign_net_volume)) parts.push(`khối ngoại ${Number(f.window_20.foreign_net_volume)>=0?"mua":"bán"} ròng ${fmtNum(Math.abs(f.window_20.foreign_net_volume),0)} cp`);
-    if(valid(f.window_20.proprietary_net_volume)) parts.push(`tự doanh ${Number(f.window_20.proprietary_net_volume)>=0?"mua":"bán"} ròng ${fmtNum(Math.abs(f.window_20.proprietary_net_volume),0)} cp`);
-    if(parts.length) lines.push(summaryLine("Flow 20 phiên",parts.join("; ")+"."));
-  }
-  if(hasMeaningfulFundamental(b)){
-    const parts=[];
-    if(valid(b.return_on_equity))parts.push(`ROE ${fmtPct(b.return_on_equity)}`);
-    if(valid(b.eps))parts.push(`EPS ${fmtNum(b.eps)}`);
-    if(valid(b.pe))parts.push(`P/E ${fmtNum(b.pe)}`);
-    if(valid(b.pb))parts.push(`P/B ${fmtNum(b.pb)}`);
-    if(parts.length) lines.push(summaryLine("Cơ bản",parts.join(" · ")+"."));
-  }
-  if(sig.length) lines.push(summaryLine("Tín hiệu HT gần nhất",`${sig[0].signal_label||sig[0].signal_code||"Có tín hiệu"} ngày ${dateVN(sig[0].signal_date)}.`));
-  if(ev.length) lines.push(summaryLine("Bối cảnh SK",`Có ${ev.length} sự kiện thị trường nằm trong vùng thời gian quanh ${dateVN(d.effective_as_of_date)}.`));
+  const insights=[
+    technicalInsight(t),
+    momentumInsight(t),
+    flowInsight(f),
+    fundamentalInsight(b),
+    signalInsight(sig),
+    eventInsight(ev,d)
+  ].filter(Boolean);
 
-  $("#overviewHeading").textContent=`${d.symbol} tại ${dateVN(d.effective_as_of_date)}`;
-  $("#overviewSummary").innerHTML=lines.length?lines.join(""):`<div class="sd-empty">Chưa đủ dữ liệu để tạo tóm tắt.</div>`;
+  $("#overviewHeading").textContent=`${d.symbol} · đọc nhanh tại ${dateVN(d.effective_as_of_date)}`;
+  $("#overviewSummary").innerHTML=insights.map(x=>summaryLine(x[0],x[1],x[2])).join("");
 
   $("#overviewDeep").innerHTML=`
-    <article class="sd-card"><div class="sd-card-head"><div><span>ĐIỂM CẦN NHÌN</span><h2>Kỹ thuật & Flow</h2></div></div>
+    <article class="sd-card sd-compact-card"><div class="sd-card-head"><div><span>CHỈ BÁO XÁC NHẬN</span><h2>Kỹ thuật & Flow</h2></div></div>
       <div class="sd-grid">
         ${cell("Breakout 20D",t.breakout_20d===true?"Có":t.breakout_20d===false?"Chưa":"—")}
         ${cell("Breakdown 20D",t.breakdown_20d===true?"Có":t.breakdown_20d===false?"Chưa":"—")}
@@ -80,12 +140,12 @@ function renderOverview(d){
         ${cell("Ngoại 5P",fmtNum(f.window_5?.foreign_net_volume,0),"",cls(f.window_5?.foreign_net_volume))}
       </div>
     </article>
-    <article class="sd-card"><div class="sd-card-head"><div><span>DỮ LIỆU ĐANG CÓ</span><h2>Độ phủ hồ sơ</h2></div></div>
+    <article class="sd-card sd-compact-card"><div class="sd-card-head"><div><span>ĐỘ PHỦ DỮ LIỆU</span><h2>Hệ thống đang biết gì</h2></div></div>
       <div class="sd-grid">
         ${cell("D1",valid(t.bars_used)?fmtNum(t.bars_used,0)+" phiên":"—")}
         ${cell("Cơ bản",hasMeaningfulFundamental(b)?"Có":"Chưa đủ")}
-        ${cell("Tín hiệu HT",String(sig.length))}
-        ${cell("SK liên quan",String(ev.length))}
+        ${cell("HT",String(sig.length))}
+        ${cell("SK",String(ev.length))}
       </div>
     </article>`;
 }
