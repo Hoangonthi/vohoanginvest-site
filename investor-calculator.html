@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Giữ stylesheet cũ để không phá logic/class hiện có -->
-  <link rel="stylesheet" href="assets/css/investor-calculator.css?v=20260918-2">
+  <link rel="stylesheet" href="assets/css/investor-calculator.css?v=20260918-3">
 
   <style>
     :root{
@@ -4099,7 +4099,7 @@
               <label>Giá trị thị trường tài sản (đồng)
                 <input id="mcallMarketValue" type="number" min="0" step="any" value="500000000">
               </label>
-              <label>Số cổ phiếu của mã đang mô phỏng
+              <label>Nếu toàn bộ V là 1 mã: số cổ phiếu (Q)
                 <input id="mcallQty" type="number" min="0" step="1" value="10000">
               </label>
               <label>Ngưỡng Margin Call R (%)
@@ -4121,13 +4121,13 @@
             </div>
             <div class="metric-grid">
               <div><span>Giá trị tài sản tại Margin Call</span><b id="mcallCallValue">—</b></div>
-              <div><span>Giá/cp ước tính tại Margin Call</span><b id="mcallCallPrice">—</b></div>
+              <div><span>Giá/cp ước tính nếu toàn bộ V là 1 mã</span><b id="mcallCallPrice">—</b></div>
               <div><span>Giá trị tài sản tại Force Sell</span><b id="mcallForceValue">—</b></div>
-              <div><span>Giá/cp ước tính tại Force Sell</span><b id="mcallForcePrice">—</b></div>
+              <div><span>Giá/cp Force Sell nếu toàn bộ V là 1 mã</span><b id="mcallForcePrice">—</b></div>
             </div>
             <div class="nba">
               <span>GIỚI HẠN CỦA MÔ HÌNH</span>
-              <p id="mcallAction">Đây là ước tính theo D, V và ngưỡng R anh/chị nhập. Thực tế CTCK có thể tính thêm tiền mặt, tỷ lệ cho vay từng mã, haircut, lãi vay, tài sản đảm bảo và quy tắc riêng.</p>
+              <p id="mcallAction">Đây là ước tính theo D, V và ngưỡng R anh/chị nhập. Giá/cp chỉ có ý nghĩa khi toàn bộ V trong mô hình là một mã. Thực tế CTCK có thể tính thêm tiền mặt, tỷ lệ cho vay từng mã, haircut, lãi vay, tài sản đảm bảo và quy tắc riêng.</p>
             </div>
           </div>
         </div>
@@ -4446,7 +4446,7 @@
   <div id="siteFooter"></div>
 <!-- Logic máy tính giữ nguyên -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="investor-calculator.js?v=20260918-2"></script>
+  <script type="module" src="investor-calculator.js?v=20260918-3"></script>
 
 
   <!-- Menu mobile -->
