@@ -115,13 +115,15 @@ function renderFit(d){
   $("#fitGrid").innerHTML=[
     fitItem("Vốn mạnh hơn VN-Index",pct(p.stronger_than_vnindex_weight)),
     fitItem("Vốn trong ngành mạnh",pct(p.strong_sector_weight)),
-    fitItem("Vốn thuộc T+",num(p.tplus_capital_coverage)===null?"Chưa dùng":pct(p.tplus_capital_coverage),d.context?.tplus_usable?"Cùng phiên":"Nguồn không cùng phiên"),
+    fitItem("Mã trùng danh sách T+",num(p.tplus_symbol_coverage)===null?"Chưa dùng":pct(p.tplus_symbol_coverage),d.context?.tplus_usable?"Theo số mã đang giữ":"Nguồn không cùng phiên"),
+    fitItem("Vốn thuộc T+",num(p.tplus_capital_coverage)===null?"Chưa dùng":pct(p.tplus_capital_coverage),d.context?.tplus_usable?"Theo tỷ trọng vốn":"Nguồn không cùng phiên"),
     fitItem("Vốn gần kháng cự",pct(p.near_resistance_weight)),
     fitItem("Vốn yếu hơn thị trường",pct(p.weaker_than_market_weight)),
     fitItem("Account Alpha",alpha===null?"Chưa đủ dữ liệu":(alpha>0?"+":"")+fmt(alpha,2)+" điểm %"),
     fitItem("VN-Index",(num(m.vnindex_change_pct)>0?"+":"")+pct(m.vnindex_change_pct,2)),
     fitItem("Market Score",num(m.market_score)===null?"—":Math.round(m.market_score)+"/100"),
-    fitItem("Trạng thái thị trường",m.market_state||"—")
+    fitItem("Trạng thái thị trường",m.market_state||"—"),
+    ...(m.morning_context?.macro_regime?[fitItem("Bối cảnh sáng nay",m.morning_context.macro_regime,"Morning Decision Brain")]:[])
   ].join("");
   const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[];
   $("#scoreDrivers").innerHTML=drivers.length?drivers.map(x=>'<div class="pf-driver '+esc(x.tone||"")+'">'+esc(x.text)+'</div>').join(""):'<div class="pf-driver">Chưa có đủ yếu tố để giải thích điểm số sâu hơn.</div>';
