@@ -240,7 +240,17 @@ async function saveSnapshot(d,input){
   const ins=await supabaseClient.from("portfolio_decision_snapshots").insert({
     auth_user_id:session.user.id,portfolio_hash:d.portfolio_hash||null,portfolio_score:p.portfolio_score,
     market_fit_score:p.market_fit_score,risk_score:p.risk_score,market_score:m.market_score,account_alpha:p.account_alpha,
-    data_confidence:c.label||null,input_payload:input,decision_payload:d
+    data_confidence:c.label||null,
+    market_date:d.context?.market_date||null,
+    portfolio_change_pct:p.portfolio_change_pct,
+    vnindex_change_pct:m.vnindex_change_pct,
+    leading_weight:p.leading_weight,strong_weight:p.strong_weight,holding_weight:p.holding_weight,
+    watch_weight:p.watch_weight,weakening_weight:p.weakening_weight,risk_weight:p.risk_weight,cash_weight:p.cash_weight,
+    tplus_capital_coverage:p.tplus_capital_coverage,
+    largest_position_weight:p.largest_position_weight,top3_weight:p.top3_weight,largest_sector_weight:p.largest_sector_weight,
+    main_strength:p.main_strength||null,main_risk:p.main_risk||null,priority_action:p.priority_action||null,
+    upgrade_conditions:p.upgrade_conditions||[],downgrade_conditions:p.downgrade_conditions||[],
+    input_payload:input,decision_payload:d
   });
   if(ins.error)throw ins.error;
   message("Đã lưu snapshot vào lịch sử tài khoản.","ok");
