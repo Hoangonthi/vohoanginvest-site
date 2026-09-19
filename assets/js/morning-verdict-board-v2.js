@@ -1,3 +1,4 @@
+import { getMorningBundle } from './morning-data-client-v1.js';
 const VHB_DECISION='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test';
 const VHB_MACRO='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/macro-anchor-public';
 const VHB_HOT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed';
@@ -209,5 +210,5 @@ function vhRender(d,macro,hot){
 
 async function vhGet(url){const r=await fetch(url,{headers:{Accept:'application/json'},cache:'no-store'});const j=await r.json();if(!r.ok||!j?.ok)throw new Error(j?.error||`HTTP ${r.status}`);return j}
 async function vhWait(){for(let i=0;i<100;i++){const h=document.getElementById('vhDecisionBoardV5');if(h)return h;await new Promise(r=>setTimeout(r,80))}return null}
-async function vhInit(){vhStyle();const host=await vhWait();if(!host)return;try{const[d,m,h]=await Promise.all([vhGet(VHB_DECISION),vhGet(VHB_MACRO).catch(()=>({ok:false})),vhGet(VHB_HOT).catch(()=>({ok:false,stocks:[]}))]);await new Promise(r=>setTimeout(r,260));vhRender(d,m,h)}catch(e){console.warn('morning-verdict-board-v2',e)}}
+async function vhInit(){vhStyle();const host=await vhWait();if(!host)return;try{const{decision:d,macro:m,hot:h}=await getMorningBundle();await new Promise(r=>setTimeout(r,260));vhRender(d,m,h)}catch(e){console.warn('morning-verdict-board-v2',e)}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',vhInit,{once:true});else vhInit();
