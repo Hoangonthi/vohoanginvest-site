@@ -230,8 +230,16 @@ function bind(){
   $("#analyzeBtn")?.addEventListener("click",analyze);
   $("#clearPortfolio")?.addEventListener("click",()=>{localStorage.removeItem(DRAFT_KEY);$("#positionList").innerHTML="";ensureRows();["cashPct","marginPct","accountChange"].forEach(id=>{if($("#"+id))$("#"+id).value=""});if($("#saveHistory"))$("#saveHistory").checked=false;message("Đã xóa dữ liệu nhập trên thiết bị này.","")});
 }
+async function loadMarketContext(){
+  try{
+    const r=await fetch(ENDPOINT,{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({positions:[],cash_pct:100,margin_pct:0})});
+    const d=await r.json().catch(()=>null);
+    if(r.ok&&d?.ok)showResults(d);
+  }catch(e){console.debug("Portfolio market context unavailable",e)}
+}
 function init(){
   loadDraft();bind();
-  $("#resultPlaceholder").innerHTML='<div><strong>Nhập danh mục để hệ thống bắt đầu.</strong>Hệ thống sẽ đọc thị trường → ngành → từng mã → tỷ trọng vốn → rủi ro rồi mới đưa ra việc cần ưu tiên. Không có dữ liệu thì không kết luận.</div>';
+  $("#resultPlaceholder").innerHTML='<div><strong>Đang đọc bối cảnh thị trường…</strong>Danh mục của bạn chưa được gửi đi cho đến khi bấm Phân tích danh mục.</div>';
+  loadMarketContext();
 }
 init();
