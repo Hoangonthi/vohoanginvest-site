@@ -1,3 +1,4 @@
+import { buildMorningViewModel } from './morning-view-model-v1.js';
 import { getMorningBundle } from './morning-data-client-v1.js';
 const VHB_DECISION='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test';
 const VHB_MACRO='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/macro-anchor-public';
@@ -163,7 +164,7 @@ function vhMacroState(macro,d){
 function vhRender(d,macro,hot){
   const host=document.getElementById('vhDecisionBoardV5');if(!host)return;
   const box=vhq('.vh5-verdict',host);if(!box)return;
-  const brain=d?.brain||null,mk0=vhMarket(d),mk={...mk0,label:vhShortDecisionLabel(brain?.conclusion?.label_short||brain?.conclusion?.label||mk0.label),action:String(brain?.conclusion?.summary||mk0.action||'')},ms=vhMacroState(macro,d),hot3=vhHot(hot,3);
+  const vm=buildMorningViewModel(d,macro,hot),mk0=vhMarket(d),mk={...mk0,label:vm.conclusion.label||mk0.label,action:vm.conclusion.summary||mk0.action},ms=vhMacroState(macro,d),hot3=vhHot(hot,3);
   const hotHtml=hot3.length?`<div class="vhb-chips">${hot3.map(x=>`<span class="vhb-chip"><b>${vhe(x.symbol)}</b><span class="up">${vhe(vhp(x.change_pct,1))}</span> · ${vhe(vhf(x.value_traded_bn,1))} tỷ</span>`).join('')}</div>`:'';
   const shortSignal=`<div class="vhb-mini-lines"><div><b>Độ lan tỏa:</b> ${vhe(vhBreadth(d))}</div><div><b>Dòng tiền:</b> ${vhe(vhLiquidity(d))}</div></div>`;
   const external=`<div class="vhb-mini-lines"><div><b>Sự kiện:</b> ${vhe(vhEvent(d))}</div><div><b>Lãi suất Mỹ:</b> ${vhe(vhFed(d))}</div></div>`;
