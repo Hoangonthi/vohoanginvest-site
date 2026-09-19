@@ -193,9 +193,37 @@ function renderConfidence(d){
   $("#unknownContract").innerHTML=missing.length?"<b>Những gì hệ thống chủ động không suy đoán:</b><br>"+missing.map(esc).join("<br>"):"";
   $("#resultUpdated").textContent="Cập nhật bộ não: "+stamp(d.generated_at)+" · "+esc(ctx.market_freshness?.label||"");
 }
+function historyComparison(d){
+  const key="vh_portfolio_decision_last_summary_v1",p=d.portfolio||{},m=d.market||{};
+  let prev=null;try{prev=JSON.parse(localStorage.getItem(key)||"null")}catch{}
+  const current={
+    hash:d.portfolio_hash||null,score:num(p.portfolio_score),market:num(m.market_score),
+    healthy:(num(p.leading_weight)||0)+(num(p.strong_weight)||0)+(num(p.holding_weight)||0),
+    weak:(num(p.weakening_weight)||0)+(num(p.risk_weight)||0),
+    margin:num(p.margin_pct)||0,near:num(p.near_resistance_weight)||0,at:d.generated_at||new Date().toISOString()
+  };
+  if(prev&&prev.hash&&current.hash===prev.hash&&num(prev.score)!==null&&current.score!==null){
+    const delta=current.score-num(prev.score),why=[];
+    if(current.market!==null&&num(prev.market)!==null&&current.market-num(prev.market)<=-3)why.push("Market Score giảm "+fmt(Math.abs(current.market-num(prev.market)),0)+" điểm");
+    if(current.market!==null&&num(prev.market)!==null&&current.market-num(prev.market)>=3)why.push("Market Score tăng "+fmt(current.market-num(prev.market),0)+" điểm");
+    if(current.weak-num(prev.weak)>=5)why.push("tỷ trọng Suy yếu/Rủi ro tăng "+fmt(current.weak-num(prev.weak),1)+" điểm %");
+    if(current.weak-num(prev.weak)<=-5)why.push("tỷ trọng Suy yếu/Rủi ro giảm "+fmt(Math.abs(current.weak-num(prev.weak)),1)+" điểm %");
+    if(current.healthy-num(prev.healthy)>=5)why.push("vốn ở nhóm khỏe tăng "+fmt(current.healthy-num(prev.healthy),1)+" điểm %");
+    if(current.healthy-num(prev.healthy)<=-5)why.push("vốn ở nhóm khỏe giảm "+fmt(Math.abs(current.healthy-num(prev.healthy)),1)+" điểm %");
+    if(current.margin-num(prev.margin)>=5)why.push("margin tăng "+fmt(current.margin-num(prev.margin),1)+" điểm %");
+    if(current.near-num(prev.near)>=10)why.push("tỷ trọng gần cản tăng "+fmt(current.near-num(prev.near),1)+" điểm %");
+    const box=$("#scoreDrivers");
+    if(box){
+      const tone=delta>0?"positive":delta<0?"negative":"";
+      const line='<div class="pf-driver '+tone+'"><b>So với lần phân tích gần nhất:</b> '+(delta>0?"+":"")+fmt(delta,0)+' điểm'+(why.length?" · "+esc(why.join("; ")):" · cấu trúc điểm không thay đổi đáng kể.")+'</div>';
+      box.insertAdjacentHTML("afterbegin",line);
+    }
+  }
+  try{localStorage.setItem(key,JSON.stringify(current))}catch{}
+}
 function showResults(d){
   renderSource(d);$("#resultPlaceholder")?.classList.add("pf-hidden");$("#resultContent")?.classList.remove("pf-hidden");
-  renderExec(d);renderAllocation(d);renderFit(d);renderPositions(d);renderEventsNews(d);renderRiskStress(d);renderConditions(d);renderConfidence(d);
+  renderExec(d);renderAllocation(d);renderFit(d);renderPositions(d);renderEventsNews(d);renderRiskStress(d);renderConditions(d);renderConfidence(d);historyComparison(d);
 }
 async function saveSnapshot(d,input){
   if(!$("#saveHistory")?.checked)return;
