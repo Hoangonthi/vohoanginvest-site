@@ -123,6 +123,10 @@ function renderFit(d){
     fitItem("VN-Index",(num(m.vnindex_change_pct)>0?"+":"")+pct(m.vnindex_change_pct,2)),
     fitItem("Market Score",num(m.market_score)===null?"—":Math.round(m.market_score)+"/100"),
     fitItem("Trạng thái thị trường",m.market_state||"—"),
+    fitItem("Độ rộng",m.breadth?.label||"—",num(m.breadth?.adv)!==null&&num(m.breadth?.dec)!==null?fmt(m.breadth.adv,0)+" tăng · "+fmt(m.breadth.dec,0)+" giảm":""),
+    fitItem("Thanh khoản",m.flow?.label||"—",num(m.flow?.value_b)!==null?fmt(m.flow.value_b,1)+" tỷ":""),
+    ...(m.leading_sectors?.[0]?[fitItem("Nhóm đang hỗ trợ",m.leading_sectors[0].name||m.leading_sectors[0].key||"—",pct(m.leading_sectors[0].change_pct,2))]:[]),
+    ...(m.weak_sectors?.[0]?[fitItem("Nhóm đang gây áp lực",m.weak_sectors[0].name||m.weak_sectors[0].key||"—",pct(m.weak_sectors[0].change_pct,2))]:[]),
     ...(m.morning_context?.macro_regime?[fitItem("Bối cảnh sáng nay",m.morning_context.macro_regime,"Morning Decision Brain")]:[])
   ].join("");
   const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[];
