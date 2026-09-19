@@ -129,8 +129,9 @@ function renderFit(d){
     ...(m.weak_sectors?.[0]?[fitItem("Nhóm đang gây áp lực",m.weak_sectors[0].name||m.weak_sectors[0].key||"—",pct(m.weak_sectors[0].change_pct,2))]:[]),
     ...(m.morning_context?.macro_regime?[fitItem("Bối cảnh sáng nay",m.morning_context.macro_regime,"Morning Decision Brain")]:[])
   ].join("");
-  const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[];
-  $("#scoreDrivers").innerHTML=drivers.length?drivers.map(x=>'<div class="pf-driver '+esc(x.tone||"")+'">'+esc(x.text)+'</div>').join(""):'<div class="pf-driver">Chưa có đủ yếu tố để giải thích điểm số sâu hơn.</div>';
+  const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[],model=p.score_model||{};
+  const modelNote=model?.portfolio_score?'<div class="pf-driver"><b>Cách tính có thể truy ngược:</b> Market Fit 45% · chất lượng vốn 35% · sức chịu rủi ro 20%. Trong Market Fit: sức mạnh tương đối 35% · đồng pha ngành 25% · cấu trúc MA 30% · T+ 10%. Thành phần thiếu dữ liệu được bỏ khỏi mẫu số, không tự điền.</div>':'';
+  $("#scoreDrivers").innerHTML=(drivers.length?drivers.map(x=>'<div class="pf-driver '+esc(x.tone||"")+'">'+esc(x.text)+'</div>').join(""):'<div class="pf-driver">Chưa có đủ yếu tố để giải thích điểm số sâu hơn.</div>')+modelNote;
 }
 function levelText(x){return x&&num(x.value)!==null?esc(x.label||"Vùng")+" "+fmt(x.value,2):"Chưa đủ dữ liệu"}
 function maText(t){
