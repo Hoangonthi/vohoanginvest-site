@@ -370,6 +370,24 @@
       transform:translateY(-1px);
     }
 
+    /* Desktop: giữ 4 lối tắt trên cùng một hàng */
+    @media (min-width:1081px){
+      .hero-quick-links{
+        flex-wrap:nowrap;
+        gap:8px;
+      }
+      .hero-quick-links li{
+        gap:5px;
+        font-size:11.5px;
+        white-space:nowrap;
+      }
+      .hero-quick-links li::before{
+        width:16px;
+        height:16px;
+        flex-basis:16px;
+      }
+    }
+
     .home-hero-visual{
     position:relative;
     min-width:0;
