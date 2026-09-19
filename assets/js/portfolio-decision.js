@@ -85,7 +85,7 @@ function renderSource(d){
 }
 function renderExec(d){
   const p=d.portfolio||{},m=d.market||{},c=d.confidence||{},score=num(p.portfolio_score),pre=Boolean(c.preliminary),alpha=num(p.account_alpha);
-  $("#scoreRing").style.setProperty("--score",score??0);$("#scoreNum").textContent=score===null?"—":Math.round(score);
+  $("#scoreRing").style.setProperty("--score-pct",(score??0)+"%");$("#scoreNum").textContent=score===null?"—":Math.round(score);
   $("#scoreState").textContent=pre?"ĐÁNH GIÁ SƠ BỘ":(p.portfolio_state||"CHƯA ĐỦ DỮ LIỆU");
   $("#execTitle").textContent=pre?"Chưa đủ dữ liệu để kết luận sâu.":"Danh mục hiện tại: "+String(p.portfolio_state||"đang được đánh giá").toLowerCase()+".";
   $("#execSummary").textContent=alpha===null?(p.main_strength||"Hệ thống đang đọc vị trí danh mục trong thị trường hiện tại."):(alpha>=0?"Danh mục đang tốt hơn VN-Index "+fmt(alpha,2)+" điểm %. ":"Danh mục đang kém VN-Index "+fmt(Math.abs(alpha),2)+" điểm %. ")+(alpha>=0?(p.main_strength||""):(p.main_risk||""));
