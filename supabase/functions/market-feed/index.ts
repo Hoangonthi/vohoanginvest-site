@@ -654,6 +654,7 @@ Deno.serve(async (req: Request) => {
     const historyStored = await recordHistory(payload, receivedAt, sourceUpdated);
     return json(req, {
       ok: true,
+      architecture:{status:"LEGACY_ACTIVE",role:"PROVIDER",replacement:"local-primary-market-public"},
       stored_at: receivedAt,
       source_updated_at: sourceUpdated,
       history_stored: historyStored
@@ -680,6 +681,12 @@ Deno.serve(async (req: Request) => {
 
     return json(req, {
       ...payload,
+      architecture:{
+        status:"LEGACY_ACTIVE",
+        role:"PROVIDER",
+        replacement:"local-primary-market-public",
+        retire_after_callers:["thi-truong-hom-nay","stock-detail","morning-decision-test"]
+      },
       market_intelligence: intelligence,
       relay_received_at: row.received_at,
       relay_source_updated_at: row.source_updated_at
