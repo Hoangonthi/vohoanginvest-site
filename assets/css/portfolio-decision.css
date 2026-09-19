@@ -117,7 +117,7 @@ button,input{font:inherit}
 .pf-exec-top{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
 .pf-score{
   width:138px;height:138px;border-radius:50%;display:grid;place-items:center;position:relative;
-  background:conic-gradient(var(--pf-gold) calc(var(--score,0)*1%),rgba(255,255,255,.08) 0)
+  background:conic-gradient(var(--pf-gold) var(--score-pct,0%),rgba(255,255,255,.08) 0)
 }
 .pf-score:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#081a29}
 .pf-score-inner{position:relative;z-index:1;text-align:center}
