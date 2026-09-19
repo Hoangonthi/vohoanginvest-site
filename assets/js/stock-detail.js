@@ -1,3 +1,4 @@
+import { getMarketContext } from "./market-data-client-v1.js";
 import { SUPABASE_URL } from "./supabase-client.js";
 
 const $=(s)=>document.querySelector(s);
@@ -18,7 +19,7 @@ const fmtCompact=(v)=>{
 const cls=(v)=>v===null||v===undefined?"":Number(v)>0?"up":Number(v)<0?"down":"";
 const esc=(s)=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const dateVN=(v)=>{if(!v)return"—";const [y,m,d]=String(v).slice(0,10).split("-");return d&&m&&y?`${d}/${m}/${y}`:String(v)};
-const MARKET_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+const MARKET_ENDPOINT="CANONICAL_MARKET_CLIENT";
 const STOCK_PRICE_LIVE_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-price-live";
 const HOT_STOCKS_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
 
@@ -761,9 +762,7 @@ async function fetchLiveQuote(symbol){
 
  // Transitional fallback: legacy market-feed VN30 stock list.
  try{
-  const r=await fetch(`${MARKET_ENDPOINT}?_=${Date.now()}`,{cache:"no-store",headers:{"Accept":"application/json"}});
-  if(!r.ok)return null;
-  const data=await r.json();
+  const data=await getMarketContext();
   const rows=Array.isArray(data?.vn30_stocks)?data.vn30_stocks:[];
   const row=rows.find(x=>String(x?.symbol||"").toUpperCase()===symbol);
   if(!row)return null;
