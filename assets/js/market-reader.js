@@ -1,8 +1,9 @@
+import { getMarketContext } from "./market-data-client-v1.js";
 import { mountMarketLeadForm } from "./market-lead.js";
 import { trackTool } from "./tool-events.js";
 import { getAdaptiveMarketBrief } from "./market-brief-engine.js";
 
-const ENDPOINT = window.VH_MARKET_ENDPOINT || "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+const ENDPOINT = window.VH_MARKET_ENDPOINT || "CANONICAL_MARKET_CLIENT";
 const NEWS_ENDPOINT = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public?mode=news";
 const SNAPSHOT_ENDPOINT = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-snapshot-public";
 const REFRESH_MS = 60_000;
@@ -125,8 +126,10 @@ function renderMetrics(data,mi){
 
 function renderSectors(data,mi){
   const momentum=new Map();
-  [...(mi?.leadership?.leaders||[]),...(mi?.leadership?.laggards||[])].forEach(x=>momentum.set(x.symbol,x));
-  const rows=Object.entries(SECTORS).map(([symbol,name])=>{const row=index(data,symbol);return{symbol,name,change:n(row?.change_pct),meta:momentum.get(symbol)||null}}).filter(x=>x.change!==null).sort((a,b)=>b.change-a.change);
+  [...(mi?.leadership?.leaders||[]),...(mi?.leadership?.laggards||[])].forEach(x=>momentum.set(x.symbol||x.key||x.name,x));
+  const canonicalRows=(Array.isArray(mi?.sectors)?mi.sectors:[]).map((x,i)=>({symbol:String(x?.key||x?.symbol||`SECTOR-${i}`),name:String(x?.name||x?.key||'Nhóm ngành'),change:n(x?.change_pct),meta:x}));
+  const indexRows=Object.entries(SECTORS).map(([symbol,name])=>{const row=index(data,symbol);return{symbol,name,change:n(row?.change_pct),meta:momentum.get(symbol)||null}});
+  const rows=(canonicalRows.some(x=>x.change!==null)?canonicalRows:indexRows).filter(x=>x.change!==null).sort((a,b)=>b.change-a.change);
   if(!rows.length){setHtml("sectorTable","<p class='reader-note'>Chưa có dữ liệu nhóm ngành.</p>");return}
   const maxAbs=Math.max(.15,...rows.map(x=>Math.abs(x.change)));
   setHtml("sectorTable",rows.map((x,i)=>{const cls=x.change>0?"up":x.change<0?"down":"flat";const width=Math.max(6,Math.min(100,Math.abs(x.change)/maxAbs*100));const meta=x.meta?.delta_15m===null||x.meta?.delta_15m===undefined?"":` · ${esc(x.meta.momentum||"")} ${pct(x.meta.delta_15m)}`;return `<div class="sector-row ${cls}"><div class="sector-name"><b>${i+1}. ${esc(x.name)}</b><small>${esc(x.symbol)}${meta}</small></div><div class="sector-bar"><i style="width:${width}%"></i></div><strong>${pct(x.change)}</strong></div>`}).join(""));
@@ -514,7 +517,7 @@ function render(data){
 }
 
 async function refresh(){
-  try{const r=await fetch(ENDPOINT,{cache:"no-store"});if(!r.ok)throw new Error(`HTTP ${r.status}`);render(await r.json())}
+  try{render(await getMarketContext())}
   catch{const live=document.getElementById("readerLive");if(live){live.className="reader-live is-danger";live.innerHTML="<i></i><span>Chưa cập nhật được dữ liệu</span>"}}
 }
 
