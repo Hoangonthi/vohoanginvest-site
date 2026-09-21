@@ -6,6 +6,7 @@ import { getAdaptiveMarketBrief } from "./market-brief-engine.js";
 const ENDPOINT = window.VH_MARKET_ENDPOINT || "CANONICAL_MARKET_CLIENT";
 const NEWS_ENDPOINT = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/broker-brief-public?mode=news";
 const SNAPSHOT_ENDPOINT = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-snapshot-public";
+const HOT_STOCKS_ENDPOINT = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
 const REFRESH_MS = 60_000;
 const AUX_REFRESH_MS = 300_000;
 const SHARE_URL = "https://www.vohoanginvest.com/thi-truong-hom-nay.html";
@@ -15,6 +16,8 @@ const SECTORS = {VNFIN:"Tài chính",VNREAL:"Bất động sản",VNIND:"Công n
 let latestData = null;
 let latestNews = [];
 let latestSnapshot = null;
+let latestHotStocks = [];
+let hotStocksFetched = false;
 let viewTracked = false;
 let auxFetchedAt = 0;
 let auxPromise = null;
@@ -381,12 +384,38 @@ async function fetchSnapshotContext(){
   latestSnapshot=j;
 }
 
+async function fetchHotStocksContext(){
+  const r=await fetch(`${HOT_STOCKS_ENDPOINT}?t=${Date.now()}`,{cache:"no-store",headers:{Accept:"application/json"}});
+  const j=await r.json();
+  if(!r.ok)throw new Error(j?.error||`HTTP ${r.status}`);
+  latestHotStocks=Array.isArray(j?.stocks)?j.stocks:[];
+  hotStocksFetched=true;
+}
+
+function strongStocksLine(limit=5){
+  if(!hotStocksFetched)return "Mã mạnh hiện tại: Chưa tải được dữ liệu từ Cổ phiếu đáng chú ý.";
+  const seen=new Set();
+  const rows=latestHotStocks.filter(row=>{
+    const symbol=String(row?.symbol||"").trim().toUpperCase();
+    const signal=String(row?.signal_class||"").toUpperCase();
+    if(!/^[A-Z]{3}$/.test(symbol)||!signal.includes("MANH")||seen.has(symbol))return false;
+    seen.add(symbol);
+    return true;
+  }).slice(0,limit);
+  if(!rows.length)return "Mã mạnh hiện tại: Chưa có mã đạt tín hiệu Mạnh.";
+  return `Mã mạnh hiện tại: ${rows.map(row=>{
+    const symbol=String(row.symbol).trim().toUpperCase();
+    const change=n(row?.change_pct);
+    return change===null?symbol:`${symbol} ${pct(change)}`;
+  }).join(" · ")}`;
+}
+
 function refreshBriefContext(force=false){
   const now=Date.now();
   if(!force&&auxPromise)return auxPromise;
-  if(!force&&now-auxFetchedAt<120_000&&(latestNews.length||latestSnapshot))return Promise.resolve();
+  if(!force&&now-auxFetchedAt<120_000&&(latestNews.length||latestSnapshot)&&hotStocksFetched)return Promise.resolve();
   auxFetchedAt=now;
-  auxPromise=Promise.allSettled([fetchNewsContext(),fetchSnapshotContext()]).finally(()=>{auxPromise=null});
+  auxPromise=Promise.allSettled([fetchNewsContext(),fetchSnapshotContext(),fetchHotStocksContext()]).finally(()=>{auxPromise=null});
   return auxPromise;
 }
 
@@ -419,6 +448,7 @@ function buildBrief(data){
     `💧 DÒNG TIỀN & DẪN DẮT`,
     flowNarrative(flow),
     `Nhóm mạnh: ${formatLeadership(mi?.leadership?.leaders,3)}`,
+    strongStocksLine(5),
     `Nhóm yếu: ${formatLeadership(mi?.leadership?.laggards,3)}`
   );
 
@@ -490,7 +520,7 @@ async function copyBrief(){
     if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);
     else{const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()}
     showCopySuccess();
-    if(message)message.textContent="Đã sao chép bản tư vấn đã ghép realtime + Decision Brain + tin/vĩ mô. Có thể dán thẳng gửi ACE.";
+    if(message)message.textContent="Đã sao chép bản tư vấn đã ghép realtime + mã mạnh + Decision Brain + tin/vĩ mô. Có thể dán thẳng gửi ACE.";
     trackTool("MARKET_READER","COPY_BRIEF",{resultCode:"SUCCESS",metadata:{score:latestData?.market_intelligence?.state?.score??null,vn30:extractVn30Rows(latestData).length}});
   }catch{
     if(message)message.textContent="Chưa sao chép được trên trình duyệt này.";
