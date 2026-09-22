@@ -1804,7 +1804,7 @@
   <div id="siteFooter"></div>
 <script>
 (() => {
-  const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+  const MARKET_URL = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-context-public-v1";
   const STORAGE_KEY = "vh_after_session_v2";
   const WATCH_KEY = "vh_after_session_watch_v2";
 
@@ -1906,6 +1906,7 @@
       const value = num(first(vni,["value","close","last","price","current"]));
       const pct = num(first(vni,["change_pct","change_percent","percent_change","pct_change"]));
       const intel = data?.market_intelligence || {};
+      const state = intel?.state || {};
       const breadth = intel?.breadth || {};
       const adv = num(first(breadth,["adv","advance","up"]));
       const dec = num(first(breadth,["dec","decline","down"]));
@@ -1961,8 +1962,7 @@
         renderBreadthBars(null,null);
       }
 
-      // Đồng bộ logic "Nhóm dẫn dắt" với Sáng nay / Investor Hub:
-      // market-feed trả nhóm dẫn dắt chuẩn tại market_intelligence.leadership.leader
+      // Đồng bộ logic "Nhóm dẫn dắt" với canonical realtime market context.
       const leader = intel?.leadership?.leader || null;
       const leaders =
         (typeof leader?.name === "string" && leader.name.trim())
@@ -1988,24 +1988,33 @@
         document.getElementById("leadersBadge")?.classList.remove("is-visible");
       }
 
-      let score = 70;
-      if(pct !== null) score += Math.max(-15,Math.min(15,pct*10));
-      if(adv !== null && dec !== null && adv+dec>0){
-        score += ((adv-dec)/(adv+dec))*15;
+      let score = num(state?.score);
+      if(score === null){
+        score = 50;
+        if(pct !== null) score += Math.max(-14,Math.min(14,pct*7));
+        if(adv !== null && dec !== null && adv+dec>0){
+          score += ((adv-dec)/(adv+dec))*28;
+        }
+        score = Math.max(0,Math.min(100,Math.round(score)));
       }
-      score = Math.max(0,Math.min(100,Math.round(score)));
-      document.getElementById("marketScore").textContent = `${score}/100`;
+
+      const stateLabel = String(state?.label || "").trim();
+      document.getElementById("marketScore").textContent = `${Math.round(score)}/100`;
       document.getElementById("marketScoreNote").textContent =
-        score>=75 ? "Tâm lý thị trường tích cực" :
-        score>=55 ? "Thị trường trung tính" :
-        "Rủi ro thị trường đang cao";
+        stateLabel
+          ? `Trạng thái hệ thống: ${stateLabel}`
+          : score>=72 ? "Trạng thái tích cực" :
+            score>=58 ? "Nghiêng tích cực" :
+            score>=46 ? "Thị trường phân hóa" :
+            score>=32 ? "Thị trường thận trọng" :
+            "Rủi ro thị trường cao";
 
       renderMarketScoreBars(score);
 
       setCardTone(
         "marketScoreCard",
-        score>=75 ? "positive" :
-        score>=55 ? "warning" :
+        score>=58 ? "positive" :
+        score>=32 ? "warning" :
         "danger"
       );
     }catch(e){
@@ -2134,6 +2143,14 @@
 
   renderWatch();
   loadMarket();
+
+  const MARKET_REFRESH_MS = 60_000;
+  window.setInterval(()=>{
+    if(document.visibilityState==="visible") loadMarket();
+  },MARKET_REFRESH_MS);
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible") loadMarket();
+  });
 })();
 </script>
 
