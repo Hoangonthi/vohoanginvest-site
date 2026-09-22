@@ -2,6 +2,8 @@ import { supabaseClient } from './supabase-client.js';
 
 const nfPrice = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const nfPoint = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+const PS_URL = 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed';
+const EXPECTED_SYMBOL = 'VN30F1M';
 
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
@@ -67,7 +69,7 @@ function renderState(data){
     tone = 'pending';
   } else if (confirmed){
     main = `${confirmed} ĐÃ XÁC NHẬN`;
-    sub = `Giá hệ thống hiện tại: ${fmtPrice(s.raw_system_price)} · chờ tín hiệu đảo chiều đủ 2 phút`;
+    sub = `Giá hệ thống hiện tại: ${fmtPrice(s.raw_system_price)}`;
     tone = confirmed === 'LONG' ? 'up' : 'down';
   }
 
@@ -84,7 +86,6 @@ function renderSummary(data){
   $('totalNet').textContent=fmtPoint(s.total_net_points,true);
   $('closedTrades').textContent=String(s.closed_trades ?? 0);
   $('totalFees').textContent=fmtPoint(s.total_fee_points,false);
-  $('confirmationRule').textContent=`${data?.confirmation_seconds ?? 120} giây`;
 }
 
 function renderRows(data){
@@ -117,6 +118,20 @@ function renderRows(data){
   }).join('');
 }
 
+async function loadRealtimePrice(){
+  const el=$('currentRealtimePrice');
+  if(!el)return;
+  try{
+    const r=await fetch(`${PS_URL}?history=1&t=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok)throw new Error(`HTTP ${r.status}`);
+    const d=await r.json();
+    if(String(d?.symbol||'').toUpperCase()!==EXPECTED_SYMBOL)throw new Error('Unexpected symbol');
+    el.textContent=fmtPrice(d?.last_price);
+  }catch(_){
+    el.textContent='—';
+  }
+}
+
 async function load(){
   try{
     const {data,error}=await supabaseClient.rpc('derivatives_advisory_public_v1',{p_limit:200});
@@ -132,5 +147,12 @@ async function load(){
 }
 
 load();
+loadRealtimePrice();
 window.setInterval(()=>{ if(document.visibilityState==='visible') load(); },5000);
-document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') load(); });
+window.setInterval(()=>{ if(document.visibilityState==='visible') loadRealtimePrice(); },2000);
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    load();
+    loadRealtimePrice();
+  }
+});
