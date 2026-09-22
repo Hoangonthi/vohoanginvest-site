@@ -1,6 +1,6 @@
-const DEFAULT_MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+const DEFAULT_MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-context-public-v1";
 const REFRESH_MS = 60_000;
-const CACHE_KEY = "vh-market-strip-last-good-v2";
+const CACHE_KEY = "vh-market-strip-last-good-v3";
 const INDEX_PRIORITY = ["VN-INDEX", "VN30", "UPCOM-INDEX", "HNX-INDEX", "VN100", "VNXALL"];
 
 const DEMO_DATA = {
@@ -238,9 +238,20 @@ async function loadMarketData() {
     const response = await fetch(DEFAULT_MARKET_ENDPOINT, { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload = await response.json();
-    if (!payload?.indexes?.length) throw new Error("Thiếu dữ liệu chỉ số");
-    writeCachedData(payload);
-    return payload;
+    const direct = Array.isArray(payload?.indexes) ? payload.indexes : [];
+    const canonicalMarkets = Array.isArray(payload?.market_intelligence?.markets)
+      ? payload.market_intelligence.markets
+      : [];
+    const merged = [
+      ...direct,
+      ...canonicalMarkets.filter(item =>
+        !direct.some(row => String(row?.symbol || "").toUpperCase() === String(item?.symbol || "").toUpperCase())
+      )
+    ];
+    if (!merged.length) throw new Error("Thiếu dữ liệu chỉ số");
+    const normalized = { ...payload, indexes: merged };
+    writeCachedData(normalized);
+    return normalized;
   } catch (error) {
     console.warn("Nguồn dữ liệu thị trường chưa sẵn sàng", error);
     const cached = readCachedData();
