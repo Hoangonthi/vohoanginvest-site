@@ -2,14 +2,14 @@
   "use strict";
 
   const MARKET_URL =
-    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed";
+    "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-context-public-v1";
 
   const PS_URL =
     "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/derivatives-feed";
 
   const ROOT_ID = "vh-market-ticker";
   const STORAGE_KEY =
-    "vh_market_ticker_last_good_v2";
+    "vh_market_ticker_last_good_v3";
 
   const REFRESH_MS = 15000;
 
@@ -206,22 +206,32 @@
     data,
     symbol
   ) {
-    if (
-      !Array.isArray(
-        data?.indexes
-      )
-    ) {
-      return null;
-    }
+    const direct =
+      Array.isArray(data?.indexes)
+        ? data.indexes
+        : [];
+
+    const canonicalMarkets =
+      Array.isArray(data?.market_intelligence?.markets)
+        ? data.market_intelligence.markets
+        : [];
 
     return (
-      data.indexes.find(
+      direct.find(
         item =>
           String(
             item?.symbol || ""
           ).toUpperCase() ===
           symbol.toUpperCase()
-      ) || null
+      ) ||
+      canonicalMarkets.find(
+        item =>
+          String(
+            item?.symbol || ""
+          ).toUpperCase() ===
+          symbol.toUpperCase()
+      ) ||
+      null
     );
   }
 
