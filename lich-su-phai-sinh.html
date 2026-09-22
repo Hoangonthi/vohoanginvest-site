@@ -52,10 +52,6 @@
       <section class="hero">
         <div class="eyebrow">VN30F1M · LỊCH SỬ TÍN HIỆU HỆ THỐNG</div>
         <h1>Lịch sử tín hiệu phái sinh</h1>
-        <p>
-          Chỉ ghi nhận LONG/SHORT sau khi tín hiệu duy trì liên tục đủ 2 phút. Điểm vào là giá hệ thống tại thời điểm xác nhận.
-          Lệnh chỉ được đóng khi tín hiệu đảo chiều cũng được xác nhận đủ 2 phút; tổng kết quả phía dưới chỉ cộng các lệnh đã đóng.
-        </p>
         <div class="hero-actions">
           <a class="btn primary" href="sang-nay-can-nhin-gi.html">← Về Sáng nay cần nhìn gì</a>
           <a class="btn secondary" href="kien-thuc.html">Cẩm nang Phái sinh →</a>
@@ -66,7 +62,7 @@
         <article class="summary-card main"><span>Tổng kết quả ròng · chỉ lệnh đã đóng</span><strong id="totalNet">0,0 điểm</strong></article>
         <article class="summary-card"><span>Lệnh đã đóng</span><strong id="closedTrades">0</strong></article>
         <article class="summary-card"><span>Phí của lệnh đã đóng</span><strong id="totalFees">0,0 điểm</strong></article>
-        <article class="summary-card"><span>Xác nhận tín hiệu</span><strong id="confirmationRule">120 giây</strong></article>
+        <article class="summary-card"><span>Giá hiện tại realtime</span><strong id="currentRealtimePrice">—</strong></article>
       </section>
 
       <section class="live-state neutral" id="liveState">
@@ -108,9 +104,7 @@
       </section>
 
       <div class="note">
-        <strong>Quy tắc ghi nhận:</strong> tín hiệu chớp tắt trước 120 giây không được tính là lệnh chính thức.
-        Khi đảo chiều được xác nhận đủ 120 giây, lệnh cũ mới được chốt và cộng vào tổng kết quả.
-        Phí quy đổi cho 1 hợp đồng: 0,3 điểm lúc mở + 0,3 điểm lúc đóng = 0,6 điểm/vòng lệnh.
+        <strong>Chi phí quy đổi:</strong> 0,3 điểm lúc mở + 0,3 điểm lúc đóng = 0,6 điểm/vòng lệnh.
         Lịch sử này là kết quả theo tín hiệu hệ thống, không phải kết quả khớp lệnh thực tế.
       </div>
     </div>
@@ -119,7 +113,7 @@
   <div id="siteFooter"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/derivatives-history.js?v=20260922-1"></script>
+  <script type="module" src="assets/js/derivatives-history.js?v=20260922-2"></script>
   <script type="module" src="assets/js/site-header.js?v=20260918-10"></script>
 </body>
 </html>
