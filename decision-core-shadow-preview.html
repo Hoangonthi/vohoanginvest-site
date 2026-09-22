@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Decision Core Shadow Preview | Võ Hoàng</title>
+  <meta name="theme-color" content="#04111f">
+  <style>
+    :root{color-scheme:dark}
+    *{box-sizing:border-box}
+    body{margin:0;background:#04111f;color:#eef6ff;font-family:Arial,sans-serif}
+    .wrap{max-width:1500px;margin:0 auto;padding:32px 22px 80px}
+    .head{margin-bottom:18px}
+    .head h1{margin:0 0 8px;font-size:26px}
+    .head p{margin:0;color:#9fb2c5;line-height:1.5}
+    .guard{margin:16px 0;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#071827;font-size:13px;color:#c8d5e1}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="head">
+      <h1>Decision Core · Shadow Preview</h1>
+      <p>Trang kiểm tra nội bộ trên feature branch. Không dùng làm production authority.</p>
+    </div>
+
+    <div class="guard">
+      Policy: <b>DP_ACCOUNT_SHADOW_2026_09_V6</b> ·
+      yêu cầu bắt buộc: <b>official=false · authority=false · read_only=true</b>
+    </div>
+
+    <section id="liveAdminPanel">
+      <div id="dcShadowRoot"></div>
+    </section>
+  </main>
+
+  <script type="module" src="assets/js/decision-core-live-shadow.js?v=20260922-v2"></script>
+</body>
+</html>
