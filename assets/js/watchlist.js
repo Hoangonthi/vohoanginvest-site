@@ -1,4 +1,4 @@
-import { SECTORS, esc, num, pct, fmt, todayVN, localGet, localSet, fetchMarket, marketContext, getSession, googleLogin, logout, supabaseClient, trackTool } from './investor-hub-shared.js';
+import { SECTORS, esc, num, pct, fmt, todayVN, localGet, localSet, fetchMarket, marketContext, getSession, googleLogin, logout, supabaseClient, trackTool } from './investor-hub-shared.js?v=20260922-canonical1';
 
 const GUEST_KEY='vh_watchlist_guest_v1';
 const MOVE_KEY='vh_watchlist_moves_v1';
@@ -29,5 +29,25 @@ async function removeRow(id){if(session){const {error}=await supabaseClient.rpc(
 async function initAuth(){session=await getSession();const auth=document.getElementById('authButton'),login=document.getElementById('loginButton'),lb=document.getElementById('loginBox');if(session){auth.textContent='Đăng xuất';auth.onclick=async()=>{await logout();location.reload()};lb.innerHTML=`<p><strong>Đã đăng nhập.</strong> Danh sách theo dõi đang lưu theo tài khoản.</p><span class="ih-status">${esc(session.user?.email||'')}</span>`}else{auth.textContent='Đăng nhập';auth.onclick=()=>googleLogin();login?.addEventListener('click',()=>googleLogin())}}
 function renamePage(){document.title='Danh sách theo dõi của tôi | Võ Hoàng';const eyebrow=document.querySelector('.wl-hero .wl-eyebrow');if(eyebrow)eyebrow.textContent='DANH SÁCH THEO DÕI CỦA TÔI';const own=document.querySelector('#danh-sach .wl-label');if(own)own.textContent='DANH SÁCH THEO DÕI';}
 function applyPrefill(){const params=new URLSearchParams(location.search);const raw=params.get('symbol');if(!raw||!/^[A-Z0-9.-]{2,12}$/i.test(raw))return;const symbol=raw.toUpperCase();const input=document.getElementById('symbol');if(!input)return;input.value=symbol;const exists=rows.some(r=>String(r.symbol||'').toUpperCase()===symbol);setTimeout(()=>{const hashTarget=location.hash?document.querySelector(location.hash):null;(hashTarget||(exists?document.getElementById('danh-sach'):document.getElementById('them-ma')))?.scrollIntoView({behavior:'smooth',block:'start'});if(!exists)input.focus()},120);window.history.replaceState({},'',location.pathname+location.hash)}
-async function init(){renamePage();sectorEl.innerHTML=`<option value="">Chọn ngành</option>${SECTORS.map(([,name])=>`<option value="${esc(name)}">${esc(name)}</option>`).join('')}`;try{market=marketContext(await fetchMarket());renderMarket()}catch{document.getElementById('marketLive').textContent='Chưa cập nhật được thị trường'}await initAuth();await loadRows();document.getElementById('saveButton').addEventListener('click',saveRow);applyPrefill();trackTool('WATCHLIST','VIEW',{metadata:{auth:!!session}})}
+async function refreshMarket(){
+  try{
+    market=marketContext(await fetchMarket());
+    renderMarket();
+    if(rows.length) render();
+  }catch{
+    document.getElementById('marketLive').textContent='Chưa cập nhật được thị trường';
+  }
+}
+async function init(){
+  renamePage();
+  sectorEl.innerHTML=`<option value="">Chọn ngành</option>${SECTORS.map(([,name])=>`<option value="${esc(name)}">${esc(name)}</option>`).join('')}`;
+  await refreshMarket();
+  await initAuth();
+  await loadRows();
+  document.getElementById('saveButton').addEventListener('click',saveRow);
+  applyPrefill();
+  window.setInterval(()=>{ if(document.visibilityState==='visible') refreshMarket(); },REFRESH_MS);
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') refreshMarket(); });
+  trackTool('WATCHLIST','VIEW',{metadata:{auth:!!session}});
+}
 init();
