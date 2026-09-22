@@ -78,6 +78,9 @@ async function fetchOne(symbol){
     const res=await fetch(url,{cache:"no-store"});
     const body=await res.json().catch(()=>null);
     if(!res.ok||!body?.ok)return {symbol,error:body?.error||("HTTP_"+res.status)};
+    if(body.official!==false||body.authority!==false||body.read_only!==true){
+      return {symbol,error:"SHADOW_SAFETY_FLAGS_MISMATCH"};
+    }
     return body;
   }catch(error){
     return {symbol,error:error instanceof Error?error.message:"FETCH_FAILED"};
@@ -101,7 +104,7 @@ function render(rows){
       <td class="dc-shadow-${esc(fresh)}">${esc(r.freshness||"UNKNOWN")}<div class="dc-shadow-muted">${fmtAge(r.age_seconds)}</div></td>
       <td>${esc(d.market_decision_state||"UNKNOWN")}</td>
       <td>${esc(d.decision_state||"UNKNOWN")}</td>
-      <td>${esc(d.action||"UNKNOWN")}</td>
+      <td>${r.freshness==="STALE"?"—":esc(d.action||"UNKNOWN")}</td>
       <td>${pct(d.confidence)}</td>
       <td>${esc(d.evidence_alignment||"UNKNOWN")}</td>
       <td>${esc(c?.sector_state?.sector_state||"UNKNOWN")}</td>
@@ -134,8 +137,9 @@ async function load(){
     render(rows);
     const ok=rows.filter(x=>!x.error).length;
     const stale=rows.filter(x=>!x.error&&x.freshness==="STALE").length;
+    const unsafe=rows.filter(x=>x.error==="SHADOW_SAFETY_FLAGS_MISMATCH").length;
     if(meta){
-      meta.textContent=`${ok}/${rows.length} mã đọc được · ${stale} stale · ${new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date())}`;
+      meta.textContent=`${ok}/${rows.length} mã đọc được · ${stale} stale · ${unsafe} safety block · ${new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date())}`;
     }
   }finally{
     loading=false;
