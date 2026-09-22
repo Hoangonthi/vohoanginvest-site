@@ -6,7 +6,7 @@ import {
   marketContext,
   supabaseClient,
   trackTool
-} from './investor-hub-shared.js';
+} from './investor-hub-shared.js?v=20260922-canonical1';
 
 
 /* =========================================================
@@ -573,6 +573,8 @@ function render(market, journal) {
    INIT
 ========================================================= */
 
+let cachedJournal = null;
+
 async function init() {
 
   try {
@@ -582,30 +584,36 @@ async function init() {
     const market =
       marketContext(rawMarket);
 
-    let journal = {};
+    let journal = cachedJournal || {};
 
 
-    try {
+    if (cachedJournal === null) {
+      try {
 
-      const { data } =
-        await supabaseClient.rpc(
-          'public_market_journal_v1',
-          {
-            p_days: 5
-          }
+        const { data } =
+          await supabaseClient.rpc(
+            'public_market_journal_v1',
+            {
+              p_days: 5
+            }
+          );
+
+        journal =
+          data?.journal ||
+          data ||
+          {};
+
+        cachedJournal = journal;
+
+      } catch (journalError) {
+
+        console.warn(
+          'Morning Brief journal:',
+          journalError
         );
 
-      journal =
-        data?.journal ||
-        data ||
-        {};
-
-    } catch (journalError) {
-
-      console.warn(
-        'Morning Brief journal:',
-        journalError
-      );
+        cachedJournal = {};
+      }
     }
 
 
@@ -635,3 +643,12 @@ async function init() {
 ========================================================= */
 
 init();
+
+const MARKET_REFRESH_MS = 60_000;
+window.setInterval(() => {
+  if (document.visibilityState === 'visible') init();
+}, MARKET_REFRESH_MS);
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') init();
+});
