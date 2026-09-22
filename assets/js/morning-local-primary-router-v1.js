@@ -1,11 +1,11 @@
-// Morning page source router v2.
-// The canonical morning stack is now:
-// market-feed -> morning-decision-test -> morning-snapshot-public.
-// Do not rewrite these requests to the older local-primary snapshot path;
-// market-feed already carries the current local/watchlist market relay and richer market context.
+// Morning page source router v3.
+// Realtime market truth must come from the canonical façade.
+// market-feed is legacy and may be stale after local-primary cutover.
+const VH_CANONICAL_MARKET_ENDPOINT='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-context-public-v1';
+window.VH_MARKET_ENDPOINT=VH_CANONICAL_MARKET_ENDPOINT;
 window.__VH_MORNING_SOURCE__={
-  market:'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed',
+  market:VH_CANONICAL_MARKET_ENDPOINT,
   decision:'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-decision-test',
   snapshot:'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/morning-snapshot-public',
-  mode:'CANONICAL_MARKET_FEED_PLUS_VERIFIED_EVENTS'
+  mode:'CANONICAL_LOCAL_PRIMARY_REALTIME_PLUS_VERIFIED_EVENTS'
 };
