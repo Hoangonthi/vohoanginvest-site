@@ -1,4 +1,4 @@
-import './morning-local-primary-router-v1.js?v=20260918-sourcefix1';
+import './morning-local-primary-router-v1.js?v=20260922-sourcefix2';
 import './morning-decision-preboot-v1.js?v=20260918-brain10';
 import './morning-brief-core.js?v=20260917-fed2';
 import './morning-decision-dashboard-v5.js?v=20260918-brain11';
