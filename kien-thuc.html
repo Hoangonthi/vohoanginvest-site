@@ -717,6 +717,81 @@
     }
 
 
+    /* FEATURED GUIDES */
+
+    .guide-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .guide-card{
+      position:relative;
+      min-height:190px;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+      border:1px solid rgba(224,187,99,.20);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at 100% 0%,rgba(224,187,99,.09),transparent 42%),
+        linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012));
+      transition:.2s ease;
+    }
+
+    .guide-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(224,187,99,.42);
+      box-shadow:0 14px 30px rgba(0,0,0,.18);
+    }
+
+    .guide-card::after{
+      content:"";
+      position:absolute;
+      left:20px;
+      right:20px;
+      top:0;
+      height:2px;
+      border-radius:999px;
+      background:linear-gradient(90deg,transparent,rgba(224,187,99,.88),transparent);
+    }
+
+    .guide-badge{
+      width:max-content;
+      padding:5px 9px;
+      border:1px solid rgba(224,187,99,.28);
+      border-radius:9px;
+      background:rgba(224,187,99,.07);
+      color:var(--gold-2);
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .guide-card h3{
+      margin:15px 0 0;
+      font-size:20px;
+      line-height:1.35;
+    }
+
+    .guide-card p{
+      margin:8px 0 0;
+      color:var(--muted-2);
+      font-size:11.5px;
+      line-height:1.65;
+    }
+
+    .guide-card span{
+      display:inline-flex;
+      align-items:center;
+      margin-top:18px;
+      color:#f2d487;
+      font-size:11px;
+      font-weight:800;
+    }
+
     /* QUICK ROUTES */
 
     .quick-grid{
@@ -1615,6 +1690,29 @@
         font-size:44px;
       }
 
+      .guide-grid{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+
+      .guide-card{
+        min-height:0;
+        padding:16px 14px;
+      }
+
+      .guide-card h3{
+        font-size:16px;
+      }
+
+      .guide-card p{
+        font-size:10px;
+      }
+
+      .guide-card span{
+        margin-top:14px;
+        font-size:9.5px;
+      }
+
       .quick-grid{
         grid-template-columns:
           repeat(2,minmax(0,1fr));
@@ -2504,6 +2602,98 @@
 
       </section>
 
+
+      <!-- FEATURED GUIDES -->
+      <section class="panel section" id="cam-nang">
+
+        <div class="section-head">
+
+          <div>
+
+            <div class="section-kicker">
+              CẨM NANG DÀNH CHO ACE MỚI
+            </div>
+
+            <h2>
+              Hai tài liệu nên đọc trước khi bắt đầu.
+            </h2>
+
+            <p>
+              Phái sinh và chứng quyền có cơ chế giao dịch, đòn bẩy và rủi ro khác cổ phiếu cơ sở.
+              ACE có thể mở nhanh từng cẩm nang để đọc trước khi giao dịch.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="guide-grid">
+
+          <a
+            class="guide-card"
+            href="https://drive.google.com/file/d/1igCetOaRwJ0JZs9oizWDRKVCiVoGGifC/view"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+
+            <div>
+
+              <div class="guide-badge">
+                01 · PHÁI SINH
+              </div>
+
+              <h3>
+                Cẩm nang Phái sinh Việt Nam
+              </h3>
+
+              <p>
+                Tài liệu dành cho ACE mới tìm hiểu: khái niệm, cơ chế giao dịch, cách đọc hợp đồng,
+                ký quỹ, lời/lỗ và những rủi ro cần biết trước khi tham gia.
+              </p>
+
+            </div>
+
+            <span>
+              Đọc cẩm nang Phái sinh →
+            </span>
+
+          </a>
+
+
+          <a
+            class="guide-card"
+            href="https://drive.google.com/file/d/11h1XEnCrWKc30NRJ0CKbHY5CS2PqZEws/view"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+
+            <div>
+
+              <div class="guide-badge">
+                02 · CHỨNG QUYỀN
+              </div>
+
+              <h3>
+                Cẩm nang Chứng quyền
+              </h3>
+
+              <p>
+                Tài liệu nhập môn giúp ACE hiểu chứng quyền có bảo đảm, cách mua bán,
+                biến động giá, thời hạn và các yếu tố ảnh hưởng đến kết quả giao dịch.
+              </p>
+
+            </div>
+
+            <span>
+              Đọc cẩm nang Chứng quyền →
+            </span>
+
+          </a>
+
+        </div>
+
+      </section>
 
       <!-- QUICK ROUTES -->
       <section class="panel section">
