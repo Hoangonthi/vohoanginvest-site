@@ -1,7 +1,7 @@
 import { supabaseClient } from './supabase-client.js';
 import { trackTool } from './tool-events.js';
 
-export const MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-feed';
+export const MARKET_ENDPOINT = window.VH_MARKET_ENDPOINT || 'https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-context-public-v1';
 export const SECTORS = [
   ['VNFIN','Tài chính'],['VNREAL','Bất động sản'],['VNIND','Công nghiệp'],['VNIT','Công nghệ thông tin'],
   ['VNMAT','Nguyên vật liệu'],['VNCONS','Hàng tiêu dùng thiết yếu'],['VNCOND','Hàng tiêu dùng không thiết yếu'],
@@ -34,18 +34,40 @@ export async function fetchMarket(){
 }
 export function marketContext(data){
   const mi=data?.market_intelligence||{};
-  const indexes=Array.isArray(data?.indexes)?data.indexes:[];
-  const get=s=>indexes.find(x=>String(x?.symbol||'')===s)||{};
+  const topIndexes=Array.isArray(data?.indexes)?data.indexes:[];
+  const marketIndexes=Array.isArray(mi?.markets)?mi.markets:[];
+  const indexes=[...topIndexes,...marketIndexes.filter(x=>!topIndexes.some(y=>String(y?.symbol||'')===String(x?.symbol||'')))];
+  const get=s=>indexes.find(x=>String(x?.symbol||'').toUpperCase()===String(s||'').toUpperCase())||{};
   const vn=get('VN-INDEX');
+
+  const rawBreadth=mi.breadth||{};
+  const adv=num(rawBreadth.adv),dec=num(rawBreadth.dec),flat=num(rawBreadth.flat);
+  const balance=num(rawBreadth.balance) ?? (
+    adv!==null && dec!==null && (adv+dec)>0
+      ? (adv-dec)/(adv+dec)
+      : null
+  );
+  const breadthLabel=rawBreadth.label || (
+    balance===null ? '—' :
+    balance>=0.15 ? 'Tích cực' :
+    balance<=-0.15 ? 'Tiêu cực' :
+    'Cân bằng'
+  );
+  const breadth={...rawBreadth,adv,dec,flat,balance,label:breadthLabel};
+
   const sectorMap=new Map();
-  SECTORS.forEach(([symbol,name])=>sectorMap.set(name,{symbol,name,change:num(get(symbol)?.change_pct)}));
+  SECTORS.forEach(([symbol,name])=>{
+    const row=get(symbol);
+    sectorMap.set(name,{symbol,name,change:num(row?.change_pct)});
+  });
+
   return {
     raw:data,
     state:mi.state||{},
     freshness:mi.freshness||{},
     vnIndex:num(vn.value),
     vnChange:num(vn.change_pct),
-    breadth:mi.breadth||{},
+    breadth,
     flow:mi.flow||{},
     leader:mi.leadership?.leader||null,
     sectors:sectorMap
