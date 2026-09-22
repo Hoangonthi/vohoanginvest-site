@@ -2,6 +2,7 @@ import { SECTORS, esc, num, pct, fmt, todayVN, localGet, localSet, fetchMarket, 
 
 const GUEST_KEY='vh_watchlist_guest_v1';
 const MOVE_KEY='vh_watchlist_moves_v1';
+const REFRESH_MS=60_000;
 let session=null,market=null,rows=[];
 const sectorEl=document.getElementById('sector');
 const box=document.getElementById('watchlistBox');
