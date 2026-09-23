@@ -641,33 +641,117 @@
 
     /* Sector */
     .sector-table{display:grid;gap:5px}
+    .reader-sector-panel{overflow:visible}
     .sector-row{
+      position:relative;
       display:grid;
-      grid-template-columns:minmax(170px,1.2fr) minmax(120px,1fr) 66px;
+      grid-template-columns:minmax(250px,1.35fr) minmax(120px,1fr) 66px;
       align-items:center;
       gap:9px;
-      min-height:32px;
+      min-height:44px;
       padding:5px 7px;
       border-radius:9px;
       background:rgba(255,255,255,.018);
     }
     .sector-name{min-width:0}
-    .sector-name b{
+    .sector-name>b{
       display:block;
       font-size:11px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .sector-name small{
+    .sector-name>small{
       display:block;
       margin-top:1px;
       color:var(--muted-2);
-      font-size:8.5px;
+      font-size:8px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
+    .sector-movers{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:2px 8px;
+      min-height:13px;
+      margin-top:2px;
+    }
+    .sector-mover-line{display:inline-flex;align-items:center;gap:3px;min-width:0}
+    .sector-mover-mark{font-size:7.5px;font-weight:900;line-height:1}
+    .sector-mover-line.is-up .sector-mover-mark{color:var(--green)}
+    .sector-mover-line.is-down .sector-mover-mark{color:var(--red)}
+    .sector-mover-links{display:inline-flex;align-items:center;gap:4px;min-width:0}
+    .sector-stock{
+      font-size:8.2px;
+      line-height:1.25;
+      font-weight:800;
+      letter-spacing:.01em;
+      text-decoration:none;
+      transition:opacity .15s ease,color .15s ease;
+    }
+    .sector-stock.is-up{color:#59e6a1}
+    .sector-stock.is-down{color:#ff7e89}
+    .sector-stock:hover{text-decoration:underline;opacity:.92}
+    .sector-more{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:22px;
+      height:14px;
+      padding:0 4px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      font-size:7.5px;
+      font-weight:800;
+      cursor:default;
+      outline:none;
+    }
+    .sector-more.is-up{color:#59e6a1}
+    .sector-more.is-down{color:#ff7e89}
+    .sector-more-pop{
+      position:absolute;
+      z-index:30;
+      left:-6px;
+      top:calc(100% + 6px);
+      display:none;
+      width:220px;
+      max-height:230px;
+      overflow:auto;
+      padding:8px;
+      border:1px solid rgba(224,187,99,.22);
+      border-radius:10px;
+      background:#071625;
+      box-shadow:0 14px 34px rgba(0,0,0,.38);
+    }
+    .sector-more:hover .sector-more-pop,
+    .sector-more:focus .sector-more-pop,
+    .sector-more:focus-within .sector-more-pop{display:grid;gap:2px}
+    .sector-more-pop>b{
+      display:block;
+      margin-bottom:4px;
+      color:#d9c58d;
+      font-size:8.5px;
+      text-align:left;
+    }
+    .sector-more-pop>a{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:4px 5px;
+      border-radius:6px;
+      color:#e8edf4;
+      font-size:8.5px;
+      text-decoration:none;
+    }
+    .sector-more-pop>a:hover{background:rgba(255,255,255,.055)}
+    .sector-more-pop>a em{font-style:normal;font-variant-numeric:tabular-nums}
+    .sector-more.is-up .sector-more-pop>a em{color:var(--green)}
+    .sector-more.is-down .sector-more-pop>a em{color:var(--red)}
     .sector-bar{
       height:5px;
       border-radius:999px;
@@ -1606,7 +1690,15 @@
       }
       .footer .footer-nav-all .quick-links a{font-size:10px}
     }
-  </style>
+  
+    @media(max-width:760px){
+      .sector-row{grid-template-columns:minmax(190px,1.25fr) minmax(72px,.7fr) 54px;gap:6px}
+      .sector-stock{font-size:7.8px}
+      .sector-mover-line{gap:2px}
+      .sector-mover-links{gap:3px}
+      .sector-more-pop{left:auto;right:-8px;width:min(220px,72vw)}
+    }
+</style>
 </head>
 <body>
 
@@ -1893,7 +1985,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/market-reader.js?v=20260921-brief6"></script>
+  <script type="module" src="assets/js/market-reader.js?v=20260923-sector1"></script>
 
   <!-- Chỉ bổ sung giao diện đổi màu; KHÔNG sửa logic backend -->
   <script>
