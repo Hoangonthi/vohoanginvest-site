@@ -127,6 +127,30 @@ function renderMetrics(data,mi){
   setText("leaderSub",leader?`${pct(leader.change_pct)} · ${leader.momentum||"ổn định"}`:"Chưa xác định");
 }
 
+function sectorMoverList(meta,side){
+  const full=side==="up"?meta?.gainers_all:meta?.losers_all;
+  const top=side==="up"?meta?.top_gainers:meta?.top_losers;
+  const source=Array.isArray(full)&&full.length?full:(Array.isArray(top)?top:[]);
+  return source
+    .map(x=>({symbol:String(x?.symbol||"").trim().toUpperCase(),change:n(x?.change_pct)}))
+    .filter(x=>/^[A-Z][A-Z0-9]{2,11}$/.test(x.symbol)&&x.change!==null&&(side==="up"?x.change>0:x.change<0))
+    .sort((a,b)=>side==="up"?b.change-a.change:a.change-b.change);
+}
+function sectorStockLink(item,side,extraClass=""){
+  const cls=side==="up"?"is-up":"is-down";
+  return `<a class="sector-stock ${cls} ${extraClass}" href="stock-detail.html?symbol=${encodeURIComponent(item.symbol)}" title="${esc(item.symbol+" "+pct(item.change))}">${esc(item.symbol)}</a>`;
+}
+function sectorMoverLine(meta,side){
+  const items=sectorMoverList(meta,side);
+  if(!items.length)return "";
+  const first=items.slice(0,3);
+  const rest=items.slice(3);
+  const mark=side==="up"?"▲":"▼";
+  const label=side==="up"?"Mã tăng":"Mã giảm";
+  const visible=first.map(x=>sectorStockLink(x,side)).join("");
+  const more=rest.length?`<span class="sector-more ${side==="up"?"is-up":"is-down"}" tabindex="0" aria-label="${label}, còn ${rest.length} mã">+${rest.length}<span class="sector-more-pop"><b>${label} còn lại</b>${rest.map(x=>`<a href="stock-detail.html?symbol=${encodeURIComponent(x.symbol)}"><span>${esc(x.symbol)}</span><em>${pct(x.change)}</em></a>`).join("")}</span></span>`:"";
+  return `<div class="sector-mover-line ${side==="up"?"is-up":"is-down"}"><span class="sector-mover-mark">${mark}</span><div class="sector-mover-links">${visible}${more}</div></div>`;
+}
 function renderSectors(data,mi){
   const momentum=new Map();
   [...(mi?.leadership?.leaders||[]),...(mi?.leadership?.laggards||[])].forEach(x=>momentum.set(x.symbol||x.key||x.name,x));
@@ -135,7 +159,21 @@ function renderSectors(data,mi){
   const rows=(canonicalRows.some(x=>x.change!==null)?canonicalRows:indexRows).filter(x=>x.change!==null).sort((a,b)=>b.change-a.change);
   if(!rows.length){setHtml("sectorTable","<p class='reader-note'>Chưa có dữ liệu nhóm ngành.</p>");return}
   const maxAbs=Math.max(.15,...rows.map(x=>Math.abs(x.change)));
-  setHtml("sectorTable",rows.map((x,i)=>{const cls=x.change>0?"up":x.change<0?"down":"flat";const width=Math.max(6,Math.min(100,Math.abs(x.change)/maxAbs*100));const meta=x.meta?.delta_15m===null||x.meta?.delta_15m===undefined?"":` · ${esc(x.meta.momentum||"")} ${pct(x.meta.delta_15m)}`;return `<div class="sector-row ${cls}"><div class="sector-name"><b>${i+1}. ${esc(x.name)}</b><small>${esc(x.symbol)}${meta}</small></div><div class="sector-bar"><i style="width:${width}%"></i></div><strong>${pct(x.change)}</strong></div>`}).join(""));
+  setHtml("sectorTable",rows.map((x,i)=>{
+    const cls=x.change>0?"up":x.change<0?"down":"flat";
+    const width=Math.max(6,Math.min(100,Math.abs(x.change)/maxAbs*100));
+    const meta=x.meta?.delta_15m===null||x.meta?.delta_15m===undefined?"":` · ${esc(x.meta.momentum||"")} ${pct(x.meta.delta_15m)}`;
+    const movers=`${sectorMoverLine(x.meta||{},"up")}${sectorMoverLine(x.meta||{},"down")}`;
+    return `<div class="sector-row ${cls}">
+      <div class="sector-name">
+        <b>${i+1}. ${esc(x.name)}</b>
+        <small>${esc(x.symbol)}${meta}</small>
+        <div class="sector-movers">${movers}</div>
+      </div>
+      <div class="sector-bar"><i style="width:${width}%"></i></div>
+      <strong>${pct(x.change)}</strong>
+    </div>`;
+  }).join(""));
 }
 
 function renderAlerts(mi){
