@@ -14,9 +14,10 @@ assert.match(js, /<em>\$\{pct\(item\.change\)\}<\/em>/, "visible stock links mus
 assert.match(js, /closeSectorMoverPopovers\(\)/, "outside interaction must be able to close popovers");
 assert.match(js, /event\.target\.closest\?\.\("\.sector-mover-line\.has-rest"\)/, "tap/click must target the full Tăng/Giảm line");
 assert.match(js, /initSectorMoverInteractions\(\);/, "sector mover interactions must be initialized");
+assert.doesNotMatch(js, /<small>\$\{esc\(x\.symbol\)\}/, "technical sector key must stay hidden from the visible row");
 
 assert.match(html, /\.sector-mover-line\.has-rest:hover \.sector-more-pop/, "desktop hover must open the remaining list");
 assert.match(html, /\.sector-mover-line\.has-rest\.is-open \.sector-more-pop/, "tap/click state must open the remaining list");
-assert.match(html, /market-reader\.js\?v=20260923-sector2/, "page must bust the market reader cache");
+assert.match(html, /market-reader\.js\?v=20260923-sector3/, "page must bust the market reader cache");
 
 console.log("PASS sector movers UI contract: top3 + percentages + full-list hover/tap + stock links");

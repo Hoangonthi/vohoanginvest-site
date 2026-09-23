@@ -648,7 +648,7 @@
       grid-template-columns:minmax(280px,1.5fr) minmax(110px,.9fr) 62px;
       align-items:center;
       gap:9px;
-      min-height:55px;
+      min-height:60px;
       padding:5px 7px;
       border-radius:9px;
       background:rgba(255,255,255,.018);
@@ -656,7 +656,7 @@
     .sector-name{min-width:0}
     .sector-name>b{
       display:block;
-      font-size:11px;
+      font-size:12px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -665,7 +665,7 @@
       display:block;
       margin-top:1px;
       color:var(--muted-2);
-      font-size:8px;
+      font-size:9px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -690,7 +690,7 @@
     .sector-mover-line.has-rest{cursor:pointer}
     .sector-mover-label{
       flex:0 0 30px;
-      font-size:7.8px;
+      font-size:8.8px;
       font-weight:800;
       line-height:1.2;
     }
@@ -707,7 +707,7 @@
       display:inline-flex;
       align-items:baseline;
       gap:2px;
-      font-size:8px;
+      font-size:9px;
       line-height:1.25;
       font-weight:800;
       letter-spacing:.005em;
@@ -716,7 +716,7 @@
     }
     .sector-stock em{
       font-style:normal;
-      font-size:7.6px;
+      font-size:8.6px;
       font-weight:700;
       font-variant-numeric:tabular-nums;
       opacity:.88;
@@ -726,7 +726,7 @@
     .sector-stock:hover{text-decoration:underline;opacity:.92}
     .sector-stock-sep{
       color:rgba(231,237,246,.35);
-      font-size:7px;
+      font-size:8px;
       line-height:1;
     }
     .sector-more-count{
@@ -740,7 +740,7 @@
       border-radius:999px;
       background:rgba(255,255,255,.035);
       color:var(--muted-2);
-      font-size:7px;
+      font-size:8px;
       font-weight:800;
     }
     .sector-more-pop{
@@ -765,7 +765,7 @@
       display:block;
       margin-bottom:4px;
       color:#d9c58d;
-      font-size:8.5px;
+      font-size:9.5px;
       text-align:left;
     }
     .sector-more-pop>a{
@@ -776,7 +776,7 @@
       padding:4px 5px;
       border-radius:6px;
       color:#e8edf4;
-      font-size:8.5px;
+      font-size:9.5px;
       text-decoration:none;
     }
     .sector-more-pop>a:hover{background:rgba(255,255,255,.055)}
@@ -792,7 +792,7 @@
     .sector-bar i{
       display:block;height:100%;border-radius:inherit;background:#9aa6b1;
     }
-    .sector-row > strong{text-align:right;font-size:10px}
+    .sector-row > strong{text-align:right;font-size:11px}
     .sector-row.up .sector-bar i{background:var(--green)}
     .sector-row.up > strong{color:var(--green)}
     .sector-row.down .sector-bar i{background:var(--red)}
@@ -1723,14 +1723,14 @@
     }
   
     @media(max-width:760px){
-      .sector-row{grid-template-columns:minmax(205px,1.45fr) minmax(58px,.55fr) 48px;gap:5px;min-height:58px}
-      .sector-name>small{font-size:7.5px}
-      .sector-mover-label{flex-basis:28px;font-size:7.4px}
-      .sector-stock{font-size:7.5px;gap:1.5px}
-      .sector-stock em{font-size:7.1px}
+      .sector-row{grid-template-columns:minmax(205px,1.45fr) minmax(58px,.55fr) 48px;gap:5px;min-height:62px}
+      .sector-name>small{font-size:8.5px}
+      .sector-mover-label{flex-basis:30px;font-size:8.4px}
+      .sector-stock{font-size:8.5px;gap:1.5px}
+      .sector-stock em{font-size:8.1px}
       .sector-mover-links{gap:2px}
-      .sector-more-count{min-width:18px;padding:0 3px}
-      .sector-more-pop{left:auto;right:-8px;width:min(235px,78vw);max-height:48vh}
+      .sector-more-count{min-width:20px;padding:0 3px;font-size:8px}
+      .sector-more-pop{left:auto;right:-8px;width:min(245px,82vw);max-height:48vh}
     }
     @media(max-width:520px){
       .sector-row{grid-template-columns:minmax(205px,1fr) 52px 45px}
@@ -2024,7 +2024,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/market-reader.js?v=20260923-sector2"></script>
+  <script type="module" src="assets/js/market-reader.js?v=20260923-sector3"></script>
 
   <!-- Chỉ bổ sung giao diện đổi màu; KHÔNG sửa logic backend -->
   <script>

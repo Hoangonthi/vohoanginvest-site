@@ -200,12 +200,12 @@ function renderSectors(data,mi){
   setHtml("sectorTable",rows.map((x,i)=>{
     const cls=x.change>0?"up":x.change<0?"down":"flat";
     const width=Math.max(6,Math.min(100,Math.abs(x.change)/maxAbs*100));
-    const meta=x.meta?.delta_15m===null||x.meta?.delta_15m===undefined?"":` · ${esc(x.meta.momentum||"")} ${pct(x.meta.delta_15m)}`;
+    const meta=x.meta?.delta_15m===null||x.meta?.delta_15m===undefined?"":`${esc(x.meta.momentum||"")} ${pct(x.meta.delta_15m)}`;
     const movers=`${sectorMoverLine(x.meta||{},"up")}${sectorMoverLine(x.meta||{},"down")}`;
     return `<div class="sector-row ${cls}">
       <div class="sector-name">
         <b>${i+1}. ${esc(x.name)}</b>
-        <small>${esc(x.symbol)}${meta}</small>
+        ${meta?`<small>${meta}</small>`:""}
         <div class="sector-movers">${movers}</div>
       </div>
       <div class="sector-bar"><i style="width:${width}%"></i></div>
