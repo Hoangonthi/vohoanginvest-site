@@ -286,3 +286,20 @@ button,input{font:inherit}
 .pf-confidence-data{
   align-items:stretch;
 }
+
+.pf-list-extra{display:grid;gap:7px}
+.pf-list-extra.pf-hidden{display:none}
+.pf-list-toggle{
+  width:100%;
+  margin-top:2px;
+  padding:8px 10px;
+  border:1px solid var(--pf-line-gold);
+  border-radius:9px;
+  background:rgba(224,187,99,.035);
+  color:#d7c083;
+  font-size:9px;
+  font-weight:750;
+  cursor:pointer;
+  text-align:center;
+}
+.pf-list-toggle:hover{background:rgba(224,187,99,.07)}
