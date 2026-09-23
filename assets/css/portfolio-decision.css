@@ -252,3 +252,37 @@ button,input{font:inherit}
   .pf-stock-head{align-items:flex-start}
   .pf-stock-facts{grid-template-columns:1fr 1fr}
 }
+/* Small analytical cards: center labels and values for faster scanning */
+.pf-metric,
+.pf-state-box,
+.pf-fit-item,
+.pf-fact,
+.pf-risk-card,
+.pf-confidence-data div{
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.pf-metric span,
+.pf-state-box span,
+.pf-fit-item span,
+.pf-fact span,
+.pf-risk-card span,
+.pf-confidence-data span{
+  width:100%;
+  text-align:center;
+}
+.pf-fit-item em{
+  display:block;
+  width:100%;
+  margin-top:3px;
+  text-align:center;
+}
+.pf-allocation,
+.pf-fit-grid,
+.pf-risk-grid,
+.pf-confidence-data{
+  align-items:stretch;
+}

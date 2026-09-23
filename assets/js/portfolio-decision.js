@@ -82,7 +82,7 @@ function renderSource(d){
   root.innerHTML='<span class="pf-dot '+freshClass(f.code)+'"></span><b>'+esc(f.label||"Chưa xác định")+'</b>'+
     '<span>Thị trường: '+esc(c.market_date||"—")+'</span><span>·</span>'+
     '<span>'+(c.tplus_usable?"T+ cùng phiên":"T+ không dùng cho phiên này")+'</span><span>·</span>'+
-    '<span>MARKET → SECTOR → STOCK → PORTFOLIO → PROFILE/RISK → DECISION CORE</span>';
+    '<span>Thị trường · Ngành · Cổ phiếu · Danh mục · Rủi ro</span>';
 }
 function renderExec(d){
   const p=d.portfolio||{},m=d.market||{},c=d.confidence||{},score=num(p.portfolio_score),pre=Boolean(c.preliminary),alpha=num(p.account_alpha);
@@ -100,6 +100,7 @@ function renderExec(d){
   $("#confidenceInline").textContent="Độ tin cậy "+(c.label||"—")+(num(c.score)!==null?" · "+Math.round(c.score)+"/100":"");
 }
 function allocationBox(label,value,tone){
+  if(num(value)===null)return "";
   return '<div class="pf-state-box '+tone+'"><span>'+esc(label)+'</span><b>'+pct(value)+'</b></div>';
 }
 function renderAllocation(d){
@@ -111,7 +112,10 @@ function renderAllocation(d){
     allocationBox("Chưa đủ dữ liệu",p.unknown_weight,"neutral"),allocationBox("Tiền mặt",p.cash_weight,"neutral")
   ].join("");
 }
-function fitItem(label,value,note=""){return '<div class="pf-fit-item"><span>'+esc(label)+'</span><b>'+value+'</b>'+(note?'<em>'+esc(note)+'</em>':"")+'</div>'}
+function fitItem(label,value,note=""){
+  if(value===null||value===undefined||value===""||value==="—"||value==="Chưa đủ dữ liệu"||value==="Chưa dùng"||value==="Chưa có"||value==="Chưa đánh giá riêng")return "";
+  return '<div class="pf-fit-item"><span>'+esc(label)+'</span><b>'+value+'</b>'+(note?'<em>'+esc(note)+'</em>':"")+'</div>';
+}
 function renderFit(d){
   const p=d.portfolio||{},m=d.market||{},alpha=num(p.account_alpha);
   $("#fitGrid").innerHTML=[
@@ -121,18 +125,18 @@ function renderFit(d){
     fitItem("Vốn thuộc T+",num(p.tplus_capital_coverage)===null?"Chưa dùng":pct(p.tplus_capital_coverage),d.context?.tplus_usable?"Theo tỷ trọng vốn":"Nguồn không cùng phiên"),
     fitItem("Vốn gần kháng cự",pct(p.near_resistance_weight)),
     fitItem("Vốn yếu hơn thị trường",pct(p.weaker_than_market_weight)),
-    fitItem("Account Alpha",alpha===null?"Chưa đủ dữ liệu":(alpha>0?"+":"")+fmt(alpha,2)+" điểm %"),
+    fitItem("So với VN-Index",alpha===null?null:(alpha>0?"+":"")+fmt(alpha,2)+" điểm %"),
     fitItem("VN-Index",(num(m.vnindex_change_pct)>0?"+":"")+pct(m.vnindex_change_pct,2)),
-    fitItem("Market Score",num(m.market_score)===null?"—":Math.round(m.market_score)+"/100"),
+    fitItem("Điểm thị trường",num(m.market_score)===null?null:Math.round(m.market_score)+"/100"),
     fitItem("Trạng thái thị trường",m.market_state||"—"),
     fitItem("Độ rộng",m.breadth?.label||"—",num(m.breadth?.adv)!==null&&num(m.breadth?.dec)!==null?fmt(m.breadth.adv,0)+" tăng · "+fmt(m.breadth.dec,0)+" giảm":""),
     fitItem("Thanh khoản",m.flow?.label||"—",num(m.flow?.value_b)!==null?fmt(m.flow.value_b,1)+" tỷ":""),
     ...(m.leading_sectors?.[0]?[fitItem("Nhóm đang hỗ trợ",m.leading_sectors[0].name||m.leading_sectors[0].key||"—",pct(m.leading_sectors[0].change_pct,2))]:[]),
     ...(m.weak_sectors?.[0]?[fitItem("Nhóm đang gây áp lực",m.weak_sectors[0].name||m.weak_sectors[0].key||"—",pct(m.weak_sectors[0].change_pct,2))]:[]),
-    ...(m.morning_context?.macro_regime?[fitItem("Bối cảnh sáng nay",m.morning_context.macro_regime,"Morning Decision Brain")]:[])
+    ...(m.morning_context?.macro_regime?[fitItem("Bối cảnh sáng nay",m.morning_context.macro_regime)]:[])
   ].join("");
   const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[],model=p.score_model||{};
-  const modelNote=model?.portfolio_score?'<div class="pf-driver"><b>Cách tính có thể truy ngược:</b> Market Fit 45% · chất lượng vốn 35% · sức chịu rủi ro 20%. Trong Market Fit: sức mạnh tương đối 35% · đồng pha ngành 25% · cấu trúc MA 30% · T+ 10%. Thành phần thiếu dữ liệu được bỏ khỏi mẫu số, không tự điền.</div>':'';
+  const modelNote=model?.portfolio_score?'<div class="pf-driver"><b>Cách chấm điểm:</b> kết hợp độ phù hợp với thị trường, chất lượng danh mục và sức chịu rủi ro. Thành phần chưa đủ dữ liệu sẽ không được tự suy đoán.</div>':'';
   $("#scoreDrivers").innerHTML=(drivers.length?drivers.map(x=>'<div class="pf-driver '+esc(x.tone||"")+'">'+esc(x.text)+'</div>').join(""):'<div class="pf-driver">Chưa có đủ yếu tố để giải thích điểm số sâu hơn.</div>')+modelNote;
 }
 function levelText(x){return x&&num(x.value)!==null?esc(x.label||"Vùng")+" "+fmt(x.value,2):"Chưa đủ dữ liệu"}
@@ -162,9 +166,28 @@ function renderPositions(d){
       '<div class="pf-stock-note"><b>Đánh giá:</b> '+esc(reasons||"Chưa đủ dữ liệu để giải thích trạng thái.")+'</div>'+
       '<div class="pf-stock-note"><b>Với vị thế đang có:</b> '+esc(x.holding_action||"Chưa đủ dữ liệu.")+'</div>'+
       '<div class="pf-stock-note"><b>Điều kiện xấu đi:</b> '+esc(x.deterioration_condition||"Chưa đủ dữ liệu.")+'</div>'+
-      '<div class="pf-stock-actions"><small>'+esc(x.price_source==="LIVE_CURRENT"?"Giá current từ Stock Price Live":x.price_source==="D1"?"Giá D1 gần nhất":"Chưa có nguồn giá")+(x.price_updated_at?" · "+stamp(x.price_updated_at):"")+'</small>'+
+      '<div class="pf-stock-actions"><small>'+esc(x.price_source==="LIVE_CURRENT"?"Giá hiện tại":x.price_source==="D1"?"Giá cuối phiên gần nhất":"Chưa có nguồn giá")+(x.price_updated_at?" · "+stamp(x.price_updated_at):"")+'</small>'+
       '<a class="pf-detail-link" href="stock-detail.html?symbol='+encodeURIComponent(x.symbol)+'">Xem phân tích chi tiết →</a></div></div></article>';
   }).join("");
+}
+function newsRelationLabel(v){
+  const x=String(v||"").toUpperCase();
+  if(x==="DIRECT_SYMBOL")return "Liên quan trực tiếp";
+  if(x==="SECTOR")return "Liên quan theo ngành";
+  if(x==="MARKET")return "Liên quan toàn thị trường";
+  return "";
+}
+function confirmationLabel(v){
+  const x=String(v||"").toUpperCase();
+  const map={
+    CONFIRMED:"Đã có phản ứng giá",
+    SUPPORTIVE:"Giá đang ủng hộ",
+    CONTRADICTED:"Giá chưa ủng hộ",
+    MIXED:"Phản ứng giá chưa rõ",
+    PENDING:"Đang chờ phản ứng giá",
+    UNKNOWN:"Chưa có xác nhận giá"
+  };
+  return map[x]||"Chưa có xác nhận giá";
 }
 function renderEventsNews(d){
   const ev=Array.isArray(d.events)?d.events:[];
@@ -172,9 +195,24 @@ function renderEventsNews(d){
   const legacy=Array.isArray(d.news)?d.news:[];
   $("#eventList").innerHTML=ev.length?ev.map(x=>'<article class="pf-event"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.detected_at)+'</time></header><p>'+esc((x.related_symbols||[]).join(" · "))+(x.severity?" · Mức "+esc(x.severity):"")+'</p></article>').join(""):'<div class="pf-note">Không có sự kiện đủ quan trọng và đủ liên quan trực tiếp tới danh mục trong dữ liệu hiện tại.</div>';
   if(canonical.length){
-    $("#newsList").innerHTML=canonical.map(x=>'<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.published_at)+'</time></header><p>'+esc(x.directness||"—")+' · '+pct(x.capital_coverage_pct)+' vốn liên quan · '+esc((x.affected_symbols||[]).join(", "))+' · '+esc(x.market_confirmation?.status||"Chưa có xác nhận giá")+'</p></article>').join("");
+    $("#newsList").innerHTML=canonical.map(x=>{
+      const parts=[
+        newsRelationLabel(x.directness),
+        num(x.capital_coverage_pct)===null?"":pct(x.capital_coverage_pct)+" vốn liên quan",
+        (x.affected_symbols||[]).join(", "),
+        confirmationLabel(x.market_confirmation?.status)
+      ].filter(Boolean);
+      return '<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.published_at)+'</time></header><p>'+esc(parts.join(" · "))+'</p></article>';
+    }).join("");
   }else{
-    $("#newsList").innerHTML=legacy.length?legacy.map(x=>'<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.last_seen_at)+'</time></header><p>'+pct(x.capital_coverage_pct)+' danh mục liên quan · '+esc((x.related_symbols||[]).join(", "))+' · '+esc(x.market_confirmation?.status||"Chưa có xác nhận giá")+'</p></article>').join(""):'<div class="pf-note">Không có tin đủ liên quan sau lớp Stock Intelligence. Hệ thống không tự điền tin.</div>';
+    $("#newsList").innerHTML=legacy.length?legacy.map(x=>{
+      const parts=[
+        num(x.capital_coverage_pct)===null?"":pct(x.capital_coverage_pct)+" danh mục liên quan",
+        (x.related_symbols||[]).join(", "),
+        confirmationLabel(x.market_confirmation?.status)
+      ].filter(Boolean);
+      return '<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.last_seen_at)+'</time></header><p>'+esc(parts.join(" · "))+'</p></article>';
+    }).join(""):'<div class="pf-note">Hiện chưa có tin đủ liên quan trực tiếp tới danh mục.</div>';
   }
 }
 function renderPersonalization(d){
@@ -185,7 +223,7 @@ function renderPersonalization(d){
   const pbox=$("#profileIntel"),rbox=$("#riskIntel");
 
   if(!profile||profile.profile_status==="UNAVAILABLE"){
-    pbox.innerHTML='<div class="pf-note"><b>Chưa có hồ sơ cá nhân hóa.</b><br>Làm <a class="pf-detail-link" href="danh-gia-ho-so-nha-dau-tu.html">17 câu đánh giá hồ sơ</a> và <a class="pf-detail-link" href="kiem-tra-thuc-te-dau-tu.html">Kiểm tra thực tế đầu tư</a>, sau đó đăng nhập/lưu kết quả để Decision Core có thêm ngữ cảnh.</div>';
+    pbox.innerHTML='<div class="pf-note"><b>Chưa có hồ sơ cá nhân hóa.</b><br>Làm <a class="pf-detail-link" href="danh-gia-ho-so-nha-dau-tu.html">17 câu đánh giá hồ sơ</a> và <a class="pf-detail-link" href="kiem-tra-thuc-te-dau-tu.html">Kiểm tra thực tế đầu tư</a>, sau đó đăng nhập để kết quả được cá nhân hóa theo tài khoản.</div>';
   }else{
     const a=profile.assessment_summary||{},fr=profile.financial_reality||{};
     pbox.innerHTML='<div class="pf-fit-grid">'+
@@ -199,30 +237,31 @@ function renderPersonalization(d){
   }
 
   if(!risk||risk.source_quality==="UNAVAILABLE"){
-    rbox.innerHTML='<div class="pf-note"><b>RISK_STATE chưa đủ dữ liệu cá nhân.</b><br>Hiện hệ thống vẫn đọc rủi ro danh mục từ tỷ trọng, trạng thái mã và margin bạn nhập; chưa dùng dữ liệu cá nhân để tăng/giảm giới hạn.</div>';
+    rbox.innerHTML='<div class="pf-note"><b>Chưa đủ dữ liệu rủi ro cá nhân.</b><br>Hiện kết quả vẫn dựa trên tỷ trọng danh mục, trạng thái từng mã và margin bạn nhập.</div>';
   }else{
     const labels={LOW_PRESSURE:"Áp lực thấp",NORMAL:"Bình thường",ELEVATED:"Cần lưu ý",HIGH_PRESSURE:"Áp lực cao",UNKNOWN:"Chưa xác định"};
     const flags=Array.isArray(risk.pressure_flags)?risk.pressure_flags:[];
     rbox.innerHTML='<div class="pf-fit-grid">'+
       fitItem("Trạng thái",labels[risk.risk_state]||risk.risk_state||"—")+
-      fitItem("Risk budget",pct(risk.risk_budget))+
-      fitItem("Ngân sách lỗ tối đa",money(risk.max_loss_allowed),"Theo vốn đầu tư và risk budget đã lưu")+
+      fitItem("Ngân sách rủi ro",pct(risk.risk_budget))+
+      fitItem("Ngân sách lỗ tối đa",money(risk.max_loss_allowed),"Theo vốn đầu tư và giới hạn rủi ro đã lưu")+
       fitItem("Giới hạn một mã",pct(risk.position_size_limit))+
       fitItem("Giới hạn một ngành",pct(risk.sector_size_limit))+
       fitItem("Giới hạn margin",pct(risk.margin_limit_pct))+
       '</div>'+
       (flags.length?'<div class="pf-note"><b>Áp lực đang ghi nhận:</b><br>'+flags.map(x=>esc(String(x).replaceAll("_"," "))).join(" · ")+'</div>':'<div class="pf-note">Chưa ghi nhận cờ áp lực tài chính nổi bật từ dữ liệu đã lưu.</div>')+
-      (decision?.personalization?.risk_state_used?'<div class="pf-note"><b>Đã dùng trong Account Intelligence.</b> Kết quả vẫn ở chế độ read-only; quyền quyết định chính thức thuộc Decision Core.</div>':'');
+      (decision?.personalization?.risk_state_used?'<div class="pf-note">Dữ liệu hồ sơ và rủi ro đã được dùng để cá nhân hóa kết quả.</div>':'');
   }
 }
 function renderRiskStress(d){
   const p=d.portfolio||{},s=d.stress_test||{};
   $("#riskGrid").innerHTML=[
-    '<div class="pf-risk-card"><span>Vị thế lớn nhất</span><b>'+pct(p.largest_position_weight)+'</b></div>',
-    '<div class="pf-risk-card"><span>Top 3 vị thế</span><b>'+pct(p.top3_weight)+'</b></div>',
-    '<div class="pf-risk-card"><span>Ngành lớn nhất</span><b>'+pct(p.largest_sector_weight)+'</b></div>',
-    '<div class="pf-risk-card"><span>Nợ margin / tài sản</span><b>'+pct(p.margin_pct)+'</b></div>'
-  ].join("");
+    ["Vị thế lớn nhất",p.largest_position_weight],
+    ["Top 3 vị thế",p.top3_weight],
+    ["Ngành lớn nhất",p.largest_sector_weight],
+    ["Nợ margin / tài sản",p.margin_pct]
+  ].filter(x=>num(x[1])!==null).map(x=>'<div class="pf-risk-card"><span>'+esc(x[0])+'</span><b>'+pct(x[1])+'</b></div>').join("") ||
+  '<div class="pf-note">Chưa đủ dữ liệu để hiển thị rủi ro tập trung.</div>';
   const sectors=Array.isArray(p.sector_weights)?p.sector_weights.slice(0,6):[];
   $("#sectorWeights").innerHTML=sectors.map(x=>'<div class="pf-sector-row"><div><span>'+esc(x.sector)+'</span><div class="pf-sector-bar"><i style="width:'+Math.min(100,Math.max(0,num(x.weight)||0))+'%"></i></div></div><b>'+pct(x.weight)+'</b></div>').join("");
   const sc=Array.isArray(s.scenarios)?s.scenarios:[];
@@ -237,13 +276,13 @@ function renderConditions(d){
 function renderConfidence(d){
   const c=d.confidence||{},ctx=d.context||{},data=c.data||{},miss=d.missing_contract||{};
   $("#confidenceScore").textContent=num(c.score)===null?"—":Math.round(c.score)+"/100";
-  $("#confidenceLabel").textContent=(c.preliminary?"SƠ BỘ · ":"")+(c.label||"—");
+  $("#confidenceLabel").textContent=(c.preliminary?"SƠ BỘ · ":"")+(c.label==="HIGH"?"Cao":c.label==="MEDIUM"?"Trung bình":c.label==="LOW"?"Thấp":c.label||"—");
   $("#confidenceData").innerHTML=[
-    ["Thị trường",data.market],["Độ phủ stock",num(data.stock_weighted_coverage)===null?"—":Math.round(data.stock_weighted_coverage)+"/100"],
+    ["Thị trường",data.market],["Độ phủ cổ phiếu",num(data.stock_weighted_coverage)===null?null:Math.round(data.stock_weighted_coverage)+"/100"],
     ["Tỷ trọng",data.portfolio_weight],["Ngành",data.sector],["T+",data.tplus],["Tin tức",data.news]
-  ].map(x=>'<div><span>'+esc(x[0])+'</span><b>'+esc(x[1]||"—")+'</b></div>').join("");
+  ].filter(x=>x[1]!==null&&x[1]!==undefined&&x[1]!==""&&x[1]!=="—").map(x=>'<div><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join("");
   const missing=Object.values(miss).filter(Boolean);
-  $("#unknownContract").innerHTML=missing.length?"<b>Những gì hệ thống chủ động không suy đoán:</b><br>"+missing.map(esc).join("<br>"):"";
+  $("#unknownContract").innerHTML=missing.length?"<b>Thông tin còn thiếu:</b><br>"+missing.map(esc).join("<br>"):"";
   $("#resultUpdated").textContent="Cập nhật bộ não: "+stamp(d.generated_at)+" · "+esc(ctx.market_freshness?.label||"");
 }
 function historyComparison(d){
