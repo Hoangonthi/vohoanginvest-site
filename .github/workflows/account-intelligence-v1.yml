@@ -1,0 +1,36 @@
+name: Account Intelligence Site CI
+
+on:
+  push:
+    branches:
+      - account-intelligence-v1
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'kiem-tra-nhanh-tai-khoan.html'
+      - 'assets/js/portfolio-decision.js'
+      - '.github/workflows/account-intelligence-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check JavaScript syntax
+        run: node --check assets/js/portfolio-decision.js
+      - name: Verify account intelligence wiring
+        run: |
+          grep -q 'account-intelligence-v1' assets/js/portfolio-decision.js
+          grep -q 'requestAccountIntelligence' assets/js/portfolio-decision.js
+          grep -q 'renderPersonalization' assets/js/portfolio-decision.js
+          grep -q 'id="profileIntel"' kiem-tra-nhanh-tai-khoan.html
+          grep -q 'id="riskIntel"' kiem-tra-nhanh-tai-khoan.html
