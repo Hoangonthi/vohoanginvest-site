@@ -12,7 +12,7 @@ assert.match(js, /side==="up"\?"Tăng":"Giảm"/, "mover rows must be labelled T
 assert.match(js, /stock-detail\.html\?symbol=\$\{encodeURIComponent\(item\.symbol\)\}/, "visible stocks must link to stock detail by symbol");
 assert.match(js, /<em>\$\{pct\(item\.change\)\}<\/em>/, "visible stock links must show percentage change");
 assert.match(js, /closeSectorMoverPopovers\(\)/, "outside interaction must be able to close popovers");
-assert.match(js, /event\.target\.closest\?\("\.sector-mover-line\.has-rest"\)/, "tap/click must target the full Tăng/Giảm line");
+assert.match(js, /event\.target\.closest\?\.\("\.sector-mover-line\.has-rest"\)/, "tap/click must target the full Tăng/Giảm line");
 assert.match(js, /initSectorMoverInteractions\(\);/, "sector mover interactions must be initialized");
 
 assert.match(html, /\.sector-mover-line\.has-rest:hover \.sector-more-pop/, "desktop hover must open the remaining list");
