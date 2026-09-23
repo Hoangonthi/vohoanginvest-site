@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Đánh giá hồ sơ nhà đầu tư – 17 câu | Võ Hoàng</title>
+  <meta name="description" content="17 câu ngắn để nhìn lại cách ra quyết định, quản trị rủi ro, danh mục, chiến lược và kỷ luật đầu tư.">
+  <link rel="icon" href="favicon10.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{min-height:100vh;background:#04111f}
+    .assessment-page-back{position:fixed;left:18px;top:18px;z-index:90;padding:9px 12px;border:1px solid rgba(229,196,119,.24);border-radius:999px;color:#f3cf74;background:rgba(3,11,20,.82);font:700 12px "Be Vietnam Pro",sans-serif;text-decoration:none}
+    [data-modal="assessment"].app-modal{display:grid}
+  </style>
+</head>
+<body>
+  <a class="assessment-page-back" href="./">← Trang chủ</a>
+  <div class="app-modal" data-modal="assessment" aria-modal="true" role="dialog">
+    <div class="modal-backdrop" data-close-assessment></div>
+    <section class="modal-panel assessment-panel">
+      <button class="modal-close" type="button" aria-label="Đóng" data-close-assessment>×</button>
+      <div data-assessment-root>Đang tải bộ đánh giá...</div>
+    </section>
+  </div>
+  <div class="app-toast" data-toast hidden></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { initAssessment } from "./assets/js/assessment.js";
+    import { openInvestorProfileAssessment } from "./assets/js/investor-profile-assessment.js";
+    initAssessment();
+    openInvestorProfileAssessment();
+    const goHome=()=>{ window.location.href="./"; };
+    document.addEventListener("click",(event)=>{
+      const target=event.target.closest("[data-close-assessment],[data-close-modal]");
+      if(target){ event.preventDefault(); goHome(); }
+    });
+    document.addEventListener("keydown",(event)=>{ if(event.key==="Escape") goHome(); });
+  </script>
+</body>
+</html>
