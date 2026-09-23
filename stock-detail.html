@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/stock-detail.css?v=20260918-17">
+  <link rel="stylesheet" href="assets/css/stock-detail.css?v=20260923-intel1">
 </head>
 <body>
   <div id="siteHeader"></div>
@@ -56,6 +56,7 @@
         <button data-tab="flow" type="button">Dòng tiền</button>
         <button data-tab="fundamental" type="button">Cơ bản</button>
         <button data-tab="history" type="button">HT & Sự kiện</button>
+        <button data-tab="intelligence" type="button">Tin & Quyết định</button>
       </nav>
 
       <section class="sd-panel active" id="tong-quan" data-panel="overview">
@@ -163,6 +164,25 @@
         </div>
       </section>
 
+      <section class="sd-panel" data-panel="intelligence">
+        <div class="sd-two">
+          <article class="sd-card">
+            <div class="sd-card-head">
+              <div><span>NEWS INTELLIGENCE</span><h2>Tin liên quan tới mã này</h2></div>
+              <small id="intelligenceNewsMeta"></small>
+            </div>
+            <div id="intelligenceNewsList" class="sd-list"></div>
+          </article>
+          <article class="sd-card">
+            <div class="sd-card-head">
+              <div><span>DECISION CORE · SHADOW</span><h2>Kiểm tra chéo quyết định</h2></div>
+              <small>Không phải authority</small>
+            </div>
+            <div id="intelligenceDecision" class="sd-list"></div>
+          </article>
+        </div>
+      </section>
+
       <p class="sd-note">
         Dữ liệu và cách phân nhóm chỉ phục vụ mục đích tham khảo, hỗ trợ nhìn lại trạng thái và bối cảnh.
         Không phải khuyến nghị mua/bán. Sự kiện thị trường được hiển thị như bối cảnh, không được mặc định là nguyên nhân của biến động giá.
@@ -172,7 +192,7 @@
 
   <div id="siteFooter"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/stock-detail.js?v=20260918-17"></script>
+  <script type="module" src="assets/js/stock-detail.js?v=20260923-intel1"></script>
   <script type="module" src="assets/js/site-header.js?v=20260913-8"></script>
 </body>
 </html>

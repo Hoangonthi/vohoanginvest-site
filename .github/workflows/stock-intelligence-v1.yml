@@ -1,0 +1,47 @@
+name: Stock Intelligence V1 CI
+
+on:
+  push:
+    branches:
+      - stock-intelligence-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check stock detail JavaScript syntax
+        run: node --check assets/js/stock-detail.js
+      - name: Smoke stock intelligence endpoint
+        run: |
+          node - <<'NODE'
+          const url='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-intelligence-public-v1?symbol=FPT&hours=72';
+          const r=await fetch(url,{headers:{accept:'application/json'}});
+          const d=await r.json().catch(()=>null);
+          if(!r.ok || !d?.ok) throw new Error('endpoint failed: '+r.status+' '+JSON.stringify(d));
+          if(d.symbol!=='FPT') throw new Error('wrong symbol');
+          if(d.safety?.official!==false || d.safety?.authority!==false || d.safety?.read_only!==true) throw new Error('shadow safety flags mismatch');
+          if(!d.news || !Array.isArray(d.news.events)) throw new Error('news envelope missing');
+          console.log(JSON.stringify({
+            ok:true,
+            symbol:d.symbol,
+            news_total:d.news.total,
+            direct:d.news.counts?.direct,
+            sector:d.news.counts?.sector,
+            market:d.news.counts?.market,
+            dc_available:d.decision_core?.available===true
+          },null,2));
+          NODE
+      - name: Verify stock detail wiring
+        run: |
+          grep -q 'data-tab="intelligence"' stock-detail.html
+          grep -q 'STOCK_INTELLIGENCE_ENDPOINT' assets/js/stock-detail.js
+          grep -q 'renderIntelligence' assets/js/stock-detail.js
