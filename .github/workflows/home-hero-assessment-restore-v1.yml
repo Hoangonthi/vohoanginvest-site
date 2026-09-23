@@ -1,0 +1,37 @@
+name: Home Hero Assessment Restore CI
+
+on:
+  push:
+    branches:
+      - home-hero-assessment-restore-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify requested hero copy and assessment links
+        run: |
+          grep -q 'font-size:48px' index.html
+          grep -q 'Đánh giá hồ sơ · 17 câu →' index.html
+          grep -q 'Kiểm tra thực tế đầu tư →' index.html
+          grep -q 'Tài khoản ổn không? →' index.html
+          grep -q 'Sáng nay nhìn gì? →' index.html
+          grep -q 'href="danh-gia-ho-so-nha-dau-tu.html"' index.html
+          grep -q 'href="kiem-tra-thuc-te-dau-tu.html"' index.html
+      - name: Verify assessment entry pages
+        run: |
+          test -f danh-gia-ho-so-nha-dau-tu.html
+          test -f kiem-tra-thuc-te-dau-tu.html
+          test -f assets/js/assessment.js
+          test -f assets/js/investor-profile-assessment.js
+          test -f assets/js/investment-reality-check.js
+          grep -q 'openInvestorProfileAssessment' danh-gia-ho-so-nha-dau-tu.html
+          grep -q 'data-open-reality-check' kiem-tra-thuc-te-dau-tu.html
+          grep -q 'data-assessment-root' danh-gia-ho-so-nha-dau-tu.html
+          grep -q 'data-assessment-root' kiem-tra-thuc-te-dau-tu.html
