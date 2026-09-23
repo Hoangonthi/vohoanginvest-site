@@ -1,0 +1,26 @@
+name: Sector movers UI contract
+
+on:
+  pull_request:
+    paths:
+      - "assets/js/market-reader.js"
+      - "thi-truong-hom-nay.html"
+      - "tests/sector-movers-ui-contract.mjs"
+      - ".github/workflows/sector-movers-ui-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check market reader JavaScript syntax
+        run: node --check assets/js/market-reader.js
+      - name: Verify sector mover UI contract
+        run: node tests/sector-movers-ui-contract.mjs

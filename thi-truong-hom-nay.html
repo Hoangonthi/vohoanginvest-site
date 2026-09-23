@@ -645,10 +645,10 @@
     .sector-row{
       position:relative;
       display:grid;
-      grid-template-columns:minmax(250px,1.35fr) minmax(120px,1fr) 66px;
+      grid-template-columns:minmax(280px,1.5fr) minmax(110px,.9fr) 62px;
       align-items:center;
       gap:9px;
-      min-height:44px;
+      min-height:55px;
       padding:5px 7px;
       border-radius:9px;
       background:rgba(255,255,255,.018);
@@ -671,55 +671,86 @@
       text-overflow:ellipsis;
     }
     .sector-movers{
-      display:flex;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:2px 8px;
-      min-height:13px;
+      display:grid;
+      gap:1px;
+      min-height:25px;
       margin-top:2px;
     }
-    .sector-mover-line{display:inline-flex;align-items:center;gap:3px;min-width:0}
-    .sector-mover-mark{font-size:7.5px;font-weight:900;line-height:1}
-    .sector-mover-line.is-up .sector-mover-mark{color:var(--green)}
-    .sector-mover-line.is-down .sector-mover-mark{color:var(--red)}
-    .sector-mover-links{display:inline-flex;align-items:center;gap:4px;min-width:0}
+    .sector-mover-line{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:4px;
+      width:max-content;
+      max-width:100%;
+      min-width:0;
+      min-height:12px;
+      outline:none;
+    }
+    .sector-mover-line.has-rest{cursor:pointer}
+    .sector-mover-label{
+      flex:0 0 30px;
+      font-size:7.8px;
+      font-weight:800;
+      line-height:1.2;
+    }
+    .sector-mover-line.is-up .sector-mover-label{color:var(--green)}
+    .sector-mover-line.is-down .sector-mover-label{color:var(--red)}
+    .sector-mover-links{
+      display:flex;
+      align-items:center;
+      gap:3px;
+      min-width:0;
+      white-space:nowrap;
+    }
     .sector-stock{
-      font-size:8.2px;
+      display:inline-flex;
+      align-items:baseline;
+      gap:2px;
+      font-size:8px;
       line-height:1.25;
       font-weight:800;
-      letter-spacing:.01em;
+      letter-spacing:.005em;
       text-decoration:none;
       transition:opacity .15s ease,color .15s ease;
+    }
+    .sector-stock em{
+      font-style:normal;
+      font-size:7.6px;
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+      opacity:.88;
     }
     .sector-stock.is-up{color:#59e6a1}
     .sector-stock.is-down{color:#ff7e89}
     .sector-stock:hover{text-decoration:underline;opacity:.92}
-    .sector-more{
-      position:relative;
+    .sector-stock-sep{
+      color:rgba(231,237,246,.35);
+      font-size:7px;
+      line-height:1;
+    }
+    .sector-more-count{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-width:22px;
+      min-width:21px;
       height:14px;
       padding:0 4px;
       border:1px solid rgba(255,255,255,.11);
       border-radius:999px;
       background:rgba(255,255,255,.035);
-      font-size:7.5px;
+      color:var(--muted-2);
+      font-size:7px;
       font-weight:800;
-      cursor:default;
-      outline:none;
     }
-    .sector-more.is-up{color:#59e6a1}
-    .sector-more.is-down{color:#ff7e89}
     .sector-more-pop{
       position:absolute;
-      z-index:30;
-      left:-6px;
-      top:calc(100% + 6px);
+      z-index:40;
+      left:30px;
+      top:calc(100% + 5px);
       display:none;
-      width:220px;
-      max-height:230px;
+      width:230px;
+      max-height:250px;
       overflow:auto;
       padding:8px;
       border:1px solid rgba(224,187,99,.22);
@@ -727,9 +758,9 @@
       background:#071625;
       box-shadow:0 14px 34px rgba(0,0,0,.38);
     }
-    .sector-more:hover .sector-more-pop,
-    .sector-more:focus .sector-more-pop,
-    .sector-more:focus-within .sector-more-pop{display:grid;gap:2px}
+    .sector-mover-line.has-rest:hover .sector-more-pop,
+    .sector-mover-line.has-rest:focus-within .sector-more-pop,
+    .sector-mover-line.has-rest.is-open .sector-more-pop{display:grid;gap:2px}
     .sector-more-pop>b{
       display:block;
       margin-bottom:4px;
@@ -750,8 +781,8 @@
     }
     .sector-more-pop>a:hover{background:rgba(255,255,255,.055)}
     .sector-more-pop>a em{font-style:normal;font-variant-numeric:tabular-nums}
-    .sector-more.is-up .sector-more-pop>a em{color:var(--green)}
-    .sector-more.is-down .sector-more-pop>a em{color:var(--red)}
+    .sector-mover-line.is-up .sector-more-pop>a em{color:var(--green)}
+    .sector-mover-line.is-down .sector-more-pop>a em{color:var(--red)}
     .sector-bar{
       height:5px;
       border-radius:999px;
@@ -1692,11 +1723,19 @@
     }
   
     @media(max-width:760px){
-      .sector-row{grid-template-columns:minmax(190px,1.25fr) minmax(72px,.7fr) 54px;gap:6px}
-      .sector-stock{font-size:7.8px}
-      .sector-mover-line{gap:2px}
-      .sector-mover-links{gap:3px}
-      .sector-more-pop{left:auto;right:-8px;width:min(220px,72vw)}
+      .sector-row{grid-template-columns:minmax(205px,1.45fr) minmax(58px,.55fr) 48px;gap:5px;min-height:58px}
+      .sector-name>small{font-size:7.5px}
+      .sector-mover-label{flex-basis:28px;font-size:7.4px}
+      .sector-stock{font-size:7.5px;gap:1.5px}
+      .sector-stock em{font-size:7.1px}
+      .sector-mover-links{gap:2px}
+      .sector-more-count{min-width:18px;padding:0 3px}
+      .sector-more-pop{left:auto;right:-8px;width:min(235px,78vw);max-height:48vh}
+    }
+    @media(max-width:520px){
+      .sector-row{grid-template-columns:minmax(205px,1fr) 52px 45px}
+      .sector-bar{height:4px}
+      .sector-mover-line{max-width:100%}
     }
 </style>
 </head>
@@ -1985,7 +2024,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/market-reader.js?v=20260923-sector1"></script>
+  <script type="module" src="assets/js/market-reader.js?v=20260923-sector2"></script>
 
   <!-- Chỉ bổ sung giao diện đổi màu; KHÔNG sửa logic backend -->
   <script>
