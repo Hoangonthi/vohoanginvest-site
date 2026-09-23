@@ -300,39 +300,131 @@
       color:var(--muted);
     }
 
-    .hero-assessment-links{
+    .hero-actions{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:24px;
+      max-width:650px;
+    }
+
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary{
+      width:100%;
+      min-height:52px;
+    }
+
+    .hero-assessment-card{
+      max-width:650px;
+      margin-top:22px;
+      padding:16px;
+      border:1px solid rgba(224,187,99,.20);
+      border-radius:18px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.012));
+      box-shadow:0 14px 34px rgba(0,0,0,.12);
+    }
+
+    .hero-assessment-head{
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .hero-assessment-link{
-      min-height:40px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(224,187,99,.28);
-      background:rgba(224,187,99,.055);
-      color:#f2d486;
-      display:inline-flex;
       align-items:center;
-      justify-content:center;
-      font-size:12px;
-      font-weight:700;
-      transition:.2s ease;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:12px;
     }
 
-    .hero-assessment-link:hover{
-      border-color:rgba(224,187,99,.58);
-      background:rgba(224,187,99,.10);
+    .hero-assessment-title{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      min-width:0;
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .hero-assessment-title svg{
+      width:18px;
+      height:18px;
+      flex:0 0 18px;
+      fill:none;
+      stroke:var(--gold-2);
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .hero-assessment-head small{
+      color:var(--muted-2);
+      font-size:11px;
+      white-space:nowrap;
+    }
+
+    .hero-assessment-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .hero-assessment-item{
+      min-width:0;
+      min-height:74px;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid rgba(224,187,99,.18);
+      background:rgba(6,24,42,.58);
+      display:grid;
+      grid-template-columns:34px minmax(0,1fr);
+      gap:11px;
+      align-items:center;
+      transition:border-color .2s ease,background .2s ease,transform .2s ease;
+    }
+
+    .hero-assessment-item:hover{
+      border-color:rgba(224,187,99,.46);
+      background:rgba(224,187,99,.055);
       transform:translateY(-1px);
     }
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:18px;
+    .hero-assessment-icon{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(224,187,99,.42);
+      color:var(--gold-2);
+      background:rgba(224,187,99,.04);
+    }
+
+    .hero-assessment-icon svg{
+      width:17px;
+      height:17px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .hero-assessment-copy{
+      min-width:0;
+    }
+
+    .hero-assessment-copy strong{
+      display:block;
+      color:#fff;
+      font-size:12px;
+      line-height:1.35;
+      font-weight:800;
+    }
+
+    .hero-assessment-copy span{
+      display:block;
+      margin-top:4px;
+      color:var(--muted-2);
+      font-size:10.5px;
+      line-height:1.4;
     }
 
     .btn-primary,.btn-secondary{
@@ -365,8 +457,10 @@
       display:flex;
       flex-wrap:wrap;
       gap:10px 18px;
-      margin:24px 0 0;
-      padding:0;
+      max-width:650px;
+      margin:22px 0 0;
+      padding:15px 0 0;
+      border-top:1px solid rgba(224,187,99,.14);
       list-style:none;
     }
     .hero-proof li{
@@ -1418,11 +1512,14 @@
       .home-eyebrow{font-size:11px;letter-spacing:.13em}
       .home-hero h1{font-size:30px;line-height:1.08}
       .home-hero-copy > p{font-size:14px;line-height:1.7}
-      .hero-assessment-links{display:grid;grid-template-columns:1fr;gap:8px;width:100%}
-      .hero-assessment-link{width:100%;min-height:42px;font-size:12px}
-      .hero-actions{width:100%;gap:9px}
+      .hero-actions{grid-template-columns:1fr;width:100%;gap:9px;margin-top:20px}
       .btn-primary,.btn-secondary{width:100%;min-height:45px;font-size:13px}
-      .hero-proof{gap:9px 12px}
+      .hero-assessment-card{width:100%;margin-top:16px;padding:13px;border-radius:16px}
+      .hero-assessment-head{align-items:flex-start;margin-bottom:10px}
+      .hero-assessment-head small{white-space:normal;text-align:right;font-size:10px}
+      .hero-assessment-grid{grid-template-columns:1fr;gap:8px}
+      .hero-assessment-item{min-height:66px;padding:11px 12px}
+      .hero-proof{gap:8px 12px;margin-top:16px;padding-top:13px}
       .hero-proof li{font-size:12px}
       /* HERO MOBILE - LOẠI BỎ KHOẢNG HỞ TRƯỚC ẢNH */
 
@@ -2414,14 +2511,41 @@
               Đầu tư dựa trên dữ liệu, quản trị vốn và một quy trình rõ ràng. Mỗi quyết định đều có kế hoạch, giới hạn rủi ro và điều kiện để hành động.
             </p>
 
-            <div class="hero-assessment-links" aria-label="Đánh giá nhà đầu tư">
-              <a class="hero-assessment-link" href="danh-gia-ho-so-nha-dau-tu.html">Đánh giá hồ sơ · 17 câu →</a>
-              <a class="hero-assessment-link" href="kiem-tra-thuc-te-dau-tu.html">Kiểm tra thực tế đầu tư →</a>
-            </div>
-
             <div class="hero-actions">
               <a class="btn-primary" href="kiem-tra-nhanh-tai-khoan.html">Tài khoản ổn không? →</a>
               <a class="btn-secondary" href="sang-nay-can-nhin-gi.html">Sáng nay nhìn gì? →</a>
+            </div>
+
+            <div class="hero-assessment-card" aria-label="Công cụ đánh giá nhanh">
+              <div class="hero-assessment-head">
+                <div class="hero-assessment-title">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-8 12h6l-1 8 9-13h-6z"/></svg>
+                  <span>Công cụ đánh giá nhanh</span>
+                </div>
+                <small>Hiểu mình hơn. Đầu tư tốt hơn.</small>
+              </div>
+
+              <div class="hero-assessment-grid">
+                <a class="hero-assessment-item" href="danh-gia-ho-so-nha-dau-tu.html">
+                  <span class="hero-assessment-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 3h7l3 3v15H7z"/><path d="M14 3v4h4"/></svg>
+                  </span>
+                  <span class="hero-assessment-copy">
+                    <strong>Đánh giá hồ sơ · 17 câu →</strong>
+                    <span>Nhìn lại cách đầu tư và mức chịu rủi ro</span>
+                  </span>
+                </a>
+
+                <a class="hero-assessment-item" href="kiem-tra-thuc-te-dau-tu.html">
+                  <span class="hero-assessment-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+                  </span>
+                  <span class="hero-assessment-copy">
+                    <strong>Kiểm tra thực tế đầu tư →</strong>
+                    <span>Đối chiếu vốn, dòng tiền và áp lực thực tế</span>
+                  </span>
+                </a>
+              </div>
             </div>
 
             <ul class="hero-proof hero-quick-links" aria-label="Lối tắt cổ phiếu">
