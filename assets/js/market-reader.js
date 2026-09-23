@@ -117,7 +117,12 @@ function renderMetrics(data,mi){
   setText("vnIndex",vnValue===null?"—":fmt(vnValue,2));
   setText("vnIndexSub",vnChange===null?"—":`${vnChange>0?"+":""}${fmt(vnChange,2)} · ${pct(vnPct)}`);
   const b=mi?.breadth||{};
-  setText("breadthState",b.label||"—");
+  const breadthLabel=String(b.label||"").trim();
+  const breadthState=document.getElementById("breadthState");
+  if(breadthState){
+    breadthState.textContent=breadthLabel;
+    breadthState.hidden=!breadthLabel;
+  }
   setText("breadthSub",b.adv===null||b.adv===undefined?"Chưa đủ dữ liệu":`${b.adv} tăng · ${b.flat} TC · ${b.dec} giảm`);
   const flow=mi?.flow||{};
   setText("flowValue",flow.value_b===null||flow.value_b===undefined?"—":`${fmtTrim(flow.value_b,1)} tỷ`);
