@@ -1,6 +1,6 @@
 import { supabaseClient } from "./supabase-client.js";
 
-const ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/portfolio-decision-public";
+const ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/account-intelligence-v1";
 const DRAFT_KEY="vh_portfolio_decision_draft_v1";
 const MAX_ROWS=20;
 const $=(s,r=document)=>r.querySelector(s);
@@ -9,6 +9,7 @@ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const num=v=>{if(v===null||v===undefined||String(v).trim()==="")return null;const x=Number(v);return Number.isFinite(x)?x:null};
 const fmt=(v,d=2)=>num(v)===null?"—":new Intl.NumberFormat("vi-VN",{maximumFractionDigits:d}).format(Number(v));
 const pct=(v,d=1)=>num(v)===null?"—":fmt(v,d)+"%";
+const money=v=>num(v)===null?"—":new Intl.NumberFormat("vi-VN",{maximumFractionDigits:0}).format(Number(v))+" đ";
 const stamp=v=>{if(!v)return"—";try{return new Intl.DateTimeFormat("vi-VN",{timeZone:"Asia/Ho_Chi_Minh",hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit",hour12:false}).format(new Date(v))}catch{return"—"}};
 const moveClass=v=>num(v)>0?"pf-up":num(v)<0?"pf-down":"pf-flat";
 const stateClass=s=>String(s||"UNKNOWN").toLowerCase();
@@ -81,7 +82,7 @@ function renderSource(d){
   root.innerHTML='<span class="pf-dot '+freshClass(f.code)+'"></span><b>'+esc(f.label||"Chưa xác định")+'</b>'+
     '<span>Thị trường: '+esc(c.market_date||"—")+'</span><span>·</span>'+
     '<span>'+(c.tplus_usable?"T+ cùng phiên":"T+ không dùng cho phiên này")+'</span><span>·</span>'+
-    '<span>MARKET → SECTOR → STOCK → PORTFOLIO → ACTION</span>';
+    '<span>MARKET → SECTOR → STOCK → PORTFOLIO → PROFILE/RISK → DECISION CORE</span>';
 }
 function renderExec(d){
   const p=d.portfolio||{},m=d.market||{},c=d.confidence||{},score=num(p.portfolio_score),pre=Boolean(c.preliminary),alpha=num(p.account_alpha);
@@ -94,7 +95,8 @@ function renderExec(d){
   $("#metricFit").textContent=num(p.market_fit_score)===null?"—":Math.round(p.market_fit_score);
   $("#metricRisk").textContent=num(p.risk_score)===null?"—":Math.round(p.risk_score);
   $("#keyMessage").textContent=[p.main_strength,p.main_risk].filter(Boolean).join(" ");
-  $("#priorityAction").textContent=p.priority_action||"Chưa đủ dữ liệu để xác định việc cần ưu tiên.";
+  const accountDecision=d.account_intelligence?.account_decision||null;
+  $("#priorityAction").textContent=accountDecision?.risk_priority||p.priority_action||"Chưa đủ dữ liệu để xác định việc cần ưu tiên.";
   $("#confidenceInline").textContent="Độ tin cậy "+(c.label||"—")+(num(c.score)!==null?" · "+Math.round(c.score)+"/100":"");
 }
 function allocationBox(label,value,tone){
@@ -165,9 +167,53 @@ function renderPositions(d){
   }).join("");
 }
 function renderEventsNews(d){
-  const ev=Array.isArray(d.events)?d.events:[],nw=Array.isArray(d.news)?d.news:[];
+  const ev=Array.isArray(d.events)?d.events:[];
+  const canonical=Array.isArray(d.account_intelligence?.news_impact)?d.account_intelligence.news_impact:[];
+  const legacy=Array.isArray(d.news)?d.news:[];
   $("#eventList").innerHTML=ev.length?ev.map(x=>'<article class="pf-event"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.detected_at)+'</time></header><p>'+esc((x.related_symbols||[]).join(" · "))+(x.severity?" · Mức "+esc(x.severity):"")+'</p></article>').join(""):'<div class="pf-note">Không có sự kiện đủ quan trọng và đủ liên quan trực tiếp tới danh mục trong dữ liệu hiện tại.</div>';
-  $("#newsList").innerHTML=nw.length?nw.map(x=>'<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.last_seen_at)+'</time></header><p>'+pct(x.capital_coverage_pct)+' danh mục liên quan · '+esc((x.related_symbols||[]).join(", "))+' · '+esc(x.market_confirmation?.status||"Chưa có xác nhận giá")+'</p></article>').join(""):'<div class="pf-note">Không có tin đã qua bộ lọc xác minh liên quan trực tiếp tới các mã/ngành đang giữ. Hệ thống không tự điền tin.</div>';
+  if(canonical.length){
+    $("#newsList").innerHTML=canonical.map(x=>'<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.published_at)+'</time></header><p>'+esc(x.directness||"—")+' · '+pct(x.capital_coverage_pct)+' vốn liên quan · '+esc((x.affected_symbols||[]).join(", "))+' · '+esc(x.market_confirmation?.status||"Chưa có xác nhận giá")+'</p></article>').join("");
+  }else{
+    $("#newsList").innerHTML=legacy.length?legacy.map(x=>'<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.last_seen_at)+'</time></header><p>'+pct(x.capital_coverage_pct)+' danh mục liên quan · '+esc((x.related_symbols||[]).join(", "))+' · '+esc(x.market_confirmation?.status||"Chưa có xác nhận giá")+'</p></article>').join(""):'<div class="pf-note">Không có tin đủ liên quan sau lớp Stock Intelligence. Hệ thống không tự điền tin.</div>';
+  }
+}
+function renderPersonalization(d){
+  const root=$("#personalizationSection");if(!root)return;
+  const profile=d.account_intelligence?.investor_profile||null;
+  const risk=d.account_intelligence?.risk_state||null;
+  const decision=d.account_intelligence?.account_decision||null;
+  const pbox=$("#profileIntel"),rbox=$("#riskIntel");
+
+  if(!profile||profile.profile_status==="UNAVAILABLE"){
+    pbox.innerHTML='<div class="pf-note"><b>Chưa có hồ sơ cá nhân hóa.</b><br>Làm <a class="pf-detail-link" href="danh-gia-ho-so-nha-dau-tu.html">17 câu đánh giá hồ sơ</a> và <a class="pf-detail-link" href="kiem-tra-thuc-te-dau-tu.html">Kiểm tra thực tế đầu tư</a>, sau đó đăng nhập/lưu kết quả để Decision Core có thêm ngữ cảnh.</div>';
+  }else{
+    const a=profile.assessment_summary||{},fr=profile.financial_reality||{};
+    pbox.innerHTML='<div class="pf-fit-grid">'+
+      fitItem("Mức hoàn thiện",profile.profile_status||"—")+
+      fitItem("Điểm 17 câu",num(a.overall_score)===null?"Chưa có":fmt(a.overall_score,1)+"/100")+
+      fitItem("Quản trị rủi ro",num(profile.risk_management_score)===null?"Chưa có":fmt(profile.risk_management_score,1)+"/100","Chất lượng quản trị, không phải khẩu vị rủi ro")+
+      fitItem("Hệ thống",num(profile.system_score)===null?"Chưa có":fmt(profile.system_score,1)+"/100")+
+      fitItem("Kiểm tra thực tế",fr.available?"Đã có":"Chưa có")+
+      fitItem("Khẩu vị rủi ro",profile.risk_tolerance_profile==="UNASSESSED"?"Chưa đánh giá riêng":profile.risk_tolerance_profile||"—")+
+      '</div>';
+  }
+
+  if(!risk||risk.source_quality==="UNAVAILABLE"){
+    rbox.innerHTML='<div class="pf-note"><b>RISK_STATE chưa đủ dữ liệu cá nhân.</b><br>Hiện hệ thống vẫn đọc rủi ro danh mục từ tỷ trọng, trạng thái mã và margin bạn nhập; chưa dùng dữ liệu cá nhân để tăng/giảm giới hạn.</div>';
+  }else{
+    const labels={LOW_PRESSURE:"Áp lực thấp",NORMAL:"Bình thường",ELEVATED:"Cần lưu ý",HIGH_PRESSURE:"Áp lực cao",UNKNOWN:"Chưa xác định"};
+    const flags=Array.isArray(risk.pressure_flags)?risk.pressure_flags:[];
+    rbox.innerHTML='<div class="pf-fit-grid">'+
+      fitItem("Trạng thái",labels[risk.risk_state]||risk.risk_state||"—")+
+      fitItem("Risk budget",pct(risk.risk_budget))+
+      fitItem("Ngân sách lỗ tối đa",money(risk.max_loss_allowed),"Theo vốn đầu tư và risk budget đã lưu")+
+      fitItem("Giới hạn một mã",pct(risk.position_size_limit))+
+      fitItem("Giới hạn một ngành",pct(risk.sector_size_limit))+
+      fitItem("Giới hạn margin",pct(risk.margin_limit_pct))+
+      '</div>'+
+      (flags.length?'<div class="pf-note"><b>Áp lực đang ghi nhận:</b><br>'+flags.map(x=>esc(String(x).replaceAll("_"," "))).join(" · ")+'</div>':'<div class="pf-note">Chưa ghi nhận cờ áp lực tài chính nổi bật từ dữ liệu đã lưu.</div>')+
+      (decision?.personalization?.risk_state_used?'<div class="pf-note"><b>Đã dùng trong Account Intelligence.</b> Kết quả vẫn ở chế độ read-only; quyền quyết định chính thức thuộc Decision Core.</div>':'');
+  }
 }
 function renderRiskStress(d){
   const p=d.portfolio||{},s=d.stress_test||{};
@@ -230,7 +276,7 @@ function historyComparison(d){
 }
 function showResults(d){
   renderSource(d);$("#resultPlaceholder")?.classList.add("pf-hidden");$("#resultContent")?.classList.remove("pf-hidden");
-  renderExec(d);renderAllocation(d);renderFit(d);renderPositions(d);renderEventsNews(d);renderRiskStress(d);renderConditions(d);renderConfidence(d);historyComparison(d);
+  renderExec(d);renderPersonalization(d);renderAllocation(d);renderFit(d);renderPositions(d);renderEventsNews(d);renderRiskStress(d);renderConditions(d);renderConfidence(d);historyComparison(d);
 }
 async function saveSnapshot(d,input){
   if(!$("#saveHistory")?.checked)return;
@@ -255,12 +301,31 @@ async function saveSnapshot(d,input){
   if(ins.error)throw ins.error;
   message("Đã lưu snapshot vào lịch sử tài khoản.","ok");
 }
+async function requestAccountIntelligence(input){
+  const headers={"Content-Type":"application/json",Accept:"application/json"};
+  try{
+    const res=await supabaseClient.auth.getSession();
+    const token=res?.data?.session?.access_token||"";
+    if(token)headers.Authorization="Bearer "+token;
+  }catch{}
+  const r=await fetch(ENDPOINT,{method:"POST",cache:"no-store",headers,body:JSON.stringify(input)});
+  const ai=await r.json().catch(()=>null);
+  if(!r.ok||!ai?.ok)throw new Error(ai?.error||("HTTP "+r.status));
+  const d=ai?.provider_payload?.portfolio;
+  if(!d?.ok)throw new Error("PORTFOLIO_PROVIDER_MISSING");
+  d.account_intelligence=ai.contracts||{};
+  d.account_intelligence_meta={
+    generated_at:ai.generated_at||null,
+    stock_intelligence:ai.stock_intelligence||null,
+    safety:ai.safety||null
+  };
+  return d;
+}
 async function analyze(){
   let input;try{input=inputPayload()}catch(e){message(e.message||"Dữ liệu nhập chưa hợp lệ.","error");return}
   saveDraft();setLoading(true);message("");
   try{
-    const r=await fetch(ENDPOINT,{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(input)});
-    const d=await r.json().catch(()=>null);if(!r.ok||!d?.ok)throw new Error(d?.error||("HTTP "+r.status));
+    const d=await requestAccountIntelligence(input);
     showResults(d);
     try{await saveSnapshot(d,input)}catch(e){console.error(e);message("Phân tích đã xong nhưng chưa lưu được lịch sử. Kết quả hiện tại vẫn dùng bình thường.","error")}
     if(matchMedia("(max-width:1040px)").matches)$("#resultContent")?.scrollIntoView({behavior:"smooth",block:"start"});
@@ -277,9 +342,8 @@ function bind(){
 }
 async function loadMarketContext(){
   try{
-    const r=await fetch(ENDPOINT,{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({positions:[],cash_pct:100,margin_pct:0})});
-    const d=await r.json().catch(()=>null);
-    if(r.ok&&d?.ok)showResults(d);
+    const d=await requestAccountIntelligence({positions:[],cash_pct:100,margin_pct:0});
+    if(d?.ok)showResults(d);
   }catch(e){console.debug("Portfolio market context unavailable",e)}
 }
 function init(){
