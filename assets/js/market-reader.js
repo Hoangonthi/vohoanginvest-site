@@ -136,21 +136,59 @@ function sectorMoverList(meta,side){
     .filter(x=>/^[A-Z][A-Z0-9]{2,11}$/.test(x.symbol)&&x.change!==null&&(side==="up"?x.change>0:x.change<0))
     .sort((a,b)=>side==="up"?b.change-a.change:a.change-b.change);
 }
-function sectorStockLink(item,side,extraClass=""){
+function sectorStockLink(item,side){
   const cls=side==="up"?"is-up":"is-down";
-  return `<a class="sector-stock ${cls} ${extraClass}" href="stock-detail.html?symbol=${encodeURIComponent(item.symbol)}" title="${esc(item.symbol+" "+pct(item.change))}">${esc(item.symbol)}</a>`;
+  return `<a class="sector-stock ${cls}" href="stock-detail.html?symbol=${encodeURIComponent(item.symbol)}" title="${esc(item.symbol+" "+pct(item.change))}"><span>${esc(item.symbol)}</span><em>${pct(item.change)}</em></a>`;
 }
 function sectorMoverLine(meta,side){
   const items=sectorMoverList(meta,side);
   if(!items.length)return "";
   const first=items.slice(0,3);
   const rest=items.slice(3);
-  const mark=side==="up"?"▲":"▼";
-  const label=side==="up"?"Mã tăng":"Mã giảm";
-  const visible=first.map(x=>sectorStockLink(x,side)).join("");
-  const more=rest.length?`<span class="sector-more ${side==="up"?"is-up":"is-down"}" tabindex="0" aria-label="${label}, còn ${rest.length} mã">+${rest.length}<span class="sector-more-pop"><b>${label} còn lại</b>${rest.map(x=>`<a href="stock-detail.html?symbol=${encodeURIComponent(x.symbol)}"><span>${esc(x.symbol)}</span><em>${pct(x.change)}</em></a>`).join("")}</span></span>`:"";
-  return `<div class="sector-mover-line ${side==="up"?"is-up":"is-down"}"><span class="sector-mover-mark">${mark}</span><div class="sector-mover-links">${visible}${more}</div></div>`;
+  const label=side==="up"?"Tăng":"Giảm";
+  const visible=first.map(x=>sectorStockLink(x,side)).join('<span class="sector-stock-sep">·</span>');
+  const canExpand=rest.length>0;
+  const more=canExpand?`<span class="sector-more-count" aria-hidden="true">+${rest.length}</span><span class="sector-more-pop" role="tooltip"><b>${label} — còn lại</b>${rest.map(x=>`<a href="stock-detail.html?symbol=${encodeURIComponent(x.symbol)}"><span>${esc(x.symbol)}</span><em>${pct(x.change)}</em></a>`).join("")}</span>`:"";
+  return `<div class="sector-mover-line ${side==="up"?"is-up":"is-down"}${canExpand?" has-rest":""}" ${canExpand?'tabindex="0" aria-haspopup="true" aria-expanded="false"':""}><span class="sector-mover-label">${label}:</span><div class="sector-mover-links">${visible}${canExpand?more:""}</div></div>`;
 }
+function closeSectorMoverPopovers(except=null){
+  document.querySelectorAll(".sector-mover-line.has-rest.is-open").forEach(line=>{
+    if(line===except)return;
+    line.classList.remove("is-open");
+    line.setAttribute("aria-expanded","false");
+  });
+}
+function toggleSectorMoverPopover(line){
+  if(!line?.classList?.contains("has-rest"))return;
+  const shouldOpen=!line.classList.contains("is-open");
+  closeSectorMoverPopovers(line);
+  line.classList.toggle("is-open",shouldOpen);
+  line.setAttribute("aria-expanded",shouldOpen?"true":"false");
+}
+function initSectorMoverInteractions(){
+  document.addEventListener("click",event=>{
+    const line=event.target.closest?.(".sector-mover-line.has-rest");
+    if(line){
+      if(event.target.closest?.("a[href]"))return;
+      toggleSectorMoverPopover(line);
+      return;
+    }
+    closeSectorMoverPopovers();
+  });
+  document.addEventListener("keydown",event=>{
+    const line=event.target.closest?.(".sector-mover-line.has-rest");
+    if(event.key==="Escape"){
+      closeSectorMoverPopovers();
+      line?.blur?.();
+      return;
+    }
+    if(line&&(event.key==="Enter"||event.key===" ")){
+      event.preventDefault();
+      toggleSectorMoverPopover(line);
+    }
+  });
+}
+
 function renderSectors(data,mi){
   const momentum=new Map();
   [...(mi?.leadership?.leaders||[]),...(mi?.leadership?.laggards||[])].forEach(x=>momentum.set(x.symbol||x.key||x.name,x));
@@ -602,6 +640,7 @@ function initConversion(){
 }
 
 initConversion();
+initSectorMoverInteractions();
 refresh();
 refreshBriefContext(true);
 setInterval(()=>{if(!document.hidden)refresh()},REFRESH_MS);
