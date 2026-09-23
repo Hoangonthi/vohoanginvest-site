@@ -22,6 +22,7 @@ const dateVN=(v)=>{if(!v)return"—";const [y,m,d]=String(v).slice(0,10).split("
 const MARKET_ENDPOINT="CANONICAL_MARKET_CLIENT";
 const STOCK_PRICE_LIVE_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-price-live";
 const HOT_STOCKS_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
+const STOCK_INTELLIGENCE_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-intelligence-public-v1";
 
 let current=null;
 
@@ -728,7 +729,7 @@ function render(d){
  const watchlistLink=$("#watchlistLink");
  if(watchlistLink) watchlistLink.href=`watchlist.html?symbol=${encodeURIComponent(d.symbol)}&from=profile#them-ma`;
  $("#effectiveDate").textContent="";
- renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);
+ renderOverview(d);renderTechnical(d);renderFlow(d);renderFundamental(d);renderHistory(d);renderIntelligence(d);
  setDataVisible(true);
  setStatus("");
  requestAnimationFrame(()=>{
@@ -799,6 +800,76 @@ async function fetchTplusCandidate(symbol){
  }catch{return null}
 }
 
+
+async function fetchStockIntelligence(symbol){
+ try{
+  const r=await fetch(`${STOCK_INTELLIGENCE_ENDPOINT}?symbol=${encodeURIComponent(symbol)}&hours=72&_=${Date.now()}`,{
+    cache:"no-store",headers:{"Accept":"application/json"}
+  });
+  const d=await r.json().catch(()=>null);
+  if(!r.ok||!d?.ok)return null;
+  return d;
+ }catch{return null}
+}
+
+function intelligenceTone(v){
+ const s=String(v||"").toUpperCase();
+ if(["POSITIVE","BULLISH","SUPPORTIVE","UP"].includes(s))return"positive";
+ if(["NEGATIVE","BEARISH","ADVERSE","DOWN"].includes(s))return"negative";
+ return"";
+}
+function renderIntelligence(d){
+ const x=d.stock_intelligence||null;
+ const list=$("#intelligenceNewsList"), meta=$("#intelligenceNewsMeta"), dcHost=$("#intelligenceDecision");
+ if(!list||!dcHost)return;
+
+ if(!x){
+  if(meta)meta.textContent="Chưa đọc được lớp tin";
+  list.innerHTML='<div class="sd-empty">Chưa đọc được News Intelligence ở lần tải này. Hệ thống không tự điền tin.</div>';
+  dcHost.innerHTML='<div class="sd-empty">Chưa có dữ liệu Decision Core để kiểm tra chéo.</div>';
+  return;
+ }
+
+ const news=Array.isArray(x?.news?.events)?x.news.events:[];
+ const counts=x?.news?.counts||{};
+ if(meta)meta.textContent=`${news.length} tin · trực tiếp ${counts.direct||0} · ngành ${counts.sector||0} · thị trường ${counts.market||0}`;
+ list.innerHTML=news.length?news.slice(0,12).map(n=>{
+   const where=n.directness==="DIRECT_SYMBOL"?"TRỰC TIẾP":n.directness==="SECTOR"?"NGÀNH":"THỊ TRƯỜNG";
+   const tone=intelligenceTone(n.direction);
+   const scores=[
+     Number.isFinite(Number(n.impact_score))?`Tác động ${Math.round(Number(n.impact_score))}/100`:null,
+     Number.isFinite(Number(n.confidence_score))?`Tin cậy ${Math.round(Number(n.confidence_score))}/100`:null
+   ].filter(Boolean).join(" · ");
+   const source=n.source_url?`<a href="${esc(n.source_url)}" target="_blank" rel="noopener noreferrer">Nguồn →</a>`:"";
+   return `<article class="sd-thesis-item ${tone}">
+     <b>${esc(where)} · ${esc(n.title||"Tin liên quan")}</b>
+     <p>${esc(n.summary||n.action_reason||"Tin đã được hệ thống gắn quan hệ với mã/ngành; chưa có tóm tắt bổ sung.")}</p>
+     <small>${esc([scores,n.direction||null].filter(Boolean).join(" · "))} ${source}</small>
+   </article>`;
+ }).join(""):'<div class="sd-empty">Không có tin đủ liên quan trong cửa sổ 72 giờ. Hệ thống không tự điền tin.</div>';
+
+ const dc=x.decision_core||{};
+ if(dc.available===true){
+   const missing=Array.isArray(dc.missing_capabilities)?dc.missing_capabilities:[];
+   const degraded=Array.isArray(dc.degraded_capabilities)?dc.degraded_capabilities:[];
+   dcHost.innerHTML=`
+     <div class="sd-thesis-item">
+       <b>${esc(dc.decision_state||"UNKNOWN")} · ${esc(dc.action||"UNKNOWN")}</b>
+       <p>Market: ${esc(dc.market_decision_state||"UNKNOWN")} · Confidence: ${Number.isFinite(Number(dc.confidence))?Math.round(Number(dc.confidence)*100)+"%":"—"}.</p>
+     </div>
+     <div class="sd-thesis-item">
+       <b>Độ đầy đủ dữ liệu</b>
+       <p>${missing.length?"Thiếu: "+esc(missing.join(", ")):"Không ghi nhận capability bị thiếu."}${degraded.length?" · Suy giảm: "+esc(degraded.join(", ")):""}</p>
+     </div>
+     <div class="sd-thesis-item">
+       <b>SHADOW ONLY</b>
+       <p>official=false · authority=false · read_only=true. Kết quả này chỉ dùng kiểm tra chéo, không thay thế quyết định chính thức.</p>
+     </div>`;
+ }else{
+   dcHost.innerHTML='<div class="sd-empty">Chưa có current Decision Core an toàn cho mã này. Không suy diễn từ dữ liệu thiếu.</div>';
+ }
+}
+
 async function load(symbol){
  const s=String(symbol||"").trim().toUpperCase();
  clearVisibleData();
@@ -807,10 +878,11 @@ async function load(symbol){
  setStatus("Đang cập nhật dữ liệu…");
  try{
   const url=`${SUPABASE_URL}/functions/v1/stock-metrics-v1?symbol=${encodeURIComponent(s)}`;
-  const [r,liveQuote,tplusCandidate]=await Promise.all([
+  const [r,liveQuote,tplusCandidate,stockIntelligence]=await Promise.all([
     fetch(url,{headers:{"Accept":"application/json"}}),
     fetchLiveQuote(s),
-    fetchTplusCandidate(s)
+    fetchTplusCandidate(s),
+    fetchStockIntelligence(s)
   ]);
   const body=await r.json();
   if(!r.ok||!body?.ok)throw new Error(body?.error||"Không đọc được dữ liệu");
@@ -823,6 +895,7 @@ async function load(symbol){
   }:null);
   body.data.live_quote=resolvedLiveQuote;
   body.data.tplus_candidate=tplusCandidate;
+  body.data.stock_intelligence=stockIntelligence;
   render(body.data);
   history.replaceState({}, "", `stock-detail.html?symbol=${encodeURIComponent(s)}`);
  }catch(err){
