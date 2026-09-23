@@ -135,9 +135,10 @@ function renderFit(d){
     ...(m.weak_sectors?.[0]?[fitItem("Nhóm đang gây áp lực",m.weak_sectors[0].name||m.weak_sectors[0].key||"—",pct(m.weak_sectors[0].change_pct,2))]:[]),
     ...(m.morning_context?.macro_regime?[fitItem("Bối cảnh sáng nay",m.morning_context.macro_regime)]:[])
   ].join("");
-  const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[],model=p.score_model||{};
-  const modelNote=model?.portfolio_score?'<div class="pf-driver"><b>Cách chấm điểm:</b> kết hợp độ phù hợp với thị trường, chất lượng danh mục và sức chịu rủi ro. Thành phần chưa đủ dữ liệu sẽ không được tự suy đoán.</div>':'';
-  $("#scoreDrivers").innerHTML=(drivers.length?drivers.map(x=>'<div class="pf-driver '+esc(x.tone||"")+'">'+esc(x.text)+'</div>').join(""):'<div class="pf-driver">Chưa có đủ yếu tố để giải thích điểm số sâu hơn.</div>')+modelNote;
+  const drivers=Array.isArray(p.score_drivers)?p.score_drivers:[];
+  $("#scoreDrivers").innerHTML=drivers.length
+    ?drivers.map(x=>'<div class="pf-driver '+esc(x.tone||"")+'">'+esc(x.text)+'</div>').join("")
+    :'';
 }
 function levelText(x){return x&&num(x.value)!==null?esc(x.label||"Vùng")+" "+fmt(x.value,2):"Chưa đủ dữ liệu"}
 function maText(t){
@@ -189,31 +190,41 @@ function confirmationLabel(v){
   };
   return map[x]||"Chưa có xác nhận giá";
 }
+function renderLimitedList(root,rows,emptyText){
+  if(!root)return;
+  if(!rows.length){root.innerHTML='<div class="pf-note">'+esc(emptyText)+'</div>';return}
+  const first=rows.slice(0,5);
+  const rest=rows.slice(5);
+  root.innerHTML=first.join("")+
+    (rest.length?'<div class="pf-list-extra pf-hidden">'+rest.join("")+'</div><button type="button" class="pf-list-toggle">Xem thêm '+rest.length+' mục</button>':'');
+  const btn=root.querySelector(".pf-list-toggle");
+  const extra=root.querySelector(".pf-list-extra");
+  btn?.addEventListener("click",()=>{
+    const opening=extra?.classList.contains("pf-hidden");
+    extra?.classList.toggle("pf-hidden");
+    btn.textContent=opening?"Thu gọn":"Xem thêm "+rest.length+" mục";
+  });
+}
 function renderEventsNews(d){
   const ev=Array.isArray(d.events)?d.events:[];
   const canonical=Array.isArray(d.account_intelligence?.news_impact)?d.account_intelligence.news_impact:[];
   const legacy=Array.isArray(d.news)?d.news:[];
-  $("#eventList").innerHTML=ev.length?ev.map(x=>'<article class="pf-event"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.detected_at)+'</time></header><p>'+esc((x.related_symbols||[]).join(" · "))+(x.severity?" · Mức "+esc(x.severity):"")+'</p></article>').join(""):'<div class="pf-note">Không có sự kiện đủ quan trọng và đủ liên quan trực tiếp tới danh mục trong dữ liệu hiện tại.</div>';
-  if(canonical.length){
-    $("#newsList").innerHTML=canonical.map(x=>{
-      const parts=[
-        newsRelationLabel(x.directness),
-        num(x.capital_coverage_pct)===null?"":pct(x.capital_coverage_pct)+" vốn liên quan",
-        (x.affected_symbols||[]).join(", "),
-        confirmationLabel(x.market_confirmation?.status)
-      ].filter(Boolean);
-      return '<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.published_at)+'</time></header><p>'+esc(parts.join(" · "))+'</p></article>';
-    }).join("");
-  }else{
-    $("#newsList").innerHTML=legacy.length?legacy.map(x=>{
-      const parts=[
-        num(x.capital_coverage_pct)===null?"":pct(x.capital_coverage_pct)+" danh mục liên quan",
-        (x.related_symbols||[]).join(", "),
-        confirmationLabel(x.market_confirmation?.status)
-      ].filter(Boolean);
-      return '<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.last_seen_at)+'</time></header><p>'+esc(parts.join(" · "))+'</p></article>';
-    }).join(""):'<div class="pf-note">Hiện chưa có tin đủ liên quan trực tiếp tới danh mục.</div>';
-  }
+
+  const eventRows=ev.map(x=>'<article class="pf-event"><header><b>'+esc(x.title)+'</b><time>'+stamp(x.detected_at)+'</time></header><p>'+esc((x.related_symbols||[]).join(" · "))+(x.severity?" · Mức "+esc(x.severity):"")+'</p></article>');
+  renderLimitedList($("#eventList"),eventRows,"Hiện chưa có diễn biến đủ quan trọng liên quan trực tiếp tới danh mục.");
+
+  const newsRows=(canonical.length?canonical:legacy).map(x=>{
+    const isCanonical=canonical.length>0;
+    const symbols=isCanonical?(x.affected_symbols||[]):(x.related_symbols||[]);
+    const parts=[
+      isCanonical?newsRelationLabel(x.directness):"",
+      num(x.capital_coverage_pct)===null?"":pct(x.capital_coverage_pct)+" vốn liên quan",
+      symbols.join(", "),
+      confirmationLabel(x.market_confirmation?.status)
+    ].filter(Boolean);
+    return '<article class="pf-news"><header><b>'+esc(x.title)+'</b><time>'+stamp(isCanonical?x.published_at:x.last_seen_at)+'</time></header><p>'+esc(parts.join(" · "))+'</p></article>';
+  });
+  renderLimitedList($("#newsList"),newsRows,"Hiện chưa có tin đủ liên quan trực tiếp tới danh mục.");
 }
 function renderPersonalization(d){
   const root=$("#personalizationSection");if(!root)return;
@@ -274,15 +285,14 @@ function renderConditions(d){
   $("#downgradeList").innerHTML=bad.map(x=>"<li>"+esc(x)+"</li>").join("")||"<li>Chưa đủ dữ liệu.</li>";
 }
 function renderConfidence(d){
-  const c=d.confidence||{},ctx=d.context||{},data=c.data||{},miss=d.missing_contract||{};
+  const c=d.confidence||{},ctx=d.context||{},data=c.data||{};
   $("#confidenceScore").textContent=num(c.score)===null?"—":Math.round(c.score)+"/100";
   $("#confidenceLabel").textContent=(c.preliminary?"SƠ BỘ · ":"")+(c.label==="HIGH"?"Cao":c.label==="MEDIUM"?"Trung bình":c.label==="LOW"?"Thấp":c.label||"—");
   $("#confidenceData").innerHTML=[
     ["Thị trường",data.market],["Độ phủ cổ phiếu",num(data.stock_weighted_coverage)===null?null:Math.round(data.stock_weighted_coverage)+"/100"],
     ["Tỷ trọng",data.portfolio_weight],["Ngành",data.sector],["T+",data.tplus],["Tin tức",data.news]
   ].filter(x=>x[1]!==null&&x[1]!==undefined&&x[1]!==""&&x[1]!=="—").map(x=>'<div><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join("");
-  const missing=Object.values(miss).filter(Boolean);
-  $("#unknownContract").innerHTML=missing.length?"<b>Thông tin còn thiếu:</b><br>"+missing.map(esc).join("<br>"):"";
+  // Technical contract gaps remain internal; the customer page only shows actionable information.
   $("#resultUpdated").textContent="Cập nhật bộ não: "+stamp(d.generated_at)+" · "+esc(ctx.market_freshness?.label||"");
 }
 function historyComparison(d){
