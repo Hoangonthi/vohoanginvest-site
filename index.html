@@ -284,8 +284,8 @@
     .home-hero h1{
       margin:0;
       max-width:690px;
-      font-size:58px;
-      line-height:1.03;
+      font-size:48px;
+      line-height:1.05;
       letter-spacing:-.035em;
       font-weight:800;
     }
@@ -300,11 +300,39 @@
       color:var(--muted);
     }
 
+    .hero-assessment-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .hero-assessment-link{
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(224,187,99,.28);
+      background:rgba(224,187,99,.055);
+      color:#f2d486;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .hero-assessment-link:hover{
+      border-color:rgba(224,187,99,.58);
+      background:rgba(224,187,99,.10);
+      transform:translateY(-1px);
+    }
+
     .hero-actions{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
-      margin-top:26px;
+      margin-top:18px;
     }
 
     .btn-primary,.btn-secondary{
@@ -1335,7 +1363,7 @@
        RESPONSIVE — TABLET
     ========================================================= */
     @media (max-width:1180px){
-      .home-hero h1{font-size:50px}
+      .home-hero h1{font-size:42px}
       .home-hero-grid{grid-template-columns:minmax(0,1fr)}
       .home-hero-visual{margin-left:0;min-height:420px}
       .home-hero-visual::before{
@@ -1388,8 +1416,10 @@
       .home-hero{border-radius:22px}
       .home-hero-copy{padding:30px 17px 24px}
       .home-eyebrow{font-size:11px;letter-spacing:.13em}
-      .home-hero h1{font-size:34px;line-height:1.06}
+      .home-hero h1{font-size:30px;line-height:1.08}
       .home-hero-copy > p{font-size:14px;line-height:1.7}
+      .hero-assessment-links{display:grid;grid-template-columns:1fr;gap:8px;width:100%}
+      .hero-assessment-link{width:100%;min-height:42px;font-size:12px}
       .hero-actions{width:100%;gap:9px}
       .btn-primary,.btn-secondary{width:100%;min-height:45px;font-size:13px}
       .hero-proof{gap:9px 12px}
@@ -1527,7 +1557,7 @@
       .journey-grid{grid-template-columns:1fr}
       .journey-card{min-height:auto}
       .mobile-links{grid-template-columns:1fr 1fr}
-      .home-hero h1{font-size:31px}
+      .home-hero h1{font-size:28px}
       .footer .footer-copyright{font-size:10.5px}
       .footer .footer-legal a{font-size:10.5px}
     }
@@ -2384,9 +2414,14 @@
               Đầu tư dựa trên dữ liệu, quản trị vốn và một quy trình rõ ràng. Mỗi quyết định đều có kế hoạch, giới hạn rủi ro và điều kiện để hành động.
             </p>
 
+            <div class="hero-assessment-links" aria-label="Đánh giá nhà đầu tư">
+              <a class="hero-assessment-link" href="danh-gia-ho-so-nha-dau-tu.html">Đánh giá hồ sơ · 17 câu →</a>
+              <a class="hero-assessment-link" href="kiem-tra-thuc-te-dau-tu.html">Kiểm tra thực tế đầu tư →</a>
+            </div>
+
             <div class="hero-actions">
-              <a class="btn-primary" href="kiem-tra-nhanh-tai-khoan.html">Kiểm tra nhanh tài khoản →</a>
-              <a class="btn-secondary" href="sang-nay-can-nhin-gi.html">Sáng nay cần nhìn gì? →</a>
+              <a class="btn-primary" href="kiem-tra-nhanh-tai-khoan.html">Tài khoản ổn không? →</a>
+              <a class="btn-secondary" href="sang-nay-can-nhin-gi.html">Sáng nay nhìn gì? →</a>
             </div>
 
             <ul class="hero-proof hero-quick-links" aria-label="Lối tắt cổ phiếu">
