@@ -4,6 +4,10 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const BRIDGE_KEY = Deno.env.get("VH_BRIDGE_KEY") || "";
 const DERIVATIVES_SYMBOL = "VN30F1M";
+const ALLOWED_SOURCES = new Set([
+  "AmiBroker PSVN Trend",
+  "DATATICK_PSVN_SUPERTREND_V1"
+]);
 
 const ALLOWED_ORIGINS = new Set([
   "https://hoangonthi.github.io",
@@ -64,6 +68,7 @@ Deno.serve(async (req: Request) => {
 
     const symbol = String(body?.symbol || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0,20);
     const trend = String(body?.trend || "").toUpperCase();
+    const source = String(body?.source || "AmiBroker PSVN Trend").trim();
 
     // This endpoint is dedicated to the VN30F1M derivatives card only.
     // Never allow VN-Index, VN30 cash or another symbol to overwrite psvn_trend.
@@ -73,8 +78,11 @@ Deno.serve(async (req: Request) => {
     if (!["TANG","GIAM"].includes(trend)) {
       return json(req, { ok:false, error:"INVALID_PAYLOAD" }, 400);
     }
+    if (!ALLOWED_SOURCES.has(source)) {
+      return json(req, { ok:false, error:"DERIVATIVES_SOURCE_NOT_ALLOWED" }, 422);
+    }
 
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/derivatives_ingest_internal_v1`, {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/derivatives_ingest_internal_v2`, {
       method:"POST",
       headers:serviceHeaders({ "Content-Type":"application/json" }),
       body:JSON.stringify({
@@ -86,6 +94,7 @@ Deno.serve(async (req: Request) => {
         p_t3:num(body?.t3),
         p_reversal_price:num(body?.reversal_price),
         p_last_price:num(body?.last_price),
+        p_source:source,
         p_source_updated_at:toIso(body?.source_updated_at)
       })
     });
