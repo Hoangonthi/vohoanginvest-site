@@ -31,14 +31,39 @@ const clean=(v:any)=>String(v??"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").t
 const upper=(v:any)=>String(v??"").trim().toUpperCase();
 const score=(v:any)=>Number.isFinite(Number(v))?Number(v):0;
 
-function classifyEvent(e:any,symbol:string,sectorCode:string|null,sectorName:string|null){
+function sectorAliases(values:any[]){
+  const out=new Set<string>();
+  const alias:Record<string,string[]>={
+    "BANK":["NGÂN HÀNG"],
+    "BĐS":["BẤT ĐỘNG SẢN"],
+    "CHỨNG KHOÁN":["CHỨNG KHOÁN"],
+    "DẦU KHÍ":["DẦU KHÍ"],
+    "KHU CÔNG NGHIỆP":["KHU CÔNG NGHIỆP"],
+    "CÔNG NGHỆ":["CÔNG NGHỆ"],
+    "BÁN LẺ":["BÁN LẺ"],
+    "THÉP":["THÉP"],
+    "PHÂN BÓN":["PHÂN BÓN"],
+    "HÓA CHẤT":["HÓA CHẤT"],
+    "ĐIỆN / TIỆN ÍCH":["ĐIỆN","TIỆN ÍCH"],
+    "BẢO HIỂM":["BẢO HIỂM"],
+    "HÀNG KHÔNG":["HÀNG KHÔNG"],
+    "THỦY SẢN":["THỦY SẢN"],
+    "DỆT MAY":["DỆT MAY"]
+  };
+  for(const raw of values.filter(Boolean)){
+    const k=upper(raw);
+    out.add(k);
+    for(const a of alias[k]||[])out.add(a);
+  }
+  return [...out];
+}
+function classifyEvent(e:any,symbol:string,sectorKeys:string[]){
   const tickers=(Array.isArray(e.primary_tickers)?e.primary_tickers:[]).map(upper);
   const sectors=(Array.isArray(e.sectors)?e.sectors:[]).map((x:any)=>upper(x));
   const direct=tickers.includes(symbol);
-  const sectorKeys=[sectorCode,sectorName].filter(Boolean).map(upper);
   const sector=!direct && sectorKeys.some(k=>sectors.includes(k));
   const broad=!direct&&!sector&&tickers.length===0&&sectors.length===0&&
-    (score(e.action_relevance_score)>=70||score(e.impact_score)>=70);
+    score(e.action_relevance_score)>=80&&score(e.impact_score)>=75;
   if(direct)return "DIRECT_SYMBOL";
   if(sector)return "SECTOR";
   if(broad)return "MARKET";
@@ -74,6 +99,13 @@ Deno.serve(async(req)=>{
     if(taxErr)throw taxErr;
     if(!tax)return respond(req,{ok:false,error:"SYMBOL_NOT_VIETNAM_EQUITY",symbol},404);
 
+    const {data:groups}=await db
+      .from("stock_core_groups")
+      .select("watch_group")
+      .eq("symbol",symbol);
+    const watchGroups=(groups||[]).map((x:any)=>x.watch_group).filter(Boolean);
+    const sectorKeys=sectorAliases([tax.sector_code,tax.sector_name,tax.industry_name,...watchGroups]);
+
     const since=new Date(Date.now()-hours*3600000).toISOString();
     const {data:events,error:eventErr}=await db
       .from("news_intelligence_events")
@@ -86,7 +118,7 @@ Deno.serve(async(req)=>{
 
     const related=(events||[])
       .map((e:any)=>{
-        const directness=classifyEvent(e,symbol,tax.sector_code??null,tax.sector_name??null);
+        const directness=classifyEvent(e,symbol,sectorKeys);
         return directness?{...e,directness,rank:rankEvent(e,directness)}:null;
       })
       .filter(Boolean)
@@ -156,7 +188,7 @@ Deno.serve(async(req)=>{
       generated_at:new Date().toISOString(),
       symbol,
       window_hours:hours,
-      taxonomy:tax,
+      taxonomy:{...tax,watch_groups:watchGroups,news_sector_keys:sectorKeys},
       news:{
         counts,
         total:news.length,
