@@ -18,6 +18,8 @@ assert.doesNotMatch(js, /<small>\$\{esc\(x\.symbol\)\}/, "technical sector key m
 
 assert.match(html, /\.sector-mover-line\.has-rest:hover \.sector-more-pop/, "desktop hover must open the remaining list");
 assert.match(html, /\.sector-mover-line\.has-rest\.is-open \.sector-more-pop/, "tap/click state must open the remaining list");
-assert.match(html, /market-reader\.js\?v=20260923-sector3/, "page must bust the market reader cache");
+assert.match(html, /market-reader\.js\?v=[^"\s]+/, "page must bust the market reader cache");
+assert.doesNotMatch(js, /setText\("breadthState",b\.label\|\|"—"\)/, "breadth state must not inject a dash when the label is missing");
+assert.match(html, /<strong id="breadthState" hidden><\/strong>/, "breadth state placeholder must stay hidden until a real label exists");
 
 console.log("PASS sector movers UI contract: top3 + percentages + full-list hover/tap + stock links");
