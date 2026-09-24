@@ -192,9 +192,9 @@ function currentPulse(snapshot){
   const derTick=derNow!==null&&derPrev!==null?derNow-derPrev:null;
 
   let headline="Thị trường đang giữ nhịp, nhưng bên trong vẫn có phân hóa";
-  if(leaderChanged)headline=`${leader.name} vừa vượt lên dẫn đầu nhóm ngành`;
-  else if(tick!==null&&tick>=.30)headline=`VN-Index vừa nhích thêm ${fmt(tick,2)} điểm`;
-  else if(tick!==null&&tick<=-.30)headline=`VN-Index vừa lùi ${fmt(Math.abs(tick),2)} điểm`;
+  if(leaderChanged)headline=`Nhóm ${leader.name} đang ${num(leader.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(leader.change_pct)),2)}%`;
+  else if(tick!==null&&tick>=.30)headline=`VN-Index tăng ${fmt(tick,2)} điểm, lên ${fmt(v.value,2)} điểm`;
+  else if(tick!==null&&tick<=-.30)headline=`VN-Index giảm ${fmt(Math.abs(tick),2)} điểm, xuống ${fmt(v.value,2)} điểm`;
   else if(advDelta!==null&&advDelta>=7)headline="Độ rộng vừa mở thêm về phía tăng";
   else if(decDelta!==null&&decDelta>=7)headline="Số mã giảm đang tăng lên, cần nhìn lại độ lan tỏa";
   else if(derChanged)headline=`Phái sinh vừa chuyển sang trạng thái ${derivativeState.label.toLowerCase()}`;
@@ -202,10 +202,10 @@ function currentPulse(snapshot){
   else if(phase===3&&derTick!==null&&derTick>=.50)headline=`Phái sinh vừa nhích thêm ${fmt(derTick,1)} điểm`;
   else if(phase===3&&derTick!==null&&derTick<=-.50)headline=`Phái sinh vừa lùi ${fmt(Math.abs(derTick),1)} điểm`;
   else if((extremes.worst?.pct??0)<=-5.5)headline=`${extremes.worst.symbol} đang là biến động bất thường cần chú ý`;
-  else if(phase===1&&leader&&laggard)headline=`${leader.name} mạnh nhất, ${laggard.name} đang ở phía yếu nhất`;
+  else if(phase===1&&leader&&laggard)headline=`Nhóm ${leader.name} ${num(leader.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(leader.change_pct)),2)}%; ${laggard.name} ${num(laggard.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(laggard.change_pct)),2)}%`;
   else if(phase===2&&leader)headline=`Bên trong ${leader.name} đang xuất hiện phân hóa rõ hơn`;
   else if(phase===3&&derivativeState)headline=`Cơ sở đang vận động trong khi phái sinh ${derivativeState.label.toLowerCase()}`;
-  else if(d5!==null&&Math.abs(d5)>=1)headline=d5>0?"VN-Index đang cải thiện trong 5 phút gần đây":"VN-Index đang chậm lại trong 5 phút gần đây";
+  else if(d5!==null&&Math.abs(d5)>=1)headline=d5>0?`VN-Index tăng ${fmt(Math.abs(d5),1)} điểm trong 5 phút, lên ${fmt(v.value,2)} điểm`:`VN-Index giảm ${fmt(Math.abs(d5),1)} điểm trong 5 phút, xuống ${fmt(v.value,2)} điểm`;
 
   const bits=[];
   const indexOpeners=[
