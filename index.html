@@ -1373,7 +1373,12 @@
     }
     .final-cta h2{margin:0;font-size:29px;line-height:1.25}
     .final-cta p{margin:10px auto 0;max-width:690px;font-size:14px;line-height:1.7;color:var(--muted-2)}
-    .final-cta .hero-actions{justify-content:center;margin-top:20px}
+    .final-cta .hero-actions{
+      margin:20px auto 0;
+      max-width:980px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      justify-content:center;
+    }
 
     /* =========================================================
        FOOTER — BÁM SÁT BẢN CHÍNH TRANG "SÁNG NAY"
@@ -1641,6 +1646,7 @@
       .about-actions{justify-content:center}
       .final-cta{padding:24px 14px}
       .final-cta h2{font-size:23px}
+      .final-cta .hero-actions{grid-template-columns:1fr;width:100%;max-width:590px}
 
       .footer .footer-main{
         padding:26px 0 19px;
@@ -2908,6 +2914,8 @@
           <div class="hero-actions">
             <a class="btn-primary" href="kiem-tra-nhanh-tai-khoan.html">Kiểm tra nhanh tài khoản →</a>
             <a class="btn-secondary" href="investor-calculator.html">Mở bộ công cụ →</a>
+            <a class="btn-secondary" href="danh-gia-ho-so-nha-dau-tu.html">Đánh giá hồ sơ · 17 câu →</a>
+            <a class="btn-secondary" href="kiem-tra-thuc-te-dau-tu.html">Kiểm tra thực tế đầu tư →</a>
           </div>
         </div>
       </section>
