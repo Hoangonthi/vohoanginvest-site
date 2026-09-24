@@ -215,7 +215,7 @@ function currentPulse(snapshot){
   const derTick=derNow!==null&&derPrev!==null?derNow-derPrev:null;
 
   let headline="Thị trường đang giữ nhịp, nhưng bên trong vẫn có phân hóa";
-  if(leaderChanged)headline=`${leader.name} vừa vượt lên dẫn đầu nhóm ngành`;
+  if(leaderChanged)headline=`Nhóm ${leader.name} đang ${num(leader.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(leader.change_pct)),2)}%`;
   else if(tick!==null&&tick>=.30)headline=`VN-Index vừa nhích thêm ${fmt(tick,2)} điểm`;
   else if(tick!==null&&tick<=-.30)headline=`VN-Index vừa lùi ${fmt(Math.abs(tick),2)} điểm`;
   else if(advDelta!==null&&advDelta>=7)headline="Độ rộng vừa mở thêm về phía tăng";
@@ -225,21 +225,23 @@ function currentPulse(snapshot){
   else if(phase===3&&derTick!==null&&derTick>=.50)headline=`Phái sinh vừa nhích thêm ${fmt(derTick,1)} điểm`;
   else if(phase===3&&derTick!==null&&derTick<=-.50)headline=`Phái sinh vừa lùi ${fmt(Math.abs(derTick),1)} điểm`;
   else if((extremes.worst?.pct??0)<=-5.5)headline=`${extremes.worst.symbol} đang là biến động bất thường cần chú ý`;
-  else if(phase===1&&leader&&laggard)headline=`${leader.name} mạnh nhất, ${laggard.name} đang ở phía yếu nhất`;
-  else if(phase===2&&leader)headline=`Bên trong ${leader.name} đang xuất hiện phân hóa rõ hơn`;
+  else if(phase===1&&leader&&laggard)headline=`Nhóm ${leader.name} ${num(leader.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(leader.change_pct)),2)}%, ${laggard.name} ${num(laggard.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(laggard.change_pct)),2)}%`;
+  else if(phase===2&&leader)headline=`Nhóm ${leader.name} đang ${num(leader.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(leader.change_pct)),2)}%`;
   else if(phase===3&&derivativeState)headline=`Cơ sở đang vận động trong khi phái sinh ${derivativeState.label.toLowerCase()}`;
   else if(d5!==null&&Math.abs(d5)>=1)headline=d5>0?"VN-Index đang cải thiện trong 5 phút gần đây":"VN-Index đang chậm lại trong 5 phút gần đây";
 
   const bits=[];
-  const indexOpeners=[
-    `VN-Index hiện ở ${fmt(v.value,2)} điểm, ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
-    `Mặt điểm số lúc này: VN-Index ${fmt(v.value,2)}, thay đổi ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
-    `Chỉ số đang đứng tại ${fmt(v.value,2)} điểm, tương ứng ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`
-  ];
-  bits.push(indexOpeners[phase%indexOpeners.length]);
-
-  if(tick!==null&&Math.abs(tick)>=.05)bits.push(`So với lần cập nhật trước, chỉ số ${tick>0?"nhích thêm":"lùi"} ${fmt(Math.abs(tick),2)} điểm.`);
-  else if(d5!==null&&Math.abs(d5)>=.1)bits.push(`Trong khoảng 5 phút, VN-Index thay đổi ${signed(d5,1)} điểm${d15!==null?`; 15 phút là ${signed(d15,1)} điểm`:""}.`);
+  const sectorStory=Boolean(leader&&(leaderChanged||phase===1||phase===2));
+  if(!sectorStory){
+    const indexOpeners=[
+      `VN-Index hiện ở ${fmt(v.value,2)} điểm, ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
+      `Mặt điểm số lúc này: VN-Index ${fmt(v.value,2)}, thay đổi ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
+      `Chỉ số đang đứng tại ${fmt(v.value,2)} điểm, tương ứng ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`
+    ];
+    bits.push(indexOpeners[phase%indexOpeners.length]);
+    if(tick!==null&&Math.abs(tick)>=.05)bits.push(`So với lần cập nhật trước, chỉ số ${tick>0?"nhích thêm":"lùi"} ${fmt(Math.abs(tick),2)} điểm.`);
+    else if(d5!==null&&Math.abs(d5)>=.1)bits.push(`Trong khoảng 5 phút, VN-Index thay đổi ${signed(d5,1)} điểm${d15!==null?`; 15 phút là ${signed(d15,1)} điểm`:""}.`);
+  }
 
   if(adv!==null&&dec!==null){
     let breadth=`Độ rộng hiện có ${Math.round(adv)} mã tăng và ${Math.round(dec)} mã giảm`;
@@ -250,9 +252,9 @@ function currentPulse(snapshot){
 
   if(leader&&laggard){
     const next=snapshot?.sectors?.strongest?.[1];
-    let s=`Nhóm mạnh nhất lúc này là ${leader.name} ${signed(leader.change_pct,2)}%`;
-    if(next)s+=`, kế đến ${next.name} ${signed(next.change_pct,2)}%`;
-    if(!sameName(leader.name,laggard.name))s+=`; phía yếu nhất là ${laggard.name} ${signed(laggard.change_pct,2)}%`;
+    let s=`Nhóm ${leader.name} đang ${num(leader.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(leader.change_pct)),2)}%`;
+    if(next)s+=`; ${next.name} ${num(next.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(next.change_pct)),2)}%`;
+    if(!sameName(leader.name,laggard.name))s+=`; ${laggard.name} ${num(laggard.change_pct)>=0?"tăng":"giảm"} ${fmt(Math.abs(num(laggard.change_pct)),2)}%`;
     bits.push(s+".");
     const internal=sectorInternalLine(leader);if(internal)bits.push(internal);
   }
@@ -272,7 +274,7 @@ function currentPulse(snapshot){
   const above=w?.zones?.nearest_above,below=w?.zones?.nearest_below;
   if(above&&num(above.value)!==null&&num(above.distance_pct)!==null&&Number(above.distance_pct)<=.6)watch=`Phía trước gần nhất là ${above.label} quanh ${fmt(above.value,1)} điểm. Cần nhìn đồng thời độ rộng và phản ứng của nhóm dẫn khi VN-Index tiến vào vùng này.`;
   else if(below&&num(below.value)!==null&&num(below.distance_pct)!==null&&Number(below.distance_pct)<=.6)watch=`Vùng đỡ gần nhất quanh ${below.label} ${fmt(below.value,1)} điểm. Nếu chỉ số mất vùng này và số mã giảm mở rộng, rủi ro ngắn hạn sẽ tăng.`;
-  else if(leaderChanged)watch=`Theo dõi xem ${leader.name} có giữ được vị trí dẫn đầu thêm vài nhịp hay chỉ là luân chuyển ngắn; đồng thời nhìn ${prevLeader.name} có suy yếu tiếp hay không.`;
+  else if(leaderChanged)watch=`Theo dõi nhóm ${leader.name} (${num(leader.change_pct)>=0?"+":"-"}${fmt(Math.abs(num(leader.change_pct)),2)}%) có giữ được mức tăng hiện tại và độ rộng nội nhóm hay không; đồng thời nhìn ${prevLeader.name} có suy yếu tiếp hay không.`;
   else if(derivativeState?.direction==="GIAM"&&num(v.change)>0)watch="Cơ sở đang xanh nhưng phái sinh nghiêng giảm; cần theo dõi xem sự lệch pha này thu hẹp hay mở rộng trong các nhịp tiếp theo.";
   else if(derivativeState?.direction==="TANG"&&num(v.change)<0)watch="Cơ sở còn đỏ nhưng phái sinh nghiêng tăng; cần theo dõi liệu độ rộng có cải thiện để xác nhận nhịp hồi hay không.";
   else if(d15!==null&&d15>0)watch="Theo dõi xem đà cải thiện có lan sang thêm nhóm ngành thay vì chỉ tập trung ở một nhóm đang mạnh.";
