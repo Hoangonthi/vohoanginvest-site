@@ -207,7 +207,8 @@ function currentPulse(snapshot){
   else if(phase===3&&derivativeState)headline=`Cơ sở đang vận động trong khi phái sinh ${derivativeState.label.toLowerCase()}`;
   else if(d5!==null&&Math.abs(d5)>=1)headline=d5>0?`VN-Index tăng ${fmt(Math.abs(d5),1)} điểm trong 5 phút, lên ${fmt(v.value,2)} điểm`:`VN-Index giảm ${fmt(Math.abs(d5),1)} điểm trong 5 phút, xuống ${fmt(v.value,2)} điểm`;
 
-  const story=leaderChanged||(phase===1&&leader&&laggard)||(phase===2&&leader)?"SECTOR":derChanged||(phase===3&&derivativeState)?"DERIVATIVE":(extremes.worst?.pct??0)<=-5.5?"STOCK":"MARKET";\n  const bits=[];
+  const story=leaderChanged||(phase===1&&leader&&laggard)||(phase===2&&leader)?"SECTOR":derChanged||(phase===3&&derivativeState)?"DERIVATIVE":(extremes.worst?.pct??0)<=-5.5?"STOCK":"MARKET";
+  const bits=[];
   const sectorHeadline = Boolean(leaderChanged || (phase===1&&leader&&laggard) || (phase===2&&leader));
   const indexOpeners=[
     `VN-Index hiện ở ${fmt(v.value,2)} điểm, ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
@@ -249,7 +250,10 @@ function currentPulse(snapshot){
 
   let watch="Nhìn tiếp sự thay đổi của độ rộng, nhóm dẫn và nhóm yếu; nếu cả ba cùng cải thiện thì nhịp tăng sẽ có chất lượng hơn.";
   const above=w?.zones?.nearest_above,below=w?.zones?.nearest_below;
-  if(story==="SECTOR"&&leader)watch=`Theo dõi nhóm ${leader.name} (${signed(leader.change_pct,2)}%) có duy trì được vị trí và độ rộng nội nhóm hay không.`;\n  else if(story==="DERIVATIVE")watch="Theo dõi hướng đi và độ bền của phái sinh trong các nhịp tiếp theo; đây là lớp tham chiếu thêm.";\n  else if(story==="STOCK"&&extremes.worst)watch=`Theo dõi ${extremes.worst.symbol} xem biến động mạnh có tiếp diễn hay thu hẹp trong các nhịp kế tiếp.`;\n  else if(above&&num(above.value)!==null&&num(above.distance_pct)!==null&&Number(above.distance_pct)<=.6)watch=`Phía trước gần nhất là ${above.label} quanh ${fmt(above.value,1)} điểm. Cần nhìn đồng thời độ rộng và phản ứng của nhóm dẫn khi VN-Index tiến vào vùng này.`;
+  if(story==="SECTOR"&&leader)watch=`Theo dõi nhóm ${leader.name} (${signed(leader.change_pct,2)}%) có duy trì được vị trí và độ rộng nội nhóm hay không.`;
+  else if(story==="DERIVATIVE")watch="Theo dõi hướng đi và độ bền của phái sinh trong các nhịp tiếp theo; đây là lớp tham chiếu thêm.";
+  else if(story==="STOCK"&&extremes.worst)watch=`Theo dõi ${extremes.worst.symbol} xem biến động mạnh có tiếp diễn hay thu hẹp trong các nhịp kế tiếp.`;
+  else if(above&&num(above.value)!==null&&num(above.distance_pct)!==null&&Number(above.distance_pct)<=.6)watch=`Phía trước gần nhất là ${above.label} quanh ${fmt(above.value,1)} điểm. Cần nhìn đồng thời độ rộng và phản ứng của nhóm dẫn khi VN-Index tiến vào vùng này.`;
   else if(below&&num(below.value)!==null&&num(below.distance_pct)!==null&&Number(below.distance_pct)<=.6)watch=`Vùng đỡ gần nhất quanh ${below.label} ${fmt(below.value,1)} điểm. Nếu chỉ số mất vùng này và số mã giảm mở rộng, rủi ro ngắn hạn sẽ tăng.`;
   else if(leaderChanged)watch=`Theo dõi xem ${leader.name} có giữ được vị trí dẫn đầu thêm vài nhịp hay chỉ là luân chuyển ngắn; đồng thời nhìn ${prevLeader.name} có suy yếu tiếp hay không.`;
   else if(derivativeState?.direction==="GIAM"&&num(v.change)>0)watch="Cơ sở đang xanh nhưng phái sinh nghiêng giảm; cần theo dõi xem sự lệch pha này thu hẹp hay mở rộng trong các nhịp tiếp theo.";
