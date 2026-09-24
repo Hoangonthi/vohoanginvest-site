@@ -30,7 +30,7 @@ function injectStyle(){
   if(document.getElementById("dcShadowStyle"))return;
   const style=document.createElement("style");
   style.id="dcShadowStyle";
-  style.textContent=`
+  style.textContent=`.dc-shadow-toggle{width:100%;padding:10px 12px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.035);color:#eef6ff;text-align:left;font-weight:700;cursor:pointer}.dc-shadow-host>.dc-shadow-toggle+div[hidden]{display:none!important}\n
     .dc-shadow{margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(2,12,24,.58)}
     .dc-shadow-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
     .dc-shadow-title{font-size:14px;font-weight:700;letter-spacing:.04em}
@@ -54,8 +54,8 @@ function injectStyle(){
 }
 
 function shell(root){
-  root.className="dc-shadow";
-  root.innerHTML=`
+  root.className="dc-shadow-host";
+  root.innerHTML=`<button type="button" id="dcShadowToggle" class="dc-shadow-toggle" aria-expanded="false">＋ Kiểm tra chéo cổ phiếu</button><div id="dcShadowPanel" hidden><div class="dc-shadow">${`
     <div class="dc-shadow-head">
       <div>
         <div class="dc-shadow-title">DECISION CORE · SHADOW</div>
@@ -69,7 +69,7 @@ function shell(root){
     <div class="dc-shadow-meta" id="dcShadowMeta">Chưa tải Decision Core.</div>
     <div class="dc-shadow-table-wrap"><div id="dcShadowBody"></div></div>
     <div class="dc-shadow-warning">Shadow-only: <b>official=false · authority=false · read_only=true</b>. Nếu dữ liệu thiếu hoặc cũ, giữ UNKNOWN/INSUFFICIENT và không suy diễn thành khuyến nghị.</div>
-  `;
+`}</div></div>`;
 }
 
 async function fetchOne(symbol){
@@ -160,13 +160,22 @@ function init(){
   if(!root||!panel)return;
   injectStyle();
   shell(root);
+  const toggle=document.getElementById("dcShadowToggle");
+  const box=document.getElementById("dcShadowPanel");
   document.getElementById("dcShadowRefresh")?.addEventListener("click",load);
+  toggle?.addEventListener("click",()=>{
+    if(!box)return;
+    const opening=box.hidden;
+    box.hidden=!opening;
+    toggle.setAttribute("aria-expanded",String(opening));
+    toggle.textContent=(opening?"−":"＋")+" Kiểm tra chéo cổ phiếu";
+    if(opening&& !panel.hidden)start();else stop();
+  });
   const observer=new MutationObserver(()=>{
-    if(panel.hidden)stop();else start();
+    if(panel.hidden||box?.hidden)stop();else start();
   });
   observer.observe(panel,{attributes:true,attributeFilter:["hidden"]});
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(!panel.hidden)start();});
-  if(!panel.hidden)start();
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(!panel.hidden&&!box?.hidden)start();});
 }
 
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
