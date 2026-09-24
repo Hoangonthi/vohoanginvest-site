@@ -8,7 +8,7 @@ import './morning-verdict-board-v2.js?v=20260918-brain6';
 import './morning-macro-action-engine-v2.js?v=20260918-brain7';
 import './morning-readable-type-v1.js?v=20260917-fed2';
 import './morning-decision-ready-v1.js?v=20260917-fed2';
-import './morning-live-patch-v1.js?v=20260918-brain7';
+import './morning-live-patch-v1.js?v=20260924-label1';
 // Confirmed macro events must be the final authority after all normal V5/live render layers.
 import './morning-macro-actual-event-v1.js?v=20260917-fed2';
 // The derivatives card is exclusively VN30F1M. Never allow VN-Index/VN30 cash fallback here.
