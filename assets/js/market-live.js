@@ -208,15 +208,17 @@ function currentPulse(snapshot){
   else if(d5!==null&&Math.abs(d5)>=1)headline=d5>0?`VN-Index tăng ${fmt(Math.abs(d5),1)} điểm trong 5 phút, lên ${fmt(v.value,2)} điểm`:`VN-Index giảm ${fmt(Math.abs(d5),1)} điểm trong 5 phút, xuống ${fmt(v.value,2)} điểm`;
 
   const bits=[];
+  const sectorHeadline = Boolean(leaderChanged || (phase===1&&leader&&laggard) || (phase===2&&leader));
   const indexOpeners=[
     `VN-Index hiện ở ${fmt(v.value,2)} điểm, ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
     `Mặt điểm số lúc này: VN-Index ${fmt(v.value,2)}, thay đổi ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`,
     `Chỉ số đang đứng tại ${fmt(v.value,2)} điểm, tương ứng ${signed(v.change,2)} điểm (${pct(v.change_pct)}).`
   ];
-  bits.push(indexOpeners[phase%indexOpeners.length]);
-
-  if(tick!==null&&Math.abs(tick)>=.05)bits.push(`So với lần cập nhật trước, chỉ số ${tick>0?"nhích thêm":"lùi"} ${fmt(Math.abs(tick),2)} điểm.`);
-  else if(d5!==null&&Math.abs(d5)>=.1)bits.push(`Trong khoảng 5 phút, VN-Index thay đổi ${signed(d5,1)} điểm${d15!==null?`; 15 phút là ${signed(d15,1)} điểm`:""}.`);
+  if(!sectorHeadline){
+    bits.push(indexOpeners[phase%indexOpeners.length]);
+    if(tick!==null&&Math.abs(tick)>=.05)bits.push(`So với lần cập nhật trước, chỉ số ${tick>0?"nhích thêm":"lùi"} ${fmt(Math.abs(tick),2)} điểm.`);
+    else if(d5!==null&&Math.abs(d5)>=.1)bits.push(`Trong khoảng 5 phút, VN-Index thay đổi ${signed(d5,1)} điểm${d15!==null?`; 15 phút là ${signed(d15,1)} điểm`:""}.`);
+  }
 
   if(adv!==null&&dec!==null){
     let breadth=`Độ rộng hiện có ${Math.round(adv)} mã tăng và ${Math.round(dec)} mã giảm`;
