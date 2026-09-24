@@ -31,7 +31,7 @@ function injectStyle(){
   const style=document.createElement("style");
   style.id="dcShadowStyle";
   style.textContent=`
-    .dc-shadow{margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(2,12,24,.58)}
+    .dc-shadow-toggle{width:100%;margin-top:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.035);color:#eef6ff;text-align:left;cursor:pointer;font-weight:700}.dc-shadow-panel[hidden]{display:none!important}\n    .dc-shadow{margin-top:8px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(2,12,24,.58)}
     .dc-shadow-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
     .dc-shadow-title{font-size:14px;font-weight:700;letter-spacing:.04em}
     .dc-shadow-sub{margin-top:4px;font-size:12px;opacity:.72}
@@ -53,10 +53,7 @@ function injectStyle(){
   document.head.appendChild(style);
 }
 
-function shell(root){
-  root.className="dc-shadow";
-  root.innerHTML=`
-    <div class="dc-shadow-head">
+function shell(root){\n  root.innerHTML=`<button type="button" class="dc-shadow-toggle" id="dcShadowToggle" aria-expanded="false">＋ Kiểm tra chéo cổ phiếu</button><div class="dc-shadow-panel" id="dcShadowPanel" hidden><div class="dc-shadow">\n    <div class="dc-shadow-head">
       <div>
         <div class="dc-shadow-title">DECISION CORE · SHADOW</div>
         <div class="dc-shadow-sub">Chỉ dùng kiểm tra chéo trong livestream · không phải authority</div>
@@ -68,8 +65,7 @@ function shell(root){
     </div>
     <div class="dc-shadow-meta" id="dcShadowMeta">Chưa tải Decision Core.</div>
     <div class="dc-shadow-table-wrap"><div id="dcShadowBody"></div></div>
-    <div class="dc-shadow-warning">Shadow-only: <b>official=false · authority=false · read_only=true</b>. Nếu dữ liệu thiếu hoặc cũ, giữ UNKNOWN/INSUFFICIENT và không suy diễn thành khuyến nghị.</div>
-  `;
+    <div class="dc-shadow-warning">Shadow-only: <b>official=false · authority=false · read_only=true</b>. Nếu dữ liệu thiếu hoặc cũ, giữ UNKNOWN/INSUFFICIENT và không suy diễn thành khuyến nghị.</div>\n  </div></div>`;
 }
 
 async function fetchOne(symbol){
@@ -159,14 +155,12 @@ function init(){
   const panel=document.getElementById("liveAdminPanel");
   if(!root||!panel)return;
   injectStyle();
-  shell(root);
-  document.getElementById("dcShadowRefresh")?.addEventListener("click",load);
+  shell(root);\n  const toggle=document.getElementById("dcShadowToggle"),box=document.getElementById("dcShadowPanel");\n  toggle?.addEventListener("click",()=>{const open=box?.hidden!==false;if(box)box.hidden=!open;if(toggle){toggle.setAttribute("aria-expanded",String(open));toggle.textContent=(open?"−":"＋")+" Kiểm tra chéo cổ phiếu";}if(open)start();else stop();});\n  document.getElementById("dcShadowRefresh")?.addEventListener("click",load);
   const observer=new MutationObserver(()=>{
-    if(panel.hidden)stop();else start();
+    if(panel.hidden||document.getElementById("dcShadowPanel")?.hidden)stop();else start();
   });
   observer.observe(panel,{attributes:true,attributeFilter:["hidden"]});
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(!panel.hidden)start();});
-  if(!panel.hidden)start();
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(!panel.hidden&&!document.getElementById("dcShadowPanel")?.hidden)start();});
 }
 
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
