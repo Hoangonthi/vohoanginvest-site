@@ -95,7 +95,7 @@ function patchBrain(d){
   const foot=q('.vh5-foot span',host);
   if(foot){
     const t=new Date(d.generated_at||brain.generated_at||Date.now()).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'});
-    setHtml(foot,'<span class="vh-live-stamp">Decision Brain</span> · '+esc(t)+' (GMT+7)');
+    setHtml(foot,esc(t)+' (GMT+7)');
   }
   requestAnimationFrame(()=>{window.__VH_CARD_EQUALIZER__?.(host);window.__VH_DASH_CARD_EQUALIZER__?.(host)});
 }
