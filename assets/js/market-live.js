@@ -418,7 +418,8 @@ async function load(initial=false){
     if(data.latest&&data.latest.captured_at!==latestSnapshot?.captured_at){previousSnapshot=latestSnapshot;previousDerivative=derivativeState;}
     latestSnapshot=data.latest||latestSnapshot;
     derivativeState=data.derivatives||null;
-    renderSnapshot(latestSnapshot);\n    mergeComments(Array.isArray(data.comments)?data.comments:[],full);
+    renderSnapshot(latestSnapshot);
+    mergeComments(Array.isArray(data.comments)?data.comments:[],full);
     renderLatest();
   }catch(error){console.warn("Market live load failed",error);const status=$("liveStatus");if(status){status.classList.add("off");status.querySelector("span").textContent="Chưa kết nối được dữ liệu";}}
 }
