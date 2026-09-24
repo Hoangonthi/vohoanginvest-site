@@ -23,6 +23,7 @@ const MARKET_ENDPOINT="CANONICAL_MARKET_CLIENT";
 const STOCK_PRICE_LIVE_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-price-live";
 const HOT_STOCKS_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/hot-stocks-feed";
 const STOCK_INTELLIGENCE_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/stock-intelligence-public-v1";
+const MARKET_STOCK_METRICS_ENDPOINT="https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/market-stock-metrics-v1";
 
 let current=null;
 
@@ -884,8 +885,14 @@ async function load(symbol){
     fetchTplusCandidate(s),
     fetchStockIntelligence(s)
   ]);
-  const body=await r.json();
-  if(!r.ok||!body?.ok)throw new Error(body?.error||"Không đọc được dữ liệu");
+  let body=await r.json();
+  if((!r.ok||!body?.ok)&&body?.error==="SYMBOL_NOT_ACTIVE_CORE"){
+    const fallback=await fetch(`${MARKET_STOCK_METRICS_ENDPOINT}?symbol=${encodeURIComponent(s)}`,{headers:{"Accept":"application/json"}});
+    body=await fallback.json();
+    if(!fallback.ok||!body?.ok)throw new Error(body?.error||"Không đọc được dữ liệu");
+  }else if(!r.ok||!body?.ok){
+    throw new Error(body?.error||"Không đọc được dữ liệu");
+  }
   const resolvedLiveQuote=liveQuote||(tplusCandidate&&valid(tplusCandidate.price)?{
     price:Number(tplusCandidate.price),
     change_pct:null,
