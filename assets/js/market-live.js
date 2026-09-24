@@ -259,7 +259,9 @@ function currentPulse(snapshot){
     const internal=sectorInternalLine(leader);if(internal)bits.push(internal);
   }
 
-  const dcLine=decisionCommentLine();if(dcLine)bits.push(dcLine);\n\n  if(derivativeState?.fresh){
+  const dcLine=decisionCommentLine();if(dcLine)bits.push(dcLine);
+
+  if(derivativeState?.fresh){
     let derLine=`Phái sinh hiện ${derivativeState.label.toLowerCase()}`;
     if(derNow!==null){
       if(derTick!==null&&Math.abs(derTick)<.20)derLine+=`, gần như đi ngang quanh ${fmt(derNow,1)} trong nhịp cập nhật này`;
