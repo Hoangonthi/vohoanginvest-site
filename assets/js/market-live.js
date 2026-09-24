@@ -14,6 +14,10 @@ let dayHistoryLoaded = false;
 let historyLoading = false;
 const HISTORY_STEP = 7;
 let timelineVisible = HISTORY_STEP;
+let decisionContext = [];
+let decisionContextAt = 0;
+const DECISION_API = "https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/decision-core-live-public-v1";
+const DECISION_POLICY = "DP_ACCOUNT_SHADOW_2026_09_V6";
 
 const marqueeState={
   raf:0,
@@ -27,7 +31,8 @@ const marqueeState={
 };
 
 const $ = (id) => document.getElementById(id);
-const esc = (value = "") => String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
+const publicTerms = (value = "") => String(value).replace(/\bVWAP\b/gi,"vùng giá bình quân phiên");
+const esc = (value = "") => publicTerms(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
 const num = (v) => { if(v===null||v===undefined||v==="")return null; const x=Number(v); return Number.isFinite(x)?x:null; };
 const fmt = (v,d=2) => { const x=num(v); return x===null?"—":new Intl.NumberFormat("vi-VN",{minimumFractionDigits:d,maximumFractionDigits:d}).format(x); };
 const signed = (v,d=2) => { const x=num(v); return x===null?"—":`${x>0?"+":""}${fmt(x,d)}`; };
@@ -178,6 +183,24 @@ function sectorInternalLine(sector){
   return"";
 }
 
+async function refreshDecisionContext(snapshot){
+  if(!snapshot||Date.now()-decisionContextAt<60000)return;
+  decisionContextAt=Date.now();
+  const ex=stockExtremes(snapshot);
+  const symbols=[ex.best?.symbol,ex.worst?.symbol,...liquidStockExtremes(snapshot).strong.map(x=>x.symbol),...liquidStockExtremes(snapshot).weak.map(x=>x.symbol)].filter(Boolean);
+  const unique=[...new Set(symbols)].slice(0,3);
+  if(!unique.length)return;
+  const rows=await Promise.all(unique.map(async symbol=>{try{const u=DECISION_API+"?symbol="+encodeURIComponent(symbol)+"&policy_version="+encodeURIComponent(DECISION_POLICY)+"&_="+Date.now();const r=await fetch(u,{cache:"no-store"});const j=await r.json();return r.ok&&j?.ok&&j.official===false&&j.authority===false?j:null}catch{return null}}));
+  decisionContext=rows.filter(Boolean).filter(x=>x.freshness==="FRESH"&&Number(x?.decision?.confidence||0)>=.45);
+}
+function decisionCommentLine(){
+  if(!decisionContext.length)return"";
+  const ranked=[...decisionContext].sort((a,b)=>Number(b?.decision?.confidence||0)-Number(a?.decision?.confidence||0));
+  const notable=ranked.filter(x=>{const d=x.decision||{},c=x.context||{};return d.evidence_alignment==="SUPPORTIVE"||c?.sector_state?.sector_state==="LEADING"||c?.sector_state?.sector_state==="LAGGING"||c?.fundamental_state?.fundamental_state==="POSITIVE"}).slice(0,2);
+  if(!notable.length)return"";
+  return "Ở lớp cổ phiếu, "+notable.map(x=>{const d=x.decision||{},c=x.context||{},s=c?.sector_state?.sector_state,f=c?.fundamental_state?.fundamental_state;let note=d.evidence_alignment==="SUPPORTIVE"?"đang có tín hiệu đồng thuận tốt hơn":s==="LEADING"?"đang thuộc nhóm dẫn":s==="LAGGING"?"đang chậm hơn nhóm":"đang có điểm riêng đáng theo dõi";if(f==="POSITIVE"&&note!=="đang có tín hiệu đồng thuận tốt hơn")note+=", nền cơ bản tích cực";return x.symbol+" "+note}).join("; ")+". Đây là lớp kiểm tra chéo, chỉ nhắc khi dữ liệu đủ mới và có khác biệt đáng chú ý.";
+}
+
 function currentPulse(snapshot){
   if(!snapshot)return null;
   const v=snapshot.vnindex||{},w=snapshot.world||{},ball=w.ball||{},leader=strongest(snapshot),laggard=weakest(snapshot),prevLeader=strongest(previousSnapshot);
@@ -234,7 +257,7 @@ function currentPulse(snapshot){
     const internal=sectorInternalLine(leader);if(internal)bits.push(internal);
   }
 
-  if(derivativeState?.fresh){
+  const dcLine=decisionCommentLine();if(dcLine)bits.push(dcLine);\n\n  if(derivativeState?.fresh){
     let derLine=`Phái sinh hiện ${derivativeState.label.toLowerCase()}`;
     if(derNow!==null){
       if(derTick!==null&&Math.abs(derTick)<.20)derLine+=`, gần như đi ngang quanh ${fmt(derNow,1)} trong nhịp cập nhật này`;
@@ -416,8 +439,7 @@ async function load(initial=false){
     if(data.latest&&data.latest.captured_at!==latestSnapshot?.captured_at){previousSnapshot=latestSnapshot;previousDerivative=derivativeState;}
     latestSnapshot=data.latest||latestSnapshot;
     derivativeState=data.derivatives||null;
-    renderSnapshot(latestSnapshot);
-    mergeComments(Array.isArray(data.comments)?data.comments:[],full);
+    renderSnapshot(latestSnapshot);\n    refreshDecisionContext(latestSnapshot).then(()=>renderLatest()).catch(()=>{});\n    mergeComments(Array.isArray(data.comments)?data.comments:[],full);
     renderLatest();
   }catch(error){console.warn("Market live load failed",error);const status=$("liveStatus");if(status){status.classList.add("off");status.querySelector("span").textContent="Chưa kết nối được dữ liệu";}}
 }
