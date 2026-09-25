@@ -42,7 +42,7 @@
 </div></section></main>
 <div id="siteFooter"></div>
 <script>
-const API='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/news-intelligence-preview-v3';
+const API='https://elmrbnewlukxscbcfizg.supabase.co/functions/v1/news-feed-lite';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const stamp=v=>{if(!v)return'—';try{const d=new Date(v);const parts=new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d).reduce((a,p)=>(a[p.type]=p.value,a),{});return`${parts.hour}:${parts.minute} ${parts.day}-${parts.month}`}catch{return'—'}};
 const nowStamp=()=>{try{return new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric',hour12:false}).format(new Date())}catch{return'—'}};
