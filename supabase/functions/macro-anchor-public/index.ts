@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const ALLOWED=new Set(["https://www.vohoanginvest.com","https://vohoanginvest.com","https://hoangonthi.github.io","http://localhost:3000","http://127.0.0.1:5500"]);
-function cors(req:Request){const o=req.headers.get("origin")||"";return{"Access-Control-Allow-Origin":ALLOWED.has(o)?o:"https://www.vohoanginvest.com","Access-Control-Allow-Methods":"GET,OPTIONS","Access-Control-Allow-Headers":"content-type","Cache-Control":"no-store, max-age=0","Vary":"Origin"}}
+function cors(req:Request){const o=req.headers.get("origin")||"";return{"Access-Control-Allow-Origin":ALLOWED.has(o)?o:"https://www.vohoanginvest.com","Access-Control-Allow-Methods":"GET,OPTIONS","Access-Control-Allow-Headers":"content-type, cache-control","Cache-Control":"no-store, max-age=0","Vary":"Origin"}}
 function json(req:Request,body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:{...cors(req),"Content-Type":"application/json; charset=utf-8"}})}
 function num(v:any){const x=Number(v);return Number.isFinite(x)?x:null}
 function fmt(v:any,d=1){const x=num(v);return x===null?"—":x.toLocaleString("vi-VN",{minimumFractionDigits:0,maximumFractionDigits:d})}
