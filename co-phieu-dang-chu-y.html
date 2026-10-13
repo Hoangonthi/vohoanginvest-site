@@ -409,6 +409,22 @@
         <p class="note">Dữ liệu phản ánh bộ tiêu chí dòng tiền và kỹ thuật đang dùng trong hệ thống. Một mã xuất hiện ở đây chưa đồng nghĩa với việc phù hợp để mua tại giá hiện tại.</p>
       </section>
 
+      <section class="panel" id="tradeRecommendations" hidden>
+        <div class="panel-head"><div><div class="eyebrow">THEO DÕI KHUYẾN NGHỊ</div><h2>Danh sách khuyến nghị</h2><p>TP đã chạm bôi vàng; ST chờ Admin xác nhận. Lãi/lỗ sau phí và thuế.</p></div><div class="updated" id="tradePriceAt"></div></div>
+        <div class="trade-controls"><button type="button" class="filter active" data-view="ACTIVE">Đang theo dõi</button><button type="button" class="filter" data-view="CLOSED">Đã hoàn tất</button><button type="button" class="row-action primary" id="tradeAdd" hidden>+ Thêm khuyến nghị</button></div>
+        <div class="table-wrap"><table class="table trade-table"><thead><tr><th>Mã / Ngày</th><th>T</th><th>Giá mua</th><th>Giá hiện tại / Thoát</th><th>TP1</th><th>TP2</th><th>TP3</th><th>ST</th><th>Lãi/lỗ</th><th>Trạng thái</th><th id="tradeAdmin" hidden>Admin</th></tr></thead><tbody id="tradeBody"><tr><td colspan="11" class="empty">Đang tải...</td></tr></tbody></table></div>
+        <p class="note" id="tradeError" role="status"></p>
+        <form id="tradeForm" class="trade-form" hidden><h3>Khuyến nghị</h3><div class="trade-fields">
+          <label>Mã<input name="symbol" required pattern="[A-Za-z]{3}" maxlength="3"></label>
+          <label>Giá mua<input name="entry" type="number" min="0.01" step="any" required></label>
+          <label>Ngày giờ mua<input name="entryAt" type="datetime-local"></label>
+          <label>TP1<input name="tp1" type="number" min="0.01" step="any" required></label>
+          <label>TP2<input name="tp2" type="number" min="0.01" step="any" required></label>
+          <label>TP3<input name="tp3" type="number" min="0.01" step="any" required></label>
+          <label>ST<input name="stop" type="number" min="0.01" step="any" required></label>
+        </div><button class="btn primary" type="submit">Lưu khuyến nghị</button> <button class="btn" type="button" id="tradeCancel">Hủy</button></form>
+      </section>
+
       <section class="panel">
         <div class="eyebrow">CÁCH DÙNG</div>
         <div class="guide">
@@ -425,7 +441,8 @@
 
   <script src="assets/js/co-phieu-dang-chu-y.js?v=20261013-2" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/site-header.js?v=20260918-10"></script>\n  <script type="module" src="assets/js/stock-trade-recommendations.js?v=20261013-2"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260918-10"></script>
+  <script type="module" src="assets/js/stock-trade-recommendations.js?v=20261013-3"></script>
   <script>document.querySelectorAll('[data-main-tab]').forEach(b=>b.addEventListener('click',()=>{const isRec=b.dataset.mainTab==='recommendations';document.getElementById('danh-sach').hidden=isRec;document.getElementById('tradeRecommendations').hidden=!isRec;document.querySelectorAll('[data-main-tab]').forEach(x=>{const selected=x===b;x.classList.toggle('active',selected);x.setAttribute('aria-selected',String(selected))})}));</script>
 </body>
 </html>
