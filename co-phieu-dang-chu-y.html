@@ -357,6 +357,7 @@
     #danh-sach{scroll-margin-top:92px}
     @media(max-width:560px){#danh-sach{scroll-margin-top:76px}}
     .trade-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.trade-table{min-width:1160px}.trade-table td small{display:block;font-size:10px;color:var(--muted2);margin-top:5px}.trade-table td.hit{background:#f5d66d;color:#392800;font-weight:900}.trade-table td.gain{color:var(--green);font-weight:800}.trade-table td.loss{color:var(--red);font-weight:800}.trade-table td.flat{color:var(--gold2)}.trade-table button{cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--gold2);padding:7px;border-radius:7px}.trade-form{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:12px}.trade-form[hidden]{display:none}.trade-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}.trade-fields label{display:grid;gap:6px;color:var(--muted);font-size:12px}.trade-fields input{width:100%;min-width:0;background:#071828;color:white;border:1px solid var(--line);border-radius:8px;padding:10px}#tradeError:not(:empty){color:var(--orange)}
+    .vh-main-tabs{display:flex;gap:8px;margin:22px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}.vh-main-tab{border:0;background:transparent;color:var(--muted);padding:14px 18px;white-space:nowrap;font:inherit;font-weight:700;cursor:pointer;border-bottom:3px solid transparent}.vh-main-tab.active{color:var(--gold2);border-bottom-color:var(--gold2)}#tradeRecommendations[hidden],#danh-sach[hidden]{display:none!important}.trade-controls{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.trade-table{min-width:1160px}.trade-table td small{display:block;font-size:11px;color:var(--muted2);margin-top:4px}.trade-table td.hit{background:#f5d66d;color:#392800;font-weight:900}.trade-table td.gain{color:#28c98c;font-weight:800}.trade-table td.loss{color:#ff6565;font-weight:800}.trade-table td.flat{color:#f5d66d}.trade-table button{cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--gold2);padding:7px;border-radius:7px}.trade-form{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:12px}.trade-form[hidden]{display:none}.trade-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}.trade-fields label{display:grid;gap:6px;color:var(--muted);font-size:12px}.trade-fields input{width:100%;min-width:0;background:#071828;color:white;border:1px solid var(--line);border-radius:8px;padding:10px}#tradeError:not(:empty){color:#ffb56a}
   </style>
 </head>
 <body>
@@ -383,6 +384,10 @@
         <article class="sum"><span>Điểm T+ trung bình</span><b id="sumScore">—</b><small>Trên các mã đang hiển thị</small></article>
       </section>
 
+      <div class="vh-main-tabs" role="tablist" aria-label="Danh mục cổ phiếu">
+        <button type="button" role="tab" class="vh-main-tab active" data-main-tab="notable" aria-selected="true">Các mã đang nổi bật</button>
+        <button type="button" role="tab" class="vh-main-tab" data-main-tab="recommendations" aria-selected="false">Danh sách khuyến nghị</button>
+      </div>
       <section class="panel" id="danh-sach">
         <div class="panel-head">
           <div>
@@ -418,8 +423,9 @@
   <!-- Footer dùng chung toàn website, cùng source với trang chủ -->
   <div id="siteFooter"></div>
 
-  <script src="assets/js/co-phieu-dang-chu-y.js?v=20260918-5" defer></script>
+  <script src="assets/js/co-phieu-dang-chu-y.js?v=20261013-2" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="assets/js/site-header.js?v=20260918-10"></script>\n  <script type="module" src="assets/js/stock-trade-recommendations.js?v=20261013-1"></script>
+  <script type="module" src="assets/js/site-header.js?v=20260918-10"></script>\n  <script type="module" src="assets/js/stock-trade-recommendations.js?v=20261013-2"></script>
+  <script>document.querySelectorAll('[data-main-tab]').forEach(b=>b.addEventListener('click',()=>{const isRec=b.dataset.mainTab==='recommendations';document.getElementById('danh-sach').hidden=isRec;document.getElementById('tradeRecommendations').hidden=!isRec;document.querySelectorAll('[data-main-tab]').forEach(x=>{const selected=x===b;x.classList.toggle('active',selected);x.setAttribute('aria-selected',String(selected))})}));</script>
 </body>
 </html>
