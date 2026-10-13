@@ -435,6 +435,29 @@
       #tradeRecommendations .trade-controls #tradeAdd{grid-column:1/-1;justify-self:center;width:max-content;max-width:100%;min-height:39px;padding:9px 17px;text-align:center;margin:0 auto}
       #tradeRecommendations .trade-controls #tradeAdd[hidden]{display:none!important}
     }
+
+    @media(max-width:700px){
+      #tradeRecommendations .trade-mobile-summary{gap:7px;padding:10px 9px}
+      #tradeRecommendations .trade-mobile-symbol{min-width:35px;font-size:16px;flex-shrink:0}
+      #tradeRecommendations .trade-mobile-summary .trade-mobile-symbol.gain{color:#42e6a1!important}
+      #tradeRecommendations .trade-mobile-summary .trade-mobile-symbol.loss{color:#ff7382!important}
+      #tradeRecommendations .trade-mobile-summary .trade-mobile-symbol.flat{color:#f5d66d!important}
+      #tradeRecommendations .trade-mobile-summary .trade-mobile-symbol.unknown{color:#f5f7fb!important}
+      #tradeRecommendations .trade-mobile-pnl{font-size:11px;font-weight:800;white-space:nowrap;min-width:49px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+      #tradeRecommendations .trade-mobile-pnl.gain{color:#42e6a1}
+      #tradeRecommendations .trade-mobile-pnl.loss{color:#ff7382}
+      #tradeRecommendations .trade-mobile-pnl.flat{color:#f5d66d}
+      #tradeRecommendations .trade-mobile-pnl.unknown{color:#9db0c5}
+      #tradeRecommendations .trade-mobile-status{flex:1;min-width:0}
+      #tradeRecommendations .trade-mobile-chevron{width:13px;font-size:19px}
+      #tradeRecommendations .trade-mobile-summary .trade-tbadge{flex-shrink:0}
+    }
+    @media(max-width:370px){
+      #tradeRecommendations .trade-mobile-summary{gap:5px;padding:9px 7px}
+      #tradeRecommendations .trade-mobile-symbol{font-size:15px;min-width:32px}
+      #tradeRecommendations .trade-mobile-pnl{font-size:10px;min-width:43px}
+      #tradeRecommendations .trade-mobile-status .trade-status{font-size:9px;padding:5px 4px}
+    }
 </style>
 </head>
 <body>
@@ -519,7 +542,7 @@
   <script src="assets/js/co-phieu-dang-chu-y.js?v=20261013-2" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module" src="assets/js/site-header.js?v=20260918-10"></script>
-  <script type="module" src="assets/js/stock-trade-recommendations.js?v=20261013-8"></script>
+  <script type="module" src="assets/js/stock-trade-recommendations.js?v=20261013-9"></script>
   <script>document.querySelectorAll('[data-main-tab]').forEach(b=>b.addEventListener('click',()=>{const isRec=b.dataset.mainTab==='recommendations';document.getElementById('danh-sach').hidden=isRec;document.getElementById('tradeRecommendations').hidden=!isRec;document.querySelectorAll('[data-main-tab]').forEach(x=>{const selected=x===b;x.classList.toggle('active',selected);x.setAttribute('aria-selected',String(selected))})}));</script>
 </body>
 </html>
