@@ -20,6 +20,17 @@ async function closeTrade(id){const r=records.find(x=>x.id===id);if(!r||!isAdmin
 root?.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.view){mode=b.dataset.view;render()}else if(b.dataset.edit)showForm(records.find(r=>r.id===b.dataset.edit));else if(b.dataset.close)closeTrade(b.dataset.close);else if(b.id==='tradeAdd')showForm();else if(b.id==='tradeCancel')$('#tradeForm').hidden=true});
 $('#tradeForm')?.addEventListener('submit',save);
 $('#tradeForm')?.elements.entry.addEventListener('input',calculateTargets);
-window.addEventListener('vh-stock-recommend',e=>showForm(null,e.detail));
+window.addEventListener('vh-stock-recommend',async e=>{
+ if(!isAdmin)return;
+ const symbol=String(e.detail?.symbol||'').trim().toUpperCase(),price=Number(e.detail?.price);
+ if(!/^[A-Z]{3}$/.test(symbol)||!(price>0))return alertError('Mã hoặc giá không hợp lệ');
+ if(records.some(r=>r.symbol===symbol&&r.status==='ACTIVE'))return alertError(symbol+' đã có trong danh sách đang theo dõi');
+ const round=x=>Math.round(x*100)/100;
+ const {error}=await db.from('stock_trade_recommendations').insert({symbol,entry_price:price,entry_at:new Date().toISOString(),entry_time_known:true,tp1:round(price*1.05),tp2:round(price*1.10),tp3:round(price*1.15),stop_price:round(price*.93)});
+ if(error)return alertError(error);
+ await refresh();
+ document.querySelector('[data-main-tab="recommendations"]')?.click();
+ $('#tradeError').textContent=symbol+' đã được thêm vào danh sách khuyến nghị với giá mua '+money(price);
+});
 async function init(){const {data:{user}}=await db.auth.getUser();authUser=user;isAdmin=!!user&&(await db.rpc('stock_recs_is_admin')).data===true;window.__vhTradeAdmin=isAdmin;window.vhRenderNotable?.();await refresh();setInterval(refresh,60000)}
 init().catch(alertError);
