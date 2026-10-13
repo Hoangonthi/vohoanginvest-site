@@ -458,6 +458,11 @@
       #tradeRecommendations .trade-mobile-pnl{font-size:10px;min-width:43px}
       #tradeRecommendations .trade-mobile-status .trade-status{font-size:9px;padding:5px 4px}
     }
+
+    @media(max-width:700px){
+      .vh-main-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;width:100%;max-width:100%;overflow:visible;margin-top:18px}
+      .vh-main-tabs .vh-main-tab{min-width:0;width:100%;box-sizing:border-box;padding:12px 5px;font-size:clamp(10px,2.85vw,13px);line-height:1.35;white-space:normal;overflow-wrap:break-word;text-align:center;display:flex;align-items:center;justify-content:center;min-height:52px}
+    }
 </style>
 </head>
 <body>
