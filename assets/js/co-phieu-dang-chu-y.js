@@ -153,7 +153,7 @@ function render(){
     <td>${fmt(r.value_traded_bn,2)}</td>
     <td>${fmt(r.projected_volume_ratio_pct,1)}%</td>
     <td>${fmt(r.previous_volume_ratio_pct,1)}%</td>
-    <td><div class="row-actions"><a class="row-action primary" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}#tong-quan">Xem hồ sơ</a><a class="row-action" href="watchlist.html?symbol=${encodeURIComponent(r.symbol)}&from=notable#them-ma">+ Theo dõi</a></div></td>
+    <td><div class="row-actions">${window.__vhTradeAdmin?`<button class="row-action primary" type="button" data-trade-buy="${esc(r.symbol)}" data-trade-price="${esc(r.price)}">MUA</button>`:""}<a class="row-action primary" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}#tong-quan">Xem hồ sơ</a><a class="row-action" href="watchlist.html?symbol=${encodeURIComponent(r.symbol)}&from=notable#them-ma">+ Theo dõi</a></div></td>
   </tr>`).join('')}</tbody></table>`;
 
   updateExpandButton(rows.length);
@@ -195,3 +195,6 @@ document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('cl
 }));
 
 load();
+
+window.vhRenderNotable=render;
+document.addEventListener('click',e=>{const btn=e.target.closest('[data-trade-buy]');if(!btn||!window.__vhTradeAdmin)return;window.dispatchEvent(new CustomEvent('vh-stock-recommend',{detail:{symbol:btn.dataset.tradeBuy,price:Number(btn.dataset.tradePrice)}}));});
