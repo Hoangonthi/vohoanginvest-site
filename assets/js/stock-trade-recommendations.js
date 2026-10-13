@@ -13,7 +13,7 @@ function statusText(r,n,stop){if(r.status==='CLOSED_TP')return '<span class="tra
 function rowHtml(r){
  const closed=r.status!=='ACTIVE',p=closed?Number(r.exit_price):currentPrice(r.symbol),net=p===null?null:profit(Number(r.entry_price),p),n=reached(r,p),stop=!!r.stop_hit_at||(!closed&&p!==null&&p<=Number(r.stop_price));
  const col=net===null?'':net>0?'gain':net<0?'loss':'flat';
- const tp=i=>'<td class="trade-target '+(n>=i?'hit':'')+'"><span>'+money(r['tp'+i])+'</span>'+(n>=i?'<small>✓ Đạt</small>':'')+'</td>';
+ const tp=i=>'<td class="trade-target"><span class="trade-target-chip '+(n>=i?'hit':'')+'">'+money(r['tp'+i])+(n>=i?'<small>✓ Đạt</small>':'')+'</span></td>';
  const date=r.entry_time_known===false?new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date(r.entry_at)):time(r.entry_at);
  return '<tr class="trade-row '+(stop?'trade-stop-row':'')+'"><td class="trade-symbol"><strong>'+safe(r.symbol)+'</strong><small>'+date+'</small></td><td><span class="trade-tbadge">'+tDays(r.entry_at)+'</span></td><td>'+money(r.entry_price)+'</td><td class="trade-price">'+(p===null?'—':money(p))+'</td>'+tp(1)+tp(2)+tp(3)+'<td class="'+(stop?'trade-stop-hit':'')+'">'+money(r.stop_price)+'</td><td class="trade-pl '+col+'">'+(net===null?'—':(net>0?'+':'')+money(net)+'%')+'</td><td>'+statusText(r,n,stop)+'</td>'+(isAdmin?'<td class="trade-actions"><button type="button" data-edit="'+r.id+'">Sửa</button> '+(!closed?'<button type="button" data-close="'+r.id+'">Đóng</button>':'')+' <button type="button" class="trade-delete" data-delete="'+r.id+'">Xóa</button></td>':'')+'</tr>'
 }
