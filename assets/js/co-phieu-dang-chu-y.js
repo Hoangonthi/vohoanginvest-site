@@ -5,6 +5,7 @@ const LOAD_MORE_STEP=12;
 let allRows=[];
 let activeFilter='ALL';
 let visibleCount=INITIAL_VISIBLE;
+let expandedNotable=null;
 
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[c]));
@@ -128,6 +129,14 @@ function updateExpandButton(totalRows){
   }
 }
 
+function mobileNotableRow(r){
+  const open=expandedNotable===r.symbol;
+  const change=num(r.change_pct),color=change===null?'neutral':change>0?'up':change<0?'down':'zero';
+  const field=(name,value)=>'<div class="notable-mobile-field"><small>'+name+'</small><strong>'+value+'</strong></div>';
+  const href='stock-detail.html?symbol='+encodeURIComponent(r.symbol)+'#tong-quan';
+  return '<article class="notable-mobile-card'+(open?' is-open':'')+'"><button type="button" class="notable-mobile-summary" data-notable-expand="'+esc(r.symbol)+'" aria-expanded="'+open+'"><span class="notable-mobile-symbol">'+esc(r.symbol)+'</span><span class="pill '+signalClass(r.signal_class)+'">'+esc(signalText(r.signal_class))+'</span><span class="notable-mobile-change '+color+'">'+pct(r.change_pct)+'</span><span class="notable-mobile-chevron" aria-hidden="true">'+(open?'⌃':'⌄')+'</span></button>'+
+    (open?'<div class="notable-mobile-details"><div class="notable-mobile-grid">'+field('Nền giá',esc(baseText(r.base_type)))+field('Điểm T+',fmt(r.t_score,0))+field('Giá',fmt(r.price,2))+field('GTGD (tỷ)',fmt(r.value_traded_bn,2))+field('KL dự kiến',fmt(r.projected_volume_ratio_pct,1)+'%')+field('KL phiên trước',fmt(r.previous_volume_ratio_pct,1)+'%')+'</div><div class="notable-mobile-actions">'+(window.__vhTradeAdmin?'<button type="button" class="row-action primary" data-trade-buy="'+esc(r.symbol)+'" data-trade-price="'+esc(r.price)+'">MUA</button>':'')+'<a class="row-action primary" href="'+href+'">Xem hồ sơ</a><a class="row-action" href="watchlist.html?symbol='+encodeURIComponent(r.symbol)+'&from=notable#them-ma">+ Theo dõi</a></div></div>':'')+'</article>';
+}
 function render(){
   const rows=filteredRows();
   renderSummary(rows);
@@ -143,7 +152,7 @@ function render(){
 
   const shownRows=rows.slice(0,visibleCount);
   out.className='';
-  out.innerHTML=`<table class="table"><thead><tr><th>Mã</th><th>Tín hiệu</th><th>Nền giá</th><th>Điểm T+</th><th>Giá</th><th>Tăng/giảm</th><th>GTGD (tỷ)</th><th>KL dự kiến</th><th>KL phiên trước</th><th>Hành động</th></tr></thead><tbody>${shownRows.map(r=>`<tr>
+  out.innerHTML=`<div class="notable-desktop-table"><table class="table"><thead><tr><th>Mã</th><th>Tín hiệu</th><th>Nền giá</th><th>Điểm T+</th><th>Giá</th><th>Tăng/giảm</th><th>GTGD (tỷ)</th><th>KL dự kiến</th><th>KL phiên trước</th><th>Hành động</th></tr></thead><tbody>${shownRows.map(r=>`<tr>
     <td class="symbol"><a class="symbol-link" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}#tong-quan" title="Xem hồ sơ ${esc(r.symbol)}">${esc(r.symbol)}</a></td>
     <td><span class="pill ${signalClass(r.signal_class)}">${esc(signalText(r.signal_class))}</span></td>
     <td>${esc(baseText(r.base_type))}</td>
@@ -154,7 +163,7 @@ function render(){
     <td>${fmt(r.projected_volume_ratio_pct,1)}%</td>
     <td>${fmt(r.previous_volume_ratio_pct,1)}%</td>
     <td><div class="row-actions">${window.__vhTradeAdmin?`<button class="row-action primary" type="button" data-trade-buy="${esc(r.symbol)}" data-trade-price="${esc(r.price)}">MUA</button>`:""}<a class="row-action primary" href="stock-detail.html?symbol=${encodeURIComponent(r.symbol)}#tong-quan">Xem hồ sơ</a><a class="row-action" href="watchlist.html?symbol=${encodeURIComponent(r.symbol)}&from=notable#them-ma">+ Theo dõi</a></div></td>
-  </tr>`).join('')}</tbody></table>`;
+  </tr>`).join('')}</tbody></table></div><div class="notable-mobile-list">${shownRows.map(mobileNotableRow).join('')}</div>`;
 
   updateExpandButton(rows.length);
 }
@@ -184,12 +193,14 @@ ensureExpandButton();
 
 $('#searchSymbol')?.addEventListener('input',()=>{
   visibleCount=INITIAL_VISIBLE;
+  expandedNotable=null;
   render();
 });
 
 document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{
   activeFilter=btn.dataset.filter||'ALL';
   visibleCount=INITIAL_VISIBLE;
+  expandedNotable=null;
   document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===btn));
   render();
 }));
@@ -197,4 +208,4 @@ document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('cl
 load();
 
 window.vhRenderNotable=render;
-document.addEventListener('click',e=>{const btn=e.target.closest('[data-trade-buy]');if(!btn||!window.__vhTradeAdmin)return;window.dispatchEvent(new CustomEvent('vh-stock-recommend',{detail:{symbol:btn.dataset.tradeBuy,price:Number(btn.dataset.tradePrice)}}));});
+document.addEventListener('click',e=>{const toggle=e.target.closest('[data-notable-expand]');if(toggle){expandedNotable=expandedNotable===toggle.dataset.notableExpand?null:toggle.dataset.notableExpand;render();return}const btn=e.target.closest('[data-trade-buy]');if(!btn||!window.__vhTradeAdmin)return;window.dispatchEvent(new CustomEvent('vh-stock-recommend',{detail:{symbol:btn.dataset.tradeBuy,price:Number(btn.dataset.tradePrice)}}));});
