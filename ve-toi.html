@@ -3061,12 +3061,12 @@
 
   
     /* Zalo community invitation */
-    .vh-zalo-invite{margin:24px 0;padding:clamp(20px,3vw,30px);border:1px solid rgba(224,187,99,.38);border-radius:20px;background:linear-gradient(135deg,#102b43,#081a2d);box-shadow:0 12px 30px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:space-between;gap:22px}
-    .vh-zalo-invite-copy{min-width:0}
+    .vh-zalo-invite{width:100%;max-width:100%;min-width:0;margin:24px 0;padding:clamp(20px,3vw,30px);border:1px solid rgba(224,187,99,.38);border-radius:20px;background:linear-gradient(135deg,#102b43,#081a2d);box-shadow:0 12px 30px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .vh-zalo-invite-copy{min-width:0;max-width:100%;overflow-wrap:break-word}
     .vh-zalo-invite-label{display:block;color:#f3cf74;font-size:12px;font-weight:800;letter-spacing:.09em;margin-bottom:9px}
     .vh-zalo-invite h2{color:#fff;font-size:clamp(19px,2.5vw,25px);line-height:1.4;margin:0 0 9px}
     .vh-zalo-invite p{color:rgba(231,237,246,.82);font-size:14px;line-height:1.7;margin:0}
-    .vh-zalo-invite-btn{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:50px;padding:12px 22px;border-radius:12px;background:linear-gradient(180deg,#f3cf74,#d8b254);color:#1f1604;font-size:14px;font-weight:800;text-align:center;transition:filter .2s}
+    .vh-zalo-invite-btn{max-width:100%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:50px;padding:12px 22px;border-radius:12px;background:linear-gradient(180deg,#f3cf74,#d8b254);color:#1f1604;font-size:14px;font-weight:800;text-align:center;transition:filter .2s}
     .vh-zalo-invite-btn:hover,.vh-zalo-invite-btn:focus-visible{filter:brightness(1.09)}
     @media(max-width:700px){.vh-zalo-invite{flex-direction:column;align-items:stretch;gap:16px}.vh-zalo-invite-btn{width:100%}}
 
@@ -3146,6 +3146,15 @@
 
 
       <!-- TÔI ĐANG XÂY ĐIỀU GÌ -->
+      <section class="vh-zalo-invite" aria-labelledby="vh-zalo-title">
+        <div class="vh-zalo-invite-copy">
+          <span class="vh-zalo-invite-label">CỘNG ĐỒNG ĐẦU TƯ VÕ HOÀNG</span>
+          <h2 id="vh-zalo-title">Tham gia nhóm Zalo – Đầu tư chuẩn hệ thống</h2>
+          <p>Cập nhật nhận định thị trường, chia sẻ kiến thức và trao đổi cùng cộng đồng nhà đầu tư.</p>
+        </div>
+        <a class="vh-zalo-invite-btn" href="https://zalo.me/g/gkhlyg627" target="_blank" rel="noopener noreferrer" aria-label="Tham gia nhóm Zalo Đầu tư chuẩn hệ thống (mở tab mới)">Tham gia nhóm Zalo ↗</a>
+      </section>
+
       <section class="profile-section profile-panel profile-core">
 
         <div class="profile-section-head">
@@ -3473,16 +3482,6 @@
       </section>
 
     </div>
-
-  
-      <section class="vh-zalo-invite" aria-labelledby="vh-zalo-title">
-        <div class="vh-zalo-invite-copy">
-          <span class="vh-zalo-invite-label">CỘNG ĐỒNG ĐẦU TƯ VÕ HOÀNG</span>
-          <h2 id="vh-zalo-title">Tham gia nhóm Zalo – Đầu tư chuẩn hệ thống</h2>
-          <p>Cập nhật nhận định thị trường, chia sẻ kiến thức và trao đổi cùng cộng đồng nhà đầu tư.</p>
-        </div>
-        <a class="vh-zalo-invite-btn" href="https://zalo.me/g/gkhlyg627" target="_blank" rel="noopener noreferrer" aria-label="Tham gia nhóm Zalo Đầu tư chuẩn hệ thống (mở tab mới)">Tham gia nhóm Zalo ↗</a>
-      </section>
 
     </main>
   <div id="siteFooter"></div>
