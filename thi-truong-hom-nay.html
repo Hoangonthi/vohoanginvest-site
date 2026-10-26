@@ -1967,20 +1967,6 @@
             </div>
           </div>
         </article>
-
-        <article class="panel reader-panel reader-news-panel">
-          <div class="reader-panel-head">
-            <div>
-              <span class="reader-label">TIN TỨC & SỰ KIỆN NỔI BẬT</span>
-              <h2>Cập nhật nhanh</h2>
-            </div>
-            <small>Từ hệ thống tin tức</small>
-          </div>
-
-          <div class="reader-news-list" id="marketNewsList">
-            <div class="reader-news-row"><span class="reader-news-source">TIN</span><span>Đang tải tin mới từ hệ thống tin tức…</span></div>
-          </div>
-        </article>
       </section>
 
       <!-- FORM LEAD GỌN -->
@@ -2279,17 +2265,14 @@
 
       window.addEventListener("DOMContentLoaded",() => {
         syncAll();
-        loadSystemNews();
+
       });
 
       setTimeout(syncAll,700);
-      setTimeout(loadSystemNews,900);
 
       /* Dữ liệu thị trường */
       setInterval(syncAll,10000);
 
-      /* Tin tức: 5 phút cập nhật một lần */
-      setInterval(loadSystemNews,300000);
     })();
   </script>
 
